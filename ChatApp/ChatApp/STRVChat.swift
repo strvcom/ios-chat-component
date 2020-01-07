@@ -8,7 +8,7 @@
 
 import UIKit
 import ChatCore
-import ChatNetworkingFirebase
+import ChatNetworkFirebase
 import ChatUI
 
 public class Chat {
