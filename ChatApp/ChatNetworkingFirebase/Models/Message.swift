@@ -9,17 +9,17 @@
 import Foundation
 import ChatCore
 
-public enum MessageContent {
+public enum MessageFirebaseContent {
     case text(message: String)
     case image(imageUrl: String)
 }
 
-public struct Message: MessageRepresenting, Decodable {
+public struct MessageFirestore: MessageRepresenting, Decodable {
     public let id: ChatIdentifier
     public let userId: ChatIdentifier
     public let sentAt: Date
-    public let content: MessageContent
-    
+    public let content: MessageFirebaseContent
+
     private enum CodingKeys: CodingKey {
         case id
         case userId
@@ -34,6 +34,6 @@ public struct Message: MessageRepresenting, Decodable {
         
         // DUMMY DATA
         self.sentAt = Date()
-        self.content = MessageContent.text(message: "Message")
+        self.content = MessageFirebaseContent.text(message: "Message")
     }
 }

@@ -13,12 +13,13 @@ import ChatUI
 
 public class Chat {
     public typealias Configuration = ChatNetworkFirebase.Configuration
-    
-    let interface: ChatUI<ChatCore<ChatNetworkFirebase>>
+
+    let interface: ChatUI<ChatCore<FirebaseConverter>>
 
     public init(config: Configuration) {
         let networking = ChatNetworkFirebase(config: config)
-        let core = ChatCore(networking: networking)
+        let converter = FirebaseConverter()
+        let core = ChatCore(networking: networking, converter: converter)
         self.interface = ChatUI(core: core)
     }
     

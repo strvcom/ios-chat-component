@@ -9,23 +9,24 @@
 import Foundation
 import ChatCore
 
-public struct User: UserRepresenting, Decodable {
+public struct UserFirestore: UserRepresenting, Decodable {
     public let id: ChatIdentifier
     public let name: String
     public let imageUrl: URL?
-    
+
     private enum CodingKeys: CodingKey {
         case id
     }
-    
+
     // TODO: Incomplete init
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         self.id = try values.decode(ChatIdentifier.self, forKey: .id)
-        
+
         // DUMMY DATA
         self.name = "John Smith"
         self.imageUrl = nil
     }
 }
+
