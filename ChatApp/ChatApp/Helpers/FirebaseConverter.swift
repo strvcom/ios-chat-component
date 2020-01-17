@@ -37,7 +37,7 @@ public class FirebaseConverter: ChatUIModelConverting {
         case .text(let text):
             messageContect = .text(message: text)
         case .image(let imageUrl):
-            messageContect = .text(message: imageUrl)
+            messageContect = .image(imageUrl: imageUrl)
         }
         return MessageKitType(id: message.id, userId: message.userId, sentAt: message.sentAt, content: messageContect)
     }
