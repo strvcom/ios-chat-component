@@ -218,7 +218,10 @@ PODS:
     - gRPC-Core/Interface (= 1.21.0)
     - nanopb (~> 0.3)
   - gRPC-Core/Interface (1.21.0)
+  - InputBarAccessoryView (4.2.2)
   - leveldb-library (1.22)
+  - MessageKit (3.0.0):
+    - InputBarAccessoryView (~> 4.2.2)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
     - nanopb/encode (= 0.3.9011)
@@ -227,6 +230,7 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/Firestore
+  - MessageKit
 
 SPEC REPOS:
   trunk:
@@ -243,7 +247,9 @@ SPEC REPOS:
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
+    - InputBarAccessoryView
     - leveldb-library
+    - MessageKit
     - nanopb
 
 SPEC CHECKSUMS:
@@ -260,9 +266,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
   "gRPC-C++": 9dfe7b44821e7b3e44aacad2af29d2c21f7cde83
   gRPC-Core: c9aef9a261a1247e881b18059b84d597293c9947
+  InputBarAccessoryView: 2b937602598e2fab3149f37f51dd7ad795653812
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  MessageKit: e892a9ca49ebe6d82684d3a93ad84021fa23e2c6
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
 
-PODFILE CHECKSUM: 95b4d6c92b8ef76426a497669d338a18677d109f
+PODFILE CHECKSUM: 987bd260ab0b83bbdb85e1561fba675437539416
 
 COCOAPODS: 1.8.4

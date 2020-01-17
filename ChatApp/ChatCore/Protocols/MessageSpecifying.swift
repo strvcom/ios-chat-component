@@ -8,7 +8,4 @@
 
 import Foundation
 
-public protocol MessageSpecifying {
-    // Get desired message reprentation when sending a new message
-    static func specification(for data: Any) -> Self?
-}
+public protocol MessageSpecifying { }

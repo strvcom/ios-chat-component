@@ -16,3 +16,7 @@ end
 target 'ChatNetworkFirebase' do
   networking_pods
 end
+
+target 'ChatUI' do
+pod 'MessageKit'
+end

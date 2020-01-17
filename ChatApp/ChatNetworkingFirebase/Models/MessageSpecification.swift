@@ -9,24 +9,12 @@
 import UIKit
 import ChatCore
 
-public enum MessageSpecification: MessageSpecifying {
-    public static func specification(for data: Any) -> MessageSpecification? {
-        
-        switch data {
-        case let data as String:
-            return .text(message: data)
-        case let data as UIImage:
-            return .image(image: data)
-        default:
-            return nil
-        }
-    }
-    
+public enum MessageSpecificationFirestore: MessageSpecifying {
     case text(message: String)
     case image(image: UIImage)
 }
 
-extension MessageSpecification {
+extension MessageSpecificationFirestore {
     // This method is asynchronous because of different than text messages
     // For example image messages require to upload the image binary first to get the image URL
     func toJSON(completion: ([String: Any]) -> Void) {

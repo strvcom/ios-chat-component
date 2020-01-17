@@ -9,9 +9,7 @@
 import UIKit
 import ChatCore
 
-public class ConversationsListViewController<Core: ChatCoreServicing>: UIViewController {
-    typealias Conversation = Core.Conversation
-    
+public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewController {
     let core: Core
     
     private let dataSource = DataSource()
@@ -80,7 +78,12 @@ public class ConversationsListViewController<Core: ChatCoreServicing>: UIViewCon
 extension ConversationsListViewController {
     class DataSource: NSObject, UITableViewDataSource {
         var conversations: [Conversation] = []
-        
+
+        func conversationTitle(_ conversation: Conversation) -> String {
+            let title = conversation.members.compactMap{ $0.name }.joined(separator: ",")
+            return title == "" ? "Conversation Title" : title
+        }
+
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return conversations.count
         }
@@ -90,8 +93,8 @@ extension ConversationsListViewController {
             
             let conversation = conversations[indexPath.row]
             
-            cell.textLabel?.text = conversation.id
-            cell.detailTextLabel?.text = conversation.lastMessage?.id
+            cell.textLabel?.text = conversationTitle(conversation)
+            cell.detailTextLabel?.text = "message"
             
             return cell
         }

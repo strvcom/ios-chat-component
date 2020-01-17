@@ -36,8 +36,8 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
 
 // MARK: Write data
 public extension ChatNetworkFirebase {
-    func send(message: MessageSpecification, to conversation: ChatIdentifier, completion: @escaping (Result<Message, ChatError>) -> Void) {
-        
+    func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+
         message.toJSON { [weak self] json in
             guard let self = self else {
                 return
@@ -56,7 +56,7 @@ public extension ChatNetworkFirebase {
                     var messageJSON = json
                     messageJSON[Constants.defaultIdAttributeName] = ref.documentID
                     do {
-                        let message: Message = try self.decoder.decode(json: messageJSON)
+                        let message: MessageFirestore = try self.decoder.decode(json: messageJSON)
                         completion(.success(message))
                     } catch {
                         completion(.failure(.serialization(error: error)))
@@ -71,14 +71,14 @@ public extension ChatNetworkFirebase {
  
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
-    func listenToConversations(completion: @escaping (Result<[Conversation], ChatError>) -> Void) -> ChatListener {
-        
+    func listenToConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
+
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath)
         return listenTo(reference: reference, completion: completion)
     }
-    
-    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[Message], ChatError>) -> Void) -> ChatListener {
+
+    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath).document(id).collection(Constants.messagesPath)

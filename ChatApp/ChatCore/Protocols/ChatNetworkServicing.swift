@@ -11,18 +11,21 @@ import Foundation
 public protocol ChatNetworkServicing {
     associatedtype Config
     // Specific conversation type
-    associatedtype Conversation: ConversationRepresenting
+    associatedtype C: ConversationRepresenting
     // Specific message type
-    associatedtype Message: MessageRepresenting
+    associatedtype M: MessageRepresenting
     // Message description used for sending a message
-    associatedtype MessageSpecification: MessageSpecifying
+    associatedtype MS: MessageSpecifying
+
+    typealias U = C.User
 
     init(config: Config)
     
-    func send(message: MessageSpecification, to conversation: ChatIdentifier, completion: @escaping (Result<Message, ChatError>) -> Void)
-    
-    func listenToConversations(completion: @escaping (Result<[Conversation], ChatError>) -> Void) -> ChatListener
-    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[Message], ChatError>) -> Void) -> ChatListener
+    func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+
+    func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
+
+    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
 
     func remove(listener: ChatListener)
 }
