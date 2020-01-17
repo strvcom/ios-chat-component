@@ -9,6 +9,5 @@
 import Foundation
 import ChatCore
 
-public protocol ChatUIModelConverting: ChatModelConverting where MUI == MessageKitType, CUI == Conversation, MSUI == MessageSpecification {
-
-}
+public protocol ChatUIModelConverting: ChatModelConverting where MUI == MessageKitType, CUI == Conversation,
+            MSUI == MessageSpecification, USRUI == User { }

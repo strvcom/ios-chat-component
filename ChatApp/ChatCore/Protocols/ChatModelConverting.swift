@@ -13,10 +13,14 @@ public protocol ChatModelConverting {
     associatedtype MUI: MessageRepresenting
     associatedtype CUI: ConversationRepresenting
     associatedtype MSUI: MessageSpecifying
+    associatedtype USRUI: UserRepresenting
     
     func convert(messageSpecification: MSUI) -> Networking.MS
 
     func convert(message: Networking.M?) -> MUI?
 
     func convert(conversation: Networking.C) -> CUI
+
+    func convert(user: Networking.U) -> USRUI
+    
 }

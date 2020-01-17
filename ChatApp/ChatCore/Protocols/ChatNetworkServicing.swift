@@ -17,6 +17,8 @@ public protocol ChatNetworkServicing {
     // Message description used for sending a message
     associatedtype MS: MessageSpecifying
 
+    typealias U = C.User
+
     init(config: Config)
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)

@@ -13,6 +13,7 @@ open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
     public typealias C = Converter.CUI
     public typealias MS = Converter.MSUI
     public typealias M = Converter.MUI
+    public typealias USR = Converter.USRUI
 
     let networking: Networking
     let converter: Converter
@@ -48,7 +49,7 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func markAsSeen(message: Networking.M) {
+    open func markAsSeen(message: M) {
         // TODO: Implement
     }
 }

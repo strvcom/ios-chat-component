@@ -16,29 +16,38 @@ public class FirebaseConverter: ChatUIModelConverting {
     public typealias MUI = MessageKitType
     public typealias CUI = Conversation
     public typealias MSUI = MessageSpecification
+    public typealias USRUI = User
+
+    public func convert(user: UserFirestore) -> User {
+        return User(id: user.id, name: user.name, imageUrl: user.imageUrl)
+    }
 
     public func convert(messageSpecification: MessageSpecification) -> MessageSpecificationFirestore {
-        // FIXME: Dummy implementation
-        return MessageSpecificationFirestore.text(message: "Bla")
+        switch messageSpecification {
+        case .image(let image):
+            return MessageSpecificationFirestore.image(image: image)
+        case .text(let message):
+            return MessageSpecificationFirestore.text(message: message)
+        }
     }
 
     public func convert(message: MessageFirestore?) -> MessageKitType? {
         guard let message = message else { return nil }
-        // FIXME: Dummy implementation
         var messageContect: MessageContent
         switch message.content {
         case .text(let text):
             messageContect = .text(message: text)
-        default:
-            //update with image
-            messageContect = .text(message: "BLAAA")
+        case .image(let imageUrl):
+            messageContect = .text(message: imageUrl)
         }
         return MessageKitType(id: message.id, userId: message.userId, sentAt: message.sentAt, content: messageContect)
     }
 
     public func convert(conversation: ConversationFirestore) -> Conversation {
-        // FIXME: Dummy implementation
 
-        return Conversation(id: conversation.id, lastMessage: convert(message: conversation.lastMessage), members: [], messages: conversation.messages.compactMap{ convert(message: $0)}, seen: conversation.seen)
+        return Conversation(id: conversation.id, lastMessage: convert(message: conversation.lastMessage),
+                            members: conversation.members.compactMap{ convert(user: $0)},
+                            messages: conversation.messages.compactMap{ convert(message: $0)},
+                            seen: conversation.seen)
     }
 }
