@@ -31,8 +31,7 @@ public class FirebaseConverter: ChatUIModelConverting {
         }
     }
 
-    public func convert(message: MessageFirestore?) -> MessageKitType? {
-        guard let message = message else { return nil }
+    public func convert(message: MessageFirestore) -> MessageKitType {
         var messageContect: MessageContent
         switch message.content {
         case .text(let text):
@@ -44,8 +43,13 @@ public class FirebaseConverter: ChatUIModelConverting {
     }
 
     public func convert(conversation: ConversationFirestore) -> Conversation {
+        var lastMessage: MessageKitType? = nil
 
-        return Conversation(id: conversation.id, lastMessage: convert(message: conversation.lastMessage),
+        if let lastM = conversation.lastMessage {
+            lastMessage = convert(message: lastM)
+        }
+
+        return Conversation(id: conversation.id, lastMessage: lastMessage,
                             members: conversation.members.compactMap{ convert(user: $0)},
                             messages: conversation.messages.compactMap{ convert(message: $0)},
                             seen: conversation.seen)

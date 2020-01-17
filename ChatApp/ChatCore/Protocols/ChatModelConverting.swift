@@ -17,7 +17,7 @@ public protocol ChatModelConverting {
     
     func convert(messageSpecification: MSUI) -> Networking.MS
 
-    func convert(message: Networking.M?) -> MUI?
+    func convert(message: Networking.M) -> MUI
 
     func convert(conversation: Networking.C) -> CUI
 
