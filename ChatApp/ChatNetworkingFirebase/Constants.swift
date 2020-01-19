@@ -12,10 +12,12 @@ struct Constants {
     static let defaultIdAttributeName = "id"
     static let conversationsPath = "conversations"
     static let messagesPath = "messages"
+    static let usersPath = "users"
     
     struct Message {
         static let senderIdAttributeName = "userId"
         static let messageTypeAttributeName = "type"
         static let dataAttributeName = "data"
+        static let sentAtAttributeName = "sentAt"
     }
 }

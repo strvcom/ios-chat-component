@@ -8,6 +8,7 @@
 
 import UIKit
 import ChatCore
+import FirebaseFirestore
 
 public enum MessageSpecificationFirestore: MessageSpecifying {
     case text(message: String)
@@ -25,20 +26,20 @@ extension MessageSpecificationFirestore {
         case .text(let message):
             completion([
                 Constants.Message.senderIdAttributeName: userId,
-                Constants.Message.messageTypeAttributeName: "text",
                 Constants.Message.dataAttributeName: [
-                    "message": message
-                ]
+                    "text": message
+                ],
+                Constants.Message.sentAtAttributeName: Timestamp()
             ])
         case .image(_):
             // Upload image
             let imageUrl = "https://jefejiejejfejf"
             completion([
                 Constants.Message.senderIdAttributeName: userId,
-                Constants.Message.messageTypeAttributeName: "text",
                 Constants.Message.dataAttributeName: [
                     "imageUrl": imageUrl
-                ]
+                ],
+                Constants.Message.sentAtAttributeName: Timestamp()
             ])
         }
     }

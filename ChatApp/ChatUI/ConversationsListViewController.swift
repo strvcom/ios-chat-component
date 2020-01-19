@@ -73,6 +73,15 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             }
         }
     }
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
+    }
+    
+    @objc func createTestConversation() {
+        core.createTestConversation()
+    }
 }
 
 extension ConversationsListViewController {

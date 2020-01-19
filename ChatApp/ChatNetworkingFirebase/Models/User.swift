@@ -8,6 +8,7 @@
 
 import Foundation
 import ChatCore
+import FirebaseFirestoreSwift
 
 public struct UserFirestore: UserRepresenting, Decodable {
     public let id: ChatIdentifier
@@ -15,18 +16,25 @@ public struct UserFirestore: UserRepresenting, Decodable {
     public let imageUrl: URL?
 
     private enum CodingKeys: CodingKey {
-        case id
+        case id, name, imageUrl
+    }
+    
+    public init(id: ChatIdentifier, name: String, imageUrl: URL?) {
+        self.id = id
+        self.name = name
+        self.imageUrl = imageUrl
     }
 
-    // TODO: Incomplete init
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.id = try values.decode(ChatIdentifier.self, forKey: .id)
-
-        // DUMMY DATA
-        self.name = "John Smith"
-        self.imageUrl = nil
+        self.id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue ?? ""
+        self.name = try values.decode(String.self, forKey: .name)
+        self.imageUrl = try values.decodeIfPresent(URL.self, forKey: .imageUrl)
+    }
+    
+    public func reinit(withId id: ChatIdentifier) -> UserFirestore {
+        return UserFirestore(id: id, name: self.name, imageUrl: self.imageUrl)
     }
 }
 
