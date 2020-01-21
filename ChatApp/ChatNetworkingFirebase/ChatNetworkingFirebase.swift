@@ -20,7 +20,6 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
     
     let database: Firestore
-    let decoder = JSONDecoder()
 
     private var listeners: [ChatListener: ListenerRegistration] = [:]
 
