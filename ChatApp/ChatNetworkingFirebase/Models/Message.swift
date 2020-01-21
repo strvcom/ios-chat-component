@@ -28,7 +28,11 @@ public struct MessageFirestore: MessageRepresenting, Decodable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue ?? ""
+        guard let id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue else {
+            throw ChatError.internal(message: "Missing documentID")
+        }
+        
+        self.id = id
         self.userId = try values.decode(ChatIdentifier.self, forKey: .userId)
         self.sentAt = try values.decode(Timestamp.self, forKey: .sentAt).dateValue()
         self.content = try values.decode(MessageFirebaseContent.self, forKey: .content)

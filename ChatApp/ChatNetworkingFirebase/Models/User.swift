@@ -28,7 +28,11 @@ public struct UserFirestore: UserRepresenting, Decodable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue ?? ""
+        guard let id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue else {
+            throw ChatError.internal(message: "Missing documentID")
+        }
+        
+        self.id = id
         self.name = try values.decode(String.self, forKey: .name)
         self.imageUrl = try values.decodeIfPresent(URL.self, forKey: .imageUrl)
     }

@@ -27,7 +27,11 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue ?? ""
+        guard let id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue else {
+            throw ChatError.internal(message: "Missing documentID")
+        }
+        
+        self.id = id
         self.lastMessage = try values.decodeIfPresent(Message.self, forKey: .lastMessage)
         self.members = try values.decode([String: UserFirestore].self, forKey: .members).compactMap { $0.value.reinit(withId: $0.key) }
         self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seenAt)?.reduce(into: Seen(), { (result, item) in
