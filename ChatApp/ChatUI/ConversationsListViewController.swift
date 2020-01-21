@@ -63,13 +63,20 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
 
-        listener = core.listenToConversations { [weak self] result in
-            switch result {
-            case .success(let conversations):
-                self?.dataSource.conversations = conversations
-                self?.tableView.reloadData()
-            case .failure(let error):
-                print(error)
+        core.load { [weak self] error in
+            
+            guard let self = self else {
+                return
+            }
+            
+            self.listener = self.core.listenToConversations { result in
+                switch result {
+                case .success(let conversations):
+                    self.dataSource.conversations = conversations
+                    self.tableView.reloadData()
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
     }

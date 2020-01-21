@@ -36,9 +36,5 @@ public struct UserFirestore: UserRepresenting, Decodable {
         self.name = try values.decode(String.self, forKey: .name)
         self.imageUrl = try values.decodeIfPresent(URL.self, forKey: .imageUrl)
     }
-    
-    public func reinit(withId id: ChatIdentifier) -> UserFirestore {
-        return UserFirestore(id: id, name: self.name, imageUrl: self.imageUrl)
-    }
 }
 

@@ -22,6 +22,8 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     private var listeners: [ChatListener: ListenerRegistration] = [:]
+    private var usersListener: ChatListener?
+    private var users: [UserFirestore] = []
 
     required public init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -33,6 +35,12 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         
         // TEMPORARY
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
+    }
+    
+    deinit {
+        if let usersListener = usersListener {
+            remove(listener: usersListener)
+        }
     }
 }
 
@@ -59,6 +67,22 @@ private extension ChatNetworkFirebase {
         }
     }
 }
+
+// MARK: - Load
+public extension ChatNetworkFirebase {
+    func load(completion: @escaping (Error?) -> Void) {
+        usersListener = listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
+            switch result {
+            case let .success(users):
+                self?.users = users
+                completion(nil)
+            case let .failure(error):
+                completion(error)
+            }
+        }
+    }
+}
+
 // MARK: Write data
 public extension ChatNetworkFirebase {
     func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
@@ -100,7 +124,20 @@ public extension ChatNetworkFirebase {
 
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath)
-        return listenTo(reference: reference, completion: completion)
+        return listenTo(reference: reference, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+            
+            guard case let Result.success(conversations) = result else {
+                completion(result)
+                return
+            }
+            
+            // Set members from previously downloaded users
+            completion(.success(conversations.map { conversation in
+                var result = conversation
+                result.members = self.users.filter { result.memberIds.contains($0.id) }
+                return result
+            }))
+        })
     }
 
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
@@ -114,37 +151,15 @@ public extension ChatNetworkFirebase {
         return listenTo(reference: reference, completion: completion)
     }
     
+    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
+        let reference = database.collection(Constants.usersPath)
+        
+        return listenTo(reference: reference, completion: completion)
+    }
+    
     func remove(listener: ChatListener) {
         listeners[listener]?.remove()
     }
-    
-    /// TEMPORARY
-    // Creates a test conversation with all current users as members
-    // just to have something to see in the conversation list.
-    // Can be removed when we have UI for starting new conversation.
-    func createTestConversation() {
-        database
-            .collection(Constants.usersPath)
-            .getDocuments { (querySnapshot, _) in
-                guard
-                    let querySnapshot = querySnapshot,
-                    let users = try? querySnapshot.documents.compactMap({
-                        try $0.data(as: UserFirestore.self)
-                    }) else {
-                        return
-                }
-                
-                self.database
-                    .collection(Constants.conversationsPath)
-                    .addDocument(data: [
-                        "members": users.reduce(into: [String: [String: Any]](), { (result, user) in
-                            result[user.id] = ["name": user.name]
-                        })
-                    ])
-        }
-    }
-
-
 }
 
 // MARK: Private methods

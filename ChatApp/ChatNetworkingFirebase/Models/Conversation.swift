@@ -16,7 +16,8 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
 
     public let id: ChatIdentifier
     public let lastMessage: MessageFirestore?
-    public let members: [UserFirestore]
+    public let memberIds: [ChatIdentifier]
+    public var members: [UserFirestore] = []
     public let messages: [MessageFirestore] = []
     public let seen: Seen
 
@@ -33,7 +34,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         
         self.id = id
         self.lastMessage = try values.decodeIfPresent(Message.self, forKey: .lastMessage)
-        self.members = try values.decode([String: UserFirestore].self, forKey: .members).compactMap { $0.value.reinit(withId: $0.key) }
+        self.memberIds = try values.decode([ChatIdentifier].self, forKey: .members)
         self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seenAt)?.reduce(into: Seen(), { (result, item) in
             let (key, value) = item
             result[key] = (messageId: value.messageId, seenAt: value.timestamp)
