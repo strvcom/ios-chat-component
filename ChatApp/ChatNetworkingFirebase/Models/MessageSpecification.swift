@@ -26,6 +26,7 @@ extension MessageSpecificationFirestore {
         case .text(let message):
             completion([
                 Constants.Message.senderIdAttributeName: userId,
+                Constants.Message.messageTypeAttributeName: "text",
                 Constants.Message.dataAttributeName: [
                     "text": message
                 ],
@@ -36,6 +37,7 @@ extension MessageSpecificationFirestore {
             let imageUrl = "https://jefejiejejfejf"
             completion([
                 Constants.Message.senderIdAttributeName: userId,
+                Constants.Message.messageTypeAttributeName: "image",
                 Constants.Message.dataAttributeName: [
                     "imageUrl": imageUrl
                 ],
