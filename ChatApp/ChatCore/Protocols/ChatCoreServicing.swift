@@ -26,7 +26,4 @@ public protocol ChatCoreServicing {
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
 
     func remove(listener: ChatListener)
-    
-    // TEMPORARY
-    func createTestConversation()
 }

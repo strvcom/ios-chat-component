@@ -26,11 +26,6 @@ open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
         self.networking = networking
         self.converter = converter
     }
-    
-    // TEMPORARY
-    public func createTestConversation() {
-        networking.createTestConversation()
-    }
 }
     
 // MARK: Sending messages

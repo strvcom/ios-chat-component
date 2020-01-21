@@ -79,8 +79,12 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
     }
     
-    @objc func createTestConversation() {
-        core.createTestConversation()
+    /// TEMPORARY
+    // Creates a test conversation with all current users as members
+    // just to have something to see in the conversation list.
+    // Can be removed when we have UI for starting new conversation.
+    @objc public func createTestConversation() {
+        NotificationCenter.default.post(name: NSNotification.Name("TestConversation"), object: nil)
     }
 }
 

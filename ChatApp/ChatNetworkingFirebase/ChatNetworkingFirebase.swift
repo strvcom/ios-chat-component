@@ -30,9 +30,35 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         FirebaseApp.configure(options: options)
         
         self.database = Firestore.firestore()
+        
+        // TEMPORARY
+        NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
     }
 }
 
+// TEMPORARY
+private extension ChatNetworkFirebase {
+    @objc func createTestConversation() {
+        database
+            .collection(Constants.usersPath)
+            .getDocuments { [weak self] (querySnapshot, _) in
+                guard
+                    let self = self,
+                    let querySnapshot = querySnapshot,
+                    let users = try? querySnapshot.documents.compactMap({
+                        try $0.data(as: UserFirestore.self)
+                    }) else {
+                        return
+                }
+                
+                self.database
+                    .collection(Constants.conversationsPath)
+                    .addDocument(data: [
+                        "members": users.map { $0.id }
+                    ])
+        }
+    }
+}
 // MARK: Write data
 public extension ChatNetworkFirebase {
     func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
