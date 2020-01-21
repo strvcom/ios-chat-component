@@ -32,7 +32,7 @@ extension MessageSpecificationFirestore {
                 Constants.Message.sentAtAttributeName: Timestamp()
             ])
         case .image(_):
-            // Upload image
+            // TODO: Upload image
             let imageUrl = "https://jefejiejejfejf"
             completion([
                 Constants.Message.senderIdAttributeName: userId,
