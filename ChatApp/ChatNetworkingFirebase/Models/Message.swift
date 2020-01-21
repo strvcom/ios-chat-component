@@ -11,28 +11,6 @@ import ChatCore
 import FirebaseFirestoreSwift
 import FirebaseFirestore
 
-public enum MessageFirebaseContent: Decodable {
-    case text(message: String)
-    case image(imageUrl: String)
-    
-    private enum CodingKeys: String, CodingKey {
-        case text
-        case image = "imageUrl"
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        if let message = try? values.decode(String.self, forKey: .text) {
-            self = .text(message: message)
-        } else if let imageUrl = try? values.decode(String.self, forKey: .image) {
-            self = .image(imageUrl: imageUrl)
-        } else {
-            self = .text(message: "(no content)")
-        }
-    }
-}
-
 public struct MessageFirestore: MessageRepresenting, Decodable {
     
     public let id: ChatIdentifier

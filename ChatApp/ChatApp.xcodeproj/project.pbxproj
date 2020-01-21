@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		008B43311772BA388EBE9E00 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */; };
 		04232D9023D4BAB200869F89 /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04232D8E23D4BA6300869F89 /* SeenItem.swift */; };
+		047129F823D7251200A3A7C1 /* MesageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04232D9123D5EBA400869F89 /* MesageContent.swift */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3B23C32020007F7754 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = AD6B5D3923C32020007F7754 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
@@ -100,6 +101,7 @@
 
 /* Begin PBXFileReference section */
 		04232D8E23D4BA6300869F89 /* SeenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeenItem.swift; sourceTree = "<group>"; };
+		04232D9123D5EBA400869F89 /* MesageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MesageContent.swift; sourceTree = "<group>"; };
 		21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B07E7DEF347F0A170FAA619 /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519033A4B72B0D6C9BFFD754 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				AD6B5D8923C321B3007F7754 /* Message.swift */,
 				AD6B5D8A23C321B3007F7754 /* User.swift */,
 				04232D8E23D4BA6300869F89 /* SeenItem.swift */,
+				04232D9123D5EBA400869F89 /* MesageContent.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -701,6 +704,7 @@
 				AD6B5D8F23C321B3007F7754 /* MessageSpecification.swift in Sources */,
 				AD6B5D8E23C321B3007F7754 /* Conversation.swift in Sources */,
 				AD6B5D9023C321B3007F7754 /* Message.swift in Sources */,
+				047129F823D7251200A3A7C1 /* MesageContent.swift in Sources */,
 				AD6B5D8C23C321B3007F7754 /* ChatNetworkingFirebase.swift in Sources */,
 				AD6B5D8B23C321B3007F7754 /* Constants.swift in Sources */,
 				04232D9023D4BAB200869F89 /* SeenItem.swift in Sources */,
