@@ -73,9 +73,21 @@ public extension ChatNetworkFirebase {
                     .document(conversation)
                     .collection(Constants.messagesPath)
 
-            reference.addDocument(data: json) { error in
+            let documentRef = reference.document()
+            
+            documentRef.setData(json) { error in
                 if let error = error {
                     completion(.failure(.networking(error: error)))
+                } else {
+                    documentRef.getDocument { (documentSnapshot, error) in
+                        if let error = error {
+                            completion(.failure(.networking(error: error)))
+                        } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
+                            completion(.success(message))
+                        } else {
+                            completion(.failure(.internal(message: "Unknown state while sending")))
+                        }
+                    }
                 }
             }
         }
