@@ -33,7 +33,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         
         self.database = Firestore.firestore()
         
-        // TEMPORARY
+        // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
     }
     
@@ -44,7 +44,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
 }
 
-// TEMPORARY
+// FIXME: Remove this temporary method when UI for conversation creating is ready
 private extension ChatNetworkFirebase {
     @objc func createTestConversation() {
         database

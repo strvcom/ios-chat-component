@@ -86,7 +86,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
     }
     
-    /// TEMPORARY
+    // FIXME: Remove this temporary method when UI for conversation creating is ready
     // Creates a test conversation with all current users as members
     // just to have something to see in the conversation list.
     // Can be removed when we have UI for starting new conversation.
