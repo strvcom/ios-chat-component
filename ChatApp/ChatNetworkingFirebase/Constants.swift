@@ -19,5 +19,9 @@ struct Constants {
         static let messageTypeAttributeName = "type"
         static let dataAttributeName = "data"
         static let sentAtAttributeName = "sentAt"
+        static let messageTypeText = "text"
+        static let messageTypeImage = "image"
+        static let dataAttributeNameText = "text"
+        static let dataAttributeNameImage = "imageUrl"
     }
 }
