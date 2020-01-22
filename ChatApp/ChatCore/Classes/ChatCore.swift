@@ -30,7 +30,7 @@ open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
 
 // MARK: - Load
 extension ChatCore {
-    open func load(completion: @escaping (Error?) -> Void) {
+    open func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
         networking.load(completion: completion)
     }
 }

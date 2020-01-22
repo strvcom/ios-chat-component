@@ -70,14 +70,14 @@ private extension ChatNetworkFirebase {
 
 // MARK: - Load
 public extension ChatNetworkFirebase {
-    func load(completion: @escaping (Error?) -> Void) {
+    func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
         usersListener = listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
             switch result {
             case let .success(users):
                 self?.users = users
-                completion(nil)
+                completion(.success(()))
             case let .failure(error):
-                completion(error)
+                completion(.failure(.networking(error: error)))
             }
         }
     }

@@ -23,7 +23,7 @@ public protocol ChatCoreServicing {
     /// This method is used to do any preparations necessary for the Chat to work
     /// - Parameter completion: called after everything is ready
     ///
-    func load(completion: @escaping (Error?) -> Void)
+    func load(completion: @escaping (Result<Void, ChatError>) -> Void)
 
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
