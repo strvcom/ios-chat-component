@@ -24,6 +24,8 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var usersListener: ChatListener?
     private var users: [UserFirestore] = []
+    private var initialized = false
+    private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
 
     required public init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -35,6 +37,10 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         
         // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
+        
+        load { [weak self] result in
+            self?.onLoadFinished(result: result)
+        }
     }
     
     deinit {
@@ -81,6 +87,14 @@ public extension ChatNetworkFirebase {
             }
         }
     }
+    
+    func onLoadFinished(result: (Result<Void, ChatError>)) {
+        if case .success = result {
+            initialized = true
+        }
+        
+        onLoadListeners.forEach { $0(result) }
+    }
 }
 
 // MARK: Write data
@@ -121,23 +135,47 @@ public extension ChatNetworkFirebase {
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
     func listenToConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
-
+       
+        let listener = ChatListener.generateIdentifier()
+        
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath)
-        return listenTo(reference: reference, completion: { (result: Result<[ConversationFirestore], ChatError>) in
-            
-            guard case let .success(conversations) = result else {
-                completion(result)
+        
+        let closureToRun = { [weak self] in
+            guard let self = self else {
                 return
             }
             
-            // Set members from previously downloaded users
-            completion(.success(conversations.map { conversation in
-                var result = conversation
-                result.members = self.users.filter { result.memberIds.contains($0.id) }
-                return result
-            }))
-        })
+            _ = self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+                
+                guard case let .success(conversations) = result else {
+                    completion(result)
+                    return
+                }
+                
+                // Set members from previously downloaded users
+                completion(.success(conversations.map { conversation in
+                    var result = conversation
+                    result.members = self.users.filter { result.memberIds.contains($0.id) }
+                    return result
+                }))
+            })
+        }
+        
+        if initialized {
+            closureToRun()
+        } else {
+            onLoadListeners.append { result in
+                switch result {
+                case .success(()):
+                    closureToRun()
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+        return listener
     }
 
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
@@ -164,7 +202,7 @@ public extension ChatNetworkFirebase {
 
 // MARK: Private methods
 private extension ChatNetworkFirebase {
-    func listenTo<T: Decodable>(reference: Query, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+    func listenTo<T: Decodable>(reference: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
         let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
                 let list: [T] = snapshot.documents.compactMap {
@@ -182,7 +220,7 @@ private extension ChatNetworkFirebase {
             }
         }
         
-        let identifier = ChatListener.generateIdentifier()
+        let identifier = customListener ?? ChatListener.generateIdentifier()
         
         listeners[identifier] = listener
         
