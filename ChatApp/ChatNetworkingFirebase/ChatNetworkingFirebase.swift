@@ -167,12 +167,14 @@ private extension ChatNetworkFirebase {
     func listenTo<T: Decodable>(reference: Query, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
         let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
-                do {
-                    let list: [T] = try snapshot.documents.compactMap { try $0.data(as: T.self) }
-                    completion(.success(list))
-                } catch {
-                    completion(.failure(.serialization(error: error)))
+                let list: [T] = snapshot.documents.compactMap {
+                    do {
+                        return try $0.data(as: T.self)
+                    } catch {
+                        return nil
+                    }
                 }
+                completion(.success(list))
             } else if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
