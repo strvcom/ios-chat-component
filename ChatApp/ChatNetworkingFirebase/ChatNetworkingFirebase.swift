@@ -126,7 +126,7 @@ public extension ChatNetworkFirebase {
         let reference = database.collection(Constants.conversationsPath)
         return listenTo(reference: reference, completion: { (result: Result<[ConversationFirestore], ChatError>) in
             
-            guard case let Result.success(conversations) = result else {
+            guard case let .success(conversations) = result else {
                 completion(result)
                 return
             }
