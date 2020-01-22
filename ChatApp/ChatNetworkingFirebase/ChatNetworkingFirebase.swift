@@ -38,8 +38,8 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
     
     deinit {
-        if let usersListener = usersListener {
-            remove(listener: usersListener)
+        listeners.forEach { (listener, _) in
+            remove(listener: listener)
         }
     }
 }
