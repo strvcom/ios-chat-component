@@ -29,7 +29,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         guard let id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue else {
-            throw ChatError.internal(message: "Missing documentID")
+            throw ChatError.incompleteDocument
         }
         
         self.id = id

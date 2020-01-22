@@ -109,7 +109,7 @@ public extension ChatNetworkFirebase {
                         } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
                             completion(.success(message))
                         } else {
-                            completion(.failure(.internal(message: "Unknown state while sending")))
+                            completion(.failure(.unexpectedState))
                         }
                     }
                 }

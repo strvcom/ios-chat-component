@@ -26,7 +26,7 @@ public enum MessageFirebaseContent: Decodable {
         } else if let imageUrl = try? values.decode(String.self, forKey: .image) {
             self = .image(imageUrl: imageUrl)
         } else {
-            throw ChatError.internal(message: "No message content")
+            throw ChatError.incompleteDocument
         }
     }
 }
