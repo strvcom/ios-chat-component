@@ -12,4 +12,6 @@ public enum ChatError: Error {
     case networking(error: Error)
     case serialization(error: Error)
     case `internal`(message: String)
+    case incompleteDocument
+    case unexpectedState
 }

@@ -20,9 +20,11 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
     
     let database: Firestore
-    let decoder = JSONDecoder()
 
     private var listeners: [ChatListener: ListenerRegistration] = [:]
+    private var users: [UserFirestore] = []
+    private var initialized = false
+    private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
 
     required public init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -31,6 +33,66 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         FirebaseApp.configure(options: options)
         
         self.database = Firestore.firestore()
+        
+        // FIXME: Remove this temporary code when UI for conversation creating is ready
+        NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
+        
+        load { [weak self] result in
+            self?.onLoadFinished(result: result)
+        }
+    }
+    
+    deinit {
+        listeners.forEach { (listener, _) in
+            remove(listener: listener)
+        }
+    }
+}
+
+// FIXME: Remove this temporary method when UI for conversation creating is ready
+private extension ChatNetworkFirebase {
+    @objc func createTestConversation() {
+        database
+            .collection(Constants.usersPath)
+            .getDocuments { [weak self] (querySnapshot, _) in
+                guard
+                    let self = self,
+                    let querySnapshot = querySnapshot,
+                    let users = try? querySnapshot.documents.compactMap({
+                        try $0.data(as: UserFirestore.self)
+                    }) else {
+                        return
+                }
+                
+                self.database
+                    .collection(Constants.conversationsPath)
+                    .addDocument(data: [
+                        "members": users.map { $0.id }
+                    ])
+        }
+    }
+}
+
+// MARK: - Load
+public extension ChatNetworkFirebase {
+    func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
+        listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
+            switch result {
+            case let .success(users):
+                self?.users = users
+                completion(.success(()))
+            case let .failure(error):
+                completion(.failure(.networking(error: error)))
+            }
+        }
+    }
+    
+    func onLoadFinished(result: (Result<Void, ChatError>)) {
+        if case .success = result {
+            initialized = true
+        }
+        
+        onLoadListeners.forEach { $0(result) }
     }
 }
 
@@ -48,21 +110,21 @@ public extension ChatNetworkFirebase {
                     .document(conversation)
                     .collection(Constants.messagesPath)
 
-            var documentRef: DocumentReference?
-            documentRef = reference.addDocument(data: json) { error in
+            let documentRef = reference.document()
+            
+            documentRef.setData(json) { error in
                 if let error = error {
                     completion(.failure(.networking(error: error)))
-                } else if let ref = documentRef {
-                    var messageJSON = json
-                    messageJSON[Constants.defaultIdAttributeName] = ref.documentID
-                    do {
-                        let message: MessageFirestore = try self.decoder.decode(json: messageJSON)
-                        completion(.success(message))
-                    } catch {
-                        completion(.failure(.serialization(error: error)))
-                    }
                 } else {
-                    completion(.failure(.internal(message: "Unknown state while sending")))
+                    documentRef.getDocument { (documentSnapshot, error) in
+                        if let error = error {
+                            completion(.failure(.networking(error: error)))
+                        } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
+                            completion(.success(message))
+                        } else {
+                            completion(.failure(.unexpectedState))
+                        }
+                    }
                 }
             }
         }
@@ -72,16 +134,64 @@ public extension ChatNetworkFirebase {
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
     func listenToConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
-
+       
+        let listener = ChatListener.generateIdentifier()
+        
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath)
-        return listenTo(reference: reference, completion: completion)
+        
+        let closureToRun = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+                
+                guard case let .success(conversations) = result else {
+                    completion(result)
+                    return
+                }
+                
+                // Set members from previously downloaded users
+                completion(.success(conversations.map { conversation in
+                    var result = conversation
+                    result.members = self.users.filter { result.memberIds.contains($0.id) }
+                    return result
+                }))
+            })
+        }
+        
+        if initialized {
+            closureToRun()
+        } else {
+            onLoadListeners.append { result in
+                switch result {
+                case .success(()):
+                    closureToRun()
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+        return listener
     }
 
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Make conversations path more generic
-        let reference = database.collection(Constants.conversationsPath).document(id).collection(Constants.messagesPath)
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .document(id)
+            .collection(Constants.messagesPath)
+            .order(by: Constants.Message.sentAtAttributeName)
+        return listenTo(reference: reference, completion: completion)
+    }
+    
+    @discardableResult
+    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
+        let reference = database.collection(Constants.usersPath)
+        
         return listenTo(reference: reference, completion: completion)
     }
     
@@ -92,15 +202,19 @@ public extension ChatNetworkFirebase {
 
 // MARK: Private methods
 private extension ChatNetworkFirebase {
-    func listenTo<T: Decodable>(reference: CollectionReference, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
-        let listener = reference.addSnapshotListener(includeMetadataChanges: false) { [weak self] (snapshot, error) in
-            if let snapshot = snapshot, let self = self {
-                do {
-                    let list: [T] = try self.decoder.decode(snapshot: snapshot)
-                    completion(.success(list))
-                } catch {
-                    completion(.failure(.serialization(error: error)))
+    @discardableResult
+    func listenTo<T: Decodable>(reference: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+        let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
+            if let snapshot = snapshot {
+                let list: [T] = snapshot.documents.compactMap {
+                    do {
+                        return try $0.data(as: T.self)
+                    } catch {
+                        print("Couldn't decode document:", error)
+                        return nil
+                    }
                 }
+                completion(.success(list))
             } else if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
@@ -108,7 +222,7 @@ private extension ChatNetworkFirebase {
             }
         }
         
-        let identifier = ChatListener.generateIdentifier()
+        let identifier = customListener ?? ChatListener.generateIdentifier()
         
         listeners[identifier] = listener
         

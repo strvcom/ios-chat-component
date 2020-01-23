@@ -8,32 +8,37 @@
 
 import Foundation
 import ChatCore
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public typealias Seen = [String: (messageId: ChatIdentifier, seenAt: Date)]
 
     public let id: ChatIdentifier
     public let lastMessage: MessageFirestore?
-    public let members: [UserFirestore]
-    public let messages: [MessageFirestore]
+    let memberIds: [ChatIdentifier]
+    public var members: [UserFirestore] = []
+    public let messages: [MessageFirestore] = []
     public let seen: Seen
 
     private enum CodingKeys: CodingKey {
-        case id
-        case lastMessage
+        case id, lastMessage, messages, members, seenAt
     }
-
-    // TODO: Incomplete init
+    
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-
-        self.id = try values.decode(ChatIdentifier.self, forKey: .id)
-        self.lastMessage = try values.decode(Message.self, forKey: .lastMessage)
-
-        // DUMMY DATA
-        self.members = []
-        self.messages = []
-        self.seen = [:]
+        
+        guard let id = try values.decode(DocumentID<String>.self, forKey: .id).wrappedValue else {
+            throw ChatError.incompleteDocument
+        }
+        
+        self.id = id
+        self.lastMessage = try values.decodeIfPresent(Message.self, forKey: .lastMessage)
+        self.memberIds = try values.decode([ChatIdentifier].self, forKey: .members)
+        self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seenAt)?.reduce(into: Seen(), { (result, item) in
+            let (key, value) = item
+            result[key] = (messageId: value.messageId, seenAt: value.timestamp)
+        }) ?? [:]
     }
 }
 

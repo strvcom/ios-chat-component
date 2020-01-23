@@ -63,15 +63,29 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
 
-        listener = core.listenToConversations { [weak self] result in
+        
+        listener = core.listenToConversations { result in
             switch result {
             case .success(let conversations):
-                self?.dataSource.conversations = conversations
-                self?.tableView.reloadData()
+                self.dataSource.conversations = conversations
+                self.tableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
+    }
+    
+    // FIXME: Remove this temporary method when UI for conversation creating is ready
+    // Creates a test conversation with all current users as members
+    // just to have something to see in the conversation list.
+    // Can be removed when we have UI for starting new conversation.
+    @objc public func createTestConversation() {
+        NotificationCenter.default.post(name: NSNotification.Name("TestConversation"), object: nil)
     }
 }
 

@@ -32,14 +32,14 @@ public class FirebaseConverter: ChatUIModelConverting {
     }
 
     public func convert(message: MessageFirestore) -> MessageKitType {
-        var messageContect: MessageContent
+        var messageContent: MessageContent
         switch message.content {
         case .text(let text):
-            messageContect = .text(message: text)
+            messageContent = .text(message: text)
         case .image(let imageUrl):
-            messageContect = .image(imageUrl: imageUrl)
+            messageContent = .image(imageUrl: imageUrl)
         }
-        return MessageKitType(id: message.id, userId: message.userId, sentAt: message.sentAt, content: messageContect)
+        return MessageKitType(id: message.id, userId: message.userId, sentAt: message.sentAt, content: messageContent)
     }
 
     public func convert(conversation: ConversationFirestore) -> Conversation {
