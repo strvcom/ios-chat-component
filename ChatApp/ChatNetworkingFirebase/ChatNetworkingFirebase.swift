@@ -145,7 +145,7 @@ public extension ChatNetworkFirebase {
                 return
             }
             
-            _ = self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+            self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
                 
                 guard case let .success(conversations) = result else {
                     completion(result)
@@ -188,6 +188,7 @@ public extension ChatNetworkFirebase {
         return listenTo(reference: reference, completion: completion)
     }
     
+    @discardableResult
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
         let reference = database.collection(Constants.usersPath)
         
@@ -201,6 +202,7 @@ public extension ChatNetworkFirebase {
 
 // MARK: Private methods
 private extension ChatNetworkFirebase {
+    @discardableResult
     func listenTo<T: Decodable>(reference: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
         let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
