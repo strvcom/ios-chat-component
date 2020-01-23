@@ -22,7 +22,6 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     private var listeners: [ChatListener: ListenerRegistration] = [:]
-    private var usersListener: ChatListener?
     private var users: [UserFirestore] = []
     private var initialized = false
     private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
@@ -77,7 +76,7 @@ private extension ChatNetworkFirebase {
 // MARK: - Load
 public extension ChatNetworkFirebase {
     func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
-        usersListener = listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
+        listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
             switch result {
             case let .success(users):
                 self?.users = users
