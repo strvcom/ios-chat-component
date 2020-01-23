@@ -209,6 +209,7 @@ private extension ChatNetworkFirebase {
                     do {
                         return try $0.data(as: T.self)
                     } catch {
+                        print("Couldn't decode document:", error)
                         return nil
                     }
                 }
