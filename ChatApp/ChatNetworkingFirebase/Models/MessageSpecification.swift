@@ -19,29 +19,22 @@ extension MessageSpecificationFirestore {
     // This method is asynchronous because of different than text messages
     // For example image messages require to upload the image binary first to get the image URL
     func toJSON(completion: ([String: Any]) -> Void) {
-        // My user id that is stored somewhere
-        let userId = "efeifjeife"
-        
         switch self {
         case .text(let message):
             completion([
-                Constants.Message.senderIdAttributeName: userId,
                 Constants.Message.messageTypeAttributeName: Constants.Message.messageTypeText,
                 Constants.Message.dataAttributeName: [
                     Constants.Message.dataAttributeNameText: message
                 ],
-                Constants.Message.sentAtAttributeName: Timestamp()
             ])
         case .image(_):
             // TODO: Upload image
             let imageUrl = "https://jefejiejejfejf"
             completion([
-                Constants.Message.senderIdAttributeName: userId,
                 Constants.Message.messageTypeAttributeName: Constants.Message.messageTypeImage,
                 Constants.Message.dataAttributeName: [
                     Constants.Message.dataAttributeNameImage: imageUrl
                 ],
-                Constants.Message.sentAtAttributeName: Timestamp()
             ])
         }
     }

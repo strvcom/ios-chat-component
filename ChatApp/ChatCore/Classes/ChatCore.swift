@@ -18,6 +18,13 @@ open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
     let networking: Networking
     let converter: Converter
 
+    public var currentUser: USR? {
+        get {
+            guard let currentUser = networking.currentUser else { return nil }
+            return converter.convert(user: currentUser)
+        }
+    }
+
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic

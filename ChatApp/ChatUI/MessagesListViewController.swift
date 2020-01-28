@@ -12,8 +12,8 @@ import MessageKit
 import InputBarAccessoryView
 
 public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController {
-//REMOVE
-    let sender = Sender(id: "any_unique_id", displayName: "Mireya")
+    // FIXME: sender can be set with the init 
+    var sender = Sender(id: "any_unique_id", displayName: "Mireya")
 
     let core: Core
     let conversation: Conversation
@@ -42,6 +42,10 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     private func setup() {
         view.backgroundColor = .white
+
+        if let user = core.currentUser {
+            self.sender = Sender(id: user.id, displayName: user.name)
+        }
 
         messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self

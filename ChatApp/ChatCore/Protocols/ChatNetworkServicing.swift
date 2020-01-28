@@ -19,6 +19,8 @@ public protocol ChatNetworkServicing {
 
     typealias U = C.User
 
+    var currentUser: U? { get } 
+
     init(config: Config)
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
