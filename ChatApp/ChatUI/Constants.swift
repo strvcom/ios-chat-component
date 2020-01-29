@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct Constants {
     static let imageMessageSize = (width: 200, height: 200)
+    static let photoPickerIconSize: CGFloat = 36
 }

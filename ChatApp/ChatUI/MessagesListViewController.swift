@@ -78,6 +78,7 @@ extension MessagesListViewController {
     }
 }
 
+// MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
         return sender
@@ -94,6 +95,7 @@ extension MessagesListViewController: MessagesDataSource {
 
 extension MessagesListViewController: MessagesLayoutDelegate { }
 
+// MARK: - MessagesDisplayDelegate
 extension MessagesListViewController: MessagesDisplayDelegate {
     
     public func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -102,17 +104,11 @@ extension MessagesListViewController: MessagesDisplayDelegate {
             return
         }
         
-        URLSession.shared.dataTask(with: imageUrl) { (data, response, error) in
-            guard error == nil, let data = data else {
-                return
-            }
-            DispatchQueue.main.async {
-                imageView.image = UIImage(data: data)
-            }
-        }.resume()
+        imageView.setImage(with: imageUrl)
     }
 }
 
+// MARK: - InputBarAccessoryViewDelegate
 extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
@@ -133,22 +129,30 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
     }
 }
 
+// MARK: - Setup
 private extension MessagesListViewController {
     func setupInputBar() {
         messageInputBar.delegate = self
         
         let item = InputBarButtonItem()
-            .onTouchUpInside { item in
-                let picker = UIImagePickerController()
-                picker.sourceType = .photoLibrary
-                picker.delegate = self
-                self.present(picker, animated: true)
+            .onTouchUpInside { [weak self] _ in
+                self?.displayImagePicker()
             }
         
-        item.setSize(CGSize(width: 36, height: 36), animated: false)
+        item.setSize(CGSize(
+            width: Constants.photoPickerIconSize,
+            height: Constants.photoPickerIconSize
+        ), animated: false)
         item.setImage(UIImage(systemName: "photo"), for: .normal)
         item.imageView?.contentMode = .scaleAspectFit
-        messageInputBar.setLeftStackViewWidthConstant(to: 36, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: Constants.photoPickerIconSize, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
+    }
+    
+    func displayImagePicker() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = self
+        present(picker, animated: true)
     }
 }

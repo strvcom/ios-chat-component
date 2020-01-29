@@ -117,18 +117,12 @@ public extension ChatNetworkFirebase {
             return
         }
 
-<<<<<<< HEAD
-        message.toJSON { [weak self] json in
-            guard let self = self else {
-                completion(.failure(.unexpectedState))
-=======
         message.toJSON { [weak self] result in
             guard let self = self, case let .success(json) = result else {
                 if case let .failure(error) = result {
                     completion(.failure(error))
                 }
                 
->>>>>>> Add ability to send image messages
                 return
             }
 
