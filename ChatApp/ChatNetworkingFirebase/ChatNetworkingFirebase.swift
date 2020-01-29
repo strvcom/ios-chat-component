@@ -14,6 +14,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     public struct Configuration {
         let configUrl: String
         let userId: String
+
         public init(configUrl: String, userId: String) {
             self.userId = userId
             self.configUrl = configUrl
@@ -22,14 +23,15 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     
     let database: Firestore
 
+    public private(set) var currentUser: UserFirestore?
+
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var initialized = false
     private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
     private var currentUserId: String?
-    public var currentUser: UserFirestore?
     private var users: [UserFirestore] = [] {
         didSet {
-            if let currentUserId =  currentUserId {
+            if let currentUserId = currentUserId {
                 currentUser = users.first{ $0.id == currentUserId }
             }
         }
@@ -39,6 +41,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
+
         currentUserId = config.userId
         FirebaseApp.configure(options: options)
         
@@ -109,9 +112,16 @@ public extension ChatNetworkFirebase {
 // MARK: Write data
 public extension ChatNetworkFirebase {
     func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-        guard let currentUserId = self.currentUser?.id else { return }
+        guard let currentUserId = self.currentUser?.id else {
+            completion(.failure(.internal(message: "User not found")))
+            return
+        }
+
         message.toJSON { [weak self] json in
-            guard let self = self else { return }
+            guard let self = self else {
+                completion(.failure(.unexpectedState))
+                return
+            }
 
             var newJSON: [String : Any] = json
             newJSON[Constants.Message.senderIdAttributeName] = currentUserId

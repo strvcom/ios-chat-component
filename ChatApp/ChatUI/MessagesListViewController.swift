@@ -12,18 +12,17 @@ import MessageKit
 import InputBarAccessoryView
 
 public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController {
-    // FIXME: sender can be set with the init 
-    var sender = Sender(id: "any_unique_id", displayName: "Mireya")
-
     let core: Core
     let conversation: Conversation
     fileprivate let dataSource = DataSource()
 
     private var listener: ChatListener?
+    private var sender: Sender
 
-    init(conversation: Conversation, core: Core) {
+    init(conversation: Conversation, core: Core, sender: Sender) {
         self.core = core
         self.conversation = conversation
+        self.sender = sender
 
         super.init(nibName: nil, bundle: nil)
 
@@ -42,10 +41,6 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     private func setup() {
         view.backgroundColor = .white
-
-        if let user = core.currentUser {
-            self.sender = Sender(id: user.id, displayName: user.name)
-        }
 
         messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self
