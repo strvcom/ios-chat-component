@@ -16,6 +16,9 @@ public protocol ChatCoreServicing {
     typealias C = Converter.CUI
     typealias M = Converter.MUI
     typealias MS = Converter.MSUI
+    typealias U = Converter.USRUI
+
+    var currentUser: U? { get }
 
     init(networking: Networking, converter: Converter)
 

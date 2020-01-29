@@ -8,6 +8,7 @@
 
 import UIKit
 import ChatCore
+import MessageKit
 
 public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewController {
     let core: Core
@@ -17,6 +18,9 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     private var tableView: UITableView!
     private var listener: ChatListener?
+
+    // FIXME: this is just a temporary solution
+    private var sender = Sender(id: "", displayName: "")
     
     init(core: Core) {
         self.core = core
@@ -38,14 +42,14 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     private func setup() {
         view.backgroundColor = .white
-        
+
         delegate = Delegate(didSelectBlock: { [weak self] row in
             guard let self = self else {
                 return
             }
             
             let conversation = self.dataSource.conversations[row]
-            let controller = MessagesListViewController(conversation: conversation, core: self.core)
+            let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
             self.navigationController?.pushViewController(controller, animated: true)
         })
         
@@ -68,6 +72,11 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             switch result {
             case .success(let conversations):
                 self.dataSource.conversations = conversations
+
+                if let user = self.core.currentUser {
+                    self.sender = Sender(id: user.id, displayName: user.name)
+                }
+
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)

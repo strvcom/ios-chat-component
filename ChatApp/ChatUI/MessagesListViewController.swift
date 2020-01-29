@@ -12,18 +12,17 @@ import MessageKit
 import InputBarAccessoryView
 
 public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController {
-//REMOVE
-    let sender = Sender(id: "any_unique_id", displayName: "Mireya")
-
     let core: Core
     let conversation: Conversation
     fileprivate let dataSource = DataSource()
 
     private var listener: ChatListener?
+    private let sender: Sender
 
-    init(conversation: Conversation, core: Core) {
+    init(conversation: Conversation, core: Core, sender: Sender) {
         self.core = core
         self.conversation = conversation
+        self.sender = sender
 
         super.init(nibName: nil, bundle: nil)
 

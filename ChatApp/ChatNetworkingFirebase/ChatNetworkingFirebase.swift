@@ -13,23 +13,36 @@ import Firebase
 public class ChatNetworkFirebase: ChatNetworkServicing {
     public struct Configuration {
         let configUrl: String
-        
-        public init(configUrl: String) {
+        let userId: String
+
+        public init(configUrl: String, userId: String) {
+            self.userId = userId
             self.configUrl = configUrl
         }
     }
     
     let database: Firestore
 
+    public private(set) var currentUser: UserFirestore?
+
     private var listeners: [ChatListener: ListenerRegistration] = [:]
-    private var users: [UserFirestore] = []
     private var initialized = false
     private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
+    private var currentUserId: String?
+    private var users: [UserFirestore] = [] {
+        didSet {
+            if let currentUserId = currentUserId {
+                currentUser = users.first{ $0.id == currentUserId }
+            }
+        }
+    }
 
     required public init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
+
+        currentUserId = config.userId
         FirebaseApp.configure(options: options)
         
         self.database = Firestore.firestore()
@@ -99,20 +112,29 @@ public extension ChatNetworkFirebase {
 // MARK: Write data
 public extension ChatNetworkFirebase {
     func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+        guard let currentUserId = self.currentUser?.id else {
+            completion(.failure(.internal(message: "User not found")))
+            return
+        }
 
         message.toJSON { [weak self] json in
             guard let self = self else {
+                completion(.failure(.unexpectedState))
                 return
             }
-            
+
+            var newJSON: [String : Any] = json
+            newJSON[Constants.Message.senderIdAttributeName] = currentUserId
+            newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
+
             let reference = self.database
                     .collection(Constants.conversationsPath)
                     .document(conversation)
                     .collection(Constants.messagesPath)
 
             let documentRef = reference.document()
-            
-            documentRef.setData(json) { error in
+
+            documentRef.setData(newJSON) { error in
                 if let error = error {
                     completion(.failure(.networking(error: error)))
                 } else {
