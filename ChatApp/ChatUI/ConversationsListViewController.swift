@@ -18,6 +18,8 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     private var tableView: UITableView!
     private var listener: ChatListener?
+
+    // FIXME: this is just a temporary solution
     private var sender = Sender(id: "", displayName: "")
     
     init(core: Core) {

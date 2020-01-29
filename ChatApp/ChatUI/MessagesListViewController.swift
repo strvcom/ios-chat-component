@@ -17,7 +17,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     fileprivate let dataSource = DataSource()
 
     private var listener: ChatListener?
-    private var sender: Sender
+    private let sender: Sender
 
     init(conversation: Conversation, core: Core, sender: Sender) {
         self.core = core
