@@ -25,8 +25,7 @@ extension MessageSpecificationFirestore {
                 Constants.Message.messageTypeAttributeName: Constants.Message.messageTypeText,
                 Constants.Message.dataAttributeName: [
                     Constants.Message.dataAttributeNameText: message
-                ],
-                Constants.Message.sentAtAttributeName: Timestamp()
+                ]
             ]
             completion(.success(data))
         case .image(let image):
@@ -37,8 +36,7 @@ extension MessageSpecificationFirestore {
                         Constants.Message.messageTypeAttributeName: Constants.Message.messageTypeImage,
                         Constants.Message.dataAttributeName: [
                             Constants.Message.dataAttributeNameImage: imageUrl
-                        ],
-                        Constants.Message.sentAtAttributeName: Timestamp()
+                        ]
                     ]
                     completion(.success(data))
                 case .failure(let error):

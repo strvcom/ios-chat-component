@@ -18,6 +18,8 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     private var listener: ChatListener?
     private let sender: Sender
+    
+    let photoPickerIconSize: CGFloat = 36
 
     init(conversation: Conversation, core: Core, sender: Sender) {
         self.core = core
@@ -140,12 +142,12 @@ private extension MessagesListViewController {
             }
         
         item.setSize(CGSize(
-            width: Constants.photoPickerIconSize,
-            height: Constants.photoPickerIconSize
+            width: photoPickerIconSize,
+            height: photoPickerIconSize
         ), animated: false)
         item.setImage(UIImage(systemName: "photo"), for: .normal)
         item.imageView?.contentMode = .scaleAspectFit
-        messageInputBar.setLeftStackViewWidthConstant(to: Constants.photoPickerIconSize, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
     }
     

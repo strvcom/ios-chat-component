@@ -9,18 +9,18 @@
 import UIKit
 
 extension UIImage {
-    public var optimized: UIImage {
+    public func optimized(maxWidth: CGFloat = 1000) -> UIImage {
         let width = size.width
         let height = size.height
-        let scale = width / FileConstants.maxWidth
+        let scale = width / maxWidth
         
-        guard width > FileConstants.maxWidth else {
+        guard width > maxWidth else {
             return self
         }
         
         let newSize = CGSize(
-            width: FileConstants.maxWidth,
-            height: CGFloat(ceil(FileConstants.maxWidth/width * height))
+            width: maxWidth,
+            height: CGFloat(ceil(maxWidth/width * height))
         )
 
         UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
@@ -28,8 +28,4 @@ extension UIImage {
         draw(in: CGRect(origin: .zero, size: newSize))
         return UIGraphicsGetImageFromCurrentImageContext() ?? self
     }
-}
-
-private struct FileConstants {
-    static let maxWidth: CGFloat = 1000
 }

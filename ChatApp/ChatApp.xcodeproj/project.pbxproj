@@ -14,7 +14,7 @@
 		047129FC23E08D6B00A3A7C1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047129FB23E08D6B00A3A7C1 /* Constants.swift */; };
 		04E97C4823E1DE7F001FA318 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4723E1DE7F001FA318 /* ImageUploader.swift */; };
 		04E97C4E23E1E729001FA318 /* UIImage+Resizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */; };
-		04E97C4F23E1E72D001FA318 /* UIImageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */; };
+		04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3B23C32020007F7754 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = AD6B5D3923C32020007F7754 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
@@ -215,8 +215,15 @@
 		04E97C4A23E1E608001FA318 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */,
 				04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04E97C5023E2ED9D001FA318 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -241,6 +248,7 @@
 		AD6B5D3823C32020007F7754 /* ChatUI */ = {
 			isa = PBXGroup;
 			children = (
+				04E97C5023E2ED9D001FA318 /* Extensions */,
 				D2E1053223CDE5640005E8C9 /* Protocols */,
 				D2E1052923CDE2660005E8C9 /* Models */,
 				AD6B5D9223C321EA007F7754 /* ConversationsListViewController.swift */,
@@ -260,7 +268,6 @@
 				AD6B5D6A23C32155007F7754 /* Classes */,
 				AD6B5D6B23C3215E007F7754 /* Models */,
 				AD6B5D6C23C32166007F7754 /* Protocols */,
-				04E97C4A23E1E608001FA318 /* Extensions */,
 				AD6B5D4B23C320CB007F7754 /* ChatCore.h */,
 				AD6B5D4C23C320CB007F7754 /* Info.plist */,
 			);
@@ -270,6 +277,7 @@
 		AD6B5D5B23C320E8007F7754 /* ChatNetworkingFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				04E97C4A23E1E608001FA318 /* Extensions */,
 				AD6B5D8623C321B3007F7754 /* Models */,
 				AD6B5D8323C321B3007F7754 /* Constants.swift */,
 				AD6B5D8423C321B3007F7754 /* ChatNetworkingFirebase.swift */,
@@ -692,6 +700,7 @@
 				D2E1053423CDE57B0005E8C9 /* ChatUIModelConverting.swift in Sources */,
 				D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */,
 				D2E1053123CDE30B0005E8C9 /* MessageSpecification.swift in Sources */,
+				04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */,
 				AD6B5D9723C321EA007F7754 /* ListCell.swift in Sources */,
 				047129FA23E08C8B00A3A7C1 /* ImageItem.swift in Sources */,
 				D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */,
@@ -717,7 +726,6 @@
 				AD6B5D7C23C3218C007F7754 /* ChatUIServicing.swift in Sources */,
 				AD6B5D7123C3217C007F7754 /* Listener.swift in Sources */,
 				AD6B5D6923C3214E007F7754 /* ChatCore.swift in Sources */,
-				04E97C4F23E1E72D001FA318 /* UIImageView+Network.swift in Sources */,
 				AD6B5D7F23C3218C007F7754 /* ChatNetworkServicing.swift in Sources */,
 				AD6B5D7E23C3218C007F7754 /* MessageRepresenting.swift in Sources */,
 				AD6B5D8123C3218C007F7754 /* ConversationRepresenting.swift in Sources */,

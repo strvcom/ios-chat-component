@@ -14,9 +14,9 @@ struct ImageUploader {
     func upload(image: UIImage, completion: @escaping (Result<String, ChatError>) -> Void) {
         let storage = Storage.storage()
         let ref = storage.reference().child(UUID().uuidString)
-        let optimized = image.optimized
+        let optimized = image.optimized()
         
-        guard let data = optimized.pngData() ?? optimized.jpegData(compressionQuality: 1.0)  else {
+        guard let data = optimized.pngData() ?? optimized.jpegData(compressionQuality: 1.0) else {
             completion(.failure(.internal(message: "No image data")))
             return
         }
