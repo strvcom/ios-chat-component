@@ -9,20 +9,33 @@
 import UIKit
 
 extension UIImage {
-    public func optimized(maxWidth: CGFloat = 1000) -> UIImage {
+    public func optimized(maxSize: CGFloat = 1000) -> UIImage {
         let width = size.width
         let height = size.height
-        let scale = width / maxWidth
+        let scale = width / maxSize
+        let isPortrait = width < height
+        var newSize: CGSize
         
-        guard width > maxWidth else {
-            return self
+        if isPortrait {
+            if height <= maxSize {
+                return self
+            }
+            
+            newSize = CGSize(
+                width: CGFloat(ceil(maxSize/height * width)),
+                height: maxSize
+            )
+        } else {
+            if width <= maxSize {
+                return self
+            }
+            
+            newSize = CGSize(
+                width: maxSize,
+                height: CGFloat(ceil(maxSize/width * height))
+            )
         }
         
-        let newSize = CGSize(
-            width: maxWidth,
-            height: CGFloat(ceil(maxWidth/width * height))
-        )
-
         UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
         defer { UIGraphicsEndImageContext() }
         draw(in: CGRect(origin: .zero, size: newSize))
