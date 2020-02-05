@@ -12,5 +12,4 @@ import ChatCore
 public protocol ChatUICoreServicing: ChatCoreServicing where C == Conversation, M == MessageKitType,
                 MS == MessageSpecification, U == User { }
 
-extension ChatCore: ChatUICoreServicing where Models.CUI == Conversation, Models.MSUI == MessageSpecification,
-          Models.MUI == MessageKitType, Models.USRUI == User { }
+extension ChatCore: ChatUICoreServicing where Models.CUI == Conversation, Models.MSUI == MessageSpecification, Models.MUI == MessageKitType, Models.USRUI == User { }

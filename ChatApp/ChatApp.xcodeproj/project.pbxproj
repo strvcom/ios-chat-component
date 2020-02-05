@@ -58,6 +58,7 @@
 		D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830623EB143D00B83A78 /* MessageConvertible.swift */; };
 		D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */; };
 		D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */; };
+		D2D3830F23EB1D2000B83A78 /* MessageSpecificationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830E23EB1D2000B83A78 /* MessageSpecificationConvertible.swift */; };
 		D2E1052823CDE0D80005E8C9 /* ChatUIConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */; };
 		D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052A23CDE2770005E8C9 /* Conversation.swift */; };
 		D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052C23CDE2BB0005E8C9 /* User.swift */; };
@@ -170,6 +171,7 @@
 		D2D3830623EB143D00B83A78 /* MessageConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
 		D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationConvertible.swift; sourceTree = "<group>"; };
 		D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConvertible.swift; sourceTree = "<group>"; };
+		D2D3830E23EB1D2000B83A78 /* MessageSpecificationConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpecificationConvertible.swift; sourceTree = "<group>"; };
 		D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIConvertible.swift; sourceTree = "<group>"; };
 		D2E1052A23CDE2770005E8C9 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		D2E1052C23CDE2BB0005E8C9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 				D2D3830623EB143D00B83A78 /* MessageConvertible.swift */,
 				D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */,
 				D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */,
+				D2D3830E23EB1D2000B83A78 /* MessageSpecificationConvertible.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				AD6B5D6723C3211D007F7754 /* STRVChat.swift in Sources */,
 				ADB40CC623C200A5003DC146 /* AppDelegate.swift in Sources */,
 				ADB40CC823C200A5003DC146 /* SceneDelegate.swift in Sources */,
+				D2D3830F23EB1D2000B83A78 /* MessageSpecificationConvertible.swift in Sources */,
 				D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */,
 				D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */,
 				D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */,

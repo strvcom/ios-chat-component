@@ -16,20 +16,5 @@ extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, Ne
     public var networkingModel: NetworkingModel {
         return NetworkingModel(uiModel: self)
     }
-
+    
 }
-
-// MessageSpecification
-extension MessageSpecification {
-    public func convert() -> MessageSpecificationFirestore {
-        switch self {
-        case .image(let image):
-            return MessageSpecificationFirestore.image(image: image)
-        case .text(let message):
-            return MessageSpecificationFirestore.text(message: message)
-        }
-    }
-}
-
-
-

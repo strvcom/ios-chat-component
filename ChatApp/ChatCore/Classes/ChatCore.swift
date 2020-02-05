@@ -9,9 +9,10 @@
 import Foundation
 
 open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing
-           where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.U: ChatUIConvertible,
-           Networking.C.User.ChatUIModel == Models.USRUI, Networking.C.ChatUIModel == Models.CUI,
-           Networking.C.Message.ChatUIModel == Models.MUI {
+           where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.MS: ChatUIConvertible,
+            Networking.U: ChatUIConvertible, Networking.C.User.ChatUIModel == Models.USRUI,
+            Networking.C.ChatUIModel == Models.CUI, Networking.C.Message.ChatUIModel == Models.MUI,
+            Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -45,17 +46,15 @@ extension ChatCore {
                    completion: @escaping (Result<Models.MUI, ChatError>) -> Void) {
 
         // FIXME: Solve without explicit type casting
-//        let mess = message.convert()
-//        networking.send(message: mess, to: conversation) { [weak self] result in
-//            switch result {
-//            case .success(let message):
-//                if let converted = self?.converter.convert(message: message) {
-//                    completion(.success(converted))
-//                }
-//            case .failure(let error):
-//                completion(.failure(error))
-//            }
-//        }
+        let mess = Networking.MS(uiModel: message)
+        networking.send(message: mess, to: conversation) { result in
+            switch result {
+            case .success(let message):
+                completion(.success( message.uiModel))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }
 
