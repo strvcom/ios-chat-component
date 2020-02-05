@@ -40,11 +40,19 @@ public struct MessageKitType: MessageType, MessageRepresenting {
         sender = Sender(id: userId, displayName: "")
         messageId = id
         self.sentDate = sentAt
+        
         switch content {
-            case .text(let message):
-                self.kind = .text(message)
-            default:
-                self.kind = .text("")
+        case .text(let message):
+            self.kind = .text(message)
+        case .image(let imageUrl):
+            let imageItem = ImageItem(
+                url: URL(string: imageUrl),
+                image: nil,
+                placeholderImage: UIImage(),
+                size: CGSize(width: Constants.imageMessageSize.width,
+                             height: Constants.imageMessageSize.height)
+            )
+            self.kind = .photo(imageItem)
         }
         
         self.sentAt = Date()

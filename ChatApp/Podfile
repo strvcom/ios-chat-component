@@ -7,6 +7,7 @@ inhibit_all_warnings!
 
 def networking_pods
   pod 'Firebase/Firestore'
+  pod 'Firebase/Storage'
   pod 'FirebaseFirestoreSwift'
 end
 

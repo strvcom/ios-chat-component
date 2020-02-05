@@ -10,6 +10,11 @@
 		008B43311772BA388EBE9E00 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */; };
 		04232D9023D4BAB200869F89 /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04232D8E23D4BA6300869F89 /* SeenItem.swift */; };
 		047129F823D7251200A3A7C1 /* MesageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04232D9123D5EBA400869F89 /* MesageContent.swift */; };
+		047129FA23E08C8B00A3A7C1 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047129F923E08C8B00A3A7C1 /* ImageItem.swift */; };
+		047129FC23E08D6B00A3A7C1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047129FB23E08D6B00A3A7C1 /* Constants.swift */; };
+		04E97C4823E1DE7F001FA318 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4723E1DE7F001FA318 /* ImageUploader.swift */; };
+		04E97C4E23E1E729001FA318 /* UIImage+Resizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */; };
+		04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3B23C32020007F7754 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = AD6B5D3923C32020007F7754 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
@@ -105,6 +110,11 @@
 /* Begin PBXFileReference section */
 		04232D8E23D4BA6300869F89 /* SeenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeenItem.swift; sourceTree = "<group>"; };
 		04232D9123D5EBA400869F89 /* MesageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MesageContent.swift; sourceTree = "<group>"; };
+		047129F923E08C8B00A3A7C1 /* ImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
+		047129FB23E08D6B00A3A7C1 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Network.swift"; sourceTree = "<group>"; };
+		04E97C4723E1DE7F001FA318 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
+		04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resizing.swift"; sourceTree = "<group>"; };
 		21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B07E7DEF347F0A170FAA619 /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519033A4B72B0D6C9BFFD754 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -208,6 +218,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04E97C4A23E1E608001FA318 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04E97C5023E2ED9D001FA318 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		126750A5C60AA2BAA7CD74AA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +254,7 @@
 		AD6B5D3823C32020007F7754 /* ChatUI */ = {
 			isa = PBXGroup;
 			children = (
+				04E97C5023E2ED9D001FA318 /* Extensions */,
 				D2E1053223CDE5640005E8C9 /* Protocols */,
 				D2E1052923CDE2660005E8C9 /* Models */,
 				AD6B5D9223C321EA007F7754 /* ConversationsListViewController.swift */,
@@ -236,6 +263,7 @@
 				AD6B5D9523C321EA007F7754 /* ChatUI.swift */,
 				AD6B5D3923C32020007F7754 /* ChatUI.h */,
 				AD6B5D3A23C32020007F7754 /* Info.plist */,
+				047129FB23E08D6B00A3A7C1 /* Constants.swift */,
 			);
 			path = ChatUI;
 			sourceTree = "<group>";
@@ -255,10 +283,12 @@
 		AD6B5D5B23C320E8007F7754 /* ChatNetworkingFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				04E97C4A23E1E608001FA318 /* Extensions */,
 				AD6B5D8623C321B3007F7754 /* Models */,
 				AD6B5D8323C321B3007F7754 /* Constants.swift */,
 				AD6B5D8423C321B3007F7754 /* ChatNetworkingFirebase.swift */,
 				AD6B5D5C23C320E8007F7754 /* ChatNetworkingFirebase.h */,
+				04E97C4723E1DE7F001FA318 /* ImageUploader.swift */,
 				AD6B5D5D23C320E8007F7754 /* Info.plist */,
 			);
 			path = ChatNetworkingFirebase;
@@ -378,6 +408,7 @@
 				D2E1052C23CDE2BB0005E8C9 /* User.swift */,
 				D2E1053023CDE30B0005E8C9 /* MessageSpecification.swift */,
 				D2E1053723CDF0820005E8C9 /* MessageKitType.swift */,
+				047129F923E08C8B00A3A7C1 /* ImageItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -677,12 +708,15 @@
 				AD6B5D9623C321EA007F7754 /* ConversationsListViewController.swift in Sources */,
 				D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */,
 				D2E1053123CDE30B0005E8C9 /* MessageSpecification.swift in Sources */,
+				04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */,
 				AD6B5D9723C321EA007F7754 /* ListCell.swift in Sources */,
 				D2D3830523EB138700B83A78 /* ChatModelsUI.swift in Sources */,
+				047129FA23E08C8B00A3A7C1 /* ImageItem.swift in Sources */,
 				D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */,
 				D2E1053623CDE8DD0005E8C9 /* ChatUICoreServicing.swift in Sources */,
 				D2E1053823CDF0820005E8C9 /* MessageKitType.swift in Sources */,
 				AD6B5D9823C321EA007F7754 /* MessagesListViewController.swift in Sources */,
+				047129FC23E08D6B00A3A7C1 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -695,6 +729,7 @@
 				AD6B5D7D23C3218C007F7754 /* ChatCoreServicing.swift in Sources */,
 				AD6B5D7223C3217C007F7754 /* Error.swift in Sources */,
 				D2E1052823CDE0D80005E8C9 /* ChatUIConvertible.swift in Sources */,
+				04E97C4E23E1E729001FA318 /* UIImage+Resizing.swift in Sources */,
 				AD6B5D8023C3218C007F7754 /* Identifiable.swift in Sources */,
 				AD6B5D7023C3217C007F7754 /* Identifier.swift in Sources */,
 				AD6B5D7C23C3218C007F7754 /* ChatUIServicing.swift in Sources */,
@@ -715,6 +750,7 @@
 				AD6B5D9023C321B3007F7754 /* Message.swift in Sources */,
 				047129F823D7251200A3A7C1 /* MesageContent.swift in Sources */,
 				AD6B5D8C23C321B3007F7754 /* ChatNetworkingFirebase.swift in Sources */,
+				04E97C4823E1DE7F001FA318 /* ImageUploader.swift in Sources */,
 				AD6B5D8B23C321B3007F7754 /* Constants.swift in Sources */,
 				04232D9023D4BAB200869F89 /* SeenItem.swift in Sources */,
 				AD6B5D9123C321B3007F7754 /* User.swift in Sources */,

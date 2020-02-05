@@ -11,13 +11,15 @@ import ChatCore
 import MessageKit
 import InputBarAccessoryView
 
-public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController {
+public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let core: Core
     let conversation: Conversation
     fileprivate let dataSource = DataSource()
 
     private var listener: ChatListener?
     private let sender: Sender
+    
+    let photoPickerIconSize: CGFloat = 36
 
     init(conversation: Conversation, core: Core, sender: Sender) {
         self.core = core
@@ -42,7 +44,8 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     private func setup() {
         view.backgroundColor = .white
 
-        messageInputBar.delegate = self
+        setupInputBar()
+        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -58,6 +61,18 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
             }
         }
     }
+    
+    // MARK: - UIImagePickerControllerDelegate
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        guard let image = info[.originalImage] as? UIImage else {
+            return
+        }
+        
+        picker.dismiss(animated: true)
+        
+        self.core.send(message: .image(image: image), to: self.conversation.id) { _ in }
+    }
 }
 
 extension MessagesListViewController {
@@ -66,6 +81,7 @@ extension MessagesListViewController {
     }
 }
 
+// MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
         return sender
@@ -82,8 +98,20 @@ extension MessagesListViewController: MessagesDataSource {
 
 extension MessagesListViewController: MessagesLayoutDelegate { }
 
-extension MessagesListViewController: MessagesDisplayDelegate { }
+// MARK: - MessagesDisplayDelegate
+extension MessagesListViewController: MessagesDisplayDelegate {
+    
+    public func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        
+        guard case let .photo(media) = message.kind, let imageUrl = media.url else {
+            return
+        }
+        
+        imageView.setImage(with: imageUrl)
+    }
+}
 
+// MARK: - InputBarAccessoryViewDelegate
 extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
@@ -101,5 +129,33 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
             self.messageInputBar.sendButton.isEnabled = true
             self.messageInputBar.sendButton.alpha = 1.0
         }
+    }
+}
+
+// MARK: - Setup
+private extension MessagesListViewController {
+    func setupInputBar() {
+        messageInputBar.delegate = self
+        
+        let item = InputBarButtonItem()
+            .onTouchUpInside { [weak self] _ in
+                self?.displayImagePicker()
+            }
+        
+        item.setSize(CGSize(
+            width: photoPickerIconSize,
+            height: photoPickerIconSize
+        ), animated: false)
+        item.setImage(UIImage(systemName: "photo"), for: .normal)
+        item.imageView?.contentMode = .scaleAspectFit
+        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
+        messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
+    }
+    
+    func displayImagePicker() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = self
+        present(picker, animated: true)
     }
 }
