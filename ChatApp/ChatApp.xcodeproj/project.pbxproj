@@ -48,12 +48,15 @@
 		ADB40CCF23C200A5003DC146 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADB40CCE23C200A5003DC146 /* Assets.xcassets */; };
 		ADB40CD223C200A5003DC146 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */; };
 		C22643B1217792E08F78E96D /* Pods_ChatNetworkFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19D838C22065B29953D3CA6 /* Pods_ChatNetworkFirebase.framework */; };
-		D2D0716723D0A8070039023D /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D0716623D0A8070039023D /* FirebaseConverter.swift */; };
-		D2E1052823CDE0D80005E8C9 /* ChatModelConverting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052723CDE0D80005E8C9 /* ChatModelConverting.swift */; };
+		D2D0716723D0A8070039023D /* ChatNetworkingConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */; };
+		D2D3830523EB138700B83A78 /* ChatModelsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830423EB138700B83A78 /* ChatModelsUI.swift */; };
+		D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830623EB143D00B83A78 /* MessageConvertible.swift */; };
+		D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */; };
+		D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */; };
+		D2E1052823CDE0D80005E8C9 /* ChatUIConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */; };
 		D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052A23CDE2770005E8C9 /* Conversation.swift */; };
 		D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1052C23CDE2BB0005E8C9 /* User.swift */; };
 		D2E1053123CDE30B0005E8C9 /* MessageSpecification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1053023CDE30B0005E8C9 /* MessageSpecification.swift */; };
-		D2E1053423CDE57B0005E8C9 /* ChatUIModelConverting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1053323CDE57B0005E8C9 /* ChatUIModelConverting.swift */; };
 		D2E1053623CDE8DD0005E8C9 /* ChatUICoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1053523CDE8DD0005E8C9 /* ChatUICoreServicing.swift */; };
 		D2E1053823CDF0820005E8C9 /* MessageKitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E1053723CDF0820005E8C9 /* MessageKitType.swift */; };
 		FC3A38BBD06B189504D29EAC /* Pods_ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B07E7DEF347F0A170FAA619 /* Pods_ChatUI.framework */; };
@@ -152,12 +155,15 @@
 		AFCFA7591F48897B4C2C9AD6 /* Pods-ChatNetworkingFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirebase.release.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirebase/Pods-ChatNetworkingFirebase.release.xcconfig"; sourceTree = "<group>"; };
 		BC0D6E198C94DA0B73F40A1D /* Pods-STRVChatNetworkingFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STRVChatNetworkingFirebase.release.xcconfig"; path = "Target Support Files/Pods-STRVChatNetworkingFirebase/Pods-STRVChatNetworkingFirebase.release.xcconfig"; sourceTree = "<group>"; };
 		D2044EDEE5E3DE14899DA758 /* Pods-ChatNetworkingFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirebase.debug.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirebase/Pods-ChatNetworkingFirebase.debug.xcconfig"; sourceTree = "<group>"; };
-		D2D0716623D0A8070039023D /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
-		D2E1052723CDE0D80005E8C9 /* ChatModelConverting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelConverting.swift; sourceTree = "<group>"; };
+		D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkingConvertible.swift; sourceTree = "<group>"; };
+		D2D3830423EB138700B83A78 /* ChatModelsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelsUI.swift; sourceTree = "<group>"; };
+		D2D3830623EB143D00B83A78 /* MessageConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
+		D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationConvertible.swift; sourceTree = "<group>"; };
+		D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConvertible.swift; sourceTree = "<group>"; };
+		D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIConvertible.swift; sourceTree = "<group>"; };
 		D2E1052A23CDE2770005E8C9 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		D2E1052C23CDE2BB0005E8C9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D2E1053023CDE30B0005E8C9 /* MessageSpecification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpecification.swift; sourceTree = "<group>"; };
-		D2E1053323CDE57B0005E8C9 /* ChatUIModelConverting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIModelConverting.swift; sourceTree = "<group>"; };
 		D2E1053523CDE8DD0005E8C9 /* ChatUICoreServicing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUICoreServicing.swift; sourceTree = "<group>"; };
 		D2E1053723CDF0820005E8C9 /* MessageKitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageKitType.swift; sourceTree = "<group>"; };
 		E19D838C22065B29953D3CA6 /* Pods_ChatNetworkFirebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatNetworkFirebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,7 +293,7 @@
 				AD6B5D7423C3218C007F7754 /* ChatUIServicing.swift */,
 				AD6B5D7723C3218C007F7754 /* ChatNetworkServicing.swift */,
 				AD6B5D7A23C3218C007F7754 /* UserRepresenting.swift */,
-				D2E1052723CDE0D80005E8C9 /* ChatModelConverting.swift */,
+				D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -357,7 +363,10 @@
 		D2D0716523D0A7F30039023D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				D2D0716623D0A8070039023D /* FirebaseConverter.swift */,
+				D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */,
+				D2D3830623EB143D00B83A78 /* MessageConvertible.swift */,
+				D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */,
+				D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -376,8 +385,8 @@
 		D2E1053223CDE5640005E8C9 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				D2E1053323CDE57B0005E8C9 /* ChatUIModelConverting.swift */,
 				D2E1053523CDE8DD0005E8C9 /* ChatUICoreServicing.swift */,
+				D2D3830423EB138700B83A78 /* ChatModelsUI.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -666,10 +675,10 @@
 			files = (
 				AD6B5D9923C321EA007F7754 /* ChatUI.swift in Sources */,
 				AD6B5D9623C321EA007F7754 /* ConversationsListViewController.swift in Sources */,
-				D2E1053423CDE57B0005E8C9 /* ChatUIModelConverting.swift in Sources */,
 				D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */,
 				D2E1053123CDE30B0005E8C9 /* MessageSpecification.swift in Sources */,
 				AD6B5D9723C321EA007F7754 /* ListCell.swift in Sources */,
+				D2D3830523EB138700B83A78 /* ChatModelsUI.swift in Sources */,
 				D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */,
 				D2E1053623CDE8DD0005E8C9 /* ChatUICoreServicing.swift in Sources */,
 				D2E1053823CDF0820005E8C9 /* MessageKitType.swift in Sources */,
@@ -685,7 +694,7 @@
 				AD6B5D7B23C3218C007F7754 /* MessageSpecifying.swift in Sources */,
 				AD6B5D7D23C3218C007F7754 /* ChatCoreServicing.swift in Sources */,
 				AD6B5D7223C3217C007F7754 /* Error.swift in Sources */,
-				D2E1052823CDE0D80005E8C9 /* ChatModelConverting.swift in Sources */,
+				D2E1052823CDE0D80005E8C9 /* ChatUIConvertible.swift in Sources */,
 				AD6B5D8023C3218C007F7754 /* Identifiable.swift in Sources */,
 				AD6B5D7023C3217C007F7754 /* Identifier.swift in Sources */,
 				AD6B5D7C23C3218C007F7754 /* ChatUIServicing.swift in Sources */,
@@ -719,7 +728,10 @@
 				AD6B5D6723C3211D007F7754 /* STRVChat.swift in Sources */,
 				ADB40CC623C200A5003DC146 /* AppDelegate.swift in Sources */,
 				ADB40CC823C200A5003DC146 /* SceneDelegate.swift in Sources */,
-				D2D0716723D0A8070039023D /* FirebaseConverter.swift in Sources */,
+				D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */,
+				D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */,
+				D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */,
+				D2D0716723D0A8070039023D /* ChatNetworkingConvertible.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

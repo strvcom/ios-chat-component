@@ -18,13 +18,22 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public let lastMessage: MessageFirestore?
     let memberIds: [ChatIdentifier]
     public var members: [UserFirestore] = []
-    public let messages: [MessageFirestore] = []
+    public var messages: [MessageFirestore] = []
     public let seen: Seen
 
     private enum CodingKeys: CodingKey {
         case id, lastMessage, messages, members, seenAt
     }
-    
+
+    public init(id: ChatIdentifier, lastMessage: MessageFirestore?, members: [UserFirestore], messages: [MessageFirestore], seen: Seen, memberIds: [ChatIdentifier]) {
+        self.id = id
+        self.lastMessage = lastMessage
+        self.members = members
+        self.messages = messages
+        self.seen = seen
+        self.memberIds = memberIds
+    }
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         

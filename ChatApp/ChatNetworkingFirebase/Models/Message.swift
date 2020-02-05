@@ -24,7 +24,14 @@ public struct MessageFirestore: MessageRepresenting, Decodable {
         case content = "data"
         case sentAt
     }
-    
+
+    public init(id: ChatIdentifier, userId: ChatIdentifier, sentAt: Date, content: MessageFirebaseContent) {
+        self.id = id
+        self.userId = userId
+        self.sentAt = sentAt
+        self.content = content
+    }
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         

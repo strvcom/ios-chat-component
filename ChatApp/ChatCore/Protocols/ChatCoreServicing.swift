@@ -8,19 +8,26 @@
 
 import Foundation
 
+public protocol ChatUIModels {
+    associatedtype CUI: ConversationRepresenting
+    associatedtype MUI: MessageRepresenting
+    associatedtype MSUI: MessageSpecifying
+    associatedtype USRUI: UserRepresenting
+}
+
 public protocol ChatCoreServicing {
     // Networking manager
-    associatedtype Converter: ChatModelConverting
+    associatedtype Networking: ChatNetworkServicing
+    associatedtype UIModels: ChatUIModels
 
-    typealias Networking = Converter.Networking
-    typealias C = Converter.CUI
-    typealias M = Converter.MUI
-    typealias MS = Converter.MSUI
-    typealias U = Converter.USRUI
+    typealias C = UIModels.CUI
+    typealias M = UIModels.MUI
+    typealias MS = UIModels.MSUI
+    typealias U = UIModels.USRUI
 
     var currentUser: U? { get }
 
-    init(networking: Networking, converter: Converter)
+    init(networking: Networking)
 
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 

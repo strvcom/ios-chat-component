@@ -12,11 +12,10 @@ public protocol ChatNetworkServicing {
     associatedtype Config
     // Specific conversation type
     associatedtype C: ConversationRepresenting
-    // Specific message type
-    associatedtype M: MessageRepresenting
-    // Message description used for sending a message
+   // Message description used for sending a message
     associatedtype MS: MessageSpecifying
 
+    typealias M = C.Message
     typealias U = C.User
 
     var currentUser: U? { get } 
