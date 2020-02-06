@@ -32,6 +32,17 @@ extension MessageFirestore: ChatUIConvertible {
     }
 
     public init(uiModel: MessageKitType) {
-        self.init(id: uiModel.id, userId: uiModel.userId, sentAt: uiModel.sentDate, content:  .text(message: ""))
+        var content: MessageFirebaseContent
+
+        switch uiModel.kind {
+        case .text(let text):
+            content = .text(message: text)
+        case .photo(let mediaItem):
+            content = .image(imageUrl: mediaItem.url?.absoluteString ?? "")
+        default:
+            content = .text(message: "")
+        }
+
+        self.init(id: uiModel.id, userId: uiModel.userId, sentAt: uiModel.sentDate, content: content)
     }
 }

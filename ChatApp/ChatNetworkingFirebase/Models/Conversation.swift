@@ -17,7 +17,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public let id: ChatIdentifier
     public let lastMessage: MessageFirestore?
     let memberIds: [ChatIdentifier]
-    public var members: [UserFirestore] = []
+    public private(set) var members: [UserFirestore] = []
     public private(set) var messages: [MessageFirestore] = []
     public let seen: Seen
 
@@ -49,5 +49,8 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
             result[key] = (messageId: value.messageId, seenAt: value.timestamp)
         }) ?? [:]
     }
-}
 
+    public mutating func setMembers(_ members: [UserFirestore]) {
+        self.members = members
+    }
+}
