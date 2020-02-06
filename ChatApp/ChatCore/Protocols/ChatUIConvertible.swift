@@ -16,12 +16,3 @@ public protocol ChatUIConvertible {
 
     init(uiModel: ChatUIModel)
 }
-
-public protocol ChatNetworkingConvertible {
-
-    associatedtype NetworkingModel
-
-    var networkingModel: NetworkingModel { get }
-}
-
-

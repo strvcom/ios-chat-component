@@ -18,7 +18,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public let lastMessage: MessageFirestore?
     let memberIds: [ChatIdentifier]
     public var members: [UserFirestore] = []
-    public var messages: [MessageFirestore] = []
+    public private(set) var messages: [MessageFirestore] = []
     public let seen: Seen
 
     private enum CodingKeys: CodingKey {

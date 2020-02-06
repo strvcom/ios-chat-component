@@ -8,6 +8,13 @@
 
 import Foundation
 
+public protocol ChatNetworkingConvertible {
+
+    associatedtype NetworkingModel
+
+    var networkingModel: NetworkingModel { get }
+}
+
 extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.ChatUIModel == Self {
 
     public var networkingModel: NetworkingModel {
