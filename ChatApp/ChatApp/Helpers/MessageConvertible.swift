@@ -19,7 +19,7 @@ extension MessageKitType: ChatNetworkingConvertible {
 extension MessageFirestore: ChatUIConvertible {
 
     public var uiModel: MessageKitType {
-        var content = MessageContent.text(message: "")
+        var content: MessageContent
 
         switch self.content {
         case .image(let imageUrl):

@@ -42,8 +42,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: Models.MSUI, to conversation: ChatIdentifier,
-                   completion: @escaping (Result<Models.MUI, ChatError>) -> Void) {
+    open func send(message: MS, to conversation: ChatIdentifier,
+                   completion: @escaping (Result<M, ChatError>) -> Void) {
 
         // FIXME: Solve without explicit type casting
         let mess = Networking.MS(uiModel: message)
@@ -84,7 +84,7 @@ extension ChatCore {
     }
 
     open func listenToConversation(with id: ChatIdentifier,
-                                   completion: @escaping (Result<[Models.MUI], ChatError>) -> Void) -> ChatListener {
+                                   completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
         let listener = networking.listenToConversation(with: id) { result in

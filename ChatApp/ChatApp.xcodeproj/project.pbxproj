@@ -53,8 +53,9 @@
 		ADB40CCF23C200A5003DC146 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADB40CCE23C200A5003DC146 /* Assets.xcassets */; };
 		ADB40CD223C200A5003DC146 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */; };
 		C22643B1217792E08F78E96D /* Pods_ChatNetworkFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19D838C22065B29953D3CA6 /* Pods_ChatNetworkFirebase.framework */; };
-		D2D0716723D0A8070039023D /* ChatNetworkingConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */; };
-		D2D3830523EB138700B83A78 /* ChatModelsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830423EB138700B83A78 /* ChatModelsUI.swift */; };
+		D2705E5123EC1DDB0086691F /* ChatUIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2705E5023EC1DDB0086691F /* ChatUIModels.swift */; };
+		D2705E5323EC20DB0086691F /* ChatModelsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830423EB138700B83A78 /* ChatModelsUI.swift */; };
+		D2705E5523EC21070086691F /* ChatNetworkingConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2705E5423EC21070086691F /* ChatNetworkingConvertible.swift */; };
 		D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830623EB143D00B83A78 /* MessageConvertible.swift */; };
 		D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */; };
 		D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */; };
@@ -166,7 +167,8 @@
 		AFCFA7591F48897B4C2C9AD6 /* Pods-ChatNetworkingFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirebase.release.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirebase/Pods-ChatNetworkingFirebase.release.xcconfig"; sourceTree = "<group>"; };
 		BC0D6E198C94DA0B73F40A1D /* Pods-STRVChatNetworkingFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STRVChatNetworkingFirebase.release.xcconfig"; path = "Target Support Files/Pods-STRVChatNetworkingFirebase/Pods-STRVChatNetworkingFirebase.release.xcconfig"; sourceTree = "<group>"; };
 		D2044EDEE5E3DE14899DA758 /* Pods-ChatNetworkingFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirebase.debug.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirebase/Pods-ChatNetworkingFirebase.debug.xcconfig"; sourceTree = "<group>"; };
-		D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkingConvertible.swift; sourceTree = "<group>"; };
+		D2705E5023EC1DDB0086691F /* ChatUIModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIModels.swift; sourceTree = "<group>"; };
+		D2705E5423EC21070086691F /* ChatNetworkingConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkingConvertible.swift; sourceTree = "<group>"; };
 		D2D3830423EB138700B83A78 /* ChatModelsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelsUI.swift; sourceTree = "<group>"; };
 		D2D3830623EB143D00B83A78 /* MessageConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
 		D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationConvertible.swift; sourceTree = "<group>"; };
@@ -326,6 +328,8 @@
 				AD6B5D7723C3218C007F7754 /* ChatNetworkServicing.swift */,
 				AD6B5D7A23C3218C007F7754 /* UserRepresenting.swift */,
 				D2E1052723CDE0D80005E8C9 /* ChatUIConvertible.swift */,
+				D2705E5023EC1DDB0086691F /* ChatUIModels.swift */,
+				D2705E5423EC21070086691F /* ChatNetworkingConvertible.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -395,7 +399,6 @@
 		D2D0716523D0A7F30039023D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				D2D0716623D0A8070039023D /* ChatNetworkingConvertible.swift */,
 				D2D3830623EB143D00B83A78 /* MessageConvertible.swift */,
 				D2D3830823EB14A200B83A78 /* ConversationConvertible.swift */,
 				D2D3830A23EB14CF00B83A78 /* UserConvertible.swift */,
@@ -710,10 +713,10 @@
 				AD6B5D9923C321EA007F7754 /* ChatUI.swift in Sources */,
 				AD6B5D9623C321EA007F7754 /* ConversationsListViewController.swift in Sources */,
 				D2E1052D23CDE2BB0005E8C9 /* User.swift in Sources */,
+				D2705E5323EC20DB0086691F /* ChatModelsUI.swift in Sources */,
 				D2E1053123CDE30B0005E8C9 /* MessageSpecification.swift in Sources */,
 				04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */,
 				AD6B5D9723C321EA007F7754 /* ListCell.swift in Sources */,
-				D2D3830523EB138700B83A78 /* ChatModelsUI.swift in Sources */,
 				047129FA23E08C8B00A3A7C1 /* ImageItem.swift in Sources */,
 				D2E1052B23CDE2770005E8C9 /* Conversation.swift in Sources */,
 				D2E1053623CDE8DD0005E8C9 /* ChatUICoreServicing.swift in Sources */,
@@ -734,6 +737,7 @@
 				D2E1052823CDE0D80005E8C9 /* ChatUIConvertible.swift in Sources */,
 				04E97C4E23E1E729001FA318 /* UIImage+Resizing.swift in Sources */,
 				AD6B5D8023C3218C007F7754 /* Identifiable.swift in Sources */,
+				D2705E5123EC1DDB0086691F /* ChatUIModels.swift in Sources */,
 				AD6B5D7023C3217C007F7754 /* Identifier.swift in Sources */,
 				AD6B5D7C23C3218C007F7754 /* ChatUIServicing.swift in Sources */,
 				AD6B5D7123C3217C007F7754 /* Listener.swift in Sources */,
@@ -741,6 +745,7 @@
 				AD6B5D7F23C3218C007F7754 /* ChatNetworkServicing.swift in Sources */,
 				AD6B5D7E23C3218C007F7754 /* MessageRepresenting.swift in Sources */,
 				AD6B5D8123C3218C007F7754 /* ConversationRepresenting.swift in Sources */,
+				D2705E5523EC21070086691F /* ChatNetworkingConvertible.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,7 +776,6 @@
 				D2D3830723EB143D00B83A78 /* MessageConvertible.swift in Sources */,
 				D2D3830923EB14A200B83A78 /* ConversationConvertible.swift in Sources */,
 				D2D3830B23EB14CF00B83A78 /* UserConvertible.swift in Sources */,
-				D2D0716723D0A8070039023D /* ChatNetworkingConvertible.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

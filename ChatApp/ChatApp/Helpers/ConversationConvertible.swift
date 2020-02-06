@@ -24,14 +24,14 @@ extension ConversationFirestore: ChatUIConvertible {
     }
 
     public init(uiModel: Conversation) {
-        let nwMessages = uiModel.messages.compactMap { MessageFirestore(uiModel: $0) }
-        var nwLasMessages: MessageFirestore? = nil
-        if let lasMessage = uiModel.lastMessage {
-            nwLasMessages = MessageFirestore(uiModel: lasMessage)
+        let newMessages = uiModel.messages.compactMap { MessageFirestore(uiModel: $0) }
+        var newLastMessages: MessageFirestore? = nil
+        if let lastMessage = uiModel.lastMessage {
+            newLastMessages = MessageFirestore(uiModel: lastMessage)
         }
 
-        let nwMembers = uiModel.members.compactMap { UserFirestore(uiModel: $0) }
-        let nwMembersIds = uiModel.members.compactMap { "\($0.id)" }
-        self.init(id: uiModel.id, lastMessage: nwLasMessages, members: nwMembers, messages: nwMessages, seen: [:], memberIds: nwMembersIds)
+        let newMembers = uiModel.members.compactMap { UserFirestore(uiModel: $0) }
+        let newMembersIds = uiModel.members.compactMap { "\($0.id)" }
+        self.init(id: uiModel.id, lastMessage: newLastMessages, members: newMembers, messages: newMessages, seen: [:], memberIds: newMembersIds)
     }
 }

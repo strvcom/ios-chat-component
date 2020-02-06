@@ -15,6 +15,4 @@ public class ChatModelsUI: ChatUIModels {
     public typealias MUI = MessageKitType
     public typealias MSUI = MessageSpecification
     public typealias USRUI = User
-
-    init() {}
 }

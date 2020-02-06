@@ -1,14 +1,11 @@
 //
 //  ChatNetworkingConvertible.swift
-//  ChatApp
+//  ChatCore
 //
-//  Created by Mireya Orta on 1/16/20.
+//  Created by Mireya Orta on 2/6/20.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
-import ChatCore
-import ChatNetworkFirebase
-import ChatUI
 import Foundation
 
 extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.ChatUIModel == Self {
@@ -16,5 +13,5 @@ extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, Ne
     public var networkingModel: NetworkingModel {
         return NetworkingModel(uiModel: self)
     }
-    
+
 }
