@@ -8,20 +8,26 @@
 
 import Foundation
 
-open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
-    public typealias Networking = Converter.Networking
-    public typealias C = Converter.CUI
-    public typealias MS = Converter.MSUI
-    public typealias M = Converter.MUI
-    public typealias USR = Converter.USRUI
+open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing
+           where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.MS: ChatUIConvertible,
+            Networking.U: ChatUIConvertible, Networking.C.User.ChatUIModel == Models.USRUI,
+            Networking.C.ChatUIModel == Models.CUI, Networking.C.Message.ChatUIModel == Models.MUI,
+            Networking.MS.ChatUIModel == Models.MSUI {
+
+    public typealias Networking = Networking
+    public typealias UIModels = Models
+    
+    public typealias C = Models.CUI
+    public typealias MS = Models.MSUI
+    public typealias M = Models.MUI
+    public typealias USR = Models.USRUI
 
     let networking: Networking
-    let converter: Converter
 
     public var currentUser: USR? {
         get {
             guard let currentUser = networking.currentUser else { return nil }
-            return converter.convert(user: currentUser)
+            return currentUser.uiModel
         }
     }
 
@@ -29,24 +35,22 @@ open class ChatCore<Converter: ChatModelConverting>: ChatCoreServicing {
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
-    required public init (networking: Networking, converter: Converter) {
+    required public init (networking: Networking) {
         self.networking = networking
-        self.converter = converter
     }
 }
     
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void) {
+    open func send(message: MS, to conversation: ChatIdentifier,
+                   completion: @escaping (Result<M, ChatError>) -> Void) {
 
         // FIXME: Solve without explicit type casting
-        let mess = converter.convert(messageSpecification: message)
-        networking.send(message: mess, to: conversation) { [weak self] result in
+        let mess = Networking.MS(uiModel: message)
+        networking.send(message: mess, to: conversation) { result in
             switch result {
             case .success(let message):
-                if let converted = self?.converter.convert(message: message) {
-                    completion(.success(converted))
-                }
+                completion(.success( message.uiModel))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -66,10 +70,10 @@ extension ChatCore {
     open func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
-        let listener = networking.listenToConversations() { [weak self] result in
+        let listener = networking.listenToConversations() { result in
             switch result {
             case .success(let conversations):
-                let converted = conversations.compactMap({ self?.converter.convert(conversation: $0) })
+                let converted = conversations.compactMap({ $0.uiModel })
                 completion(.success(converted))
             case .failure(let error):
                 completion(.failure(error))
@@ -79,13 +83,14 @@ extension ChatCore {
         return listener
     }
 
-    open func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversation(with id: ChatIdentifier,
+                                   completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
-        let listener = networking.listenToConversation(with: id) { [weak self] result in
+        let listener = networking.listenToConversation(with: id) { result in
                    switch result {
                    case .success(let messages):
-                       let converted = messages.compactMap({ self?.converter.convert(message: $0) })
+                    let converted = messages.compactMap({ $0.uiModel })
                        completion(.success(converted))
                    case .failure(let error):
                        completion(.failure(error))

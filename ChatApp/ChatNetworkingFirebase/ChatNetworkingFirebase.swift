@@ -180,7 +180,7 @@ public extension ChatNetworkFirebase {
                 // Set members from previously downloaded users
                 completion(.success(conversations.map { conversation in
                     var result = conversation
-                    result.members = self.users.filter { result.memberIds.contains($0.id) }
+                    result.setMembers(self.users.filter { result.memberIds.contains($0.id) })
                     return result
                 }))
             })
