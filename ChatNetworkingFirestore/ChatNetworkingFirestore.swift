@@ -8,7 +8,8 @@
 
 import Foundation
 import ChatCore
-import Firebase
+import FirebaseFirestore
+import FirebaseCore
 
 public class ChatNetworkFirebase: ChatNetworkServicing {
     public struct Configuration {

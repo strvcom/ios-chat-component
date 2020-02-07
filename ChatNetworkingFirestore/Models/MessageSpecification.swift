@@ -8,7 +8,6 @@
 
 import UIKit
 import ChatCore
-import Firebase
 
 public enum MessageSpecificationFirestore: MessageSpecifying {
     case text(message: String)
