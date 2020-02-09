@@ -13,6 +13,7 @@ struct Constants {
     static let conversationsPath = "conversations"
     static let messagesPath = "messages"
     static let usersPath = "users"
+    static let paginationPageSize = 10
     
     struct Message {
         static let senderIdAttributeName = "userId"

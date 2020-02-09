@@ -49,17 +49,50 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        
+        let loadMoreButton = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMoreMessages))
+        navigationItem.setRightBarButton(loadMoreButton, animated: false)
+        
+        core.loadMessages(
+            conversation: conversation.id,
+            completion: { [weak self] result in
+                
+                guard let self = self else {
+                    return
+                }
+                
+                switch result {
+                case .success(let messages):
+                    self.dataSource.messages = messages
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToBottom(animated: false)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            },
+            updatesListener: { [weak self] result in
+                
+                guard let self = self else {
+                    return
+                }
+                
+                switch result {
+                case .success(let newMessage):
+                    
+                    // append new message
+                    if let lastMessage = self.dataSource.messages.last, lastMessage.messageId == newMessage.messageId {
+                        return
+                    }
 
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
-            switch result {
-            case .success(let messages):
-                self?.dataSource.messages = messages
-                self?.messagesCollectionView.reloadData()
-                self?.messagesCollectionView.scrollToBottom(animated: true)
-            case .failure(let error):
-                print(error)
+                    self.dataSource.messages.append(newMessage)
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToBottom(animated: true)
+                case .failure(let error):
+                    print(error)
+                }
             }
-        }
+        )
     }
     
     // MARK: - UIImagePickerControllerDelegate
@@ -72,6 +105,15 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         picker.dismiss(animated: true)
         
         self.core.send(message: .image(image: image), to: self.conversation.id) { _ in }
+    }
+
+    @objc func loadMoreMessages() {
+        core.loadMoreMessages(conversation: conversation.id) { [weak self] result in
+            if case let .success(messages) = result {
+                self?.dataSource.messages.insert(contentsOf: messages, at: 0)
+                self?.messagesCollectionView.reloadData()
+            }
+        }
     }
 }
 

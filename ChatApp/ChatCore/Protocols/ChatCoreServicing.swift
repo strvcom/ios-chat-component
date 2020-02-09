@@ -27,6 +27,14 @@ public protocol ChatCoreServicing {
     func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
 
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    
+    func loadMessages(conversation: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void, updatesListener: ((Result<M, ChatError>) -> Void)?)
+    
+    func loadMoreMessages(conversation: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
+    
+    func loadConversations(completion: @escaping (Result<[C], ChatError>) -> Void, updatesListener: ((Result<C, ChatError>) -> Void)?)
+    
+    func loadMoreConversations(completion: @escaping (Result<[C], ChatError>) -> Void)
 
     func remove(listener: ChatListener)
 }

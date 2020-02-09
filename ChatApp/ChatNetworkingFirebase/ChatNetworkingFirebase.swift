@@ -24,7 +24,10 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-
+    
+    private var messagesPaginator = Pagination()
+    private var conversationsPaginator = Pagination()
+    
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var initialized = false
     private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
@@ -160,7 +163,7 @@ public extension ChatNetworkFirebase {
 public extension ChatNetworkFirebase {
     func listenToConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
        
-        let listener = ChatListener.generateIdentifier()
+        let listener = ChatListener.conversations
         
         // FIXME: Make conversations path more generic
         let reference = database.collection(Constants.conversationsPath)
@@ -170,7 +173,7 @@ public extension ChatNetworkFirebase {
                 return
             }
             
-            self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+            self.listenTo(reference: reference, listenerIdentifier: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
                 
                 guard case let .success(conversations) = result else {
                     completion(result)
@@ -209,15 +212,17 @@ public extension ChatNetworkFirebase {
             .collection(Constants.conversationsPath)
             .document(id)
             .collection(Constants.messagesPath)
-            .order(by: Constants.Message.sentAtAttributeName)
-        return listenTo(reference: reference, completion: completion)
+            .limit(to: 1)
+            .order(by: Constants.Message.sentAtAttributeName, descending: true)
+        
+        return listenTo(reference: reference, listenerIdentifier: .messages, completion: completion)
     }
     
     @discardableResult
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
         let reference = database.collection(Constants.usersPath)
         
-        return listenTo(reference: reference, completion: completion)
+        return listenTo(reference: reference, listenerIdentifier: .users, completion: completion)
     }
     
     func remove(listener: ChatListener) {
@@ -225,32 +230,139 @@ public extension ChatNetworkFirebase {
     }
 }
 
+// MARK: - Data loading
+public extension ChatNetworkFirebase {
+    
+    func loadMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+    
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .document(id)
+            .collection(Constants.messagesPath)
+            .limit(to: messagesPaginator.pageSize)
+            .order(by: Constants.Message.sentAtAttributeName, descending: true)
+        
+        getMessages(reference: reference, completion: completion)
+    }
+    
+    func loadMoreMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+        
+        guard let currentStartingDocument = messagesPaginator.currentStartingDocument else {
+            completion(.success([])) // TODO: Failure?
+            return
+        }
+        
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .document(id)
+            .collection(Constants.messagesPath)
+            .limit(to: messagesPaginator.pageSize)
+            .order(by: Constants.Message.sentAtAttributeName, descending: true)
+            .start(afterDocument: currentStartingDocument)
+        
+        getMessages(reference: reference, completion: completion)
+    }
+    
+    func loadConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .limit(to: conversationsPaginator.pageSize)
+
+        getConversations(reference: reference, completion: completion)
+    }
+    
+    func loadMoreConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+        
+        guard let currentStartingDocument = conversationsPaginator.currentStartingDocument else {
+            completion(.success([])) // TODO: Failure?
+            return
+        }
+        
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .limit(to: conversationsPaginator.pageSize)
+            .start(afterDocument: currentStartingDocument)
+
+        getConversations(reference: reference, completion: completion)
+    }
+}
+
 // MARK: Private methods
 private extension ChatNetworkFirebase {
     @discardableResult
-    func listenTo<T: Decodable>(reference: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+    func listenTo<T: Decodable>(reference: Query, listenerIdentifier: ChatListener, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+        
+        listeners[listenerIdentifier]?.remove()
+        
         let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
-            if let snapshot = snapshot {
-                let list: [T] = snapshot.documents.compactMap {
-                    do {
-                        return try $0.data(as: T.self)
-                    } catch {
-                        print("Couldn't decode document:", error)
-                        return nil
-                    }
-                }
-                completion(.success(list))
-            } else if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.failure(.internal(message: "Unknown")))
-            }
+            self.handleItemsUpdates(snapshot: snapshot, error: error, completion: completion)
         }
         
-        let identifier = customListener ?? ChatListener.generateIdentifier()
+        listeners[listenerIdentifier] = listener
         
-        listeners[identifier] = listener
-        
-        return identifier
+        return listenerIdentifier
+    }
+    
+    func getMessages(reference: Query, completion: @escaping (Result<[M], ChatError>) -> Void) {
+        reference.getDocuments { [weak self] (snapshot, error) in
+            self?.handleItemsUpdates(snapshot: snapshot, error: error) { [weak self] (result: Result<[M], ChatError>) in
+                
+                switch result {
+                case .success(let messages):
+                    self?.messagesPaginator.currentStartingDocument = snapshot?.documents.last
+                    completion(.success(messages.reversed()))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    func getConversations(reference: Query, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+        reference.getDocuments { [weak self] (snapshot, error) in
+            
+            self?.handleItemsUpdates(snapshot: snapshot, error: error) { [weak self] (result: Result<[C], ChatError>) in
+
+                guard let self = self else {
+                    return
+                }
+                
+                switch result {
+                case .success(let conversations):
+                    self.conversationsPaginator.currentStartingDocument = snapshot?.documents.last
+                    completion(.success(conversations.map { conversation in
+                        var result = conversation
+                        result.setMembers(self.users.filter { result.memberIds.contains($0.id) })
+                        return result
+                    }))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    /// TODO: Once we implement editing/deleting we will have to change this method
+    //        to emit some kind of Update type instead of just array of new items
+    //        becuse snapshot.documents could contain deleted and/or updated items
+    func handleItemsUpdates<T: Decodable>(snapshot: QuerySnapshot?, error: Error?, completion: @escaping (Result<[T], ChatError>) -> Void) {
+        if let snapshot = snapshot {
+            
+            let list: [T] = snapshot.documents.compactMap {
+                do {
+                    return try $0.data(as: T.self)
+                } catch {
+                    print("Couldn't decode document:", error)
+                    return nil
+                }
+            }
+            
+            completion(.success(list))
+        } else if let error = error {
+            completion(.failure(.networking(error: error)))
+        } else {
+            completion(.failure(.internal(message: "Unknown")))
+        }
     }
 }

@@ -8,10 +8,6 @@
 
 import Foundation
 
-public typealias ChatListener = String
-
-extension ChatListener {
-    public static func generateIdentifier() -> ChatListener {
-        return UUID().uuidString
-    }
+public enum ChatListener {
+    case messages, conversations, users
 }

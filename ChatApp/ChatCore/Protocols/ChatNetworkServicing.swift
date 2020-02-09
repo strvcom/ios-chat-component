@@ -24,9 +24,19 @@ public protocol ChatNetworkServicing {
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
+    @discardableResult
     func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
 
+    @discardableResult
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    
+    func loadMessages(conversation: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> Void
+    
+    func loadMoreMessages(conversation: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
+    
+    func loadConversations(completion: @escaping (Result<[C], ChatError>) -> Void)
+    
+    func loadMoreConversations(completion: @escaping (Result<[C], ChatError>) -> Void)
 
     func remove(listener: ChatListener)
 }

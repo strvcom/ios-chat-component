@@ -103,3 +103,92 @@ extension ChatCore {
         networking.remove(listener: listener)
     }
 }
+
+// MARK: - Loading data
+extension ChatCore {
+    
+    open func loadMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void, updatesListener: ((Result<M, ChatError>) -> Void)?) {
+        
+        networking.loadMessages(conversation: id) { [weak self] result in
+            
+            switch result {
+            case .success(let messages):
+                completion(.success(messages.compactMap({ $0.uiModel })))
+                
+                guard let updatesListener = updatesListener else {
+                    return
+                }
+                
+                // start listening to the conversation after the first successful load
+                self?.networking.listenToConversation(with: id, completion: { result in
+                    switch result {
+                    case .success(let messages):
+                        guard let newMessage = messages.first else {
+                            return
+                        }
+                        
+                        updatesListener(.success(newMessage.uiModel))
+                    case .failure(let error):
+                        updatesListener(.failure(error))
+                    }
+                })
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    open func loadMoreMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) {
+        networking.loadMoreMessages(conversation: id) { result in
+            switch result {
+            case .success(let messages):
+                completion(.success(messages.compactMap({ $0.uiModel })))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    open func loadConversations(completion: @escaping (Result<[C], ChatError>) -> Void, updatesListener: ((Result<C, ChatError>) -> Void)?) {
+        
+        networking.loadConversations { [weak self] result in
+            
+            switch result {
+            case .success(let conversations):
+                let converted = conversations.compactMap({ $0.uiModel })
+                completion(.success(converted))
+                
+                guard let updatesListener = updatesListener else {
+                    return
+                }
+                
+                self?.networking.listenToConversations { result in
+
+                    switch result {
+                    case .success(let conversations):
+                        guard let newConversation = conversations.first else {
+                            return
+                        }
+                        
+                        updatesListener(.success(newConversation.uiModel))
+                    case .failure(let error):
+                        updatesListener(.failure(error))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    open func loadMoreConversations(completion: @escaping (Result<[C], ChatError>) -> Void) {
+        networking.loadMoreConversations { result in
+            switch result {
+            case .success(let conversations):
+                completion(.success(conversations.compactMap({ $0.uiModel })))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}

@@ -66,22 +66,45 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
-
         
-        listener = core.listenToConversations { result in
-            switch result {
-            case .success(let conversations):
-                self.dataSource.conversations = conversations
-
-                if let user = self.core.currentUser {
-                    self.sender = Sender(id: user.id, displayName: user.name)
+        core.loadConversations(
+            completion: { [weak self] result in
+                guard let self = self else {
+                    return
                 }
+                
+                switch result {
+                case .success(let conversations):
+                    self.dataSource.conversations = conversations
 
-                self.tableView.reloadData()
-            case .failure(let error):
-                print(error)
+                    if let user = self.core.currentUser {
+                        self.sender = Sender(id: user.id, displayName: user.name)
+                    }
+
+                    self.tableView.reloadData()
+                case .failure(let error):
+                    print(error)
+                }
+            },
+            updatesListener: { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                
+                switch result {
+                case .success(let newConversation):
+                    
+                    if let firstConversation = self.dataSource.conversations.first, firstConversation.id == newConversation.id {
+                        return
+                    }
+                    
+                    self.dataSource.conversations.insert(newConversation, at: 0)
+                    self.tableView.reloadData()
+                case .failure(let error):
+                    print(error)
+                }
             }
-        }
+        )
     }
     
     public override func viewDidLoad() {

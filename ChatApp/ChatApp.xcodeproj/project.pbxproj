@@ -15,6 +15,7 @@
 		04E97C4823E1DE7F001FA318 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4723E1DE7F001FA318 /* ImageUploader.swift */; };
 		04E97C4E23E1E729001FA318 /* UIImage+Resizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */; };
 		04E97C5123E2EDA9001FA318 /* UIImageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */; };
+		04E97C5323F09160001FA318 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E97C5223F09160001FA318 /* Pagination.swift */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3B23C32020007F7754 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = AD6B5D3923C32020007F7754 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
@@ -117,6 +118,7 @@
 		04E97C4523E1DBB0001FA318 /* UIImageView+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Network.swift"; sourceTree = "<group>"; };
 		04E97C4723E1DE7F001FA318 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		04E97C4B23E1E618001FA318 /* UIImage+Resizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resizing.swift"; sourceTree = "<group>"; };
+		04E97C5223F09160001FA318 /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B07E7DEF347F0A170FAA619 /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519033A4B72B0D6C9BFFD754 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				AD6B5D5C23C320E8007F7754 /* ChatNetworkingFirebase.h */,
 				04E97C4723E1DE7F001FA318 /* ImageUploader.swift */,
 				AD6B5D5D23C320E8007F7754 /* Info.plist */,
+				04E97C5223F09160001FA318 /* Pagination.swift */,
 			);
 			path = ChatNetworkingFirebase;
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 				AD6B5D8C23C321B3007F7754 /* ChatNetworkingFirebase.swift in Sources */,
 				04E97C4823E1DE7F001FA318 /* ImageUploader.swift in Sources */,
 				AD6B5D8B23C321B3007F7754 /* Constants.swift in Sources */,
+				04E97C5323F09160001FA318 /* Pagination.swift in Sources */,
 				04232D9023D4BAB200869F89 /* SeenItem.swift in Sources */,
 				AD6B5D9123C321B3007F7754 /* User.swift in Sources */,
 			);
