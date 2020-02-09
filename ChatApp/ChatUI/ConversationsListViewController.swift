@@ -42,16 +42,29 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     private func setup() {
         view.backgroundColor = .white
-
-        delegate = Delegate(didSelectBlock: { [weak self] row in
-            guard let self = self else {
-                return
+        
+        delegate = Delegate(
+            didSelectBlock: { [weak self] row in
+                guard let self = self else {
+                    return
+                }
+                
+                let conversation = self.dataSource.conversations[row]
+                let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
+                self.navigationController?.pushViewController(controller, animated: true)
+            },
+            didTapLoadMore: { [weak self] in
+                self?.core.loadMoreConversations(completion: { result in
+                    switch result {
+                    case .success(let conversations):
+                        self?.dataSource.conversations.append(contentsOf: conversations)
+                        self?.tableView.reloadData()
+                    case .failure(let error):
+                        print(error)
+                    }
+                })
             }
-            
-            let conversation = self.dataSource.conversations[row]
-            let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
-            self.navigationController?.pushViewController(controller, animated: true)
-        })
+        )
         
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -149,13 +162,31 @@ extension ConversationsListViewController {
     class Delegate: NSObject, UITableViewDelegate {
         typealias Block = (Int) -> Void
         let didSelectBlock: Block
+        let didTapLoadMore: () -> Void
         
-        init(didSelectBlock: @escaping Block) {
+        init(didSelectBlock: @escaping Block, didTapLoadMore: @escaping () -> Void) {
             self.didSelectBlock = didSelectBlock
+            self.didTapLoadMore = didTapLoadMore
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             didSelectBlock(indexPath.row)
+        }
+        
+        func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+            let button = UIButton(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+            button.setTitle("Load more...", for: .normal)
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.addTarget(self, action: #selector(onLoadMoreTapped), for: .touchUpInside)
+            return button
+        }
+        
+        func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+            return 50
+        }
+        
+        @objc func onLoadMoreTapped() {
+            self.didTapLoadMore()
         }
     }
 }
