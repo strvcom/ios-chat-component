@@ -11,14 +11,22 @@ def networking_pods
   pod 'FirebaseFirestoreSwift'
 end
 
+def ui_pods
+  pod 'MessageKit'
+end
+
 target 'ChatApp' do
   networking_pods
 end
 
-target 'ChatNetworkFirebase' do
+target 'Chat' do
+  networking_pods
+end
+
+target 'ChatNetworkingFirestore' do
   networking_pods
 end
 
 target 'ChatUI' do
-pod 'MessageKit'
+  ui_pods
 end

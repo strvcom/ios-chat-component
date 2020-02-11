@@ -146,7 +146,9 @@ private extension MessagesListViewController {
             width: photoPickerIconSize,
             height: photoPickerIconSize
         ), animated: false)
-        item.setImage(UIImage(systemName: "photo"), for: .normal)
+        if #available(iOS 13.0, *) {
+            item.setImage(UIImage(systemName: "photo"), for: .normal)
+        }
         item.imageView?.contentMode = .scaleAspectFit
         messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
