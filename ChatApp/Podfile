@@ -6,8 +6,9 @@ use_frameworks!
 inhibit_all_warnings!
 
 def networking_pods
-  pod 'Firebase/Firestore'
-  pod 'Firebase/Storage'
+  pod 'FirebaseCore'
+  pod 'FirebaseFirestore'
+  pod 'FirebaseStorage'
   pod 'FirebaseFirestoreSwift'
 end
 
