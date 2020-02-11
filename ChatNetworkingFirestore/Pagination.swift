@@ -8,13 +8,12 @@
 
 import Foundation
 import ChatCore
-import Firebase
 
 struct Pagination<T: Decodable> {
     var updateBlock: ((Result<[T], ChatError>) -> Void)?
     var listener: ChatListener?
-    var pageSize = Constants.defaultPageSize
-    var itemsLoaded = Constants.defaultPageSize
+    var pageSize: Int
+    lazy var itemsLoaded = pageSize
     
     mutating func nextPage() {
         itemsLoaded += pageSize

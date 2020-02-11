@@ -38,10 +38,8 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         }
     }
     
-    var messagesPagination = Pagination<MessageFirestore>()
-    var conversationsPagination = Pagination<ConversationFirestore>()
-    
-    private var conversationId: ChatIdentifier?
+    private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
+    private var conversationsPagination: Pagination<ConversationFirestore>?
     
     required public init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -165,34 +163,36 @@ public extension ChatNetworkFirebase {
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
-       
-        conversationsPagination.pageSize = pageSize
-        let listener = "conversations"
         
-        let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
+        let listener = ChatListener.generateIdentifier()
+        
+        conversationsPagination = Pagination(
+            updateBlock: completion,
+            listener: listener,
+            pageSize: pageSize
+        )
+        
+        let query = conversationsQuery(numberOfConversations: conversationsPagination!.itemsLoaded)
         
         let closureToRun = { [weak self] in
             guard let self = self else {
                 return
             }
             
-            self.listenTo(query: query, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+            self.listenTo(query: query, customListener: listener) { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
+                
+                guard let self = self else {
+                    return
+                }
                 
                 guard case let .success(conversations) = result else {
                     completion(result)
                     return
                 }
                 
-                self.conversationsPagination.listener = listener
-                self.conversationsPagination.updateBlock = completion
-                
                 // Set members from previously downloaded users
-                completion(.success(conversations.map { conversation in
-                    var result = conversation
-                    result.setMembers(self.users.filter { result.memberIds.contains($0.id) })
-                    return result
-                }))
-            })
+                completion(.success(self.conversationsWithMembers(conversations: conversations)))
+            }
         }
         
         if initialized {
@@ -213,15 +213,14 @@ public extension ChatNetworkFirebase {
 
     func listenToConversation(with id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
         
-        messagesPagination.pageSize = pageSize
+        let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
+        let listener = listenTo(query: query, completion: completion)
         
-        let query = messagesQuery(conversation: id, numberOfMessages: messagesPagination.itemsLoaded)
-        let listener = listenTo(query: query, customListener: "messages-\(id)", completion: completion)
-        
-        messagesPagination.pageSize = pageSize
-        messagesPagination.listener = listener
-        conversationId = id
-        messagesPagination.updateBlock = completion
+        messagesPaginators[id] = Pagination<MessageFirestore>(
+            updateBlock: completion,
+            listener: listener,
+            pageSize: pageSize
+        )
         
         return listener
     }
@@ -239,56 +238,43 @@ public extension ChatNetworkFirebase {
     
     func loadMoreConversations() {
         
-        guard let conversationsListener = conversationsPagination.listener else {
+        guard let conversationsPagination = conversationsPagination else {
             return
         }
         
-        remove(listener: conversationsListener)
-        
-        conversationsPagination.nextPage()
-        
-        let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
-        
-        self.conversationsPagination.listener = listenTo(
-            query: query,
-            customListener: conversationsListener,
-            completion: { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
+        self.conversationsPagination = advancePaginator(
+            paginator: conversationsPagination,
+            query: conversationsQuery(),
+            listenerCompletion: { [weak self] result in
                 guard let self = self else {
                     return
                 }
                 
                 switch result {
                 case .success(let conversations):
-                    self.conversationsPagination.updateBlock?(.success(conversations.map { conversation in
-                        var result = conversation
-                        result.setMembers(self.users.filter { result.memberIds.contains($0.id) })
-                        return result
-                    }))
+                    self.conversationsPagination?.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
                 case .failure(let error):
-                    self.conversationsPagination.updateBlock?(.failure(error))
+                    self.conversationsPagination?.updateBlock?(.failure(error))
                 }
         })
     }
     
-    func loadMoreMessages() {
+    func loadMoreMessages(conversation id: String) {
         
-        guard let messagesListener = messagesPagination.listener, let conversationId = conversationId else {
+        guard var paginator = messagesPaginators[id] else {
             return
         }
         
-        remove(listener: messagesListener)
-        
-        messagesPagination.nextPage()
         let query = messagesQuery(
-            conversation: conversationId,
-            numberOfMessages: messagesPagination.itemsLoaded
+            conversation: id,
+            numberOfMessages: paginator.itemsLoaded
         )
         
-        self.messagesPagination.listener = listenTo(
+        messagesPaginators[id] = advancePaginator(
+            paginator: paginator,
             query: query,
-            customListener: messagesListener,
-            completion: { [weak self] (result: Result<[MessageFirestore], ChatError>) in
-                self?.messagesPagination.updateBlock?(result)
+            listenerCompletion: { [weak self] (result: Result<[MessageFirestore], ChatError>) in
+                self?.messagesPaginators[id]?.updateBlock?(result)
         })
     }
 }
@@ -296,20 +282,30 @@ public extension ChatNetworkFirebase {
 // MARK: Queries
 private extension ChatNetworkFirebase {
     
-    func conversationsQuery(numberOfConversations: Int) -> Query {
-        database
+    func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
+        let query = database
             .collection(Constants.conversationsPath)
-            .limit(to: numberOfConversations)
+
+        if let limit = numberOfConversations {
+            return query.limit(to: limit)
+        }
+        
+        return query
     }
     
-    func messagesQuery(conversation id: String, numberOfMessages: Int) -> Query {
+    func messagesQuery(conversation id: String, numberOfMessages: Int?) -> Query {
         // FIXME: Make conversations path more generic
-        database
+        let query = database
             .collection(Constants.conversationsPath)
             .document(id)
             .collection(Constants.messagesPath)
             .order(by: Constants.Message.sentAtAttributeName, descending: true)
-            .limit(to: numberOfMessages)
+        
+        if let limit = numberOfMessages {
+            return query.limit(to: limit)
+        }
+        
+        return query
     }
 
 }
@@ -341,5 +337,32 @@ private extension ChatNetworkFirebase {
         listeners[identifier] = listener
         
         return identifier
+    }
+    
+    func conversationsWithMembers(conversations: [ConversationFirestore]) -> [ConversationFirestore] {
+        conversations.map { conversation in
+            var result = conversation
+            result.setMembers(users.filter { result.memberIds.contains($0.id) })
+            return result
+        }
+    }
+    
+    func advancePaginator<T: Decodable>(paginator: Pagination<T>, query: Query, listenerCompletion: @escaping (Result<[T], ChatError>) -> Void) -> Pagination<T> {
+        
+        var paginator = paginator
+        
+        guard let listener = paginator.listener else {
+            return paginator
+        }
+        
+        remove(listener: listener)
+        
+        paginator.nextPage()
+        
+        let query = query.limit(to: paginator.itemsLoaded)
+        
+        paginator.listener = listenTo(query: query, customListener: listener, completion: listenerCompletion)
+        
+        return paginator
     }
 }

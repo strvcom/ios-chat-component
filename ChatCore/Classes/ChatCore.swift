@@ -103,8 +103,8 @@ extension ChatCore {
         return listener
     }
     
-    open func loadMoreMessages() {
-        networking.loadMoreMessages()
+    open func loadMoreMessages(conversation id: ChatIdentifier) {
+        networking.loadMoreMessages(conversation: id)
     }
     
     open func remove(listener: ChatListener) {

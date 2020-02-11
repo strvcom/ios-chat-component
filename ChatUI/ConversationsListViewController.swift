@@ -76,7 +76,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             ])
 
         
-        listener = core.listenToConversations(pageSize: 5) { result in
+        listener = core.listenToConversations { result in
             switch result {
             case .success(let conversations):
                 self.dataSource.conversations = conversations
