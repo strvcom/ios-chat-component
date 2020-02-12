@@ -136,7 +136,7 @@ extension ConversationsListViewController {
         let didSelectBlock: Block
         let loadMoreBlock: () -> Void
         
-        internal init(didSelectBlock: @escaping Block, loadMoreBlock: @escaping () -> Void) {
+        init(didSelectBlock: @escaping Block, loadMoreBlock: @escaping () -> Void) {
             self.didSelectBlock = didSelectBlock
             self.loadMoreBlock = loadMoreBlock
         }
