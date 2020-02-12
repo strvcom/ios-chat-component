@@ -87,11 +87,11 @@ extension ChatCore {
         networking.loadMoreConversations()
     }
 
-    open func listenToConversation(with id: ChatIdentifier, pageSize: Int,
+    open func listenToConversation(conversation id: ChatIdentifier, pageSize: Int,
                                    completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
-        let listener = networking.listenToConversation(with: id, pageSize: pageSize) { result in
+        let listener = networking.listenToConversation(conversation: id, pageSize: pageSize) { result in
                    switch result {
                    case .success(let messages):
                     let converted = messages.compactMap({ $0.uiModel })

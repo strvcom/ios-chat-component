@@ -28,7 +28,7 @@ public protocol ChatNetworkServicing {
     
     func loadMoreConversations()
 
-    func listenToConversation(with id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    func listenToConversation(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
     
     func loadMoreMessages(conversation id: ChatIdentifier)
 

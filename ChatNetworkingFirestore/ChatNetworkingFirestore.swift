@@ -211,7 +211,7 @@ public extension ChatNetworkFirebase {
         return listener
     }
 
-    func listenToConversation(with id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
+    func listenToConversation(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
         
         let completion = reversedDataCompletion(completion: completion)
         

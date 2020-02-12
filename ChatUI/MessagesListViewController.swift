@@ -53,7 +53,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
         navigationItem.setRightBarButton(item, animated: false)
         
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
+        listener = core.listenToConversation(conversation: conversation.id) { [weak self] result in
             switch result {
             case .success(let messages):
                 self?.dataSource.messages = messages
