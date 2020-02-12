@@ -28,7 +28,7 @@ public protocol ChatCoreServicing {
     
     func loadMoreConversations()
 
-    func listenToConversation(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
     
     func loadMoreMessages(conversation id: ChatIdentifier)
 
@@ -38,7 +38,7 @@ public protocol ChatCoreServicing {
 // MARK: Default page size
 public extension ChatCoreServicing {
     func listenToConversation(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
-        listenToConversation(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
+        listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
     func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
