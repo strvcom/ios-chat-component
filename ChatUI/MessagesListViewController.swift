@@ -49,17 +49,23 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
-
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
+        
+        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
+        navigationItem.setRightBarButton(item, animated: false)
+        
+        listener = core.listenToConversation(conversation: conversation.id) { [weak self] result in
             switch result {
             case .success(let messages):
                 self?.dataSource.messages = messages
                 self?.messagesCollectionView.reloadData()
-                self?.messagesCollectionView.scrollToBottom(animated: true)
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    @objc func loadMore() {
+        core.loadMoreMessages(conversation: conversation.id)
     }
     
     // MARK: - UIImagePickerControllerDelegate

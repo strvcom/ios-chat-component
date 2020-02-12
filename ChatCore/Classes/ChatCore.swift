@@ -67,10 +67,10 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
-        let listener = networking.listenToConversations() { result in
+        let listener = networking.listenToConversations(pageSize: pageSize) { result in
             switch result {
             case .success(let conversations):
                 let converted = conversations.compactMap({ $0.uiModel })
@@ -82,12 +82,16 @@ extension ChatCore {
 
         return listener
     }
+    
+    open func loadMoreConversations() {
+        networking.loadMoreConversations()
+    }
 
-    open func listenToConversation(with id: ChatIdentifier,
+    open func listenToMessages(conversation id: ChatIdentifier, pageSize: Int,
                                    completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
-        let listener = networking.listenToConversation(with: id) { result in
+        let listener = networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
                    switch result {
                    case .success(let messages):
                     let converted = messages.compactMap({ $0.uiModel })
@@ -97,6 +101,10 @@ extension ChatCore {
                    }
                }
         return listener
+    }
+    
+    open func loadMoreMessages(conversation id: ChatIdentifier) {
+        networking.loadMoreMessages(conversation: id)
     }
     
     open func remove(listener: ChatListener) {
