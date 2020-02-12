@@ -213,6 +213,8 @@ public extension ChatNetworkFirebase {
 
     func listenToConversation(with id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
         
+        let completion = reversedDataCompletion(completion: completion)
+        
         let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
         let listener = listenTo(query: query, completion: completion)
         
@@ -364,5 +366,16 @@ private extension ChatNetworkFirebase {
         paginator.listener = listenTo(query: query, customListener: listener, completion: listenerCompletion)
         
         return paginator
+    }
+    
+    func reversedDataCompletion<T: Decodable>(completion: @escaping (Result<[T], ChatError>) -> Void) -> (Result<[T], ChatError>) -> Void {
+        return { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data.reversed()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }

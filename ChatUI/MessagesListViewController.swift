@@ -56,7 +56,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         listener = core.listenToConversation(with: conversation.id) { [weak self] result in
             switch result {
             case .success(let messages):
-                self?.dataSource.messages = messages.reversed()
+                self?.dataSource.messages = messages
                 self?.messagesCollectionView.reloadData()
             case .failure(let error):
                 print(error)
