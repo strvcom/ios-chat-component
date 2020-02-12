@@ -76,7 +76,7 @@ private extension ChatNetworkFirebase {
                     }) else {
                         return
                 }
-                
+
                 self.database
                     .collection(Constants.conversationsPath)
                     .addDocument(data: [
@@ -154,6 +154,41 @@ public extension ChatNetworkFirebase {
             }
         }
     }
+
+    func updateSeenMessage(_ message: MessageFirestore, to conversation: ChatIdentifier) {
+        guard let currentUserId = self.currentUser?.id else {
+//            completion(.failure(.internal(message: "User not found")))
+            return
+        }
+        let reference = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+
+
+        reference.getDocument { (document, _) in
+        guard let document = document,
+            var conversation = try? document.data(as: ConversationFirestore.self)
+            else { return }
+
+            conversation.seen.updateValue((messageId: message.id, seenAt: Date()), forKey: currentUserId)
+
+            var newJson: [String: Any] = [:]
+
+            for item in conversation.seen {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
+
+            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+                 if let err = err {
+                     print("Error updating document: \(err)")
+                 } else {
+                     print("Document successfully updated")
+                }
+            }
+        }
+    }
 }
  
 // MARK: Listen to collections
@@ -212,7 +247,7 @@ public extension ChatNetworkFirebase {
             .order(by: Constants.Message.sentAtAttributeName)
         return listenTo(reference: reference, completion: completion)
     }
-    
+
     @discardableResult
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
         let reference = database.collection(Constants.usersPath)

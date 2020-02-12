@@ -24,6 +24,8 @@ public protocol ChatNetworkServicing {
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
+    func updateSeenMessage(_ message: M, to conversation: ChatIdentifier) 
+
     func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
 
     func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener

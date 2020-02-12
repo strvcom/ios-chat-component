@@ -43,6 +43,6 @@ extension MessageFirestore: ChatUIConvertible {
             content = .text(message: "")
         }
 
-        self.init(id: uiModel.id, userId: uiModel.userId, sentAt: uiModel.sentDate, content: content)
+        self.init(id: uiModel.messageId, userId: uiModel.userId, sentAt: uiModel.sentDate, content: content)
     }
 }

@@ -40,27 +40,6 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
             core.remove(listener: listener)
         }
     }
-
-    private func setup() {
-        view.backgroundColor = .white
-
-        setupInputBar()
-        
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
-            switch result {
-            case .success(let messages):
-                self?.dataSource.messages = messages
-                self?.messagesCollectionView.reloadData()
-                self?.messagesCollectionView.scrollToBottom(animated: true)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
     
     // MARK: - UIImagePickerControllerDelegate
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -81,6 +60,37 @@ extension MessagesListViewController {
     }
 }
 
+// MARK: - Private
+private extension MessagesListViewController {
+    func setup() {
+        view.backgroundColor = .white
+
+        setupInputBar()
+        
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+
+        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
+            switch result {
+            case .success(let messages):
+                self?.dataSource.messages = messages
+                self?.markSeenMessage()
+                self?.messagesCollectionView.reloadData()
+                self?.messagesCollectionView.scrollToBottom(animated: true)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+
+    func markSeenMessage() {
+        guard let lastMessage = self.dataSource.messages.last else { return }
+        core.updateSeenMessage(lastMessage, to: conversation.id)
+    }
+    
+}
+
 // MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
@@ -93,6 +103,29 @@ extension MessagesListViewController: MessagesDataSource {
 
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         return self.dataSource.messages.count
+    }
+
+    public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return conversation.seen.first { $0.value.messageId == message.messageId} != nil ? 20: 0
+    }
+
+    public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        var text: String = ""
+
+        let seenMessages: [String: (messageId: ChatIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
+
+        if conversation.members.count == 2 && seenMessages.contains{ $0.key != self.sender.senderId } {
+            text = "Seen"
+        } else if conversation.members.count > 2 && seenMessages.count == conversation.members.count - 1 {
+            text = "Seen by All"
+        } else if conversation.members.count > 2 && !seenMessages.isEmpty {
+            let usersIds = seenMessages.compactMap{ $0.key }
+
+            let seenUsers = conversation.members.filter{ usersIds.contains($0.id)}.compactMap{ $0.name}.joined(separator: ",")
+            text = "Seen by \(seenUsers)"
+        }
+
+        return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
 }
 
