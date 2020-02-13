@@ -174,6 +174,9 @@ public extension ChatNetworkFirebase {
             var conversation = try? document.data(as: ConversationFirestore.self)
             else { return }
 
+            let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
+            if lastSeenMessage != nil && lastSeenMessage?.value.messageId == message.id { return }
+
             conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
             var newJson: [String: Any] = [:]
