@@ -56,7 +56,7 @@ public struct MessageKitType: MessageType, MessageRepresenting {
         }
         
         self.sentAt = Date()
-        self.userId = ""
-        self.id = ""
+        self.userId = userId
+        self.id = id
     }
 }

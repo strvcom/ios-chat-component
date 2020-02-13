@@ -26,6 +26,7 @@ struct Constants {
         static let messageIdAttributeName = "messageId"
         static let timestampAttributeName = "timestamp"
     }
+    
     struct Conversation {
         static let seenAttributeName = "seen"
     }

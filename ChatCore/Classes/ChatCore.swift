@@ -60,9 +60,9 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: M, to conversation: ChatIdentifier) {
+    open func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) {
         let seenMessage = Networking.M(uiModel: message)
-        networking.updateSeenMessage(seenMessage, to: conversation)
+        networking.updateSeenMessage(seenMessage, in: conversation)
     }
 }
 

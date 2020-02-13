@@ -72,7 +72,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     func markSeenMessage() {
         guard let lastMessage = self.dataSource.messages.last else { return }
-        core.updateSeenMessage(lastMessage, to: conversation.id)
+        core.updateSeenMessage(lastMessage, in: conversation.id)
     }
 
     // MARK: - UIImagePickerControllerDelegate

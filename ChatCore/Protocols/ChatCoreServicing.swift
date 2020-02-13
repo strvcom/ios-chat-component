@@ -34,7 +34,7 @@ public protocol ChatCoreServicing {
 
     func remove(listener: ChatListener)
 
-    func updateSeenMessage(_ message: M, to conversation: ChatIdentifier)
+    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
 }
 
 // MARK: Default page size

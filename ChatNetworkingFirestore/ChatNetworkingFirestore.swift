@@ -159,9 +159,9 @@ public extension ChatNetworkFirebase {
         }
     }
 
-    func updateSeenMessage(_ message: MessageFirestore, to conversation: ChatIdentifier) {
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: ChatIdentifier) {
         guard let currentUserId = self.currentUser?.id else {
-//            completion(.failure(.internal(message: "User not found")))
+            print("User not found")
             return
         }
         let reference = self.database

@@ -25,7 +25,7 @@ public struct SeenItem: Decodable {
         self.timestamp = try values.decode(Timestamp.self, forKey: .timestamp).dateValue()
     }
 
-    public init(messageId: ChatIdentifier, timestamp: Date ) {
+    public init(messageId: ChatIdentifier, timestamp: Date) {
         self.messageId = messageId
         self.timestamp = timestamp
     }
