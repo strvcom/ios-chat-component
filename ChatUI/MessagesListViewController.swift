@@ -41,7 +41,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         }
     }
 
-    func setup() {
+    private func setup() {
         view.backgroundColor = .white
 
         setupInputBar()

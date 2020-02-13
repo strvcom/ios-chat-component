@@ -18,8 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
 
         // userFirebaseID is an information that backend is providing
-//        let userFirebaseID = "urUZOrLgwyK6r6daQvE1"
-        let userFirebaseID = "zVOwmCo7uq4gI4OehsM1"
+        let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
         chat = Chat(config: config)

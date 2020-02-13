@@ -80,7 +80,7 @@ private extension ChatNetworkFirebase {
                     }) else {
                         return
                 }
-
+                
                 self.database
                     .collection(Constants.conversationsPath)
                     .addDocument(data: [
@@ -174,7 +174,7 @@ public extension ChatNetworkFirebase {
             var conversation = try? document.data(as: ConversationFirestore.self)
             else { return }
 
-            conversation.seen.updateValue((messageId: message.id, seenAt: Date()), forKey: currentUserId)
+            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
             var newJson: [String: Any] = [:]
 
@@ -261,7 +261,7 @@ public extension ChatNetworkFirebase {
         
         return listener
     }
-
+    
     @discardableResult
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
         let query = database.collection(Constants.usersPath)

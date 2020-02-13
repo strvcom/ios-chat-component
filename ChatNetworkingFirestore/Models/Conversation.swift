@@ -19,7 +19,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     let memberIds: [ChatIdentifier]
     public private(set) var members: [UserFirestore] = []
     public private(set) var messages: [MessageFirestore] = []
-    public var seen: Seen
+    public private(set) var seen: Seen
 
     private enum CodingKeys: CodingKey {
         case id, lastMessage, messages, members, seen
@@ -52,5 +52,9 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
 
     public mutating func setMembers(_ members: [UserFirestore]) {
         self.members = members
+    }
+
+    public mutating func setSeenMessages(_ seen: (messageId: ChatIdentifier, seenAt: Date), currentUserId: ChatIdentifier) {
+        self.seen.updateValue(seen, forKey: currentUserId)
     }
 }
