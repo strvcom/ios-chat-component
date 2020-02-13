@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Chat
 
 var chat: Chat!
 

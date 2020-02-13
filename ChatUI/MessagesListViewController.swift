@@ -40,7 +40,41 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
             core.remove(listener: listener)
         }
     }
-    
+
+    func setup() {
+        view.backgroundColor = .white
+
+        setupInputBar()
+
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+
+        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
+        navigationItem.setRightBarButton(item, animated: false)
+
+        listener = core.listenToConversation(conversation: conversation.id) { [weak self] result in
+            switch result {
+            case .success(let messages):
+                self?.dataSource.messages = messages
+                self?.markSeenMessage()
+                self?.messagesCollectionView.reloadData()
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+
+    @objc
+    func loadMore() {
+        core.loadMoreMessages(conversation: conversation.id)
+    }
+
+    func markSeenMessage() {
+        guard let lastMessage = self.dataSource.messages.last else { return }
+        core.updateSeenMessage(lastMessage, to: conversation.id)
+    }
+
     // MARK: - UIImagePickerControllerDelegate
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -58,37 +92,6 @@ extension MessagesListViewController {
     class DataSource: NSObject {
         var messages: [MessageKitType] = []
     }
-}
-
-// MARK: - Private
-private extension MessagesListViewController {
-    func setup() {
-        view.backgroundColor = .white
-
-        setupInputBar()
-        
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
-            switch result {
-            case .success(let messages):
-                self?.dataSource.messages = messages
-                self?.markSeenMessage()
-                self?.messagesCollectionView.reloadData()
-                self?.messagesCollectionView.scrollToBottom(animated: true)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-
-    func markSeenMessage() {
-        guard let lastMessage = self.dataSource.messages.last else { return }
-        core.updateSeenMessage(lastMessage, to: conversation.id)
-    }
-    
 }
 
 // MARK: - MessagesDataSource
@@ -179,7 +182,9 @@ private extension MessagesListViewController {
             width: photoPickerIconSize,
             height: photoPickerIconSize
         ), animated: false)
-        item.setImage(UIImage(systemName: "photo"), for: .normal)
+        if #available(iOS 13.0, *) {
+            item.setImage(UIImage(systemName: "photo"), for: .normal)
+        }
         item.imageView?.contentMode = .scaleAspectFit
         messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)

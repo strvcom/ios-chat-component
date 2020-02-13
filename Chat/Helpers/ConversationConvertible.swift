@@ -7,7 +7,7 @@
 //
 
 import ChatCore
-import ChatNetworkFirebase
+import ChatNetworkingFirestore
 import ChatUI
 import Foundation
 
