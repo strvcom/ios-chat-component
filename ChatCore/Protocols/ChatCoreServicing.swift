@@ -33,6 +33,8 @@ public protocol ChatCoreServicing {
     func loadMoreMessages(conversation id: ChatIdentifier)
 
     func remove(listener: ChatListener)
+
+    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
 }
 
 // MARK: Default page size

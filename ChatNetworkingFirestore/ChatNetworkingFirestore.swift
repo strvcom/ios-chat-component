@@ -135,9 +135,9 @@ public extension ChatNetworkFirebase {
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
-                    .collection(Constants.conversationsPath)
-                    .document(conversation)
-                    .collection(Constants.messagesPath)
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+                .collection(Constants.messagesPath)
 
             let documentRef = reference.document()
 
@@ -158,8 +158,46 @@ public extension ChatNetworkFirebase {
             }
         }
     }
+
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: ChatIdentifier) {
+        guard let currentUserId = self.currentUser?.id else {
+            print("User not found")
+            return
+        }
+        let reference = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+
+
+        reference.getDocument { (document, _) in
+            guard let document = document,
+                var conversation = try? document.data(as: ConversationFirestore.self)
+                else { return }
+
+            let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
+            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else { return }
+
+            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+
+            var newJson: [String: Any] = [:]
+
+            for item in conversation.seen {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
+
+            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                }
+            }
+        }
+    }
 }
- 
+
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {

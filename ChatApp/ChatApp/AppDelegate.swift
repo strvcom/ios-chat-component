@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // userFirebaseID is an information that backend is providing
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
-        
+
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
         chat = Chat(config: config)
         

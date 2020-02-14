@@ -23,5 +23,11 @@ struct Constants {
         static let messageTypeImage = "image"
         static let dataAttributeNameText = "text"
         static let dataAttributeNameImage = "imageUrl"
+        static let messageIdAttributeName = "messageId"
+        static let timestampAttributeName = "timestamp"
+    }
+    
+    struct Conversation {
+        static let seenAttributeName = "seen"
     }
 }
