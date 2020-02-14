@@ -135,9 +135,9 @@ public extension ChatNetworkFirebase {
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
-                    .collection(Constants.conversationsPath)
-                    .document(conversation)
-                    .collection(Constants.messagesPath)
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+                .collection(Constants.messagesPath)
 
             let documentRef = reference.document()
 
@@ -170,12 +170,12 @@ public extension ChatNetworkFirebase {
 
 
         reference.getDocument { (document, _) in
-        guard let document = document,
-            var conversation = try? document.data(as: ConversationFirestore.self)
-            else { return }
+            guard let document = document,
+                var conversation = try? document.data(as: ConversationFirestore.self)
+                else { return }
 
             let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
-            if lastSeenMessage != nil && lastSeenMessage?.value.messageId == message.id { return }
+            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else { return }
 
             conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
@@ -188,16 +188,16 @@ public extension ChatNetworkFirebase {
             }
 
             reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-                 if let err = err {
-                     print("Error updating document: \(err)")
-                 } else {
-                     print("Document successfully updated")
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
                 }
             }
         }
     }
 }
- 
+
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
