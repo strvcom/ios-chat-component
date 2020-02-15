@@ -25,10 +25,9 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-
+    public var delegate: ChatNetworkServicingDelegate?
+    
     private var listeners: [ChatListener: ListenerRegistration] = [:]
-    private var initialized = false
-    private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
     private var currentUserId: String?
     private var users: [UserFirestore] = [] {
         didSet {
@@ -55,7 +54,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
         
         load { [weak self] result in
-            self?.onLoadFinished(result: result)
+            self?.delegate?.didFinishLoading()
         }
     }
     
@@ -102,14 +101,6 @@ public extension ChatNetworkFirebase {
                 completion(.failure(.networking(error: error)))
             }
         }
-    }
-    
-    func onLoadFinished(result: (Result<Void, ChatError>)) {
-        if case .success = result {
-            initialized = true
-        }
-        
-        onLoadListeners.forEach { $0(result) }
     }
 }
 
@@ -200,9 +191,7 @@ public extension ChatNetworkFirebase {
 
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
-        
-        let listener = ChatListener.generateIdentifier()
+    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
         
         conversationsPagination = Pagination(
             updateBlock: completion,
@@ -212,57 +201,35 @@ public extension ChatNetworkFirebase {
         
         let query = conversationsQuery(numberOfConversations: conversationsPagination!.itemsLoaded)
         
-        let closureToRun = { [weak self] in
+        listenTo(query: query, customListener: listener, completion: { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
+            
             guard let self = self else {
                 return
             }
             
-            self.listenTo(query: query, customListener: listener) { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
-                
-                guard let self = self else {
-                    return
-                }
-                
-                guard case let .success(conversations) = result else {
-                    completion(result)
-                    return
-                }
-                
-                // Set members from previously downloaded users
-                completion(.success(self.conversationsWithMembers(conversations: conversations)))
+            guard case let .success(conversations) = result else {
+                completion(result)
+                return
             }
-        }
-        
-        if initialized {
-            closureToRun()
-        } else {
-            onLoadListeners.append { result in
-                switch result {
-                case .success(()):
-                    closureToRun()
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-        
-        return listener
+
+            // Set members from previously downloaded users
+            completion(.success(self.conversationsWithMembers(conversations: conversations)))
+        })
     }
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
         
         let completion = reversedDataCompletion(completion: completion)
         
         let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
-        let listener = listenTo(query: query, completion: completion)
+        
+        listenTo(query: query, customListener: listener, completion: completion)
         
         messagesPaginators[id] = Pagination<MessageFirestore>(
             updateBlock: completion,
             listener: listener,
             pageSize: pageSize
         )
-        
-        return listener
     }
     
     @discardableResult

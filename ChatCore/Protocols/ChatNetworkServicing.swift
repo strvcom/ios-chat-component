@@ -18,7 +18,9 @@ public protocol ChatNetworkServicing {
     typealias M = C.Message
     typealias U = C.User
 
-    var currentUser: U? { get } 
+    var currentUser: U? { get }
+    
+    var delegate: ChatNetworkServicingDelegate? { get set }
 
     init(config: Config)
     
@@ -26,11 +28,11 @@ public protocol ChatNetworkServicing {
 
     func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) 
 
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
+    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[C], ChatError>) -> Void)
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[M], ChatError>) -> Void)
     
     func loadMoreMessages(conversation id: ChatIdentifier)
 
