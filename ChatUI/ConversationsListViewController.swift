@@ -14,9 +14,11 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     let core: Core
     
     private let dataSource = DataSource()
+    
+    // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     
-    private var tableView: UITableView!
+    private lazy var tableView = UITableView()
     private var listener: ChatListener?
 
     // FIXME: this is just a temporary solution
@@ -30,6 +32,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         setup()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -61,7 +64,6 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             }
         )
         
-        tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ListCell.self, forCellReuseIdentifier: ListCell.reuseIdentifier)
         tableView.dataSource = dataSource
@@ -92,7 +94,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         }
     }
     
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
     }
@@ -111,8 +113,8 @@ extension ConversationsListViewController {
         var conversations: [Conversation] = []
 
         func conversationTitle(_ conversation: Conversation) -> String {
-            let title = conversation.members.compactMap{ $0.name }.joined(separator: ",")
-            return title == "" ? "Conversation Title" : title
+            let title = conversation.members.compactMap { $0.name }.joined(separator: ",")
+            return title.isEmpty ? "Conversation Title" : title
         }
 
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -132,6 +134,7 @@ extension ConversationsListViewController {
     }
     
     class Delegate: NSObject, UITableViewDelegate {
+        // swiftlint:disable:next nesting
         typealias Block = (Int) -> Void
         let didSelectBlock: Block
         let loadMoreBlock: () -> Void

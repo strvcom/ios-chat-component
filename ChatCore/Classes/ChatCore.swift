@@ -17,6 +17,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias Networking = Networking
     public typealias UIModels = Models
     
+    // swiftlint:disable type_name
     public typealias C = Models.CUI
     public typealias MS = Models.MSUI
     public typealias M = Models.MUI
@@ -25,17 +26,17 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     let networking: Networking
 
     public var currentUser: USR? {
-        get {
-            guard let currentUser = networking.currentUser else { return nil }
-            return currentUser.uiModel
+        guard let currentUser = networking.currentUser else {
+            return nil
         }
+        return currentUser.uiModel
     }
 
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
-    required public init (networking: Networking) {
+    public required init (networking: Networking) {
         self.networking = networking
     }
 }
@@ -88,8 +89,11 @@ extension ChatCore {
         networking.loadMoreConversations()
     }
 
-    open func listenToMessages(conversation id: ChatIdentifier, pageSize: Int,
-                                   completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+    open func listenToMessages(
+        conversation id: ChatIdentifier,
+        pageSize: Int,
+        completion: @escaping (Result<[M], ChatError>) -> Void
+    ) -> ChatListener {
 
         // FIXME: Solve without explicit type casting
         let listener = networking.listenToMessages(conversation: id, pageSize: pageSize) { result in

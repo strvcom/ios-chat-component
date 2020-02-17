@@ -15,9 +15,9 @@ public protocol ChatNetworkingConvertible {
     var networkingModel: NetworkingModel { get }
 }
 
-extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.ChatUIModel == Self {
+public extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.ChatUIModel == Self {
 
-    public var networkingModel: NetworkingModel {
+    var networkingModel: NetworkingModel {
         return NetworkingModel(uiModel: self)
     }
 

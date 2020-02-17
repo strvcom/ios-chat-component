@@ -9,6 +9,7 @@
 import UIKit
 import ChatCore
 
+// swiftlint:disable type_name
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     public typealias C = Conversation
     public typealias M = MessageKitType
@@ -16,7 +17,7 @@ public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
 
     let core: Core
     
-    required public init(core: Core) {
+    public required init(core: Core) {
         self.core = core
     }
     

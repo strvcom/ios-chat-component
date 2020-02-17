@@ -8,6 +8,7 @@
 
 import Foundation
 
+// swiftlint:disable type_name
 public protocol ChatCoreServicing {
     // Networking manager
     associatedtype Networking: ChatNetworkServicing

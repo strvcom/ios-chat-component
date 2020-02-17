@@ -8,8 +8,10 @@
 
 import Foundation
 
+// swiftlint:disable type_name
 public protocol ChatNetworkServicing {
     associatedtype Config
+    
     // Specific conversation type
     associatedtype C: ConversationRepresenting
    // Message description used for sending a message
@@ -18,13 +20,13 @@ public protocol ChatNetworkServicing {
     typealias M = C.Message
     typealias U = C.User
 
-    var currentUser: U? { get } 
+    var currentUser: U? { get }
 
     init(config: Config)
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
-    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) 
+    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
 
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
     

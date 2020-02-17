@@ -33,7 +33,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     private var users: [UserFirestore] = [] {
         didSet {
             if let currentUserId = currentUserId {
-                currentUser = users.first{ $0.id == currentUserId }
+                currentUser = users.first { $0.id == currentUserId }
             }
         }
     }
@@ -41,7 +41,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore>?
     
-    required public init(config: Configuration) {
+    public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
@@ -130,7 +130,7 @@ public extension ChatNetworkFirebase {
                 return
             }
 
-            var newJSON: [String : Any] = json
+            var newJSON: [String: Any] = json
             newJSON[Constants.Message.senderIdAttributeName] = currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
@@ -175,7 +175,9 @@ public extension ChatNetworkFirebase {
                 else { return }
 
             let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
-            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else { return }
+            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else {
+                return
+            }
 
             conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
@@ -210,6 +212,7 @@ public extension ChatNetworkFirebase {
             pageSize: pageSize
         )
         
+        // swiftlint:disable:next force_unwrapping
         let query = conversationsQuery(numberOfConversations: conversationsPagination!.itemsLoaded)
         
         let closureToRun = { [weak self] in
@@ -238,7 +241,7 @@ public extension ChatNetworkFirebase {
         } else {
             onLoadListeners.append { result in
                 switch result {
-                case .success(()):
+                case .success:
                     closureToRun()
                 case .failure(let error):
                     completion(.failure(error))
