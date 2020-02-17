@@ -39,7 +39,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
     
     private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
-    private var conversationsPagination: Pagination<ConversationFirestore>?
+    private var conversationsPagination: Pagination<ConversationFirestore> = .empty
     
     public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -212,8 +212,7 @@ public extension ChatNetworkFirebase {
             pageSize: pageSize
         )
         
-        // swiftlint:disable:next force_unwrapping
-        let query = conversationsQuery(numberOfConversations: conversationsPagination!.itemsLoaded)
+        let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
         
         let closureToRun = { [weak self] in
             guard let self = self else {
@@ -280,11 +279,6 @@ public extension ChatNetworkFirebase {
     }
     
     func loadMoreConversations() {
-        
-        guard let conversationsPagination = conversationsPagination else {
-            return
-        }
-        
         self.conversationsPagination = advancePaginator(
             paginator: conversationsPagination,
             query: conversationsQuery(),
@@ -295,16 +289,16 @@ public extension ChatNetworkFirebase {
                 
                 switch result {
                 case .success(let conversations):
-                    self.conversationsPagination?.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
+                    self.conversationsPagination.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
                 case .failure(let error):
-                    self.conversationsPagination?.updateBlock?(.failure(error))
+                    self.conversationsPagination.updateBlock?(.failure(error))
                 }
         })
     }
     
     func loadMoreMessages(conversation id: String) {
         
-        guard var paginator = messagesPaginators[id] else {
+        guard let paginator = messagesPaginators[id] else {
             return
         }
         
