@@ -134,12 +134,10 @@ extension ConversationsListViewController {
     }
     
     class Delegate: NSObject, UITableViewDelegate {
-        // swiftlint:disable:next nesting
-        typealias Block = (Int) -> Void
-        let didSelectBlock: Block
+        let didSelectBlock: (Int) -> Void
         let loadMoreBlock: () -> Void
         
-        init(didSelectBlock: @escaping Block, loadMoreBlock: @escaping () -> Void) {
+        init(didSelectBlock: @escaping (Int) -> Void, loadMoreBlock: @escaping () -> Void) {
             self.didSelectBlock = didSelectBlock
             self.loadMoreBlock = loadMoreBlock
         }

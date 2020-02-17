@@ -17,15 +17,14 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias Networking = Networking
     public typealias UIModels = Models
     
-    // swiftlint:disable type_name
-    public typealias C = Models.CUI
-    public typealias MS = Models.MSUI
-    public typealias M = Models.MUI
-    public typealias USR = Models.USRUI
+    public typealias ConversationUI = Models.CUI
+    public typealias MessageSpecifyingUI = Models.MSUI
+    public typealias MessageUI = Models.MUI
+    public typealias UserUI = Models.USRUI
 
     let networking: Networking
 
-    public var currentUser: USR? {
+    public var currentUser: UserUI? {
         guard let currentUser = networking.currentUser else {
             return nil
         }
@@ -43,8 +42,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: MS, to conversation: ChatIdentifier,
-                   completion: @escaping (Result<M, ChatError>) -> Void) {
+    open func send(message: MessageSpecifyingUI, to conversation: ChatIdentifier,
+                   completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         let mess = Networking.MS(uiModel: message)
         networking.send(message: mess, to: conversation) { result in
             switch result {
@@ -59,7 +58,7 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) {
+    open func updateSeenMessage(_ message: MessageUI, in conversation: ChatIdentifier) {
         let seenMessage = Networking.M(uiModel: message)
         networking.updateSeenMessage(seenMessage, in: conversation)
     }
@@ -67,7 +66,7 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationUI], ChatError>) -> Void) -> ChatListener {
         let listener = networking.listenToConversations(pageSize: pageSize) { result in
             switch result {
             case .success(let conversations):
@@ -88,7 +87,7 @@ extension ChatCore {
     open func listenToMessages(
         conversation id: ChatIdentifier,
         pageSize: Int,
-        completion: @escaping (Result<[M], ChatError>) -> Void
+        completion: @escaping (Result<[MessageUI], ChatError>) -> Void
     ) -> ChatListener {
         let listener = networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
                    switch result {
