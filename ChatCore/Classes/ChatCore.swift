@@ -45,8 +45,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MS, to conversation: ChatIdentifier,
                    completion: @escaping (Result<M, ChatError>) -> Void) {
-
-        // FIXME: Solve without explicit type casting
         let mess = Networking.MS(uiModel: message)
         networking.send(message: mess, to: conversation) { result in
             switch result {
@@ -70,8 +68,6 @@ extension ChatCore {
 // MARK: Listening to updates
 extension ChatCore {
     open func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
-
-        // FIXME: Solve without explicit type casting
         let listener = networking.listenToConversations(pageSize: pageSize) { result in
             switch result {
             case .success(let conversations):
@@ -94,8 +90,6 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (Result<[M], ChatError>) -> Void
     ) -> ChatListener {
-
-        // FIXME: Solve without explicit type casting
         let listener = networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
                    switch result {
                    case .success(let messages):

@@ -337,7 +337,6 @@ private extension ChatNetworkFirebase {
     }
     
     func messagesQuery(conversation id: String, numberOfMessages: Int?) -> Query {
-        // FIXME: Make conversations path more generic
         let query = database
             .collection(Constants.conversationsPath)
             .document(id)
