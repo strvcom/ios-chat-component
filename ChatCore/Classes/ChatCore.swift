@@ -25,6 +25,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
     private var initialized = false
+    
+    public weak var delegate: ChatCoreServicingDelegate?
 
     public var currentUser: USR? {
         get {

@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol ChatNetworkServicingDelegate {
-    func didFinishLoading()
+public protocol ChatNetworkServicingDelegate: AnyObject {
+    func didFinishLoading(result: Result<Void, ChatError>)
 }
