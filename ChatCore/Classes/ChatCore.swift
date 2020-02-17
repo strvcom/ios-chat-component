@@ -49,19 +49,16 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MS, to conversation: ChatIdentifier,
                    completion: @escaping (Result<M, ChatError>) -> Void) {
-        
-        if willRunAfterInit(closure: { [weak self] in self?.send(message: message, to: conversation, completion: completion) }) {
-            return
-        }
-        
-        // FIXME: Solve without explicit type casting
-        let mess = Networking.MS(uiModel: message)
-        networking.send(message: mess, to: conversation) { result in
-            switch result {
-            case .success(let message):
-                completion(.success( message.uiModel))
-            case .failure(let error):
-                completion(.failure(error))
+        runAfterInit { [weak self] in
+            // FIXME: Solve without explicit type casting
+            let mess = Networking.MS(uiModel: message)
+            self?.networking.send(message: mess, to: conversation) { result in
+                switch result {
+                case .success(let message):
+                    completion(.success( message.uiModel))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -77,24 +74,19 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    
-    @discardableResult
     open func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
-        
         let listener = ChatListener.generateIdentifier()
         
-        if willRunAfterInit(closure: { [weak self] in self?.listenToConversations(completion: completion) }) {
-            return listener
-        }
-        
-        // FIXME: Solve without explicit type casting
-        networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
-            switch result {
-            case .success(let conversations):
-                let converted = conversations.compactMap({ $0.uiModel })
-                completion(.success(converted))
-            case .failure(let error):
-                completion(.failure(error))
+        runAfterInit { [weak self] in
+            // FIXME: Solve without explicit type casting
+            self?.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
+                switch result {
+                case .success(let conversations):
+                    let converted = conversations.compactMap({ $0.uiModel })
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
         
@@ -105,23 +97,19 @@ extension ChatCore {
         networking.loadMoreConversations()
     }
     
-    @discardableResult
     open func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
-        
         let listener = ChatListener.generateIdentifier()
         
-        if willRunAfterInit(closure: { [weak self] in self?.listenToMessages(conversation: id, completion: completion) }) {
-            return listener
-        }
-        
-        // FIXME: Solve without explicit type casting
-        networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
-            switch result {
-            case .success(let messages):
-                let converted = messages.compactMap({ $0.uiModel })
-                completion(.success(converted))
-            case .failure(let error):
-                completion(.failure(error))
+        runAfterInit { [weak self] in
+            // FIXME: Solve without explicit type casting
+            self?.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
+                switch result {
+                case .success(let messages):
+                    let converted = messages.compactMap({ $0.uiModel })
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
         
@@ -139,24 +127,36 @@ extension ChatCore {
 
 // MARK: Private methods
 private extension ChatCore {
-    func willRunAfterInit(closure: @escaping () -> Void) -> Bool {
-        let waitingForInitialization = !initialized
-        
-        if waitingForInitialization {
-            cachedCalls.append(closure)
+    func runAfterInit(closure: @escaping () -> Void) {
+        guard initialized else {
+            schedule(closure: closure)
+            
+            return
         }
         
-        return waitingForInitialization
+        closure()
+    }
+    
+    func schedule(closure: @escaping () -> Void) {
+        cachedCalls.append(closure)
     }
 }
 
 // MARK: ChatNetworkServicingDelegate
 extension ChatCore: ChatNetworkServicingDelegate {
-    public func didFinishLoading() {
-        initialized = true
+    public func didFinishLoading(result: Result<Void, ChatError>) {
         
-        cachedCalls.forEach { call in
-            call()
+        switch result {
+        case .success:
+            initialized = true
+            
+            cachedCalls.forEach { call in
+                call()
+            }
+            
+            cachedCalls = []
+        case .failure(let error):
+            delegate?.didFailInitialization(withError: error)
         }
     }
 }
