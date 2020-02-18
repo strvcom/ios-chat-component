@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct Constants {
+enum Constants {
     static let defaultPageSize = 10
 }

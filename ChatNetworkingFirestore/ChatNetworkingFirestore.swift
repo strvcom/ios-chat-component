@@ -33,15 +33,15 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     private var users: [UserFirestore] = [] {
         didSet {
             if let currentUserId = currentUserId {
-                currentUser = users.first{ $0.id == currentUserId }
+                currentUser = users.first { $0.id == currentUserId }
             }
         }
     }
     
     private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
-    private var conversationsPagination: Pagination<ConversationFirestore>?
+    private var conversationsPagination: Pagination<ConversationFirestore> = .empty
     
-    required public init(config: Configuration) {
+    public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
@@ -130,7 +130,7 @@ public extension ChatNetworkFirebase {
                 return
             }
 
-            var newJSON: [String : Any] = json
+            var newJSON: [String: Any] = json
             newJSON[Constants.Message.senderIdAttributeName] = currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
@@ -175,7 +175,9 @@ public extension ChatNetworkFirebase {
                 else { return }
 
             let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
-            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else { return }
+            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else {
+                return
+            }
 
             conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
@@ -210,7 +212,7 @@ public extension ChatNetworkFirebase {
             pageSize: pageSize
         )
         
-        let query = conversationsQuery(numberOfConversations: conversationsPagination!.itemsLoaded)
+        let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
         
         let closureToRun = { [weak self] in
             guard let self = self else {
@@ -238,7 +240,7 @@ public extension ChatNetworkFirebase {
         } else {
             onLoadListeners.append { result in
                 switch result {
-                case .success(()):
+                case .success:
                     closureToRun()
                 case .failure(let error):
                     completion(.failure(error))
@@ -277,11 +279,6 @@ public extension ChatNetworkFirebase {
     }
     
     func loadMoreConversations() {
-        
-        guard let conversationsPagination = conversationsPagination else {
-            return
-        }
-        
         self.conversationsPagination = advancePaginator(
             paginator: conversationsPagination,
             query: conversationsQuery(),
@@ -292,16 +289,16 @@ public extension ChatNetworkFirebase {
                 
                 switch result {
                 case .success(let conversations):
-                    self.conversationsPagination?.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
+                    self.conversationsPagination.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
                 case .failure(let error):
-                    self.conversationsPagination?.updateBlock?(.failure(error))
+                    self.conversationsPagination.updateBlock?(.failure(error))
                 }
         })
     }
     
     func loadMoreMessages(conversation id: String) {
         
-        guard var paginator = messagesPaginators[id] else {
+        guard let paginator = messagesPaginators[id] else {
             return
         }
         
@@ -334,7 +331,6 @@ private extension ChatNetworkFirebase {
     }
     
     func messagesQuery(conversation id: String, numberOfMessages: Int?) -> Query {
-        // FIXME: Make conversations path more generic
         let query = database
             .collection(Constants.conversationsPath)
             .document(id)

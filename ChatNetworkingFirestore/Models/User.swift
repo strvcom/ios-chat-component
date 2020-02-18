@@ -37,4 +37,3 @@ public struct UserFirestore: UserRepresenting, Decodable {
         self.imageUrl = try values.decodeIfPresent(URL.self, forKey: .imageUrl)
     }
 }
-

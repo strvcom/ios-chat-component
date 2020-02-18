@@ -8,8 +8,8 @@
 
 import UIKit
 
-extension UIImage {
-    public func optimized(maxSize: CGFloat = 1000) -> UIImage {
+public extension UIImage {
+    func optimized(maxSize: CGFloat = 1000) -> UIImage {
         let width = size.width
         let height = size.height
         let scale = width / maxSize
