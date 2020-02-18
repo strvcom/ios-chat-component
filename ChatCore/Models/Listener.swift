@@ -10,8 +10,8 @@ import Foundation
 
 public typealias ChatListener = String
 
-extension ChatListener {
-    public static func generateIdentifier() -> ChatListener {
+public extension ChatListener {
+    static func generateIdentifier() -> ChatListener {
         return UUID().uuidString
     }
 }

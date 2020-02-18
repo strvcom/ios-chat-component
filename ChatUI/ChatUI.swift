@@ -10,13 +10,9 @@ import UIKit
 import ChatCore
 
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
-    public typealias C = Conversation
-    public typealias M = MessageKitType
-    public typealias MS = MessageSpecification
-
     let core: Core
     
-    required public init(core: Core) {
+    public required init(core: Core) {
         self.core = core
     }
     

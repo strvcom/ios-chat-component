@@ -17,10 +17,10 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias Networking = Networking
     public typealias UIModels = Models
     
-    public typealias C = Models.CUI
-    public typealias MS = Models.MSUI
-    public typealias M = Models.MUI
-    public typealias USR = Models.USRUI
+    public typealias ConversationUI = Models.CUI
+    public typealias MessageSpecifyingUI = Models.MSUI
+    public typealias MessageUI = Models.MUI
+    public typealias UserUI = Models.USRUI
 
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
@@ -28,18 +28,18 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
     public weak var delegate: ChatCoreServicingDelegate?
 
-    public var currentUser: USR? {
-        get {
-            guard let currentUser = networking.currentUser else { return nil }
-            return currentUser.uiModel
+    public var currentUser: UserUI? {
+        guard let currentUser = networking.currentUser else {
+            return nil
         }
+        return currentUser.uiModel
     }
 
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
-    required public init (networking: Networking) {
+    public required init (networking: Networking) {
         self.networking = networking
         self.networking.delegate = self
     }
@@ -47,15 +47,14 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: MS, to conversation: ChatIdentifier,
-                   completion: @escaping (Result<M, ChatError>) -> Void) {
+    open func send(message: MessageSpecifyingUI, to conversation: ChatIdentifier,
+                   completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         runAfterInit { [weak self] in
-            // FIXME: Solve without explicit type casting
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 switch result {
                 case .success(let message):
-                    completion(.success( message.uiModel))
+                    completion(.success(message.uiModel))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -66,7 +65,7 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) {
+    open func updateSeenMessage(_ message: MessageUI, in conversation: ChatIdentifier) {
         let seenMessage = Networking.M(uiModel: message)
         networking.updateSeenMessage(seenMessage, in: conversation)
     }
@@ -74,11 +73,10 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationUI], ChatError>) -> Void) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
-        
+
         runAfterInit { [weak self] in
-            // FIXME: Solve without explicit type casting
             self?.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
@@ -89,19 +87,22 @@ extension ChatCore {
                 }
             }
         }
-        
+
         return listener
     }
     
     open func loadMoreConversations() {
         networking.loadMoreConversations()
     }
-    
-    open func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+
+    open func listenToMessages(
+        conversation id: ChatIdentifier,
+        pageSize: Int,
+        completion: @escaping (Result<[MessageUI], ChatError>) -> Void
+    ) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
         
         runAfterInit { [weak self] in
-            // FIXME: Solve without explicit type casting
             self?.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let messages):
@@ -112,7 +113,7 @@ extension ChatCore {
                 }
             }
         }
-        
+
         return listener
     }
     

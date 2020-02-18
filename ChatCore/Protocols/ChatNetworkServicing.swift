@@ -8,8 +8,10 @@
 
 import Foundation
 
+// swiftlint:disable type_name
 public protocol ChatNetworkServicing {
     associatedtype Config
+    
     // Specific conversation type
     associatedtype C: ConversationRepresenting
    // Message description used for sending a message
@@ -26,7 +28,7 @@ public protocol ChatNetworkServicing {
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
-    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier) 
+    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
 
     func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[C], ChatError>) -> Void)
     

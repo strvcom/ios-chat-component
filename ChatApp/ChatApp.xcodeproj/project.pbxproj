@@ -588,6 +588,7 @@
 			buildConfigurationList = ADB40CD623C200A5003DC146 /* Build configuration list for PBXNativeTarget "ChatApp" */;
 			buildPhases = (
 				24FD2DDF13B0E4A4C4EDB65F /* [CP] Check Pods Manifest.lock */,
+				043CC11E23F9C9170027DD11 /* Swiftlint */,
 				ADB40CBE23C200A5003DC146 /* Sources */,
 				ADB40CBF23C200A5003DC146 /* Frameworks */,
 				ADB40CC023C200A5003DC146 /* Resources */,
@@ -721,6 +722,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		043CC11E23F9C9170027DD11 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
 		24FD2DDF13B0E4A4C4EDB65F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
