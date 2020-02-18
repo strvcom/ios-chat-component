@@ -9,7 +9,6 @@
 import UIKit
 import ChatCore
 
-// swiftlint:disable type_name
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     let core: Core
     
