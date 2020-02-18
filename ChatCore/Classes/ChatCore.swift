@@ -25,8 +25,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
     private var initialized = false
-    
-    public weak var delegate: ChatCoreServicingDelegate?
 
     public var currentUser: UserUI? {
         guard let currentUser = networking.currentUser else {
@@ -157,7 +155,7 @@ extension ChatCore: ChatNetworkServicingDelegate {
             
             cachedCalls = []
         case .failure(let error):
-            delegate?.didFailInitialization(withError: error)
+            print(error)
         }
     }
 }

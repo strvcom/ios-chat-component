@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		008B43311772BA388EBE9E00 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */; };
-		043CC12023FADF6F0027DD11 /* ChatCoreServicingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC11F23FADF6F0027DD11 /* ChatCoreServicingDelegate.swift */; };
 		04957CC623F306A900AD595B /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC423F3068900AD595B /* Pagination.swift */; };
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		04E8C60F23F8280A00501413 /* ChatNetworkServicingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E8C60D23F8273000501413 /* ChatNetworkServicingDelegate.swift */; };
@@ -126,7 +125,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		043CC11F23FADF6F0027DD11 /* ChatCoreServicingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoreServicingDelegate.swift; sourceTree = "<group>"; };
 		04957CC423F3068900AD595B /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		04957CC723F375C500AD595B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		04E8C60D23F8273000501413 /* ChatNetworkServicingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkServicingDelegate.swift; sourceTree = "<group>"; };
@@ -437,7 +435,6 @@
 				C11E9E3223EDCD1E005E10A1 /* ChatNetworkingConvertible.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
 				04E8C60D23F8273000501413 /* ChatNetworkServicingDelegate.swift */,
-				043CC11F23FADF6F0027DD11 /* ChatCoreServicingDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -888,7 +885,6 @@
 				04E8C60F23F8280A00501413 /* ChatNetworkServicingDelegate.swift in Sources */,
 				C11E9E3923EDCD1E005E10A1 /* Listener.swift in Sources */,
 				C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */,
-				043CC12023FADF6F0027DD11 /* ChatCoreServicingDelegate.swift in Sources */,
 				C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
