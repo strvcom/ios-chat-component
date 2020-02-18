@@ -22,7 +22,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
 
-    let networking: Networking
+    private var networking: Networking
+    private var cachedCalls = [() -> Void]()
+    private var initialized = false
 
     public var currentUser: UserUI? {
         guard let currentUser = networking.currentUser else {
@@ -37,6 +39,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     public required init (networking: Networking) {
         self.networking = networking
+        self.networking.delegate = self
     }
 }
     
@@ -44,13 +47,15 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ChatIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-        let mess = Networking.MS(uiModel: message)
-        networking.send(message: mess, to: conversation) { result in
-            switch result {
-            case .success(let message):
-                completion(.success( message.uiModel))
-            case .failure(let error):
-                completion(.failure(error))
+        runAfterInit { [weak self] in
+            let mess = Networking.MS(uiModel: message)
+            self?.networking.send(message: mess, to: conversation) { result in
+                switch result {
+                case .success(let message):
+                    completion(.success(message.uiModel))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -67,13 +72,17 @@ extension ChatCore {
 // MARK: Listening to updates
 extension ChatCore {
     open func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationUI], ChatError>) -> Void) -> ChatListener {
-        let listener = networking.listenToConversations(pageSize: pageSize) { result in
-            switch result {
-            case .success(let conversations):
-                let converted = conversations.compactMap({ $0.uiModel })
-                completion(.success(converted))
-            case .failure(let error):
-                completion(.failure(error))
+        let listener = ChatListener.generateIdentifier()
+
+        runAfterInit { [weak self] in
+            self?.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
+                switch result {
+                case .success(let conversations):
+                    let converted = conversations.compactMap({ $0.uiModel })
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
 
@@ -89,15 +98,20 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (Result<[MessageUI], ChatError>) -> Void
     ) -> ChatListener {
-        let listener = networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
-                   switch result {
-                   case .success(let messages):
+        let listener = ChatListener.generateIdentifier()
+        
+        runAfterInit { [weak self] in
+            self?.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
+                switch result {
+                case .success(let messages):
                     let converted = messages.compactMap({ $0.uiModel })
-                       completion(.success(converted))
-                   case .failure(let error):
-                       completion(.failure(error))
-                   }
-               }
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
         return listener
     }
     
@@ -107,5 +121,41 @@ extension ChatCore {
     
     open func remove(listener: ChatListener) {
         networking.remove(listener: listener)
+    }
+}
+
+// MARK: Private methods
+private extension ChatCore {
+    func runAfterInit(closure: @escaping () -> Void) {
+        guard initialized else {
+            schedule(closure: closure)
+            
+            return
+        }
+        
+        closure()
+    }
+    
+    func schedule(closure: @escaping () -> Void) {
+        cachedCalls.append(closure)
+    }
+}
+
+// MARK: ChatNetworkServicingDelegate
+extension ChatCore: ChatNetworkServicingDelegate {
+    public func didFinishLoading(result: Result<Void, ChatError>) {
+        
+        switch result {
+        case .success:
+            initialized = true
+            
+            cachedCalls.forEach { call in
+                call()
+            }
+            
+            cachedCalls = []
+        case .failure(let error):
+            print(error)
+        }
     }
 }

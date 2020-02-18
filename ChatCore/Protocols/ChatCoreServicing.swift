@@ -40,7 +40,7 @@ public protocol ChatCoreServicing {
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToConversation(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+    func listenToMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
