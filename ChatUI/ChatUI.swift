@@ -11,10 +11,6 @@ import ChatCore
 
 // swiftlint:disable type_name
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
-    public typealias C = Conversation
-    public typealias M = MessageKitType
-    public typealias MS = MessageSpecification
-
     let core: Core
     
     public required init(core: Core) {
