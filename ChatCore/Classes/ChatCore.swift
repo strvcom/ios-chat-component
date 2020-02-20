@@ -22,10 +22,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
     
-    private var conversationsCount = 0
-    private var messagesCount = 0
-    private var endOfConversations = false
-    private var endOfMessages = false
+    private var dataManagers = [ChatListener: DataManager]()
 
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
@@ -79,8 +76,7 @@ extension ChatCore {
     open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
         
-        conversationsCount = 0
-        endOfConversations = false
+        dataManagers[listener] = DataManager(pageSize: pageSize)
 
         runAfterInit { [weak self] in
             
@@ -92,16 +88,12 @@ extension ChatCore {
                 switch result {
                 case .success(let conversations):
                     
-                    self.endOfConversations = self.endOfConversations || self.reachedEndOfData(
-                        currentCount: self.conversationsCount,
-                        pageSize: pageSize,
-                        data: conversations
-                    )
-                    self.conversationsCount = conversations.count
+                    self.dataManagers[listener]?.update(data: conversations)
                     
                     let converted = conversations.compactMap({ $0.uiModel })
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
-                    completion(.success(DataPayload(data: converted, reachedEnd: self.endOfConversations)))
+                    completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -122,8 +114,7 @@ extension ChatCore {
     ) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
 
-        messagesCount = 0
-        endOfMessages = false
+        dataManagers[listener] = DataManager(pageSize: pageSize)
         
         runAfterInit { [weak self] in
             
@@ -135,16 +126,12 @@ extension ChatCore {
                 switch result {
                 case .success(let messages):
                     
-                    self.endOfMessages = self.endOfMessages || self.reachedEndOfData(
-                        currentCount: self.messagesCount,
-                        pageSize: pageSize,
-                        data: messages
-                    )
-                    self.messagesCount = messages.count
+                    self.dataManagers[listener]?.update(data: messages)
                     
                     let converted = messages.compactMap({ $0.uiModel })
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
-                    completion(.success(DataPayload(data: converted, reachedEnd: self.endOfMessages)))
+                    completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -160,6 +147,7 @@ extension ChatCore {
     
     open func remove(listener: ChatListener) {
         networking.remove(listener: listener)
+        dataManagers[listener] = nil
     }
 }
 
@@ -177,10 +165,6 @@ private extension ChatCore {
     
     func schedule(closure: @escaping () -> Void) {
         cachedCalls.append(closure)
-    }
-    
-    func reachedEndOfData<T>(currentCount: Int, pageSize: Int, data: [T]) -> Bool {
-        return currentCount == data.count || data.count % pageSize != 0
     }
 }
 
