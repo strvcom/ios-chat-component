@@ -29,13 +29,60 @@ The interfaces between layers should be designed as universal as possible. Pleas
 
 Each modules is a standalone framework target, so we can hide implementation details from each others with **internal** modifier
 
-### STRVChatKit - Essential models and protocols
+### ChatCore - Essential models and protocols
 
-### STRVChatKitFirestore - Firestore operation adapter for codables
+### ChatNetworkingFirestore - Firestore networking layer
+
+### ChatUI - UI using MessageKit
+
+## CocoaPods
+
+### Installation
+
+As we are currently working with a private repository, podspecs of each layer are in a separate repository right [here](https://github.com/strvcom/ios-research-chat-component-specs)
+
+To integrate Chat Component into your Xcode project using CocoaPods, specify it in your `Podfile`. Do not forget to include source path to the private repo with podspecs. You also must be logged into your Github account to have access to the private repos:
+```
+source 'https://github.com/strvcom/ios-research-chat-component-specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'TARGET_NAME' do
+  # For plug&play solution with predefined MessageKit UI and Firestore backend
+  pod 'Chat/ChatMessageKitFirestore'
+
+  # If you want to use just some of the layers
+  pod 'Chat/Core'
+  pod 'Chat/NetworkingFirestore'
+  pod 'Chat/UI'
+end
+```
  
+### Publishing new version
+
+As we work with private repos, also the publishing is more complicated. But not too much. You also must be logged into your Github account to have access to the private repos. Then you need to add the private pods to your local specs like this:
+
+```
+pod repo add Chat https://github.com/strvcom/ios-research-chat-component-specs.git
+pod repo add ChatCore https://github.com/strvcom/ios-research-chat-component-specs.git
+pod repo add ChatUI https://github.com/strvcom/ios-research-chat-component-specs.git
+pod repo add ChatNetworkingFirestore https://github.com/strvcom/ios-research-chat-component-specs.git
+```
+
+This should be done only once.
+
+When you want to release a new version of a pod, first, you need to push your code with a tag describing the version number, let's say `1.1.0`.
+
+Let's assume you updated `ChatCore`. So you need to get `ChatCore.podspec` from the specs repository and locally update version number to `1.1.0` in the file. Finally, you have to push the changes in specs to the specs repository like this:
+
+```
+pod repo push ChatCore ~/Desktop/ChatCore.podspec
+```
+
+And that's it. You can check complete [Podspec docs](https://guides.cocoapods.org/syntax/podspec.html) and [Private Pod docs](https://guides.cocoapods.org/making/private-cocoapods.html).
+
 ## Example
 
-[Example](Example/)
+[Example](ChatApp/)
 
 ## Features
 

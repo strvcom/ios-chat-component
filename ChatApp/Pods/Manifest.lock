@@ -164,14 +164,6 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.3):
     - BoringSSL-GRPC/Interface (= 0.0.3)
   - BoringSSL-GRPC/Interface (0.0.3)
-  - Firebase/CoreOnly (6.14.0):
-    - FirebaseCore (= 6.5.0)
-  - Firebase/Firestore (6.14.0):
-    - Firebase/CoreOnly
-    - FirebaseFirestore (~> 1.8.2)
-  - Firebase/Storage (6.14.0):
-    - Firebase/CoreOnly
-    - FirebaseStorage (~> 3.4.3)
   - FirebaseAuthInterop (1.0.0)
   - FirebaseCore (6.5.0):
     - FirebaseCoreDiagnostics (~> 1.0)
@@ -200,7 +192,7 @@ PODS:
     - nanopb (~> 0.3.901)
   - FirebaseFirestoreSwift (0.2):
     - FirebaseFirestore (>= 1.6.1, ~> 1.6)
-  - FirebaseStorage (3.4.3):
+  - FirebaseStorage (3.5.0):
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
@@ -240,9 +232,10 @@ PODS:
   - SwiftLint (0.39.1)
 
 DEPENDENCIES:
-  - Firebase/Firestore
-  - Firebase/Storage
+  - FirebaseCore
+  - FirebaseFirestore
   - FirebaseFirestoreSwift
+  - FirebaseStorage
   - MessageKit
   - SwiftLint
 
@@ -250,7 +243,6 @@ SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
-    - Firebase
     - FirebaseAuthInterop
     - FirebaseCore
     - FirebaseCoreDiagnostics
@@ -273,14 +265,13 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
-  Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: 632e05cc5e1199d9147122c16d92305eb04c34bd
   FirebaseCoreDiagnostics: 511f4f3ed7d440bb69127e8b97c2bc8befae639e
   FirebaseCoreDiagnosticsInterop: e9b1b023157e3a2fc6418b5cb601e79b9af7b3a0
   FirebaseFirestore: 52120e2833f804a874ba1a9f59aab864a8ae2286
   FirebaseFirestoreSwift: 0437bb10d83f8161a9131da1739998254c78fdf5
-  FirebaseStorage: 93fe2f8190a01bfb2b2c4932df7d679744c4ef1d
+  FirebaseStorage: 6c5263796af3b1be82ed173598aade47535fe125
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
   GoogleDataTransportCCTSupport: 202d7cdf9c4a7d81a2bb7f7e7e1ba6faa421b1f2
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
@@ -293,6 +284,6 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
 
-PODFILE CHECKSUM: 0097ba6517e9763a6a45eae8bb4c7cd555580a33
+PODFILE CHECKSUM: 0ae6d7b4fb4d8ca0570d152d6ef06023e150fee6
 
 COCOAPODS: 1.8.4
