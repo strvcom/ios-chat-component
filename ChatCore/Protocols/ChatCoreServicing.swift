@@ -25,11 +25,11 @@ public protocol ChatCoreServicing {
 
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
     
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ChatListener
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ChatListener
     
     func loadMoreMessages(conversation id: ChatIdentifier)
 
@@ -40,11 +40,11 @@ public protocol ChatCoreServicing {
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+    func listenToMessages(conversation id: ChatIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ChatListener {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
-    func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
+    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ChatListener {
         listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
     }
 }

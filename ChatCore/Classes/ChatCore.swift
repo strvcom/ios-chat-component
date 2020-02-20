@@ -21,6 +21,11 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
+    
+    private var conversationsCount = 0
+    private var messagesCount = 0
+    private var endOfConversations = false
+    private var endOfMessages = false
 
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
@@ -71,15 +76,32 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationUI], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
+        
+        conversationsCount = 0
+        endOfConversations = false
 
         runAfterInit { [weak self] in
-            self?.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
+                    
+                    self.endOfConversations = self.endOfConversations || self.reachedEndOfData(
+                        currentCount: self.conversationsCount,
+                        pageSize: pageSize,
+                        data: conversations
+                    )
+                    self.conversationsCount = conversations.count
+                    
                     let converted = conversations.compactMap({ $0.uiModel })
-                    completion(.success(converted))
+                    
+                    completion(.success(DataPayload(data: converted, reachedEnd: self.endOfConversations)))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -96,16 +118,33 @@ extension ChatCore {
     open func listenToMessages(
         conversation id: ChatIdentifier,
         pageSize: Int,
-        completion: @escaping (Result<[MessageUI], ChatError>) -> Void
+        completion: @escaping (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
     ) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
+
+        messagesCount = 0
+        endOfMessages = false
         
         runAfterInit { [weak self] in
-            self?.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            self.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let messages):
+                    
+                    self.endOfMessages = self.endOfMessages || self.reachedEndOfData(
+                        currentCount: self.messagesCount,
+                        pageSize: pageSize,
+                        data: messages
+                    )
+                    self.messagesCount = messages.count
+                    
                     let converted = messages.compactMap({ $0.uiModel })
-                    completion(.success(converted))
+                    
+                    completion(.success(DataPayload(data: converted, reachedEnd: self.endOfMessages)))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -138,6 +177,10 @@ private extension ChatCore {
     
     func schedule(closure: @escaping () -> Void) {
         cachedCalls.append(closure)
+    }
+    
+    func reachedEndOfData<T>(currentCount: Int, pageSize: Int, data: [T]) -> Bool {
+        return currentCount == data.count || data.count % pageSize != 0
     }
 }
 
