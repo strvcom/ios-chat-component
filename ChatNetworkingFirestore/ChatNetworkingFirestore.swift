@@ -25,20 +25,22 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-
+    public weak var delegate: ChatNetworkServicingDelegate?
+    
     private var listeners: [ChatListener: ListenerRegistration] = [:]
-    private var initialized = false
-    private var onLoadListeners: [(Result<Void, ChatError>) -> Void] = []
     private var currentUserId: String?
     private var users: [UserFirestore] = [] {
         didSet {
             if let currentUserId = currentUserId {
-                currentUser = users.first{ $0.id == currentUserId }
+                currentUser = users.first { $0.id == currentUserId }
             }
         }
     }
-
-    required public init(config: Configuration) {
+    
+    private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
+    private var conversationsPagination: Pagination<ConversationFirestore> = .empty
+    
+    public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
@@ -52,7 +54,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
         
         load { [weak self] result in
-            self?.onLoadFinished(result: result)
+            self?.delegate?.didFinishLoading(result: result)
         }
     }
     
@@ -100,14 +102,6 @@ public extension ChatNetworkFirebase {
             }
         }
     }
-    
-    func onLoadFinished(result: (Result<Void, ChatError>)) {
-        if case .success = result {
-            initialized = true
-        }
-        
-        onLoadListeners.forEach { $0(result) }
-    }
 }
 
 // MARK: Write data
@@ -127,14 +121,14 @@ public extension ChatNetworkFirebase {
                 return
             }
 
-            var newJSON: [String : Any] = json
+            var newJSON: [String: Any] = json
             newJSON[Constants.Message.senderIdAttributeName] = currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
-                    .collection(Constants.conversationsPath)
-                    .document(conversation)
-                    .collection(Constants.messagesPath)
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+                .collection(Constants.messagesPath)
 
             let documentRef = reference.document()
 
@@ -155,82 +149,175 @@ public extension ChatNetworkFirebase {
             }
         }
     }
+
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: ChatIdentifier) {
+        guard let currentUserId = self.currentUser?.id else {
+            print("User not found")
+            return
+        }
+        let reference = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+
+
+        reference.getDocument { (document, _) in
+            guard let document = document,
+                var conversation = try? document.data(as: ConversationFirestore.self)
+                else { return }
+
+            let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
+            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else {
+                return
+            }
+
+            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+
+            var newJson: [String: Any] = [:]
+
+            for item in conversation.seen {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
+
+            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                }
+            }
+        }
+    }
 }
- 
+
 // MARK: Listen to collections
 public extension ChatNetworkFirebase {
-    func listenToConversations(completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) -> ChatListener {
-       
-        let listener = ChatListener.generateIdentifier()
+    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
         
-        // FIXME: Make conversations path more generic
-        let reference = database.collection(Constants.conversationsPath)
+        conversationsPagination = Pagination(
+            updateBlock: completion,
+            listener: listener,
+            pageSize: pageSize
+        )
         
-        let closureToRun = { [weak self] in
+        let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
+        
+        listenTo(query: query, customListener: listener, completion: { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
+            
             guard let self = self else {
                 return
             }
             
-            self.listenTo(reference: reference, customListener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
-                
-                guard case let .success(conversations) = result else {
-                    completion(result)
-                    return
-                }
-                
-                // Set members from previously downloaded users
-                completion(.success(conversations.map { conversation in
-                    var result = conversation
-                    result.setMembers(self.users.filter { result.memberIds.contains($0.id) })
-                    return result
-                }))
-            })
-        }
-        
-        if initialized {
-            closureToRun()
-        } else {
-            onLoadListeners.append { result in
-                switch result {
-                case .success(()):
-                    closureToRun()
-                case .failure(let error):
-                    completion(.failure(error))
-                }
+            guard case let .success(conversations) = result else {
+                completion(result)
+                return
             }
-        }
-        
-        return listener
+
+            // Set members from previously downloaded users
+            completion(.success(self.conversationsWithMembers(conversations: conversations)))
+        })
     }
 
-    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) -> ChatListener {
-
-        // FIXME: Make conversations path more generic
-        let reference = database
-            .collection(Constants.conversationsPath)
-            .document(id)
-            .collection(Constants.messagesPath)
-            .order(by: Constants.Message.sentAtAttributeName)
-        return listenTo(reference: reference, completion: completion)
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+        
+        let completion = reversedDataCompletion(completion: completion)
+        
+        let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
+        
+        listenTo(query: query, customListener: listener, completion: completion)
+        
+        messagesPaginators[id] = Pagination<MessageFirestore>(
+            updateBlock: completion,
+            listener: listener,
+            pageSize: pageSize
+        )
     }
     
     @discardableResult
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
-        let reference = database.collection(Constants.usersPath)
+        let query = database.collection(Constants.usersPath)
         
-        return listenTo(reference: reference, completion: completion)
+        return listenTo(query: query, completion: completion)
     }
     
     func remove(listener: ChatListener) {
         listeners[listener]?.remove()
     }
+    
+    func loadMoreConversations() {
+        self.conversationsPagination = advancePaginator(
+            paginator: conversationsPagination,
+            query: conversationsQuery(),
+            listenerCompletion: { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                
+                switch result {
+                case .success(let conversations):
+                    self.conversationsPagination.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
+                case .failure(let error):
+                    self.conversationsPagination.updateBlock?(.failure(error))
+                }
+        })
+    }
+    
+    func loadMoreMessages(conversation id: String) {
+        
+        guard let paginator = messagesPaginators[id] else {
+            return
+        }
+        
+        let query = messagesQuery(
+            conversation: id,
+            numberOfMessages: paginator.itemsLoaded
+        )
+        
+        messagesPaginators[id] = advancePaginator(
+            paginator: paginator,
+            query: query,
+            listenerCompletion: { [weak self] (result: Result<[MessageFirestore], ChatError>) in
+                self?.messagesPaginators[id]?.updateBlock?(result)
+        })
+    }
+}
+
+// MARK: Queries
+private extension ChatNetworkFirebase {
+    
+    func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
+        let query = database
+            .collection(Constants.conversationsPath)
+
+        if let limit = numberOfConversations {
+            return query.limit(to: limit)
+        }
+        
+        return query
+    }
+    
+    func messagesQuery(conversation id: String, numberOfMessages: Int?) -> Query {
+        let query = database
+            .collection(Constants.conversationsPath)
+            .document(id)
+            .collection(Constants.messagesPath)
+            .order(by: Constants.Message.sentAtAttributeName, descending: true)
+        
+        if let limit = numberOfMessages {
+            return query.limit(to: limit)
+        }
+        
+        return query
+    }
+
 }
 
 // MARK: Private methods
 private extension ChatNetworkFirebase {
     @discardableResult
-    func listenTo<T: Decodable>(reference: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
-        let listener = reference.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
+    func listenTo<T: Decodable>(query: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+        let listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
                 let list: [T] = snapshot.documents.compactMap {
                     do {
@@ -253,5 +340,43 @@ private extension ChatNetworkFirebase {
         listeners[identifier] = listener
         
         return identifier
+    }
+    
+    func conversationsWithMembers(conversations: [ConversationFirestore]) -> [ConversationFirestore] {
+        conversations.map { conversation in
+            var result = conversation
+            result.setMembers(users.filter { result.memberIds.contains($0.id) })
+            return result
+        }
+    }
+    
+    func advancePaginator<T: Decodable>(paginator: Pagination<T>, query: Query, listenerCompletion: @escaping (Result<[T], ChatError>) -> Void) -> Pagination<T> {
+        
+        var paginator = paginator
+        
+        guard let listener = paginator.listener else {
+            return paginator
+        }
+        
+        remove(listener: listener)
+        
+        paginator.nextPage()
+        
+        let query = query.limit(to: paginator.itemsLoaded)
+        
+        paginator.listener = listenTo(query: query, customListener: listener, completion: listenerCompletion)
+        
+        return paginator
+    }
+    
+    func reversedDataCompletion<T: Decodable>(completion: @escaping (Result<[T], ChatError>) -> Void) -> (Result<[T], ChatError>) -> Void {
+        return { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data.reversed()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }

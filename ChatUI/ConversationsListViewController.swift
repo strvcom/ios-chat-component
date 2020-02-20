@@ -14,9 +14,11 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     let core: Core
     
     private let dataSource = DataSource()
+    
+    // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     
-    private var tableView: UITableView!
+    private lazy var tableView = UITableView()
     private var listener: ChatListener?
 
     // FIXME: this is just a temporary solution
@@ -30,6 +32,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         setup()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,18 +45,25 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     private func setup() {
         view.backgroundColor = .white
-
-        delegate = Delegate(didSelectBlock: { [weak self] row in
-            guard let self = self else {
-                return
-            }
-            
-            let conversation = self.dataSource.conversations[row]
-            let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
-            self.navigationController?.pushViewController(controller, animated: true)
-        })
         
-        tableView = UITableView()
+        delegate = Delegate(
+            didSelectBlock: { [weak self] row in
+                guard let self = self else {
+                    return
+                }
+                
+                let conversation = self.dataSource.conversations[row]
+                let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
+                self.navigationController?.pushViewController(controller, animated: true)
+            },
+            loadMoreBlock: { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.core.loadMoreConversations()
+            }
+        )
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ListCell.self, forCellReuseIdentifier: ListCell.reuseIdentifier)
         tableView.dataSource = dataSource
@@ -84,7 +94,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         }
     }
     
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createTestConversation))
     }
@@ -103,8 +113,8 @@ extension ConversationsListViewController {
         var conversations: [Conversation] = []
 
         func conversationTitle(_ conversation: Conversation) -> String {
-            let title = conversation.members.compactMap{ $0.name }.joined(separator: ",")
-            return title == "" ? "Conversation Title" : title
+            let title = conversation.members.compactMap { $0.name }.joined(separator: ",")
+            return title.isEmpty ? "Conversation Title" : title
         }
 
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -124,15 +134,28 @@ extension ConversationsListViewController {
     }
     
     class Delegate: NSObject, UITableViewDelegate {
-        typealias Block = (Int) -> Void
-        let didSelectBlock: Block
+        let didSelectBlock: (Int) -> Void
+        let loadMoreBlock: () -> Void
         
-        init(didSelectBlock: @escaping Block) {
+        init(didSelectBlock: @escaping (Int) -> Void, loadMoreBlock: @escaping () -> Void) {
             self.didSelectBlock = didSelectBlock
+            self.loadMoreBlock = loadMoreBlock
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             didSelectBlock(indexPath.row)
+        }
+        
+        func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+            let button = UIButton()
+            button.setTitle("Load more...", for: .normal)
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.addTarget(self, action: #selector(loadMoreTapped), for: .touchUpInside)
+            return button
+        }
+        
+        @objc func loadMoreTapped() {
+            loadMoreBlock()
         }
     }
 }

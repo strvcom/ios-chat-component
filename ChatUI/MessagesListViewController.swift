@@ -14,7 +14,7 @@ import InputBarAccessoryView
 public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let core: Core
     let conversation: Conversation
-    fileprivate let dataSource = DataSource()
+    private let dataSource = DataSource()
 
     private var listener: ChatListener?
     private let sender: Sender
@@ -31,6 +31,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         setup()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -45,25 +46,40 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         view.backgroundColor = .white
 
         setupInputBar()
-        
+
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
 
-        listener = core.listenToConversation(with: conversation.id) { [weak self] result in
+        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
+        navigationItem.setRightBarButton(item, animated: false)
+
+        listener = core.listenToMessages(conversation: conversation.id) { [weak self] result in
             switch result {
             case .success(let messages):
                 self?.dataSource.messages = messages
+                self?.markSeenMessage()
                 self?.messagesCollectionView.reloadData()
-                self?.messagesCollectionView.scrollToBottom(animated: true)
             case .failure(let error):
                 print(error)
             }
         }
     }
-    
+
+    @objc
+    func loadMore() {
+        core.loadMoreMessages(conversation: conversation.id)
+    }
+
+    func markSeenMessage() {
+        guard let lastMessage = self.dataSource.messages.last else {
+            return
+        }
+        core.updateSeenMessage(lastMessage, in: conversation.id)
+    }
+
     // MARK: - UIImagePickerControllerDelegate
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
         guard let image = info[.originalImage] as? UIImage else {
             return
@@ -94,6 +110,29 @@ extension MessagesListViewController: MessagesDataSource {
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         return self.dataSource.messages.count
     }
+
+    public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return conversation.seen.contains { $0.value.messageId == message.messageId } ? 20 : 0
+    }
+
+    public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        var text: String = ""
+
+        let seenMessages: [String: (messageId: ChatIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
+
+        if conversation.members.count == 2 && seenMessages.contains { $0.key != self.sender.senderId } {
+            text = "Seen"
+        } else if conversation.members.count > 2 && seenMessages.count == conversation.members.count - 1 {
+            text = "Seen by All"
+        } else if conversation.members.count > 2 && !seenMessages.isEmpty {
+            let usersIds = seenMessages.compactMap { $0.key }
+
+            let seenUsers = conversation.members.filter { usersIds.contains($0.id) }.compactMap { $0.name }.joined(separator: ",")
+            text = "Seen by \(seenUsers)"
+        }
+
+        return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
+    }
 }
 
 extension MessagesListViewController: MessagesLayoutDelegate { }
@@ -119,7 +158,7 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
         self.messageInputBar.sendButton.alpha = 0.3
 
         let specs = MessageSpecification.text(message: text)
-        core.send(message: specs, to: conversation.id) { result in
+        core.send(message: specs, to: conversation.id) { _ in
 
             self.messageInputBar.inputTextView.text = nil
 

@@ -8,9 +8,9 @@
 
 import UIKit
 
-extension UIImageView {
-    public func setImage(with url: URL) {
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+public extension UIImageView {
+    func setImage(with url: URL) {
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
             guard error == nil, let data = data else {
                 return
             }

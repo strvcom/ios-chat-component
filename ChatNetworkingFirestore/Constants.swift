@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct Constants {
+enum Constants {
     static let defaultIdAttributeName = "id"
     static let conversationsPath = "conversations"
     static let messagesPath = "messages"
     static let usersPath = "users"
     
-    struct Message {
+    enum Message {
         static let senderIdAttributeName = "userId"
         static let messageTypeAttributeName = "type"
         static let dataAttributeName = "data"
@@ -23,5 +23,11 @@ struct Constants {
         static let messageTypeImage = "image"
         static let dataAttributeNameText = "text"
         static let dataAttributeNameImage = "imageUrl"
+        static let messageIdAttributeName = "messageId"
+        static let timestampAttributeName = "timestamp"
+    }
+    
+    enum Conversation {
+        static let seenAttributeName = "seen"
     }
 }

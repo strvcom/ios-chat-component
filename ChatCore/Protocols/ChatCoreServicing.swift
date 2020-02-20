@@ -8,6 +8,7 @@
 
 import Foundation
 
+// swiftlint:disable type_name
 public protocol ChatCoreServicing {
     // Networking manager
     associatedtype Networking: ChatNetworkServicing
@@ -23,10 +24,27 @@ public protocol ChatCoreServicing {
     init(networking: Networking)
 
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
+    
+    func loadMoreConversations()
 
-    func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener
-
-    func listenToConversation(with id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener
+    
+    func loadMoreMessages(conversation id: ChatIdentifier)
 
     func remove(listener: ChatListener)
+
+    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
+}
+
+// MARK: Default page size
+public extension ChatCoreServicing {
+    func listenToMessages(conversation id: ChatIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void) -> ChatListener {
+        listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
+    }
+    
+    func listenToConversations(completion: @escaping (Result<[C], ChatError>) -> Void) -> ChatListener {
+        listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
+    }
 }

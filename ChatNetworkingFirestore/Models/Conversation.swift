@@ -19,10 +19,10 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     let memberIds: [ChatIdentifier]
     public private(set) var members: [UserFirestore] = []
     public private(set) var messages: [MessageFirestore] = []
-    public let seen: Seen
+    public private(set) var seen: Seen
 
     private enum CodingKeys: CodingKey {
-        case id, lastMessage, messages, members, seenAt
+        case id, lastMessage, messages, members, seen
     }
 
     public init(id: ChatIdentifier, lastMessage: MessageFirestore?, members: [UserFirestore], messages: [MessageFirestore], seen: Seen, memberIds: [ChatIdentifier]) {
@@ -44,7 +44,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         self.id = id
         self.lastMessage = try values.decodeIfPresent(Message.self, forKey: .lastMessage)
         self.memberIds = try values.decode([ChatIdentifier].self, forKey: .members)
-        self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seenAt)?.reduce(into: Seen(), { (result, item) in
+        self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seen)?.reduce(into: Seen(), { (result, item) in
             let (key, value) = item
             result[key] = (messageId: value.messageId, seenAt: value.timestamp)
         }) ?? [:]
@@ -52,5 +52,9 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
 
     public mutating func setMembers(_ members: [UserFirestore]) {
         self.members = members
+    }
+
+    public mutating func setSeenMessages(_ seen: (messageId: ChatIdentifier, seenAt: Date), currentUserId: ChatIdentifier) {
+        self.seen.updateValue(seen, forKey: currentUserId)
     }
 }

@@ -18,6 +18,7 @@ end
 
 target 'ChatApp' do
   networking_pods
+  pod 'SwiftLint'
 end
 
 target 'Chat' do
