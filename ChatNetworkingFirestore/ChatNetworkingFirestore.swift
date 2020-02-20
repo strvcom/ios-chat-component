@@ -287,8 +287,14 @@ public extension ChatNetworkFirebase {
 private extension ChatNetworkFirebase {
     
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
+        
+        guard let userId = currentUserId else {
+            fatalError("Current user must be set")
+        }
+        
         let query = database
             .collection(Constants.conversationsPath)
+            .whereField(Constants.Message.membersAttributeName, arrayContains: userId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)

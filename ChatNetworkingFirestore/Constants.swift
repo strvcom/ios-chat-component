@@ -25,6 +25,7 @@ enum Constants {
         static let dataAttributeNameImage = "imageUrl"
         static let messageIdAttributeName = "messageId"
         static let timestampAttributeName = "timestamp"
+        static let membersAttributeName = "members"
     }
     
     enum Conversation {
