@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		008B43311772BA388EBE9E00 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */; };
-		043CC14223FE9AE30027DD11 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
+		043CC14323FE9EA70027DD11 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
 		04957CC623F306A900AD595B /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC423F3068900AD595B /* Pagination.swift */; };
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		04E8C60F23F8280A00501413 /* ChatNetworkServicingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E8C60D23F8273000501413 /* ChatNetworkServicingDelegate.swift */; };
@@ -880,6 +880,7 @@
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,
 				04957CC923F3760000AD595B /* Constants.swift in Sources */,
+				043CC14323FE9EA70027DD11 /* DataPayload.swift in Sources */,
 				C11E9E4323EDCD1E005E10A1 /* ChatNetworkingConvertible.swift in Sources */,
 				C11E9E4023EDCD1E005E10A1 /* ChatUIServicing.swift in Sources */,
 				C11E9E4423EDCD1E005E10A1 /* ConversationRepresenting.swift in Sources */,
@@ -916,7 +917,6 @@
 			files = (
 				ADB40CC623C200A5003DC146 /* AppDelegate.swift in Sources */,
 				ADB40CC823C200A5003DC146 /* SceneDelegate.swift in Sources */,
-				043CC14223FE9AE30027DD11 /* DataPayload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
