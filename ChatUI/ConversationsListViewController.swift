@@ -80,8 +80,9 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
         
         listener = core.listenToConversations { result in
             switch result {
-            case .success(let conversations):
-                self.dataSource.conversations = conversations
+            case .success(let payload):
+                self.delegate?.loadMoreButtonVisible = !payload.reachedEnd
+                self.dataSource.conversations = payload.data
 
                 if let user = self.core.currentUser {
                     self.sender = Sender(id: user.id, displayName: user.name)
@@ -136,6 +137,7 @@ extension ConversationsListViewController {
     class Delegate: NSObject, UITableViewDelegate {
         let didSelectBlock: (Int) -> Void
         let loadMoreBlock: () -> Void
+        var loadMoreButtonVisible = true
         
         init(didSelectBlock: @escaping (Int) -> Void, loadMoreBlock: @escaping () -> Void) {
             self.didSelectBlock = didSelectBlock
@@ -147,6 +149,11 @@ extension ConversationsListViewController {
         }
         
         func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+            
+            if loadMoreButtonVisible == false {
+                return nil
+            }
+            
             let button = UIButton()
             button.setTitle("Load more...", for: .normal)
             button.setTitleColor(.systemBlue, for: .normal)

@@ -19,6 +19,12 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     private var listener: ChatListener?
     private let sender: Sender
     
+    private var loadMoreButtonVisible = true {
+        didSet {
+            loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
+        }
+    }
+    
     let photoPickerIconSize: CGFloat = 36
 
     init(conversation: Conversation, core: Core, sender: Sender) {
@@ -51,13 +57,13 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
 
-        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
-        navigationItem.setRightBarButton(item, animated: false)
-
         listener = core.listenToMessages(conversation: conversation.id) { [weak self] result in
+            
             switch result {
-            case .success(let messages):
-                self?.dataSource.messages = messages
+            case .success(let payload):
+                self?.loadMoreButtonVisible = payload.reachedEnd == false
+                
+                self?.dataSource.messages = payload.data
                 self?.markSeenMessage()
                 self?.messagesCollectionView.reloadData()
             case .failure(let error):
@@ -198,5 +204,17 @@ private extension MessagesListViewController {
         picker.sourceType = .photoLibrary
         picker.delegate = self
         present(picker, animated: true)
+    }
+}
+
+// MARK: - Private methods
+private extension MessagesListViewController {
+    func showLoadMoreButton() {
+        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
+        navigationItem.setRightBarButton(item, animated: false)
+    }
+    
+    func hideLoadMoreButton() {
+        navigationItem.rightBarButtonItems = []
     }
 }

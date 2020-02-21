@@ -21,6 +21,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
+    
+    private var dataManagers = [ChatListener: DataManager]()
 
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
@@ -71,15 +73,27 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationUI], ChatError>) -> Void) -> ChatListener {
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
+        
+        dataManagers[listener] = DataManager(pageSize: pageSize)
 
         runAfterInit { [weak self] in
-            self?.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
+                    
+                    self.dataManagers[listener]?.update(data: conversations)
+                    
                     let converted = conversations.compactMap({ $0.uiModel })
-                    completion(.success(converted))
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                    
+                    completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -96,16 +110,28 @@ extension ChatCore {
     open func listenToMessages(
         conversation id: ChatIdentifier,
         pageSize: Int,
-        completion: @escaping (Result<[MessageUI], ChatError>) -> Void
+        completion: @escaping (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
     ) -> ChatListener {
         let listener = ChatListener.generateIdentifier()
+
+        dataManagers[listener] = DataManager(pageSize: pageSize)
         
         runAfterInit { [weak self] in
-            self?.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            self.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let messages):
+                    
+                    self.dataManagers[listener]?.update(data: messages)
+                    
                     let converted = messages.compactMap({ $0.uiModel })
-                    completion(.success(converted))
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                    
+                    completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -121,6 +147,7 @@ extension ChatCore {
     
     open func remove(listener: ChatListener) {
         networking.remove(listener: listener)
+        dataManagers[listener] = nil
     }
 }
 
