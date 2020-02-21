@@ -27,6 +27,9 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     public private(set) var currentUser: UserFirestore?
     public weak var delegate: ChatNetworkServicingDelegate?
     
+    private var messages = [ChatIdentifier: [ChatIdentifier: MessageFirestore]]()
+    private var conversations = [ChatIdentifier: ConversationFirestore]()
+    
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var currentUserId: String?
     private var users: [UserFirestore] = [] {
@@ -150,42 +153,37 @@ public extension ChatNetworkFirebase {
         }
     }
 
-    func updateSeenMessage(_ message: MessageFirestore, in conversation: ChatIdentifier) {
+    func updateSeenMessage(_ message: MessageFirestore, in conversationId: ChatIdentifier) {
+        
         guard let currentUserId = self.currentUser?.id else {
             print("User not found")
             return
         }
+        
+        guard var conversation = conversations[conversationId] else {
+            print("Conversation not available")
+            return
+        }
+        
+        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+        
+        var newJson: [String: Any] = [:]
+
+        for item in conversation.seen {
+            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
+            newJson[item.key] = informationJson
+        }
+        
         let reference = self.database
             .collection(Constants.conversationsPath)
-            .document(conversation)
-
-
-        reference.getDocument { (document, _) in
-            guard let document = document,
-                var conversation = try? document.data(as: ConversationFirestore.self)
-                else { return }
-
-            let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
-            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else {
-                return
-            }
-
-            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
-
-            var newJson: [String: Any] = [:]
-
-            for item in conversation.seen {
-                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
-                newJson[item.key] = informationJson
-            }
-
-            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-                if let err = err {
-                    print("Error updating document: \(err)")
-                } else {
-                    print("Document successfully updated")
-                }
+            .document(conversationId)
+        
+        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
             }
         }
     }
@@ -215,7 +213,11 @@ public extension ChatNetworkFirebase {
             }
 
             // Set members from previously downloaded users
-            completion(.success(self.conversationsWithMembers(conversations: conversations)))
+            let data = self.conversationsWithMembers(conversations: conversations)
+            self.conversations = conversations.reduce(into: [:], { (result, conversation) in
+                result[conversation.id] = conversation
+            })
+            completion(.success(data))
         })
     }
 
@@ -225,7 +227,23 @@ public extension ChatNetworkFirebase {
         
         let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
         
-        listenTo(query: query, customListener: listener, completion: completion)
+        listenTo(query: query, customListener: listener) { [weak self] (result: Result<[MessageFirestore], ChatError>) in
+            
+            guard let self = self else {
+                return
+            }
+            
+            guard case let .success(messages) = result else {
+                completion(result)
+                return
+            }
+            
+            self.messages[id] = messages.reduce(into: [:], { (result, message) in
+                result[message.id] = message
+            })
+            
+            completion(.success(messages))
+        }
         
         messagesPaginators[id] = Pagination<MessageFirestore>(
             updateBlock: completion,
