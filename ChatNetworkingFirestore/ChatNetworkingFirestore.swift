@@ -150,42 +150,33 @@ public extension ChatNetworkFirebase {
         }
     }
 
-    func updateSeenMessage(_ message: MessageFirestore, in conversation: ChatIdentifier) {
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
+        
         guard let currentUserId = self.currentUser?.id else {
             print("User not found")
             return
         }
+        
+        var conversation = conversation
+        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+        
+        var newJson: [String: Any] = [:]
+
+        for item in conversation.seen {
+            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
+            newJson[item.key] = informationJson
+        }
+        
         let reference = self.database
             .collection(Constants.conversationsPath)
-            .document(conversation)
-
-
-        reference.getDocument { (document, _) in
-            guard let document = document,
-                var conversation = try? document.data(as: ConversationFirestore.self)
-                else { return }
-
-            let lastSeenMessage = conversation.seen.first(where: { $0.key == currentUserId })
-            guard lastSeenMessage == nil && lastSeenMessage?.value.messageId != message.id else {
-                return
-            }
-
-            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
-
-            var newJson: [String: Any] = [:]
-
-            for item in conversation.seen {
-                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
-                newJson[item.key] = informationJson
-            }
-
-            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-                if let err = err {
-                    print("Error updating document: \(err)")
-                } else {
-                    print("Document successfully updated")
-                }
+            .document(conversation.id)
+        
+        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
             }
         }
     }

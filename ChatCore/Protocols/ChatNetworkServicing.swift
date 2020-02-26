@@ -14,7 +14,7 @@ public protocol ChatNetworkServicing {
     
     // Specific conversation type
     associatedtype C: ConversationRepresenting
-   // Message description used for sending a message
+    // Message description used for sending a message
     associatedtype MS: MessageSpecifying
 
     typealias M = C.Message
@@ -28,7 +28,7 @@ public protocol ChatNetworkServicing {
     
     func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
-    func updateSeenMessage(_ message: M, in conversation: ChatIdentifier)
+    func updateSeenMessage(_ message: M, in conversation: C)
 
     func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[C], ChatError>) -> Void)
     
