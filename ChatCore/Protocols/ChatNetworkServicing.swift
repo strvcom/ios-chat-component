@@ -26,17 +26,17 @@ public protocol ChatNetworkServicing {
 
     init(config: Config)
     
-    func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: Identifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
     func updateSeenMessage(_ message: M, in conversation: C)
 
-    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[C], ChatError>) -> Void)
+    func listenToConversations(pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[C], ChatError>) -> Void)
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: Identifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
     
-    func loadMoreMessages(conversation id: ChatIdentifier)
+    func loadMoreMessages(conversation id: Identifier)
 
-    func remove(listener: ChatListener)
+    func remove(listener: ListenerIdentifier)
 }

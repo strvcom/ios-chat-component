@@ -19,7 +19,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     private var delegate: Delegate?
     
     private lazy var tableView = UITableView()
-    private var listener: ChatListener?
+    private var listener: ListenerIdentifier?
 
     // FIXME: this is just a temporary solution
     private var sender = Sender(id: "", displayName: "")

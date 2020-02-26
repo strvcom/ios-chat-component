@@ -8,12 +8,12 @@
 
 import Foundation
 
-public protocol ConversationRepresenting: ChatIdentifiable {
+public protocol ConversationRepresenting: Identifiable {
     associatedtype Message: MessageRepresenting
     associatedtype User: UserRepresenting
     
     var lastMessage: Message? { get }
     var members: [User] { get }
     var messages: [Message] { get }
-    var seen: [String: (messageId: ChatIdentifier, seenAt: Date)] { get }
+    var seen: [String: (messageId: Identifier, seenAt: Date)] { get }
 }

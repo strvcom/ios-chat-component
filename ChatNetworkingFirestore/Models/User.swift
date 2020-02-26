@@ -11,7 +11,7 @@ import ChatCore
 import FirebaseFirestoreSwift
 
 public struct UserFirestore: UserRepresenting, Decodable {
-    public let id: ChatIdentifier
+    public let id: Identifier
     public let name: String
     public let imageUrl: URL?
 
@@ -19,7 +19,7 @@ public struct UserFirestore: UserRepresenting, Decodable {
         case id, name, imageUrl
     }
     
-    public init(id: ChatIdentifier, name: String, imageUrl: URL?) {
+    public init(id: Identifier, name: String, imageUrl: URL?) {
         self.id = id
         self.name = name
         self.imageUrl = imageUrl

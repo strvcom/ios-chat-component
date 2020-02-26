@@ -8,4 +8,4 @@
 
 import Foundation
 
-public typealias ChatIdentifier = String
+public typealias Identifier = String

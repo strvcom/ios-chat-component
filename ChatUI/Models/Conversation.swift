@@ -10,15 +10,15 @@ import Foundation
 import ChatCore
 
 public struct Conversation: ConversationRepresenting {
-    public typealias Seen = [String: (messageId: ChatIdentifier, seenAt: Date)]
+    public typealias Seen = [String: (messageId: Identifier, seenAt: Date)]
 
-    public let id: ChatIdentifier
+    public let id: Identifier
     public let lastMessage: MessageKitType?
     public let members: [User]
     public let messages: [MessageKitType]
     public let seen: Seen
 
-    public init(id: ChatIdentifier, lastMessage: MessageKitType?, members: [User], messages: [MessageKitType], seen: Seen) {
+    public init(id: Identifier, lastMessage: MessageKitType?, members: [User], messages: [MessageKitType], seen: Seen) {
         self.id = id
         self.lastMessage = lastMessage
         self.members = members

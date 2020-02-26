@@ -12,13 +12,13 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public class Chat {
-    public typealias Configuration = ChatNetworkFirebase.Configuration
+    public typealias Configuration = ChatNetworkingFirestore.Configuration
 
-    let interface: ChatUI<ChatCore<ChatNetworkFirebase, ChatModelsUI>>
+    let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
 
     public init(config: Configuration) {
-        let networking = ChatNetworkFirebase(config: config)
-        let core: ChatCore<ChatNetworkFirebase, ChatModelsUI> = ChatCore(networking: networking)
+        let networking = ChatNetworkingFirestore(config: config)
+        let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI> = ChatCore(networking: networking)
         self.interface = ChatUI(core: core)
     }
     

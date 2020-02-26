@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol ChatIdentifiable {
-    var id: ChatIdentifier { get }
+public protocol Identifiable {
+    var id: Identifier { get }
 }

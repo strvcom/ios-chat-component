@@ -12,11 +12,11 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 public struct ConversationFirestore: ConversationRepresenting, Decodable {
-    public typealias Seen = [String: (messageId: ChatIdentifier, seenAt: Date)]
+    public typealias Seen = [String: (messageId: Identifier, seenAt: Date)]
 
-    public let id: ChatIdentifier
+    public let id: Identifier
     public let lastMessage: MessageFirestore?
-    let memberIds: [ChatIdentifier]
+    let memberIds: [Identifier]
     public private(set) var members: [UserFirestore] = []
     public private(set) var messages: [MessageFirestore] = []
     public private(set) var seen: Seen
@@ -25,7 +25,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         case id, lastMessage, messages, members, seen
     }
 
-    public init(id: ChatIdentifier, lastMessage: MessageFirestore?, members: [UserFirestore], messages: [MessageFirestore], seen: Seen, memberIds: [ChatIdentifier]) {
+    public init(id: Identifier, lastMessage: MessageFirestore?, members: [UserFirestore], messages: [MessageFirestore], seen: Seen, memberIds: [Identifier]) {
         self.id = id
         self.lastMessage = lastMessage
         self.members = members
@@ -43,7 +43,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         
         self.id = id
         self.lastMessage = try values.decodeIfPresent(Message.self, forKey: .lastMessage)
-        self.memberIds = try values.decode([ChatIdentifier].self, forKey: .members)
+        self.memberIds = try values.decode([Identifier].self, forKey: .members)
         self.seen = try values.decodeIfPresent([String: SeenItem].self, forKey: .seen)?.reduce(into: Seen(), { (result, item) in
             let (key, value) = item
             result[key] = (messageId: value.messageId, seenAt: value.timestamp)
@@ -54,7 +54,7 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         self.members = members
     }
 
-    public mutating func setSeenMessages(_ seen: (messageId: ChatIdentifier, seenAt: Date), currentUserId: ChatIdentifier) {
+    public mutating func setSeenMessages(_ seen: (messageId: Identifier, seenAt: Date), currentUserId: Identifier) {
         self.seen.updateValue(seen, forKey: currentUserId)
     }
 }
