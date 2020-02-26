@@ -27,6 +27,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
     private var initialized = false
+    
+    private var messages = [ChatIdentifier: DataPayload<[MessageUI]>]()
+    private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
     public var currentUser: UserUI? {
         guard let currentUser = networking.currentUser else {
@@ -71,7 +74,15 @@ extension ChatCore {
 // MARK: Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: ChatIdentifier) {
+        
+        guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
+            print("Conversation with id \(conversation) not found")
+            return
+        }
+        
         let seenMessage = Networking.M(uiModel: message)
+        let conversation = Networking.C(uiModel: existingConversation)
+        
         networking.updateSeenMessage(seenMessage, in: conversation)
     }
 }
@@ -98,6 +109,7 @@ extension ChatCore {
                     let converted = conversations.compactMap({ $0.uiModel })
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
+                    self.conversations = data
                     completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
@@ -136,6 +148,7 @@ extension ChatCore {
                     let converted = messages.compactMap({ $0.uiModel })
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
+                    self.messages[id] = data
                     completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
