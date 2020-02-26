@@ -21,11 +21,12 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
-    
+
     private var dataManagers = [ChatListener: DataManager]()
 
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
+    private var backgroundCalls = [IdentifiableClosure<ChatIdentifier, Void>]()
     private var initialized = false
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
@@ -52,18 +53,16 @@ extension ChatCore {
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
         runAfterInit { [weak self] in
-            self?.runWithBackgroundTask { [weak self] in
-                // FIXME: CJ test delay for testing bg task is working
-                DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
-                    let mess = Networking.MS(uiModel: message)
-                    self?.networking.send(message: mess, to: conversation) { result in
-                        self?.endBackgroundTask()
-                        switch result {
-                        case .success(let message):
-                            completion(.success(message.uiModel))
-                        case .failure(let error):
-                            completion(.failure(error))
-                        }
+            self?.runWithBackgroundTask { [weak self] id in
+                let mess = Networking.MS(uiModel: message)
+                self?.networking.send(message: mess, to: conversation) { result in
+                    // clean up closure from background task
+                    self?.finishedInBackgroundTask(id: id)
+                    switch result {
+                    case .success(let message):
+                        completion(.success(message.uiModel))
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
                 }
             }
@@ -199,21 +198,43 @@ extension ChatCore: ChatNetworkServicingDelegate {
 import UIKit
 private extension ChatCore {
 
-    func runWithBackgroundTask(closure: @escaping () -> Void) {
-        registerBackgroundTask()
-        closure()
+    func runWithBackgroundTask(closure: @escaping VoidClosure<ChatIdentifier>) {
+        print("Hook closure to background task")
+        // Check if task is set already
+        if backgroundTask == .invalid {
+            registerBackgroundTask()
+        }
+
+        // Wrap closure into identifiable one and add it to queue
+        let identifiableClosure = IdentifiableClosure(closure)
+        backgroundCalls.append(identifiableClosure)
+        closure(identifiableClosure.id)
     }
 
     func registerBackgroundTask() {
-        print("Background task registered.")
+        print("Background task registered")
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
+            // Expiration handler
             self?.endBackgroundTask()
         }
     }
 
+    func finishedInBackgroundTask(id: ChatIdentifier) {
+        print("Finished closure with \(id) in background task")
+        if let index = backgroundCalls.firstIndex(where: { $0.id == id }) {
+            backgroundCalls.remove(at: index)
+        }
+
+        if backgroundCalls.isEmpty {
+            endBackgroundTask()
+        }
+    }
+
     func endBackgroundTask() {
-        print("Background task ended.")
+        print("Background task ended")
+        // clean up
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = .invalid
+        backgroundCalls.removeAll()
     }
 }
