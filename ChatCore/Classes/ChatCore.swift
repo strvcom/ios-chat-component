@@ -27,6 +27,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
     private var initialized = false
+    private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
     public var currentUser: UserUI? {
         guard let currentUser = networking.currentUser else {
@@ -44,19 +45,26 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         self.networking.delegate = self
     }
 }
-    
+
 // MARK: Sending messages
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ChatIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+
         runAfterInit { [weak self] in
-            let mess = Networking.MS(uiModel: message)
-            self?.networking.send(message: mess, to: conversation) { result in
-                switch result {
-                case .success(let message):
-                    completion(.success(message.uiModel))
-                case .failure(let error):
-                    completion(.failure(error))
+            self?.runWithBackgroundTask { [weak self] in
+                // FIXME: CJ test delay for testing bg task is working
+                DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
+                    let mess = Networking.MS(uiModel: message)
+                    self?.networking.send(message: mess, to: conversation) { result in
+                        self?.endBackgroundTask()
+                        switch result {
+                        case .success(let message):
+                            completion(.success(message.uiModel))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
             }
         }
@@ -171,7 +179,7 @@ private extension ChatCore {
 // MARK: ChatNetworkServicingDelegate
 extension ChatCore: ChatNetworkServicingDelegate {
     public func didFinishLoading(result: Result<Void, ChatError>) {
-        
+
         switch result {
         case .success:
             initialized = true
@@ -184,5 +192,28 @@ extension ChatCore: ChatNetworkServicingDelegate {
         case .failure(let error):
             print(error)
         }
+    }
+}
+
+// MARK: Background task management
+import UIKit
+private extension ChatCore {
+
+    func runWithBackgroundTask(closure: @escaping () -> Void) {
+        registerBackgroundTask()
+        closure()
+    }
+
+    func registerBackgroundTask() {
+        print("Background task registered.")
+        backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
+            self?.endBackgroundTask()
+        }
+    }
+
+    func endBackgroundTask() {
+        print("Background task ended.")
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = .invalid
     }
 }

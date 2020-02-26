@@ -140,6 +140,7 @@ public extension ChatNetworkFirebase {
                         if let error = error {
                             completion(.failure(.networking(error: error)))
                         } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
+                            print("Message successfully sent")
                             completion(.success(message))
                         } else {
                             completion(.failure(.unexpectedState))
