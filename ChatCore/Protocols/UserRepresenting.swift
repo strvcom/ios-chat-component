@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol UserRepresenting: ChatIdentifiable {
+public protocol UserRepresenting: ObjectIdentifiable {
     var name: String { get }
     var imageUrl: URL? { get }
 }

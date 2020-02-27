@@ -9,8 +9,8 @@
 import Foundation
 
 // MARK: - Helper structure, which allows identify closure by generated id
-public struct IdentifiableClosure<T, U>: Equatable, Identifiable {
-    public let id: ChatIdentifier
+public struct IdentifiableClosure<T, U>: Equatable, ObjectIdentifiable {
+    public let id: ObjectIdentifier
     public let closure: Closure<T, U>
 
     public init(_ closure: @escaping Closure<T, U>) {

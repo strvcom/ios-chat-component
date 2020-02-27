@@ -1,5 +1,5 @@
 //
-//  Identifier.swift
+//  ChatIdentifiable.swift
 //  ChatCore
 //
 //  Created by Jan Schwarz on 05/01/2020.
@@ -8,4 +8,6 @@
 
 import Foundation
 
-public typealias ChatIdentifier = String
+public protocol ObjectIdentifiable: Identifiable {
+    var id: ObjectIdentifier { get }
+}

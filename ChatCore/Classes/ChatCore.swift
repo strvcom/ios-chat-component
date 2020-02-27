@@ -22,13 +22,15 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
 
-    private var dataManagers = [ChatListener: DataManager]()
+
     private lazy var backgroundTaskManager = BackgroundTaskManager()
+    private var dataManagers = [ListenerIdentifier: DataManager]()
+
     private var networking: Networking
     private var cachedCalls = [() -> Void]()
     private var initialized = false
     
-    private var messages = [ChatIdentifier: DataPayload<[MessageUI]>]()
+    private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
     public var currentUser: UserUI? {
@@ -38,19 +40,25 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         return currentUser.uiModel
     }
 
+    deinit {
+        print("\(self) released")
+    }
+
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.delegate = self
+        self.networking.didFinishedLoading = { [weak self] result in
+            self?.didFinishLoading(result: result)
+        }
     }
 }
 
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: MessageSpecifyingUI, to conversation: ChatIdentifier,
+    open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
         runAfterInit { [weak self] in
@@ -73,7 +81,7 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: MessageUI, in conversation: ChatIdentifier) {
+    open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
         
         guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
             print("Conversation with id \(conversation) not found")
@@ -89,8 +97,8 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ChatListener {
-        let listener = ChatListener.generateIdentifier()
+    open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ListenerIdentifier {
+        let listener = ListenerIdentifier.generateIdentifier()
         
         dataManagers[listener] = DataManager(pageSize: pageSize)
 
@@ -125,11 +133,11 @@ extension ChatCore {
     }
 
     open func listenToMessages(
-        conversation id: ChatIdentifier,
+        conversation id: ObjectIdentifier,
         pageSize: Int,
         completion: @escaping (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
-    ) -> ChatListener {
-        let listener = ChatListener.generateIdentifier()
+    ) -> ListenerIdentifier {
+        let listener = ListenerIdentifier.generateIdentifier()
 
         dataManagers[listener] = DataManager(pageSize: pageSize)
         
@@ -159,11 +167,11 @@ extension ChatCore {
         return listener
     }
     
-    open func loadMoreMessages(conversation id: ChatIdentifier) {
+    open func loadMoreMessages(conversation id: ObjectIdentifier) {
         networking.loadMoreMessages(conversation: id)
     }
     
-    open func remove(listener: ChatListener) {
+    open func remove(listener: ListenerIdentifier) {
         networking.remove(listener: listener)
         dataManagers[listener] = nil
     }
@@ -186,10 +194,10 @@ private extension ChatCore {
     }
 }
 
-// MARK: ChatNetworkServicingDelegate
-extension ChatCore: ChatNetworkServicingDelegate {
-    public func didFinishLoading(result: Result<Void, ChatError>) {
-
+// MARK: ChatNetworkServicing load state observing
+private extension ChatCore {
+    func didFinishLoading(result: Result<Void, ChatError>) {
+        
         switch result {
         case .success:
             initialized = true

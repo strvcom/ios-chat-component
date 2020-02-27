@@ -12,9 +12,9 @@ import UIKit
 final class BackgroundTaskManager {
     
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    private var backgroundCalls = [IdentifiableClosure<ChatIdentifier, Void>]()
+    private var backgroundCalls = [IdentifiableClosure<ObjectIdentifier, Void>]()
 
-    func runWithBackgroundTask(closure: @escaping VoidClosure<ChatIdentifier>) {
+    func runWithBackgroundTask(closure: @escaping VoidClosure<ObjectIdentifier>) {
         print("Hook closure to background task")
         // Check if task is set already
         if backgroundTask == .invalid {
@@ -35,7 +35,7 @@ final class BackgroundTaskManager {
         }
     }
 
-    func finishedInBackgroundTask(id: ChatIdentifier) {
+    func finishedInBackgroundTask(id: ObjectIdentifier) {
         print("Finished closure with \(id) in background task")
         if let index = backgroundCalls.firstIndex(where: { $0.id == id }) {
             backgroundCalls.remove(at: index)

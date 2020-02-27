@@ -11,7 +11,7 @@ import ChatCore
 import FirebaseFirestore
 import FirebaseCore
 
-public class ChatNetworkFirebase: ChatNetworkServicing {
+public class ChatNetworkingFirestore: ChatNetworkServicing {
     public struct Configuration {
         let configUrl: String
         let userId: String
@@ -25,9 +25,9 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-    public weak var delegate: ChatNetworkServicingDelegate?
+    public var didFinishedLoading: ((Result<Void, ChatError>) -> Void)?
     
-    private var listeners: [ChatListener: ListenerRegistration] = [:]
+    private var listeners: [ListenerIdentifier: ListenerRegistration] = [:]
     private var currentUserId: String?
     private var users: [UserFirestore] = [] {
         didSet {
@@ -37,9 +37,9 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         }
     }
     
-    private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
+    private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    
+
     public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
@@ -54,11 +54,12 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
         
         load { [weak self] result in
-            self?.delegate?.didFinishLoading(result: result)
+            self?.didFinishedLoading?(result)
         }
     }
     
     deinit {
+        print("\(self) released")
         listeners.forEach { (listener, _) in
             remove(listener: listener)
         }
@@ -66,7 +67,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
 }
 
 // FIXME: Remove this temporary method when UI for conversation creating is ready
-private extension ChatNetworkFirebase {
+private extension ChatNetworkingFirestore {
     @objc func createTestConversation() {
         database
             .collection(Constants.usersPath)
@@ -90,7 +91,7 @@ private extension ChatNetworkFirebase {
 }
 
 // MARK: - Load
-public extension ChatNetworkFirebase {
+public extension ChatNetworkingFirestore {
     func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
         listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
             switch result {
@@ -105,8 +106,8 @@ public extension ChatNetworkFirebase {
 }
 
 // MARK: Write data
-public extension ChatNetworkFirebase {
-    func send(message: MessageSpecificationFirestore, to conversation: ChatIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+public extension ChatNetworkingFirestore {
+    func send(message: MessageSpecificationFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
         guard let currentUserId = self.currentUser?.id else {
             completion(.failure(.internal(message: "User not found")))
             return
@@ -184,8 +185,8 @@ public extension ChatNetworkFirebase {
 }
 
 // MARK: Listen to collections
-public extension ChatNetworkFirebase {
-    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+public extension ChatNetworkingFirestore {
+    func listenToConversations(pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
         
         conversationsPagination = Pagination(
             updateBlock: completion,
@@ -211,7 +212,7 @@ public extension ChatNetworkFirebase {
         })
     }
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
         
         let completion = reversedDataCompletion(completion: completion)
         
@@ -227,13 +228,13 @@ public extension ChatNetworkFirebase {
     }
     
     @discardableResult
-    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ChatListener {
+    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ListenerIdentifier {
         let query = database.collection(Constants.usersPath)
         
         return listenTo(query: query, completion: completion)
     }
     
-    func remove(listener: ChatListener) {
+    func remove(listener: ListenerIdentifier) {
         listeners[listener]?.remove()
     }
     
@@ -276,7 +277,7 @@ public extension ChatNetworkFirebase {
 }
 
 // MARK: Queries
-private extension ChatNetworkFirebase {
+private extension ChatNetworkingFirestore {
     
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         
@@ -312,9 +313,9 @@ private extension ChatNetworkFirebase {
 }
 
 // MARK: Private methods
-private extension ChatNetworkFirebase {
+private extension ChatNetworkingFirestore {
     @discardableResult
-    func listenTo<T: Decodable>(query: Query, customListener: ChatListener? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ChatListener {
+    func listenTo<T: Decodable>(query: Query, customListener: ListenerIdentifier? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ListenerIdentifier {
         let listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
                 let list: [T] = snapshot.documents.compactMap {
@@ -333,7 +334,7 @@ private extension ChatNetworkFirebase {
             }
         }
         
-        let identifier = customListener ?? ChatListener.generateIdentifier()
+        let identifier = customListener ?? ListenerIdentifier.generateIdentifier()
         
         listeners[identifier] = listener
         

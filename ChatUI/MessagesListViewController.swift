@@ -16,7 +16,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     let conversation: Conversation
     private let dataSource = DataSource()
 
-    private var listener: ChatListener?
+    private var listener: ListenerIdentifier?
     private let sender: Sender
     
     private var loadMoreButtonVisible = true {
@@ -124,7 +124,7 @@ extension MessagesListViewController: MessagesDataSource {
     public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         var text: String = ""
 
-        let seenMessages: [String: (messageId: ChatIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
+        let seenMessages: [String: (messageId: ObjectIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
 
         if conversation.members.count == 2 && seenMessages.contains { $0.key != self.sender.senderId } {
             text = "Seen"

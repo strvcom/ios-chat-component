@@ -21,22 +21,23 @@ public protocol ChatNetworkServicing {
     typealias U = C.User
 
     var currentUser: U? { get }
-    
-    var delegate: ChatNetworkServicingDelegate? { get set }
+
+    // Allow init network service and observe loading state at different places
+    var didFinishedLoading: ((Result<Void, ChatError>) -> Void)? { get set }
 
     init(config: Config)
     
-    func send(message: MS, to conversation: ChatIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
     func updateSeenMessage(_ message: M, in conversation: C)
 
-    func listenToConversations(pageSize: Int, listener: ChatListener, completion: @escaping (Result<[C], ChatError>) -> Void)
+    func listenToConversations(pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[C], ChatError>) -> Void)
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: ChatIdentifier, pageSize: Int, listener: ChatListener, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
     
-    func loadMoreMessages(conversation id: ChatIdentifier)
+    func loadMoreMessages(conversation id: ObjectIdentifier)
 
-    func remove(listener: ChatListener)
+    func remove(listener: ListenerIdentifier)
 }
