@@ -38,13 +38,19 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         return currentUser.uiModel
     }
 
+    deinit {
+        print("\(self) released")
+    }
+
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.delegate = self
+        self.networking.didFinishedLoading = { [weak self] result in
+            self?.didFinishLoading(result: result)
+        }
     }
 }
     
@@ -181,9 +187,9 @@ private extension ChatCore {
     }
 }
 
-// MARK: ChatNetworkServicingDelegate
-extension ChatCore: ChatNetworkServicingDelegate {
-    public func didFinishLoading(result: Result<Void, ChatError>) {
+// MARK: ChatNetworkServicing load state observing
+private extension ChatCore {
+    func didFinishLoading(result: Result<Void, ChatError>) {
         
         switch result {
         case .success:

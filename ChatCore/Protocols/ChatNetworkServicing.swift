@@ -21,8 +21,9 @@ public protocol ChatNetworkServicing {
     typealias U = C.User
 
     var currentUser: U? { get }
-    
-    var delegate: ChatNetworkServicingDelegate? { get set }
+
+    // Allow init network service and observe loading state at different places
+    var didFinishedLoading: ((Result<Void, ChatError>) -> Void)? { get set }
 
     init(config: Config)
     
