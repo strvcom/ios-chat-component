@@ -21,7 +21,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
-    
+
+
+    private lazy var backgroundTaskManager = BackgroundTaskManager()
     private var dataManagers = [ListenerIdentifier: DataManager]()
 
     private var networking: Networking
@@ -53,19 +55,24 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         }
     }
 }
-    
+
 // MARK: Sending messages
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+
         runAfterInit { [weak self] in
-            let mess = Networking.MS(uiModel: message)
-            self?.networking.send(message: mess, to: conversation) { result in
-                switch result {
-                case .success(let message):
-                    completion(.success(message.uiModel))
-                case .failure(let error):
-                    completion(.failure(error))
+            self?.backgroundTaskManager.runWithBackgroundTask { [weak self] id in
+                let mess = Networking.MS(uiModel: message)
+                self?.networking.send(message: mess, to: conversation) { result in
+                    // clean up closure from background task
+                    self?.backgroundTaskManager.finishedInBackgroundTask(id: id)
+                    switch result {
+                    case .success(let message):
+                        completion(.success(message.uiModel))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             }
         }
