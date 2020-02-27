@@ -25,7 +25,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-    public weak var delegate: ChatNetworkServicingDelegate?
+    public var didFinishedLoading: ((Result<Void, ChatError>) -> Void)?
     
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var currentUserId: String?
@@ -54,7 +54,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
         
         load { [weak self] result in
-            self?.delegate?.didFinishLoading(result: result)
+            self?.didFinishedLoading?(result)
         }
     }
     
@@ -83,7 +83,7 @@ private extension ChatNetworkFirebase {
                 self.database
                     .collection(Constants.conversationsPath)
                     .addDocument(data: [
-                        "members": users.map { $0.id }
+                        "members": users.map { $0.id }.prefix(1)
                     ])
         }
     }

@@ -44,7 +44,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.delegate = self
+        self.networking.didFinishedLoading = didFinishLoading
     }
 }
     
@@ -181,9 +181,9 @@ private extension ChatCore {
     }
 }
 
-// MARK: ChatNetworkServicingDelegate
-extension ChatCore: ChatNetworkServicingDelegate {
-    public func didFinishLoading(result: Result<Void, ChatError>) {
+// MARK: ChatNetworkServicing load state observing
+private extension ChatCore {
+    func didFinishLoading(result: Result<Void, ChatError>) {
         
         switch result {
         case .success:
