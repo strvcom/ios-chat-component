@@ -83,7 +83,7 @@ private extension ChatNetworkFirebase {
                 self.database
                     .collection(Constants.conversationsPath)
                     .addDocument(data: [
-                        "members": users.map { $0.id }.prefix(1)
+                        "members": users.map { $0.id }
                     ])
         }
     }
