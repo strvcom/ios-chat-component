@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol Identifiable {
-    var id: Identifier { get }
+public protocol ObjectIdentifiable: Identifiable {
+    var id: ObjectIdentifier { get }
 }

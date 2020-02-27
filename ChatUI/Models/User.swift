@@ -10,11 +10,11 @@ import Foundation
 import ChatCore
 
 public struct User: UserRepresenting {
-    public let id: Identifier
+    public let id: ObjectIdentifier
     public let name: String
     public let imageUrl: URL?
 
-    public init(id: Identifier, name: String, imageUrl: URL?) {
+    public init(id: ObjectIdentifier, name: String, imageUrl: URL?) {
         self.id = id
         self.name = name
         self.imageUrl = imageUrl

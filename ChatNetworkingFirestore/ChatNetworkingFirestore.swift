@@ -37,7 +37,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         }
     }
     
-    private var messagesPaginators: [Identifier: Pagination<MessageFirestore>] = [:]
+    private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
     
     public required init(config: Configuration) {
@@ -106,7 +106,7 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Write data
 public extension ChatNetworkingFirestore {
-    func send(message: MessageSpecificationFirestore, to conversation: Identifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+    func send(message: MessageSpecificationFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
         guard let currentUserId = self.currentUser?.id else {
             completion(.failure(.internal(message: "User not found")))
             return
@@ -210,7 +210,7 @@ public extension ChatNetworkingFirestore {
         })
     }
 
-    func listenToMessages(conversation id: Identifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
         
         let completion = reversedDataCompletion(completion: completion)
         

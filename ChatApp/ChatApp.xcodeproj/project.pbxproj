@@ -47,14 +47,14 @@
 		C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2223EDCD1E005E10A1 /* ChatCore.swift */; };
 		C11E9E3623EDCD1E005E10A1 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E2323EDCD1E005E10A1 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2523EDCD1E005E10A1 /* Error.swift */; };
-		C11E9E3823EDCD1E005E10A1 /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2623EDCD1E005E10A1 /* Identifier.swift */; };
+		C11E9E3823EDCD1E005E10A1 /* ObjectIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */; };
 		C11E9E3923EDCD1E005E10A1 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */; };
 		C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2923EDCD1E005E10A1 /* ChatUIConvertible.swift */; };
 		C11E9E3B23EDCD1E005E10A1 /* UserRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2A23EDCD1E005E10A1 /* UserRepresenting.swift */; };
 		C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */; };
 		C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */; };
 		C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */; };
-		C11E9E3F23EDCD1E005E10A1 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2E23EDCD1E005E10A1 /* Identifiable.swift */; };
+		C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */; };
 		C11E9E4023EDCD1E005E10A1 /* ChatUIServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */; };
 		C11E9E4123EDCD1E005E10A1 /* ChatNetworkServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */; };
 		C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */; };
@@ -180,14 +180,14 @@
 		C11E9E2223EDCD1E005E10A1 /* ChatCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCore.swift; sourceTree = "<group>"; };
 		C11E9E2323EDCD1E005E10A1 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		C11E9E2523EDCD1E005E10A1 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		C11E9E2623EDCD1E005E10A1 /* Identifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifier.swift; sourceTree = "<group>"; };
+		C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectIdentifier.swift; sourceTree = "<group>"; };
 		C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenerIdentifier.swift; sourceTree = "<group>"; };
 		C11E9E2923EDCD1E005E10A1 /* ChatUIConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIConvertible.swift; sourceTree = "<group>"; };
 		C11E9E2A23EDCD1E005E10A1 /* UserRepresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRepresenting.swift; sourceTree = "<group>"; };
 		C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecifying.swift; sourceTree = "<group>"; };
 		C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageRepresenting.swift; sourceTree = "<group>"; };
 		C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIModels.swift; sourceTree = "<group>"; };
-		C11E9E2E23EDCD1E005E10A1 /* Identifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
+		C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectIdentifiable.swift; sourceTree = "<group>"; };
 		C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIServicing.swift; sourceTree = "<group>"; };
 		C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatNetworkServicing.swift; sourceTree = "<group>"; };
 		C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCoreServicing.swift; sourceTree = "<group>"; };
@@ -420,7 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				C11E9E2523EDCD1E005E10A1 /* Error.swift */,
-				C11E9E2623EDCD1E005E10A1 /* Identifier.swift */,
+				C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */,
 				C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */,
 			);
 			path = Models;
@@ -434,7 +434,7 @@
 				C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */,
 				C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */,
 				C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */,
-				C11E9E2E23EDCD1E005E10A1 /* Identifiable.swift */,
+				C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */,
 				C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */,
 				C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */,
 				C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */,
@@ -877,8 +877,8 @@
 			files = (
 				C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */,
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
-				C11E9E3823EDCD1E005E10A1 /* Identifier.swift in Sources */,
-				C11E9E3F23EDCD1E005E10A1 /* Identifiable.swift in Sources */,
+				C11E9E3823EDCD1E005E10A1 /* ObjectIdentifier.swift in Sources */,
+				C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */,
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,

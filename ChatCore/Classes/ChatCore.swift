@@ -28,7 +28,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var cachedCalls = [() -> Void]()
     private var initialized = false
     
-    private var messages = [Identifier: DataPayload<[MessageUI]>]()
+    private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
     public var currentUser: UserUI? {
@@ -50,7 +50,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
 // MARK: Sending messages
 extension ChatCore {
-    open func send(message: MessageSpecifyingUI, to conversation: Identifier,
+    open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         runAfterInit { [weak self] in
             let mess = Networking.MS(uiModel: message)
@@ -68,7 +68,7 @@ extension ChatCore {
 
 // MARK: Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: MessageUI, in conversation: Identifier) {
+    open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
         
         guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
             print("Conversation with id \(conversation) not found")
@@ -120,7 +120,7 @@ extension ChatCore {
     }
 
     open func listenToMessages(
-        conversation id: Identifier,
+        conversation id: ObjectIdentifier,
         pageSize: Int,
         completion: @escaping (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
     ) -> ListenerIdentifier {
@@ -154,7 +154,7 @@ extension ChatCore {
         return listener
     }
     
-    open func loadMoreMessages(conversation id: Identifier) {
+    open func loadMoreMessages(conversation id: ObjectIdentifier) {
         networking.loadMoreMessages(conversation: id)
     }
     

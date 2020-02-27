@@ -26,7 +26,7 @@ public protocol ChatNetworkServicing {
 
     init(config: Config)
     
-    func send(message: MS, to conversation: Identifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
     func updateSeenMessage(_ message: M, in conversation: C)
 
@@ -34,9 +34,9 @@ public protocol ChatNetworkServicing {
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: Identifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
     
-    func loadMoreMessages(conversation id: Identifier)
+    func loadMoreMessages(conversation id: ObjectIdentifier)
 
     func remove(listener: ListenerIdentifier)
 }

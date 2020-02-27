@@ -11,7 +11,7 @@ import ChatCore
 import FirebaseFirestore
 
 public struct SeenItem: Decodable {
-    public let messageId: Identifier
+    public let messageId: ObjectIdentifier
     public let timestamp: Date
     
     private enum CodingKeys: CodingKey {
@@ -21,11 +21,11 @@ public struct SeenItem: Decodable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.messageId = try values.decode(Identifier.self, forKey: .messageId)
+        self.messageId = try values.decode(ObjectIdentifier.self, forKey: .messageId)
         self.timestamp = try values.decode(Timestamp.self, forKey: .timestamp).dateValue()
     }
 
-    public init(messageId: Identifier, timestamp: Date) {
+    public init(messageId: ObjectIdentifier, timestamp: Date) {
         self.messageId = messageId
         self.timestamp = timestamp
     }

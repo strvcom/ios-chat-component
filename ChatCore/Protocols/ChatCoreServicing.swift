@@ -23,24 +23,24 @@ public protocol ChatCoreServicing {
 
     init(networking: Networking)
 
-    func send(message: MS, to conversation: Identifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
     
     func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier
     
     func loadMoreConversations()
 
-    func listenToMessages(conversation id: Identifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier
     
-    func loadMoreMessages(conversation id: Identifier)
+    func loadMoreMessages(conversation id: ObjectIdentifier)
 
     func remove(listener: ListenerIdentifier)
 
-    func updateSeenMessage(_ message: M, in conversation: Identifier)
+    func updateSeenMessage(_ message: M, in conversation: ObjectIdentifier)
 }
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToMessages(conversation id: Identifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToMessages(conversation id: ObjectIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     

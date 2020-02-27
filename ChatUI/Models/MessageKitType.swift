@@ -16,11 +16,11 @@ public enum MessageContent {
 }
 
 public struct MessageKitType: MessageType, MessageRepresenting {
-   public var userId: Identifier
+   public var userId: ObjectIdentifier
 
    public var sentAt: Date
 
-   public var id: Identifier
+   public var id: ObjectIdentifier
    public var sender: SenderType
    public var messageId: String
    public var sentDate: Date
@@ -36,7 +36,7 @@ public struct MessageKitType: MessageType, MessageRepresenting {
         self.id = messageId
     }
 
-    public init(id: Identifier, userId: Identifier, sentAt: Date, content: MessageContent) {
+    public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
         sender = Sender(id: userId, displayName: "")
         messageId = id
         self.sentDate = sentAt

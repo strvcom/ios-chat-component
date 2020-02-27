@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol MessageRepresenting: Identifiable {
-    var userId: Identifier { get }
+public protocol MessageRepresenting: ObjectIdentifiable {
+    var userId: ObjectIdentifier { get }
     var sentAt: Date { get }
 }
