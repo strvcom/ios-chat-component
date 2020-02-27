@@ -8,11 +8,6 @@
 
 import Foundation
 
-// MARK: - Typealiases for common closures
-public typealias EmptyClosure = () -> Void
-public typealias VoidClosure<T> = (T) -> Void
-public typealias Closure<T, U> = (T) -> U
-
 // MARK: - Helper structure, which allows identify closure by generated id
 public struct IdentifiableClosure<T, U>: Equatable, Identifiable {
     public let id: ChatIdentifier
