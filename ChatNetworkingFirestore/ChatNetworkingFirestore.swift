@@ -25,7 +25,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-    public weak var delegate: ChatNetworkServicingDelegate?
+    public var didFinishedLoading: ((Result<Void, ChatError>) -> Void)?
     
     private var listeners: [ChatListener: ListenerRegistration] = [:]
     private var currentUserId: String?
@@ -39,7 +39,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     
     private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    
+
     public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
@@ -54,11 +54,12 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
         
         load { [weak self] result in
-            self?.delegate?.didFinishLoading(result: result)
+            self?.didFinishedLoading?(result)
         }
     }
     
     deinit {
+        print("\(self) released")
         listeners.forEach { (listener, _) in
             remove(listener: listener)
         }
