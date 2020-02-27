@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
-// MARK: Background task management
 import UIKit
+
+// MARK: Background task management
 final class BackgroundTaskManager {
     
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
