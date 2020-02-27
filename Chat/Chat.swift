@@ -24,7 +24,7 @@ public class Chat {
     
     public func conversationsList() -> UIViewController {
         let list = interface.conversationsList()
-        
+    
         return list
     }
 }

@@ -38,13 +38,19 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         return currentUser.uiModel
     }
 
+    deinit {
+        print("\(self) released")
+    }
+
     // Here we can have also persistent storage manager
     // Or a manager for sending retry
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.didFinishedLoading = didFinishLoading
+        self.networking.didFinishedLoading = { [weak self] result in
+            self?.didFinishLoading(result: result)
+        }
     }
 }
     

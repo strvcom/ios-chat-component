@@ -39,7 +39,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     
     private var messagesPaginators: [ChatIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    
+
     public required init(config: Configuration) {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
@@ -59,6 +59,7 @@ public class ChatNetworkFirebase: ChatNetworkServicing {
     }
     
     deinit {
+        print("\(self) released")
         listeners.forEach { (listener, _) in
             remove(listener: listener)
         }
