@@ -59,6 +59,11 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
+        taskManager.runretry { closure in
+            let test = closure(.success(()))
+            print(test)
+        }
+
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] cleanupClosure in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in

@@ -15,6 +15,7 @@ final class TaskManager {
         case afterInit
         case backgroundTask
         case backgroundThread
+        case retry
     }
 
     // closure storage for calls before init
@@ -26,6 +27,9 @@ final class TaskManager {
     // dedicated thread queue
     private let dispatchQueue = DispatchQueue(label: "com.strv.taskmanager", qos: .background)
 
+    private let maxRetryCount = 3
+    private var retryCalls: [IdentifiableClosure<VoidClosure<Result<Void, ChatError>>, Void>: Int] = [:]
+
     var initialized = false {
         didSet {
             if initialized {
@@ -34,7 +38,25 @@ final class TaskManager {
         }
     }
 
+    func runretry(attributes: Set<TaskAttribute> = [], _ closure: @escaping ((Result<Void, ChatError>) -> Int) -> Void) {
+        let identifiableClosure = IdentifiableClosure(closure)
+        if attributes.contains(.retry) {
+            //retryCalls[identifiableClosure] = 0
+        }
+
+        closure() { [weak self] result in
+            if case .failure(let error) = result {
+                if case .networking = error {
+                    // TODO: if retryCalls < maxRetryCount store message to send it again after foreground?
+                    //retryCalls[identifiableClosure]! += 1
+                }
+            }
+            return 2
+        }
+    }
+
     func run(attributes: Set<TaskAttribute> = [], _ closure: @escaping VoidClosure<EmptyClosure>) {
+
         // Wrap closure into identifiable struct
         let identifiableClosure = IdentifiableClosure(closure)
         run(attributes: attributes, identifiableClosure)
