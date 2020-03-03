@@ -16,9 +16,8 @@ public protocol ChatNetworkServicing {
     associatedtype C: ConversationRepresenting
     // Message description used for sending a message
     associatedtype MS: MessageSpecifying
-
-    typealias M = C.Message
-    typealias U = C.User
+    associatedtype M: MessageRepresenting
+    associatedtype U: UserRepresenting
 
     var currentUser: U? { get }
 
