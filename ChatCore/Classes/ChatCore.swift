@@ -22,13 +22,10 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
 
-
-    private lazy var backgroundTaskManager = BackgroundTaskManager()
+    private lazy var taskManager = TaskManager()
     private var dataManagers = [ListenerIdentifier: DataManager]()
 
     private var networking: Networking
-    private var cachedCalls = [() -> Void]()
-    private var initialized = false
     
     private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
@@ -58,24 +55,23 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
 // MARK: Sending messages
 extension ChatCore {
+
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        runAfterInit { [weak self] in
-            self?.backgroundTaskManager.runWithBackgroundTask { [weak self] id in
-                let mess = Networking.MS(uiModel: message)
-                self?.networking.send(message: mess, to: conversation) { result in
-                    // clean up closure from background task
-                    self?.backgroundTaskManager.finishedInBackgroundTask(id: id)
-                    switch result {
-                    case .success(let message):
-                        completion(.success(message.uiModel))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
+        taskManager.run({ [weak self] cleanupClosure in
+            let mess = Networking.MS(uiModel: message)
+            self?.networking.send(message: mess, to: conversation) { result in
+                // clean up closure from background task
+                switch result {
+                case .success(let message):
+                    completion(.success(message.uiModel))
+                case .failure(let error):
+                    completion(.failure(error))
                 }
+                cleanupClosure()
             }
-        }
+        }, attributes: [.backgroundTask, .afterInit, .backgroundThread])
     }
 }
 
@@ -102,28 +98,28 @@ extension ChatCore {
         
         dataManagers[listener] = DataManager(pageSize: pageSize)
 
-        runAfterInit { [weak self] in
-            
+        taskManager.run({ [weak self] cleanupClosure in
+
             guard let self = self else {
                 return
             }
-            
+
             self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
-                    
+
                     self.dataManagers[listener]?.update(data: conversations)
-                    
                     let converted = conversations.compactMap({ $0.uiModel })
+
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    
+
                     self.conversations = data
                     completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
-            }
-        }
+                cleanupClosure()
+            }}, attributes: [.afterInit, .backgroundThread])
 
         return listener
     }
@@ -141,7 +137,7 @@ extension ChatCore {
 
         dataManagers[listener] = DataManager(pageSize: pageSize)
         
-        runAfterInit { [weak self] in
+        taskManager.run({ [weak self] cleanupClosure in
             
             guard let self = self else {
                 return
@@ -161,8 +157,8 @@ extension ChatCore {
                 case .failure(let error):
                     completion(.failure(error))
                 }
-            }
-        }
+                cleanupClosure()
+            }}, attributes: [.afterInit, .backgroundThread])
 
         return listener
     }
@@ -177,38 +173,28 @@ extension ChatCore {
     }
 }
 
-// MARK: Private methods
-private extension ChatCore {
-    func runAfterInit(closure: @escaping () -> Void) {
-        guard initialized else {
-            schedule(closure: closure)
-            
-            return
-        }
-        
-        closure()
-    }
-    
-    func schedule(closure: @escaping () -> Void) {
-        cachedCalls.append(closure)
-    }
-}
-
 // MARK: ChatNetworkServicing load state observing
 private extension ChatCore {
     func didFinishLoading(result: Result<Void, ChatError>) {
         
         switch result {
         case .success:
-            initialized = true
-            
-            cachedCalls.forEach { call in
-                call()
+
+            // TODO: test code
+            delay(by: 10) {
+                self.taskManager.initialized = true
             }
-            
-            cachedCalls = []
+
         case .failure(let error):
             print(error)
         }
+    }
+
+    // TODO: temo code remove!!!
+    func delay(by seconds: TimeInterval, on queue: DispatchQueue = .main, closure: @escaping () -> Void) {
+        queue.asyncAfter(
+            deadline: .now() + seconds,
+            execute: closure
+        )
     }
 }
