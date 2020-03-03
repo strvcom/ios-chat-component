@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BackgroundTasks
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
@@ -32,7 +33,20 @@ final class TaskManager {
         }
     }
 
-    init() {}
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    init() {
+        // for ios 13 use backgroundTasks fallback ios to background fetch
+        if #available(iOS 13, *) {
+            registerBackgroundTaskScheduler()
+            // TODO:
+            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .appPerformBackgroundFetch, object: nil)
+        } else {
+            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .appPerformBackgroundFetch, object: nil)
+        }
+    }
 
     func run(_ closure: @escaping VoidClosure<EmptyClosure>, attributes: Set<TaskAttribute> = []) {
         // Wrap closure into identifiable struct
@@ -142,6 +156,12 @@ private extension TaskManager {
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
             // Expiration handler
             self?.endBackgroundTask()
+
+            // if any task not finished schedule background fetch
+            // TODO:
+//            if !self?.backgroundCalls.isEmpty  {
+//                registerBackgroundTaskScheduler()
+//            }
         }
     }
 
@@ -151,7 +171,73 @@ private extension TaskManager {
             // clean up
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
-            backgroundCalls.removeAll()
         }
+    }
+}
+
+// MARK: - Custom notifications
+public extension NSNotification.Name {
+    static let appPerformBackgroundFetch = NSNotification.Name("appPerformBackgroundFetch")
+}
+
+// MARK: - Scheduled background task handling in ios < 13
+private extension TaskManager {
+    @objc func performBackgroundFetch(notification: Notification) {
+        if let completion = notification.object as? VoidClosure<UIBackgroundFetchResult> {
+
+            completion(.newData)
+        }
+    }
+}
+
+// MARK: - Scheduled background task handling in ios 13+
+@available(iOS 13.0, *)
+private extension TaskManager {
+    func registerBackgroundTaskScheduler() {
+//        BGTaskScheduler.shared.register(forTaskWithIdentifier:
+//        "com.example.apple-samplecode.ColorFeed.refresh",
+//        using: nil)
+//          {task in
+//             self.handleAppRefresh(task: task as! BGAppRefreshTask)
+//          }
+    }
+
+    func scheduleAppRefresh() {
+//        if #available(iOS 13.0, *) {
+//            let request = BGAppRefreshTaskRequest(identifier: "com.example.apple-samplecode.ColorFeed.refresh")
+//        } else {
+//            // Fallback on earlier versions
+//        }
+//       // Fetch no earlier than 15 minutes from now
+//       request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
+//
+//       do {
+//          try BGTaskScheduler.shared.submit(request)
+//       } catch {
+//          print("Could not schedule app refresh: \(error)")
+//       }
+    }
+
+    func handleAppRefresh(task: BGAppRefreshTask) {
+      // Schedule a new refresh task
+//      scheduleAppRefresh()
+//
+//      // Create an operation that performs the main part of the background task
+//      let operation = RefreshAppContentsOperation()
+//        let test = Operation()
+//      // Provide an expiration handler for the background task
+//      // that cancels the operation
+//      task.expirationHandler = {
+//         operation.cancel()
+//      }
+//
+//      // Inform the system that the background task is complete
+//      // when the operation completes
+//      operation.completionBlock = {
+//         task.setTaskCompleted(success: !operation.isCancelled)
+//      }
+//
+//      // Start the operation
+//      operationQueue.addOperation(operation)
     }
 }
