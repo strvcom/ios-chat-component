@@ -59,7 +59,7 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        taskManager.run({ [weak self] cleanupClosure in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] cleanupClosure in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 // clean up closure from background task
@@ -71,7 +71,7 @@ extension ChatCore {
                 }
                 cleanupClosure()
             }
-        }, attributes: [.backgroundTask, .afterInit, .backgroundThread])
+        }
     }
 }
 
@@ -98,28 +98,28 @@ extension ChatCore {
         
         dataManagers[listener] = DataManager(pageSize: pageSize)
 
-        taskManager.run({ [weak self] cleanupClosure in
-
+        taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] cleanupClosure in
+            
             guard let self = self else {
                 return
             }
-
+            
             self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
-
+                    
                     self.dataManagers[listener]?.update(data: conversations)
                     let converted = conversations.compactMap({ $0.uiModel })
-
+                    
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-
+                    
                     self.conversations = data
                     completion(.success(data))
                 case .failure(let error):
                     completion(.failure(error))
                 }
                 cleanupClosure()
-            }}, attributes: [.afterInit, .backgroundThread])
+            }})
 
         return listener
     }
@@ -137,7 +137,7 @@ extension ChatCore {
 
         dataManagers[listener] = DataManager(pageSize: pageSize)
         
-        taskManager.run({ [weak self] cleanupClosure in
+        taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] cleanupClosure in
             
             guard let self = self else {
                 return
@@ -158,7 +158,7 @@ extension ChatCore {
                     completion(.failure(error))
                 }
                 cleanupClosure()
-            }}, attributes: [.afterInit, .backgroundThread])
+            }})
 
         return listener
     }

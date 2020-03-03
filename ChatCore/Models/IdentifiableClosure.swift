@@ -9,11 +9,12 @@
 import Foundation
 
 // MARK: - Helper structure, which allows identify closure by generated id
-public struct IdentifiableClosure<T, U>: Equatable, Hashable, ObjectIdentifiable {
+
+struct IdentifiableClosure<T, U>: Equatable, Hashable, ObjectIdentifiable {
     public let id: ObjectIdentifier
     public var closure: Closure<T, U>
 
-    public init(_ closure:  @escaping Closure<T, U>) {
+    public init(_ closure: @escaping Closure<T, U>) {
         id = UUID().uuidString
         self.closure = closure
     }
