@@ -63,7 +63,7 @@
 	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.strv.chatcore.sendmessage</string>
+		<string>com.strv.chatcore.backgroundtask</string>
 	</array>
 </dict>
 </plist>
