@@ -35,9 +35,14 @@ final class TaskManager {
     init() {}
 
     func run(_ closure: @escaping VoidClosure<EmptyClosure>, attributes: Set<TaskAttribute> = []) {
-
-        // Wrap closure into identifiable
+        // Wrap closure into identifiable struct
         let identifiableClosure = IdentifiableClosure(closure)
+        run(identifiableClosure, attributes: attributes)
+    }
+
+    private func run(_ identifiableClosure: IdentifiableClosure<EmptyClosure, Void>, attributes: Set<TaskAttribute> = []) {
+
+        print("Run closure with id \(identifiableClosure.id) with attributes \(attributes)")
 
         // after init is special, need to be initialized before running tasks
         guard (attributes.contains(.afterInit) && initialized) || !attributes.contains(.afterInit) else {
@@ -45,32 +50,30 @@ final class TaskManager {
             return
         }
 
-        // recurse call in background thread
+        // recursive call in background thread
         guard !attributes.contains(.backgroundThread) else {
             DispatchQueue.global(qos: .background).async { [weak self] in
+                print("Run in background thread task id \(identifiableClosure.id)")
                 var newAttributes = attributes
                 newAttributes.remove(.backgroundThread)
-                self?.run(closure, attributes: newAttributes)
+                self?.run(identifiableClosure, attributes: newAttributes)
             }
             return
         }
-
-        print(" Current thread \(Thread.current) isMain \(Thread.current.isMainThread) in function \(#function)")
 
         applyAttributes(identifiableClosure, attributes: attributes)
 
         // run closure it self with cleanup callback
         identifiableClosure.closure { [weak self] in
+            print("Clean up after task id \(identifiableClosure.id)")
             self?.finishTask(id: identifiableClosure.id, attributes: attributes)
         }
     }
 }
 
-
 // MARK: - Apply similar logic
 private extension TaskManager {
     func applyAttributes(_ closure: IdentifiableClosure<EmptyClosure, Void>, attributes: Set<TaskAttribute>) {
-        print(" Current thread \(Thread.current) isMain \(Thread.current.isMainThread) in function \(#function)")
         if attributes.contains(.backgroundTask) {
             applyBackgroundTask(closure)
         }
@@ -90,7 +93,7 @@ private extension TaskManager {
 private extension TaskManager {
 
     private func applyAfterInit(_ closure: IdentifiableClosure<EmptyClosure, Void>, attributes: Set<TaskAttribute>) {
-        print("Hook after init task")
+        print("Hook after init task id \(closure.id)")
         guard initialized else {
             cachedBeforeInitCalls[closure] = attributes
             // to alow chaining
@@ -103,9 +106,8 @@ private extension TaskManager {
             return
         }
 
-        print("Run \(cachedBeforeInitCalls.count) cached tasks before init")
         cachedBeforeInitCalls.forEach { (key, value) in
-            run(key.closure, attributes: value)
+            run(key, attributes: value)
         }
         cachedBeforeInitCalls.removeAll()
     }
@@ -115,7 +117,7 @@ private extension TaskManager {
 private extension TaskManager {
 
     func applyBackgroundTask(_ closure: IdentifiableClosure<EmptyClosure, Void>) {
-        print("Hook closure to background task")
+        print("Hook closure id \(closure.id) to background task")
         // Check if task is set already
         if backgroundTask == .invalid {
             registerBackgroundTask()
@@ -136,7 +138,7 @@ private extension TaskManager {
     }
 
     func registerBackgroundTask() {
-        print("Background task registered")
+        print("UIApplication background task registered")
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
             // Expiration handler
             self?.endBackgroundTask()
@@ -145,22 +147,11 @@ private extension TaskManager {
 
     func endBackgroundTask() {
         if backgroundTask != .invalid {
-            print("Background task ended")
+            print("UIApplication background task ended")
             // clean up
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
             backgroundCalls.removeAll()
         }
-    }
-}
-
-// FIXME: TODO: Temp help method to test functionality with long running tasks
-// MARK: - After initialization handling
-private extension TaskManager {
-    func delay(by seconds: TimeInterval, on queue: DispatchQueue = .main, closure: @escaping () -> Void) {
-        queue.asyncAfter(
-            deadline: .now() + seconds,
-            execute: closure
-        )
     }
 }

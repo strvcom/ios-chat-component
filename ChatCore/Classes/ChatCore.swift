@@ -179,22 +179,9 @@ private extension ChatCore {
         
         switch result {
         case .success:
-
-            // TODO: test code
-            delay(by: 10) {
-                self.taskManager.initialized = true
-            }
-
+            self.taskManager.initialized = true
         case .failure(let error):
             print(error)
         }
-    }
-
-    // TODO: temo code remove!!!
-    func delay(by seconds: TimeInterval, on queue: DispatchQueue = .main, closure: @escaping () -> Void) {
-        queue.asyncAfter(
-            deadline: .now() + seconds,
-            execute: closure
-        )
     }
 }
