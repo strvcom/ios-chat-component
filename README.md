@@ -128,16 +128,14 @@ Second step is to instantiate `ChatCore` class.
 The main [`Chat`](Chat/Chat.swift) class in this example instantiates the whole mechanism like this:
 
 ``` swift
-let interface: ChatUI<ChatCore<ChatNetworkFirebase, ChatModelsUI>>
+let interface: ChatUI<ChatCore<ChatNetworkFirestore, ChatModelsUI>>
 
 public init(config: Configuration) {
-    let networking = ChatNetworkFirebase(config: config)
-    let core = ChatCore<ChatNetworkFirebase, ChatModelsUI>(networking: networking)
+    let networking = ChatNetworkFirestore(config: config)
+    let core = ChatCore<ChatNetworkFirestore, ChatModelsUI>(networking: networking)
     self.interface = ChatUI(core: core)
 }
 ```
-
-In order to use `ChatCore` service in another class (for example a controller) as a `ChatCoreServicing` type it is necessary to use the `ChatCoreServicing` protocol as a generic constraint for that class and specify UIModels in the constraints.
 
 In this case, the class `ChatUI` specializes the `ChatCoreServicing` protocol to specify UIModels like this:
 
