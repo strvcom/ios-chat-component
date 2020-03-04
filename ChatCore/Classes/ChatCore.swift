@@ -65,7 +65,8 @@ extension ChatCore {
                 // clean up closure from background task
                 switch result {
                 case .success(let message):
-                    taskCompletion(.success)
+//                    taskCompletion(.success)
+                    taskCompletion(.failure(.internal(message: "TESTING ERROR")))
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
