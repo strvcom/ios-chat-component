@@ -25,7 +25,7 @@ extension ConversationFirestore: ChatUIConvertible {
 
     public init(uiModel: Conversation) {
         let newMessages = uiModel.messages.compactMap { MessageFirestore(uiModel: $0) }
-        var newLastMessages: MessageFirestore? = nil
+        var newLastMessages: MessageFirestore?
         if let lastMessage = uiModel.lastMessage {
             newLastMessages = MessageFirestore(uiModel: lastMessage)
         }
