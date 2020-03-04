@@ -43,6 +43,7 @@ opt_in_rules:
 # Paths to include during linting. `--path` is ignored if present.
 #
 included:
+  - ../Chat
   - ../ChatCore
   - ../ChatUI
   - ../ChatNetworkingFirestore
