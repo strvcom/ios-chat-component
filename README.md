@@ -78,7 +78,7 @@ You can use this part of the library in case you want to use both ChatNetworking
 
 ## Writing custom UI layer
 
-The provided UI layer is fairly simple and doesn't offer any customization so usually in a project you will want to create you own UI layer. The only thing that is required is providing the `ChatCore` class with a `ChatUIModels` implementation that specifies which models should be provided to your completion handlers. 
+The provided UI layer is fairly simple and doesn't offer any customization so usually in a project you will want to create your own UI layer. The only thing that is required is providing the `ChatCore` class with a `ChatUIModels` implementation that specifies which models should be provided to your completion handlers. 
 
 ```swift 
 class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing
