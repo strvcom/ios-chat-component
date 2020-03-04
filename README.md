@@ -220,11 +220,8 @@ Whenever you need to load next page of conversations or messages, simply call `c
 
 ### Conversation
 
-- [X] Open a public one-to-many conversation
 - [X] List of conversations
-- [ ] Open a private conversation
-- [ ] Open a private one-to-one conversation
-- [ ] Get notified when conversations are updated
+- [X] Get notified when conversations are updated
 - [ ] Implement background fetch for retry mechanism
 - [ ] Online status indicator
 
@@ -291,16 +288,3 @@ pod repo push ChatCore ~/Desktop/ChatCore.podspec
 ```
 
 And that's it. You can check complete [Podspec docs](https://guides.cocoapods.org/syntax/podspec.html) and [Private Pod docs](https://guides.cocoapods.org/making/private-cocoapods.html).
-
-## Notes
-The solution should be as modular and as scalable as possible. In the first phase a conversation can be created just for two users, but the framework should account with a future multichat support. Because chat is a realtime feature it should support realtime communication and animated UI updates.
-
-The framework shouldn't be dependent on any 3rd party library including frameworks for reactive programming. A reactive wrapper can be created during a future development.
-
-<!-- The framework should have at least 3 separate modules:
-
-1. Interchangeable UI layer
-2. Universal business logic layer (can be split into more modules)
-3. Interchangeable networking layer -->
-
-The interfaces between layers should be designed as universal as possible. Please bear in mind that the networking layer should be interchangeable so it shouldn't matter if it is connected to REST API or a Firebase instance. A similar statement holds for the first layer; it shouldn't matter if the UI layer uses a table view or collection view for showing messages.
