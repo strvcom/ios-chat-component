@@ -34,6 +34,8 @@ public protocol ChatCoreServicing {
     
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
+    /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
+    ///
     /// - Parameters:
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
@@ -43,6 +45,7 @@ public protocol ChatCoreServicing {
     func loadMoreConversations()
     
     /// Creates a listener to messages. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
+    /// 
     /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
     ///
     /// - Parameters:
@@ -64,8 +67,8 @@ public protocol ChatCoreServicing {
     /// Send a request to set `message` as the last seen message by current user
     ///
     /// - Parameters:
-    ///   - message
-    ///   - conversation
+    ///   - message: Message to be set as last seen
+    ///   - conversation: Target conversation
     func updateSeenMessage(_ message: M, in conversation: ObjectIdentifier)
 }
 
