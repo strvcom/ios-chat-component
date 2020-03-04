@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Make networking models conform to this protocol to be able to convert them to the UI models
 public protocol ChatUIConvertible {
 
     associatedtype ChatUIModel

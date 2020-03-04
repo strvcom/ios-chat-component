@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Minimal representation of a user used by the core.
 public protocol UserRepresenting: ObjectIdentifiable {
     var name: String { get }
     var imageUrl: URL? { get }

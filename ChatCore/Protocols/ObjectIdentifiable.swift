@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Used to identify any database object
 public protocol ObjectIdentifiable: Identifiable {
     var id: ObjectIdentifier { get }
 }

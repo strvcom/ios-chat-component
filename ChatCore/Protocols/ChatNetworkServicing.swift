@@ -9,6 +9,9 @@
 import Foundation
 
 // swiftlint:disable type_name
+/// This is the main and only protocol needed to be implemented when creating the network layer.
+/// It's used by the core for all networking operations.
+/// It contains the same methods as the `ChatNetworkServicing` protocol.
 public protocol ChatNetworkServicing {
     associatedtype Config
     

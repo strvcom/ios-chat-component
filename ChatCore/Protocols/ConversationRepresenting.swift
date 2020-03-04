@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Minimal representation of a conversation used by the core.
 public protocol ConversationRepresenting: ObjectIdentifiable {
     associatedtype Message: MessageRepresenting
     associatedtype User: UserRepresenting
