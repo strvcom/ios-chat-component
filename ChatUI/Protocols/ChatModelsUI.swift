@@ -10,7 +10,6 @@ import Foundation
 import ChatCore
 
 public class ChatModelsUI: ChatUIModels {
-    
     public typealias CUI = Conversation
     public typealias MUI = MessageKitType
     public typealias MSUI = MessageSpecification

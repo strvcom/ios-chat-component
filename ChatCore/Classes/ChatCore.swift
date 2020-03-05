@@ -23,6 +23,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias UserUI = Models.USRUI
 
     private lazy var taskManager = TaskManager()
+    private lazy var keychainManager = KeychainManager()
     private var dataManagers = [ListenerIdentifier: DataManager]()
 
     private var networking: Networking
@@ -58,6 +59,18 @@ extension ChatCore {
 
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+
+        // TODO: CJ test
+        print(message)
+        print(message.self)
+        keychainManager.storeUnsentMessage(message)
+        let data = Data()
+        //let ms = MessageSpecifyingUI(from: data)
+
+//        let test:[MessageSpecification] = keychainManager.unsentMessages()
+////        let messsages[MessageSpecifyingUI.Type] = keychainManager.unsentMessages()
+////        print(messsages)
+
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)

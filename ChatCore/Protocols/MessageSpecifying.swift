@@ -8,4 +8,4 @@
 
 import Foundation
 
-public protocol MessageSpecifying { }
+public protocol MessageSpecifying { } // cachable
