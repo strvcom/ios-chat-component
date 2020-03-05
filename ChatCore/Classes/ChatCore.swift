@@ -40,6 +40,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     deinit {
         print("\(self) released")
+        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
@@ -51,26 +52,27 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         self.networking.didFinishedLoading = { [weak self] result in
             self?.didFinishLoading(result: result)
         }
+
+        // Observer for app activation to resend all stored messages
+        NotificationCenter.default.addObserver(self, selector: #selector(resendMessages), name: .appDidBecomeActive, object: nil)
+    }
+
+    // MARK: - Resend stored messages
+    @objc private func resendMessages() {
+        let messages: [MessageSpecifyingUI] = keychainManager.unsentMessages()
+        print(messages)
+        // TODO: conversation id??
     }
 }
 
-// MARK: Sending messages
+// MARK: - Sending messages
 extension ChatCore {
 
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        // TODO: CJ test
-        print(message)
-        print(message.self)
+        // TODO: remove
         keychainManager.storeUnsentMessage(message)
-        let data = Data()
-        //let ms = MessageSpecifyingUI(from: data)
-
-//        let test:[MessageSpecification] = keychainManager.unsentMessages()
-////        let messsages[MessageSpecifyingUI.Type] = keychainManager.unsentMessages()
-////        print(messsages)
-
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
@@ -82,6 +84,8 @@ extension ChatCore {
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
+                    // FIXME: TODO: CJ Test until full tasks logic is implemented
+                    self?.keychainManager.storeUnsentMessage(message)
                     taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
@@ -90,7 +94,7 @@ extension ChatCore {
     }
 }
 
-// MARK: Seen flag
+// MARK: - Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
         
@@ -106,7 +110,7 @@ extension ChatCore {
     }
 }
 
-// MARK: Listening to updates
+// MARK: - Listening to updates
 extension ChatCore {
     open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ListenerIdentifier {
         let listener = ListenerIdentifier.generateIdentifier()
@@ -190,7 +194,7 @@ extension ChatCore {
     }
 }
 
-// MARK: ChatNetworkServicing load state observing
+// MARK: - ChatNetworkServicing load state observing
 private extension ChatCore {
     func didFinishLoading(result: Result<Void, ChatError>) {
         

@@ -24,8 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
         chat = Chat(config: config)
-        
+        NotificationCenter.default.post(name: .appDidBecomeActive, object: nil)
         return true
+
+
     }
 
     // MARK: UISceneSession Lifecycle
@@ -43,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        print("did become active")
+        NotificationCenter.default.post(name: .appDidBecomeActive, object: nil)
     }
 
 }

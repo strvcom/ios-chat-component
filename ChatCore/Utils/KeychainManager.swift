@@ -31,10 +31,16 @@ extension KeychainManager {
     }
 
     func unsentMessages<T: Codable & MessageSpecifying>() -> [T] {
-        guard let unsentMessages: [T] = object(forKey: .unsentMessages) else {
-            return []
-        }
-        return unsentMessages
+        let messagesData = data(forKey: .unsentMessages)
+        let decoder = JSONDecoder()
+        let wtd = try? decoder.decode([Data].self, from: messagesData!)
+
+        let tt = wtd?.compactMap { T(from: $0) }
+        return tt ?? []
+//        guard let unsentMessages: [T] = object(forKey: .unsentMessages) else {
+//            return []
+//        }
+//        return unsentMessages
     }
 }
 
