@@ -15,7 +15,7 @@
 
 ## Description
 
-This repository contains an universal chat framework that can be easily scaled to be used in any project that contains standard in-app chat component. This library is divided into multiple modules (layers). Each module is a standalone framework target, so the implementation details can be hidden from each others with the `internal` modifier. Each module is its own pod as well.
+This repository contains an universal chat framework that can be easily scaled to be used in any project that contains standard in-app chat component. This library is divided into multiple modules (layers). Each module is a standalone framework target, so the implementation details can be hidden from each other. Each module is its own pod as well.
 
 ## Installation
 
