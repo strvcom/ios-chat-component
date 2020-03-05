@@ -17,10 +17,17 @@ final class TaskManager {
         case backgroundThread
     }
 
+    enum TaskCompletionResult {
+        case success
+        case failure(ChatError)
+    }
+
+    typealias TaskCompletionResultHandler = (TaskCompletionResult) -> Void
+
     // closure storage for calls before init
-    private var cachedBeforeInitCalls: [IdentifiableClosure<EmptyClosure, Void>: Set<TaskAttribute>] = [:]
+    private var cachedBeforeInitCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
     // tasks hooked to background task
-    private var backgroundCalls = [IdentifiableClosure<EmptyClosure, Void>]()
+    private var backgroundCalls = [IdentifiableClosure<TaskCompletionResultHandler, Void>]()
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
     // dedicated thread queue
@@ -34,13 +41,13 @@ final class TaskManager {
         }
     }
 
-    func run(attributes: Set<TaskAttribute> = [], _ closure: @escaping VoidClosure<EmptyClosure>) {
+    func run(attributes: Set<TaskAttribute> = [], _ closure: @escaping ((@escaping TaskCompletionResultHandler) -> Void)) {
         // Wrap closure into identifiable struct
         let identifiableClosure = IdentifiableClosure(closure)
         run(attributes: attributes, identifiableClosure)
     }
 
-    private func run(attributes: Set<TaskAttribute> = [], _ identifiableClosure: IdentifiableClosure<EmptyClosure, Void>) {
+    private func run(attributes: Set<TaskAttribute> = [], _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
 
         print("Run closure with id \(identifiableClosure.id) with attributes \(attributes)")
 
@@ -64,7 +71,7 @@ final class TaskManager {
         applyAttributes(identifiableClosure, attributes: attributes)
 
         // run closure it self with cleanup callback
-        identifiableClosure.closure { [weak self] in
+        identifiableClosure.closure { [weak self] _ in
             print("Clean up after task id \(identifiableClosure.id)")
             self?.finishTask(id: identifiableClosure.id, attributes: attributes)
         }
@@ -73,7 +80,7 @@ final class TaskManager {
 
 // MARK: - Apply similar logic
 private extension TaskManager {
-    func applyAttributes(_ closure: IdentifiableClosure<EmptyClosure, Void>, attributes: Set<TaskAttribute>) {
+    func applyAttributes(_ closure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
         if attributes.contains(.backgroundTask) {
             applyBackgroundTask(closure)
         }
@@ -92,7 +99,7 @@ private extension TaskManager {
 // MARK: - After initialization handling
 private extension TaskManager {
 
-    private func applyAfterInit(_ closure: IdentifiableClosure<EmptyClosure, Void>, attributes: Set<TaskAttribute>) {
+    private func applyAfterInit(_ closure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
         print("Hook after init task id \(closure.id)")
         guard initialized else {
             cachedBeforeInitCalls[closure] = attributes
@@ -116,7 +123,7 @@ private extension TaskManager {
 // MARK: - Background task handling
 private extension TaskManager {
 
-    func applyBackgroundTask(_ closure: IdentifiableClosure<EmptyClosure, Void>) {
+    func applyBackgroundTask(_ closure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
         print("Hook closure id \(closure.id) to background task")
         // Check if task is set already
         if backgroundTask == .invalid {
