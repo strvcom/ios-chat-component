@@ -13,7 +13,10 @@ public protocol ChatUIConvertible {
 
     associatedtype ChatUIModel
 
+    /// This var constructs the UI model from the networking model
     var uiModel: ChatUIModel { get }
 
+    /// Initialize from uiModel
+    /// - Parameter uiModel: UI Model to initialize from
     init(uiModel: ChatUIModel)
 }

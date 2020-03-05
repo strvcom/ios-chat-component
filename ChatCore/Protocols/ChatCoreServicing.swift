@@ -19,7 +19,8 @@ public protocol ChatCoreServicing {
     typealias M = UIModels.MUI
     typealias MS = UIModels.MSUI
     typealias U = UIModels.USRUI
-
+    
+    /// Current user logged in to the app
     var currentUser: U? { get }
 
     init(networking: Networking)

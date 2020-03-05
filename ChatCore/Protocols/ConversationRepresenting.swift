@@ -13,8 +13,15 @@ public protocol ConversationRepresenting: ObjectIdentifiable {
     associatedtype Message: MessageRepresenting
     associatedtype User: UserRepresenting
     
+    /// Copy of the last message in conversation
     var lastMessage: Message? { get }
+    
+    /// Array of members participating in this conversation
     var members: [User] { get }
+    
+    /// Array of messages that have been sent to this conversation
     var messages: [Message] { get }
+    
+    /// Dictionary of seen timestamps with userId as the key
     var seen: [String: (messageId: ObjectIdentifier, seenAt: Date)] { get }
 }
