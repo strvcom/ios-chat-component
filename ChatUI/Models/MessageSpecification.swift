@@ -14,6 +14,7 @@ public enum MessageSpecification: MessageSpecifying {
     case image(image: UIImage)
 }
 
+// MARK: - Cachable & Codable
 extension MessageSpecification: Codable {
     private enum CodingKeys: String, CodingKey {
       case message, image

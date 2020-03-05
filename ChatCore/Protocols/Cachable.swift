@@ -8,15 +8,20 @@
 
 import Foundation
 
-// MARK: - Protocol required for object which tends to be cached
+// MARK: - Protocol required for object which needs to be cached
 public protocol Cachable {
-    init(from data: Data)
-    func toData() -> Data
+    init?(from data: Data)
+    func toData() -> Data?
 }
 
+// MARK: - Defaul implementation for codable objects
 public extension Cachable where Self: Decodable {
-    init(from data: Data) throws {
-        self = try JSONDecoder().decode(Self.self, from: data)
+    init?(from data: Data) {
+        do {
+            self = try JSONDecoder().decode(Self.self, from: data)
+        } catch {
+            return nil
+        }
     }
 }
 
@@ -24,8 +29,4 @@ public extension Cachable where Self: Encodable {
     func toData() -> Data? {
         try? JSONEncoder().encode(self)
     }
-}
-
-public struct Test: Codable, MessageSpecifying {
-    let name: String
 }

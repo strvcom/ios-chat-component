@@ -46,7 +46,7 @@ extension MessageSpecificationFirestore {
     }
 }
 
-// MARK: Cachable
+// MARK: - Cachable & Codable
 extension MessageSpecificationFirestore: Codable {
     private enum CodingKeys: String, CodingKey {
       case message, image
