@@ -8,11 +8,20 @@
 
 import Foundation
 
-open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing
-           where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.MS: ChatUIConvertible,
-            Networking.U: ChatUIConvertible, Networking.C.User.ChatUIModel == Models.USRUI,
-            Networking.C.ChatUIModel == Models.CUI, Networking.C.Message.ChatUIModel == Models.MUI,
-            Networking.MS.ChatUIModel == Models.MSUI {
+open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing where
+    
+    // Specify that associated types
+    // Conversation, Message (receive), MessageSpecifying (send) and User
+    // of ChatNetworkServicing have to conform to `ChatUIConvertible`
+    Networking.C: ChatUIConvertible,
+    Networking.M: ChatUIConvertible,
+    Networking.MS: ChatUIConvertible,
+    Networking.U: ChatUIConvertible,
+    
+    Networking.U.ChatUIModel == Models.USRUI,
+    Networking.C.ChatUIModel == Models.CUI,
+    Networking.M.ChatUIModel == Models.MUI,
+    Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
