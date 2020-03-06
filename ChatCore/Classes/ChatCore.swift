@@ -69,8 +69,10 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // MARK: - Resend stored messages
     @objc private func resendMessages() {
         let messages: [Message<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { send(message: $0.content, to: $0.conversationId) { result in
-            print(result)
+        messages.forEach { send(message: $0.content, to: $0.conversationId) { [weak self] result in
+            if case .failure = result {
+                self?.keychainManager.storeUnsentMessage($0)
+            }
         }}
     }
 }
