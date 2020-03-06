@@ -11,6 +11,6 @@ import Foundation
 public protocol ChatUIModels {
     associatedtype CUI: ConversationRepresenting
     associatedtype MUI: MessageRepresenting
-    associatedtype MSUI: MessageSpecifying & Codable
+    associatedtype MSUI: MessageSpecifying & Cachable
     associatedtype USRUI: UserRepresenting
 }

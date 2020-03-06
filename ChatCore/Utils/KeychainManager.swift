@@ -20,9 +20,9 @@ final class KeychainManager {
 
 // MARK: - Keychain for messages
 extension KeychainManager {
-    func storeUnsentMessage<T: Codable & MessageSpecifying>(_ message: T) {
-        var unsentMessages: [T] = []
-        if let unsentMessagesData: [T] = object(forKey: .unsentMessages) {
+    func storeUnsentMessage<T: Cachable & MessageSpecifying>(_ message: Message<T>) {
+        var unsentMessages: [Message<T>] = []
+        if let unsentMessagesData: [Message<T>] = object(forKey: .unsentMessages) {
             unsentMessages = unsentMessagesData
         }
 
@@ -30,17 +30,11 @@ extension KeychainManager {
         storeObject(object: unsentMessages, forKey: .unsentMessages)
     }
 
-    func unsentMessages<T: Codable & MessageSpecifying>() -> [T] {
-        let messagesData = data(forKey: .unsentMessages)
-        let decoder = JSONDecoder()
-        let wtd = try? decoder.decode([Data].self, from: messagesData!)
-
-        let tt = wtd?.compactMap { T(from: $0) }
-        return tt ?? []
-//        guard let unsentMessages: [T] = object(forKey: .unsentMessages) else {
-//            return []
-//        }
-//        return unsentMessages
+    func unsentMessages<T: Cachable & MessageSpecifying>() -> [Message<T>] {
+        let messages: [Message<T>] = object(forKey: .unsentMessages) ?? []
+        // remove all from cache, those will be saved again if fails
+        remove(forKey: .unsentMessages)
+        return messages
     }
 }
 

@@ -18,6 +18,7 @@
 		841711AB2407F1160004FED7 /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841711AA2407F1160004FED7 /* Closure.swift */; };
 		843A583C24114FE4007E6F45 /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583B24114FE4007E6F45 /* Cachable.swift */; };
 		843A583E24115F2F007E6F45 /* Notification+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583D24115F2F007E6F45 /* Notification+Custom.swift */; };
+		843A5840241283B0007E6F45 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583F241283B0007E6F45 /* Message.swift */; };
 		843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D814D2406D6B100C62656 /* IdentifiableClosure.swift */; };
 		843D81542406E90F00C62656 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D81522406E90200C62656 /* TaskManager.swift */; };
 		84D032D9240F17650017EF88 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D032D8240F17650017EF88 /* KeychainManager.swift */; };
@@ -149,6 +150,7 @@
 		841711AA2407F1160004FED7 /* Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
 		843A583B24114FE4007E6F45 /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
 		843A583D24115F2F007E6F45 /* Notification+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Custom.swift"; sourceTree = "<group>"; };
+		843A583F241283B0007E6F45 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		843D814D2406D6B100C62656 /* IdentifiableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClosure.swift; sourceTree = "<group>"; };
 		843D81522406E90200C62656 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		84D032D8240F17650017EF88 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 				843D814D2406D6B100C62656 /* IdentifiableClosure.swift */,
 				C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */,
 				C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */,
+				843A583F241283B0007E6F45 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -936,6 +939,7 @@
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,
 				843A583C24114FE4007E6F45 /* Cachable.swift in Sources */,
+				843A5840241283B0007E6F45 /* Message.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,
 				04957CC923F3760000AD595B /* Constants.swift in Sources */,
 				C11E9E4323EDCD1E005E10A1 /* ChatNetworkingConvertible.swift in Sources */,

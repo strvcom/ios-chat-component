@@ -59,9 +59,10 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     // MARK: - Resend stored messages
     @objc private func resendMessages() {
-        let messages: [MessageSpecifyingUI] = keychainManager.unsentMessages()
-        print(messages)
-        // TODO: conversation id??
+        let messages: [Message<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { send(message: $0.content, to: $0.conversationId) { result in
+            print(result)
+        }}
     }
 }
 
@@ -70,9 +71,6 @@ extension ChatCore {
 
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-
-        // TODO: remove
-        keychainManager.storeUnsentMessage(message)
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
@@ -84,8 +82,9 @@ extension ChatCore {
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
-                    // FIXME: TODO: CJ Test until full tasks logic is implemented
-                    self?.keychainManager.storeUnsentMessage(message)
+                    // FIXME: CJ Until full tasks logic is implemented store when error
+                    let messageCache = Message(content: message, conversationId: conversation)
+                    self?.keychainManager.storeUnsentMessage(messageCache)
                     taskCompletion(.failure(error))
                     completion(.failure(error))
                 }

@@ -15,7 +15,7 @@ public enum MessageSpecification: MessageSpecifying {
 }
 
 // MARK: - Cachable & Codable
-extension MessageSpecification: Codable {
+extension MessageSpecification: Cachable {
     private enum CodingKeys: String, CodingKey {
       case message, image
     }
