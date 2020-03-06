@@ -12,6 +12,6 @@ public typealias ListenerIdentifier = String
 
 public extension ListenerIdentifier {
     static func generateIdentifier() -> ListenerIdentifier {
-        return UUID().uuidString
+        UUID().uuidString
     }
 }
