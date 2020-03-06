@@ -32,10 +32,10 @@ extension MessageSpecificationFirestore: ChatUIConvertible {
 
     public init(uiModel: MessageSpecification) {
         switch uiModel {
-            case .image(let image):
-                self =  MessageSpecificationFirestore.image(image: image)
-            case .text(let message):
-                self = MessageSpecificationFirestore.text(message: message)
+        case .image(let image):
+            self =  MessageSpecificationFirestore.image(image: image)
+        case .text(let message):
+            self = MessageSpecificationFirestore.text(message: message)
         }
     }
 }

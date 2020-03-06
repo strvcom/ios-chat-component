@@ -25,4 +25,3 @@ extension UserFirestore: ChatUIConvertible {
         self.init(id: uiModel.id, name: uiModel.name, imageUrl: uiModel.imageUrl)
     }
 }
-
