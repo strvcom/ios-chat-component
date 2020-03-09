@@ -51,12 +51,9 @@ final class TaskManager {
     init() {
         // for ios 13 use backgroundTasks fallback ios to background fetch
         if #available(iOS 13, *) {
-            // TODO:
-            //registerBackgroundTaskScheduler()
-
-            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .appPerformBackgroundFetch, object: nil)
+            registerBackgroundTaskScheduler()
         } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .appPerformBackgroundFetch, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .chatCoreAppPerformBackgroundFetch, object: nil)
         }
     }
 
@@ -169,13 +166,14 @@ private extension TaskManager {
             guard let self = self else {
                 return
             }
-            // Expiration handler
-            self.endBackgroundTask()
 
             // Schedule background processing
             if #available(iOS 13, *), !self.backgroundCalls.isEmpty {
                 self.scheduleBackgroundProcessing()
             }
+
+            // Expiration handler
+            self.endBackgroundTask()
         }
     }
 
@@ -185,14 +183,8 @@ private extension TaskManager {
             // clean up
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
-            backgroundCalls.removeAll()
         }
     }
-}
-
-// MARK: - Custom notifications
-public extension NSNotification.Name {
-    static let appPerformBackgroundFetch = NSNotification.Name("appPerformBackgroundFetch")
 }
 
 /*
@@ -210,18 +202,20 @@ private extension TaskManager {
     }
 
     func runBackgroundCalls(completionHandler: @escaping EmptyClosure) {
-        var tasks = backgroundCalls
+        let tasks = backgroundCalls
         // run all stored tasks until all are done
-//        backgroundCalls.forEach { task in
-//            task.closure {
-//            if let index = tasks.firstIndex(of: task) {
-//                tasks.remove(at: index)
-//            }
-//
-//            if tasks.isEmpty {
-//                completionHandler()
-//            }
-//            }}
+        tasks.forEach { task in
+            task.closure { [weak self] result in
+                if case .success = result {
+                    if let index = self?.backgroundCalls.firstIndex(of: task) {
+                        self?.backgroundCalls.remove(at: index)
+                    }
+
+                    if tasks.isEmpty {
+                        completionHandler()
+                    }
+                }
+            }}
     }
 }
 
