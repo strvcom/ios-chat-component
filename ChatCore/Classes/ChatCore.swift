@@ -62,10 +62,10 @@ extension ChatCore {
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
-                // clean up closure from background task
                 switch result {
                 case .success(let message):
-                    taskCompletion(.success)
+//                    taskCompletion(.success)
+                    taskCompletion(.failure(.networking(error: NSError(domain: "dasd", code: 1, userInfo: nil))))
                     completion(.success(message.uiModel))
 
                 case .failure(let error):

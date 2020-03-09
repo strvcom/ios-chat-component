@@ -87,23 +87,25 @@ private extension TaskManager {
 
     func handleTaskCompletionResult(attributes: Set<TaskAttribute>, result: TaskCompletionResult, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
         print("Clean up after task id \(identifiableClosure.id) with result \(result)")
-        // clean up in all cases to release background task
-        finishTask(attributes: attributes, identifiableClosure)
 
         // retry in case of network error
         if case .failure(let error) = result, attributes.contains(.retry), let retryCount = retryCalls[identifiableClosure], retryCount > 0 {
             if case .networking = error {
-                // run again whole flow
-                print("Retry task id \(identifiableClosure.id), retry count \(retryCount)")
-                run(attributes: attributes, identifiableClosure)
-                if retryCount > 1 {
+                if retryCount > 0 {
+                    // run again whole flow
+                    print("Retry task id \(identifiableClosure.id), retry count \(retryCount)")
+                    run(attributes: attributes, identifiableClosure)
                     retryCalls[identifiableClosure] = retryCount - 1
                 } else {
                     retryCalls.removeValue(forKey: identifiableClosure)
+                    // clean up in all cases to release background task
+                    finishTask(attributes: attributes, identifiableClosure)
                 }
             }
-        } else if case .success = result, attributes.contains(.retry) {
+        } else {
             retryCalls.removeValue(forKey: identifiableClosure)
+            // clean up in all cases to release background task
+            finishTask(attributes: attributes, identifiableClosure)
         }
     }
 }
@@ -164,7 +166,10 @@ private extension TaskManager {
             registerBackgroundTask()
         }
 
-        backgroundCalls.append(identifiableClosure)
+        // check if backgroundCalls doesnt contain task already bc of retry logic
+        if !backgroundCalls.contains(identifiableClosure) {
+            backgroundCalls.append(identifiableClosure)
+        }
     }
 
     func finishedInBackgroundTask(id: ObjectIdentifier) {
