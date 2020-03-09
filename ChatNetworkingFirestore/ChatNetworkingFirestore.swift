@@ -27,7 +27,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     public private(set) var currentUser: UserFirestore?
     public var didFinishedLoading: ((Result<Void, ChatError>) -> Void)?
     
-    private var listeners: [ListenerIdentifier: ListenerRegistration] = [:]
+    private var listeners: [ListenerArguments: ListenerRegistration] = [:]
     private var currentUserId: String?
     private var users: [UserFirestore] = [] {
         didSet {
@@ -60,8 +60,8 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     
     deinit {
         print("\(self) released")
-        listeners.forEach { (listener, _) in
-            remove(listener: listener)
+        listeners.forEach {
+            remove(arguments: $0.key)
         }
     }
 }
@@ -186,17 +186,19 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Listen to collections
 public extension ChatNetworkingFirestore {
-    func listenToConversations(pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+        
+        let arguments = ListenerArguments.conversations(pageSize: pageSize)
         
         conversationsPagination = Pagination(
             updateBlock: completion,
-            listener: listener,
+            arguments: arguments,
             pageSize: pageSize
         )
         
         let query = conversationsQuery(numberOfConversations: conversationsPagination.itemsLoaded)
         
-        listenTo(query: query, customListener: listener, completion: { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
+        listenTo(query: query, arguments: arguments, completion: { [weak self] (result: Result<[ConversationFirestore], ChatError>) in
             
             guard let self = self else {
                 return
@@ -212,30 +214,29 @@ public extension ChatNetworkingFirestore {
         })
     }
 
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
         
         let completion = reversedDataCompletion(completion: completion)
-        
+        let arguments = ListenerArguments.messages(pageSize: pageSize, conversationId: id)
         let query = messagesQuery(conversation: id, numberOfMessages: pageSize)
         
-        listenTo(query: query, customListener: listener, completion: completion)
+        listenTo(query: query, arguments: arguments, completion: completion)
         
-        messagesPaginators[id] = Pagination<MessageFirestore>(
+        messagesPaginators[id] = Pagination(
             updateBlock: completion,
-            listener: listener,
+            arguments: arguments,
             pageSize: pageSize
         )
     }
     
-    @discardableResult
-    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
         let query = database.collection(Constants.usersPath)
         
-        return listenTo(query: query, completion: completion)
+        listenTo(query: query, arguments: .users, completion: completion)
     }
     
-    func remove(listener: ListenerIdentifier) {
-        listeners[listener]?.remove()
+    func remove(arguments: ListenerArguments) {
+        listeners[arguments]?.remove()
     }
     
     func loadMoreConversations() {
@@ -314,8 +315,7 @@ private extension ChatNetworkingFirestore {
 
 // MARK: Private methods
 private extension ChatNetworkingFirestore {
-    @discardableResult
-    func listenTo<T: Decodable>(query: Query, customListener: ListenerIdentifier? = nil, completion: @escaping (Result<[T], ChatError>) -> Void) -> ListenerIdentifier {
+    func listenTo<T: Decodable>(query: Query, arguments: ListenerArguments, completion: @escaping (Result<[T], ChatError>) -> Void) {
         let listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
                 let list: [T] = snapshot.documents.compactMap {
@@ -334,11 +334,7 @@ private extension ChatNetworkingFirestore {
             }
         }
         
-        let identifier = customListener ?? ListenerIdentifier.generateIdentifier()
-        
-        listeners[identifier] = listener
-        
-        return identifier
+        listeners[arguments] = listener
     }
     
     func conversationsWithMembers(conversations: [ConversationFirestore]) -> [ConversationFirestore] {
@@ -353,17 +349,13 @@ private extension ChatNetworkingFirestore {
         
         var paginator = paginator
         
-        guard let listener = paginator.listener else {
-            return paginator
-        }
-        
-        remove(listener: listener)
+        remove(arguments: paginator.arguments)
         
         paginator.nextPage()
         
         let query = query.limit(to: paginator.itemsLoaded)
         
-        paginator.listener = listenTo(query: query, customListener: listener, completion: listenerCompletion)
+        listenTo(query: query, arguments: paginator.arguments, completion: listenerCompletion)
         
         return paginator
     }

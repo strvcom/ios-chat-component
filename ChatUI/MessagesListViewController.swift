@@ -16,7 +16,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     let conversation: Conversation
     private let dataSource = DataSource()
 
-    private var listener: ListenerIdentifier?
+    private var listener: ObjectIdentifier?
     private let sender: Sender
     
     private var loadMoreButtonVisible = true {

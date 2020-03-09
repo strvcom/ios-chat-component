@@ -30,20 +30,19 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
+    
+    public typealias ConversationResult = Result<DataPayload<[ConversationUI]>, ChatError>
+    public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
     private lazy var taskManager = TaskManager()
-    private var dataManagers = [ListenerIdentifier: DataManager]()
+    private var dataManagers = [ListenerArguments: DataManager]()
     
     private var conversationListeners = [
-        ListenerArguments: [
-            ListenerIdentifier: (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void
-        ]
+        ListenerArguments: [IdentifiableClosure<ConversationResult, Void>]
     ]()
     
     private var messagesListeners = [
-        ListenerArguments: [
-            ListenerIdentifier: (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
-        ]
+        ListenerArguments: [IdentifiableClosure<MessagesResult, Void>]
     ]()
     
     private var networking: Networking
@@ -116,24 +115,27 @@ extension ChatCore {
 
 // MARK: Listening to updates
 extension ChatCore {
-    open func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[ConversationUI]>, ChatError>) -> Void) -> ListenerIdentifier {
-        let listener = ListenerIdentifier.generateIdentifier()
+    open func listenToConversations(
+        pageSize: Int,
+        completion: @escaping (ConversationResult) -> Void
+    ) -> ObjectIdentifier {
+        
+        let closure = IdentifiableClosure<ConversationResult, Void>(completion)
         
         let arguments = ListenerArguments.conversations(pageSize: pageSize)
         
         // Add completion block
         if conversationListeners[arguments] == nil {
-            conversationListeners[arguments] = [:]
+            conversationListeners[arguments] = []
         }
-        
-        conversationListeners[arguments]?[listener] = completion
+        conversationListeners[arguments]?.append(closure)
         
         if let existingListeners = conversationListeners[arguments], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
-            return listener
+            return closure.id
         }
         
-        dataManagers[listener] = DataManager(pageSize: pageSize)
+        dataManagers[arguments] = DataManager(pageSize: pageSize)
 
         taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
             
@@ -141,31 +143,32 @@ extension ChatCore {
                 return
             }
             
-            self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
+            self.networking.listenToConversations(pageSize: pageSize) { result in
                 switch result {
                 case .success(let conversations):
                     
-                    self.dataManagers[listener]?.update(data: conversations)
+                    self.dataManagers[arguments]?.update(data: conversations)
                     let converted = conversations.compactMap({ $0.uiModel })
                     
-                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[arguments]?.reachedEnd ?? true)
                     
                     self.conversations = data
                     taskCompletion(.success)
                     
                     // Call each closure registered for these arguments
-                    self.conversationListeners[arguments]?.values.forEach {
-                        $0(.success(data))
+                    self.conversationListeners[arguments]?.forEach {
+                        $0.closure(.success(data))
                     }
                 case .failure(let error):
                     taskCompletion(.failure(error))
-                    self.conversationListeners[arguments]?.values.forEach {
-                        $0(.failure(error))
+                    self.conversationListeners[arguments]?.forEach {
+                        $0.closure(.failure(error))
                     }
                 }
-            }})
+            }
+        })
 
-        return listener
+        return closure.id
     }
     
     open func loadMoreConversations() {
@@ -175,24 +178,25 @@ extension ChatCore {
     open func listenToMessages(
         conversation id: ObjectIdentifier,
         pageSize: Int,
-        completion: @escaping (Result<DataPayload<[MessageUI]>, ChatError>) -> Void
-    ) -> ListenerIdentifier {
-        let listener = ListenerIdentifier.generateIdentifier()
+        completion: @escaping (MessagesResult) -> Void
+    ) -> ObjectIdentifier {
+        
+        let closure = IdentifiableClosure<MessagesResult, Void>(completion)
         
         let arguments = ListenerArguments.messages(pageSize: pageSize, conversationId: id)
         
         if messagesListeners[arguments] == nil {
-            messagesListeners[arguments] = [:]
+            messagesListeners[arguments] = []
         }
         
-        messagesListeners[arguments]?[listener] = completion
+        messagesListeners[arguments]?.append(closure)
         
         if let existingListeners = conversationListeners[arguments], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
-            return listener
+            return closure.id
         }
         
-        dataManagers[listener] = DataManager(pageSize: pageSize)
+        dataManagers[arguments] = DataManager(pageSize: pageSize)
         
         taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
             
@@ -200,43 +204,40 @@ extension ChatCore {
                 return
             }
             
-            self.networking.listenToMessages(conversation: id, pageSize: pageSize, listener: listener) { result in
+            self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
                 switch result {
                 case .success(let messages):
                     
-                    self.dataManagers[listener]?.update(data: messages)
+                    self.dataManagers[arguments]?.update(data: messages)
                     
                     let converted = messages.compactMap({ $0.uiModel })
-                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[arguments]?.reachedEnd ?? true)
                     
                     self.messages[id] = data
                     taskCompletion(.success)
                     
                     // Call each closure registered for these arguments
-                    self.messagesListeners[arguments]?.values.forEach {
-                        $0(.success(data))
+                    self.messagesListeners[arguments]?.forEach {
+                        $0.closure(.success(data))
                     }
                 case .failure(let error):
                     taskCompletion(.failure(error))
-                    self.messagesListeners[arguments]?.values.forEach {
-                        $0(.failure(error))
+                    self.messagesListeners[arguments]?.forEach {
+                        $0.closure(.failure(error))
                     }
                 }
             }})
 
-        return listener
+        return closure.id
     }
     
     open func loadMoreMessages(conversation id: ObjectIdentifier) {
         networking.loadMoreMessages(conversation: id)
     }
     
-    open func remove(listener: ListenerIdentifier) {
-        networking.remove(listener: listener)
-        dataManagers[listener] = nil
-        
-        removeListener(listener, from: conversationListeners)
-        removeListener(listener, from: messagesListeners)
+    open func remove(listener: ObjectIdentifier) {
+        removeListener(listener, from: &conversationListeners)
+        removeListener(listener, from: &messagesListeners)
     }
 }
 
@@ -253,16 +254,18 @@ private extension ChatCore {
     }
     
     func removeListener<T>(
-        _ listener: ListenerIdentifier,
-        from listeners: [ListenerArguments: [ListenerIdentifier: (Result<DataPayload<[T]>, ChatError>) -> Void]]
+        _ listener: ObjectIdentifier,
+        from listeners: inout [ListenerArguments: [IdentifiableClosure<T, Void>]]
     ) {
-        listeners.forEach { value in
-            let (arguments, listeners) = value
+        listeners.forEach { (arguments, closures) in
+            closures.forEach { _ in
+                listeners[arguments] = listeners[arguments]?.filter { $0.id != listener }
+            }
             
-            listeners.keys.forEach { listenerId in
-                if listenerId == listener {
-                    conversationListeners[arguments]?[listenerId] = nil
-                }
+            // If there are no more closures registered for this set of arguments, remove networking listener and data manager
+            if listeners[arguments]?.isEmpty ?? true {
+                networking.remove(arguments: arguments)
+                dataManagers[arguments] = nil
             }
         }
     }

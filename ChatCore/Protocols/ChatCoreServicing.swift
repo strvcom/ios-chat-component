@@ -40,20 +40,20 @@ public protocol ChatCoreServicing {
     /// - Parameters:
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ObjectIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToConversations`
     func loadMoreConversations()
     
     /// Creates a listener to messages. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
-    /// 
+    ///
     /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
     ///
     /// - Parameters:
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ObjectIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///
@@ -63,7 +63,7 @@ public protocol ChatCoreServicing {
     /// Used to remove listeners when you no longer need to receive data.
     ///
     /// - Parameter listener: listener identifier obtained when creating a listener to conversations or messages
-    func remove(listener: ListenerIdentifier)
+    func remove(listener: ObjectIdentifier)
     
     /// Send a request to set `message` as the last seen message by current user
     ///
@@ -75,11 +75,11 @@ public protocol ChatCoreServicing {
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToMessages(conversation id: ObjectIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToMessages(conversation id: ObjectIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ObjectIdentifier {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
-    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ObjectIdentifier {
         listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
     }
 }

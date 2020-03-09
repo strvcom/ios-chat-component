@@ -11,4 +11,6 @@ import Foundation
 public enum ListenerArguments: Hashable {
     case conversations(pageSize: Int)
     case messages(pageSize: Int, conversationId: ObjectIdentifier)
+    case users
+    case empty
 }

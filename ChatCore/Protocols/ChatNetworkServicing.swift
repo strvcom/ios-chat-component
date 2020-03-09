@@ -49,9 +49,8 @@ public protocol ChatNetworkServicing {
     ///
     /// - Parameters:
     ///   - pageSize: How many items to get at once
-    ///   - listener: Identifer of an existing listener
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToConversations(pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[C], ChatError>) -> Void)
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void)
     
     //// This method asks for more data and calls the completion callback specified in `listenToConversations`
     func loadMoreConversations()
@@ -61,9 +60,8 @@ public protocol ChatNetworkServicing {
     /// - Parameters:
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
-    ///   - listener: Identifier of an existing listener
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, listener: ListenerIdentifier, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void)
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///
@@ -72,6 +70,6 @@ public protocol ChatNetworkServicing {
 
     /// Used to remove listeners when you no longer need to receive data.
     ///
-    /// - Parameter listener: listener identifier obtained when creating a listener to conversations or messages
-    func remove(listener: ListenerIdentifier)
+    /// - Parameter arguments: set of arguments for which the listener should be removed
+    func remove(arguments: ListenerArguments)
 }

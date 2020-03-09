@@ -51,7 +51,6 @@
 		C11E9E3623EDCD1E005E10A1 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E2323EDCD1E005E10A1 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2523EDCD1E005E10A1 /* Error.swift */; };
 		C11E9E3823EDCD1E005E10A1 /* ObjectIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */; };
-		C11E9E3923EDCD1E005E10A1 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */; };
 		C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2923EDCD1E005E10A1 /* ChatUIConvertible.swift */; };
 		C11E9E3B23EDCD1E005E10A1 /* UserRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2A23EDCD1E005E10A1 /* UserRepresenting.swift */; };
 		C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */; };
@@ -187,7 +186,6 @@
 		C11E9E2323EDCD1E005E10A1 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		C11E9E2523EDCD1E005E10A1 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectIdentifier.swift; sourceTree = "<group>"; };
-		C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenerIdentifier.swift; sourceTree = "<group>"; };
 		C11E9E2923EDCD1E005E10A1 /* ChatUIConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIConvertible.swift; sourceTree = "<group>"; };
 		C11E9E2A23EDCD1E005E10A1 /* UserRepresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRepresenting.swift; sourceTree = "<group>"; };
 		C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecifying.swift; sourceTree = "<group>"; };
@@ -439,7 +437,6 @@
 				841711AA2407F1160004FED7 /* Closure.swift */,
 				843D814D2406D6B100C62656 /* IdentifiableClosure.swift */,
 				C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */,
-				C11E9E2723EDCD1E005E10A1 /* ListenerIdentifier.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -910,7 +907,6 @@
 				049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */,
 				841711AB2407F1160004FED7 /* Closure.swift in Sources */,
 				843D81542406E90F00C62656 /* TaskManager.swift in Sources */,
-				C11E9E3923EDCD1E005E10A1 /* ListenerIdentifier.swift in Sources */,
 				C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */,
 				C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */,
 				049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */,
