@@ -25,8 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
         chat = Chat(config: config)
         return true
-
-
     }
 
     // MARK: UISceneSession Lifecycle
@@ -45,7 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Needs to be implemented to hook up default resending unsent messages
-        NotificationCenter.default.post(name: .chatCoreAppDidBecomeActive, object: nil)
+        NotificationCenter.default.post(name: .chatCoreResendMessages, object: nil)
     }
-
 }

@@ -9,4 +9,4 @@
 import Foundation
 
 // MARK: - Protocol required for object which needs to be cached
-public protocol Cachable: Codable {}
+public protocol Cachable: Codable, Equatable {}

@@ -24,15 +24,13 @@ extension MessageSpecification: Cachable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        // default necessary init value
-        self = .text(message: "")
-
         if let message = try container.decodeIfPresent(String.self, forKey: .message) {
             self = .text(message: message)
-        }
-
-        if let imageData = try container.decodeIfPresent(Data.self, forKey: .image), let image = UIImage(data: imageData) {
+        } else if let imageData = try container.decodeIfPresent(Data.self, forKey: .image), let image = UIImage(data: imageData) {
             self = .image(image: image)
+        } else {
+            let context = DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "MessageSpecification is missing content")
+            throw DecodingError.dataCorrupted(context)
         }
     }
 

@@ -15,26 +15,27 @@ enum KeychainKey: String {
 }
 
 final class KeychainManager {
-    let keychain = KeychainSwift()
+    private let keychain = KeychainSwift()
 }
 
 // MARK: - Keychain for messages
 extension KeychainManager {
-    func storeUnsentMessage<T: Cachable & MessageSpecifying>(_ message: Message<T>) {
-        var unsentMessages: [Message<T>] = []
-        if let unsentMessagesData: [Message<T>] = object(forKey: .unsentMessages) {
-            unsentMessages = unsentMessagesData
-        }
-
+    func storeUnsentMessage<T: Cachable & MessageSpecifying>(_ message: CachedMessage<T>) {
+        var unsentMessages: [CachedMessage<T>] = object(forKey: .unsentMessages) ?? []
         unsentMessages.append(message)
         storeObject(object: unsentMessages, forKey: .unsentMessages)
     }
 
-    func unsentMessages<T: Cachable & MessageSpecifying>() -> [Message<T>] {
-        let messages: [Message<T>] = object(forKey: .unsentMessages) ?? []
-        // remove all from cache, those will be saved again if fails
-        remove(forKey: .unsentMessages)
-        return messages
+    func unsentMessages<T: Cachable & MessageSpecifying>() -> [CachedMessage<T>] {
+        object(forKey: .unsentMessages) ?? []
+    }
+
+    func removeMessage<T: Cachable & MessageSpecifying>(message: CachedMessage<T>) {
+        var unsentMessages: [CachedMessage<T>] = object(forKey: .unsentMessages) ?? []
+        if let index = unsentMessages.firstIndex(of: message) {
+            unsentMessages.remove(at: index)
+        }
+        storeObject(object: unsentMessages, forKey: .unsentMessages)
     }
 }
 
@@ -72,9 +73,8 @@ extension KeychainManager {
             return object
         } catch {
             print(error.localizedDescription)
+            return nil
         }
-
-        return nil
     }
 
     func storeObject<T: Codable>(object: T, forKey key: KeychainKey) {

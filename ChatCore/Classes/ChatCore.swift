@@ -63,16 +63,16 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         }
 
         // Observer for app activation to resend all stored messages
-        NotificationCenter.default.addObserver(self, selector: #selector(resendMessages), name: .chatCoreAppDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resendMessages), name: .chatCoreResendMessages, object: nil)
     }
 
     // Resend stored messages, needs to be in main class scope
     @objc private func resendMessages() {
-        let messages: [Message<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
         messages.forEach { [weak self] message in
             send(message: message.content, to: message.conversationId) { [weak self] result in
-                if case .failure(let error) = result, case .networking = error {
-                    self?.keychainManager.storeUnsentMessage(message)
+                if case .success = result {
+                    self?.keychainManager.removeMessage(message: message)
                 }
             }}
     }
@@ -84,19 +84,21 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
+        // store to keychain for purpose message wont send
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation)
+        keychainManager.storeUnsentMessage(cachedMessage)
+
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 // clean up closure from background task
                 switch result {
                 case .success(let message):
+                    self?.keychainManager.removeMessage(message: cachedMessage)
                     taskCompletion(.success)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
-                    // FIXME: CJ Until full tasks logic is implemented store when error
-                    let messageCache = Message(content: message, conversationId: conversation)
-                    self?.keychainManager.storeUnsentMessage(messageCache)
                     taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
@@ -167,7 +169,6 @@ extension ChatCore {
         let listener = ListenerIdentifier.generateIdentifier()
 
         dataManagers[listener] = DataManager(pageSize: pageSize)
-        
         taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
             
             guard let self = self else {
