@@ -65,16 +65,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         // Observer for app activation to resend all stored messages
         NotificationCenter.default.addObserver(self, selector: #selector(resendMessages), name: .appDidBecomeActive, object: nil)
     }
-
-    // MARK: - Resend stored messages
-    @objc private func resendMessages() {
-        let messages: [Message<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { send(message: $0.content, to: $0.conversationId) { [weak self] result in
-            if case .failure = result {
-                self?.keychainManager.storeUnsentMessage($0)
-            }
-        }}
-    }
 }
 
 // MARK: - Sending messages
@@ -101,6 +91,17 @@ extension ChatCore {
                 }
             }
         }
+    }
+
+    // Resend stored messages
+    @objc private func resendMessages() {
+        let messages: [Message<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { [weak self] message in
+            send(message: message.content, to: message.conversationId) { [weak self] result in
+                if case .failure(let error) = result, case .networking = error {
+                    self?.keychainManager.storeUnsentMessage(message)
+                }
+            }}
     }
 }
 
