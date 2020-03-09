@@ -10,5 +10,5 @@ import Foundation
 
 // MARK: - Custom notifications
 public extension NSNotification.Name {
-    static let appDidBecomeActive = NSNotification.Name("appDidBecomeActive")
+    static let chatCoreAppDidBecomeActive = NSNotification.Name("chatcore.appDidBecomeActive")
 }
