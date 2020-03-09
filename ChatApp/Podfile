@@ -25,10 +25,6 @@ target 'Chat' do
   networking_pods
 end
 
-target 'ChatCore' do
-  pod 'KeychainSwift'
-end
-
 target 'ChatNetworkingFirestore' do
   networking_pods
 end

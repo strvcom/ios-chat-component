@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import KeychainSwift
 
 // MARK: - KeychainKeys
 enum KeychainKey: String {

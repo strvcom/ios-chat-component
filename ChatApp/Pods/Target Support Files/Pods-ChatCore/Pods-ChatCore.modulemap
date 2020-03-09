@@ -1,6 +1,0 @@
-framework module Pods_ChatCore {
-  umbrella header "Pods-ChatCore-umbrella.h"
-
-  export *
-  module * { export * }
-}
