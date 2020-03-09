@@ -64,8 +64,7 @@ extension ChatCore {
             self?.networking.send(message: mess, to: conversation) { result in
                 switch result {
                 case .success(let message):
-//                    taskCompletion(.success)
-                    taskCompletion(.failure(.networking(error: NSError(domain: "dasd", code: 1, userInfo: nil))))
+                    taskCompletion(.success)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
