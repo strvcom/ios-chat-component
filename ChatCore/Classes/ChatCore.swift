@@ -8,11 +8,20 @@
 
 import Foundation
 
-open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing
-           where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.MS: ChatUIConvertible,
-            Networking.U: ChatUIConvertible, Networking.C.User.ChatUIModel == Models.USRUI,
-            Networking.C.ChatUIModel == Models.CUI, Networking.C.Message.ChatUIModel == Models.MUI,
-            Networking.MS.ChatUIModel == Models.MSUI {
+open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing where
+    
+    // Specify that associated types
+    // Conversation, Message (receive), MessageSpecifying (send) and User
+    // of ChatNetworkServicing have to conform to `ChatUIConvertible`
+    Networking.C: ChatUIConvertible,
+    Networking.M: ChatUIConvertible,
+    Networking.MS: ChatUIConvertible,
+    Networking.U: ChatUIConvertible,
+    
+    Networking.U.ChatUIModel == Models.USRUI,
+    Networking.C.ChatUIModel == Models.CUI,
+    Networking.M.ChatUIModel == Models.MUI,
+    Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -59,19 +68,21 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        taskManager.run({ [weak self] cleanupClosure in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 // clean up closure from background task
                 switch result {
                 case .success(let message):
+                    taskCompletion(.success)
                     completion(.success(message.uiModel))
+
                 case .failure(let error):
+                    taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
-                cleanupClosure()
             }
-        }, attributes: [.backgroundTask, .afterInit, .backgroundThread])
+        }
     }
 }
 
@@ -98,28 +109,29 @@ extension ChatCore {
         
         dataManagers[listener] = DataManager(pageSize: pageSize)
 
-        taskManager.run({ [weak self] cleanupClosure in
-
+        taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
+            
             guard let self = self else {
                 return
             }
-
+            
             self.networking.listenToConversations(pageSize: pageSize, listener: listener) { result in
                 switch result {
                 case .success(let conversations):
-
+                    
                     self.dataManagers[listener]?.update(data: conversations)
                     let converted = conversations.compactMap({ $0.uiModel })
-
+                    
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-
+                    
                     self.conversations = data
+                    taskCompletion(.success)
                     completion(.success(data))
                 case .failure(let error):
+                    taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
-                cleanupClosure()
-            }}, attributes: [.afterInit, .backgroundThread])
+            }})
 
         return listener
     }
@@ -137,7 +149,7 @@ extension ChatCore {
 
         dataManagers[listener] = DataManager(pageSize: pageSize)
         
-        taskManager.run({ [weak self] cleanupClosure in
+        taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
             
             guard let self = self else {
                 return
@@ -153,12 +165,13 @@ extension ChatCore {
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
                     self.messages[id] = data
+                    taskCompletion(.success)
                     completion(.success(data))
                 case .failure(let error):
+                    taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
-                cleanupClosure()
-            }}, attributes: [.afterInit, .backgroundThread])
+            }})
 
         return listener
     }

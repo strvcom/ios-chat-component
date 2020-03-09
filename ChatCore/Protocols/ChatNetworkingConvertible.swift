@@ -8,10 +8,12 @@
 
 import Foundation
 
+/// Make UI models conform to this protocol to be able to convert them to the networking models
 public protocol ChatNetworkingConvertible {
 
     associatedtype NetworkingModel
-
+    
+    /// This var constructs the networking model from the UI model
     var networkingModel: NetworkingModel { get }
 }
 
