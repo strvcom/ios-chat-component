@@ -32,8 +32,6 @@ final class TaskManager {
     private var backgroundCalls = [IdentifiableClosure<TaskCompletionResultHandler, Void>]()
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
-    private let backgroundTaskIdentifier = "com.strv.chatcore.backgroundtask"
-
     // dedicated thread queue
     private let dispatchQueue = DispatchQueue(label: "com.strv.taskmanager", qos: .background)
 
@@ -237,12 +235,15 @@ private extension TaskManager {
         // run all stored tasks until all are done
         tasks.forEach { task in
             task.closure { [weak self] result in
+                guard let self = self else {
+                    return
+                }
                 if case .success = result {
-                    if let index = self?.backgroundCalls.firstIndex(of: task) {
-                        self?.backgroundCalls.remove(at: index)
+                    if let index = self.backgroundCalls.firstIndex(of: task) {
+                        self.backgroundCalls.remove(at: index)
                     }
 
-                    if tasks.isEmpty {
+                    if self.backgroundCalls.isEmpty {
                         completionHandler()
                     }
                 }
@@ -254,7 +255,7 @@ private extension TaskManager {
 @available(iOS 13.0, *)
 private extension TaskManager {
     func registerBackgroundTaskScheduler() {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundTaskIdentifier, using: nil) { task in
             guard let task = task as? BGProcessingTask else {
                 return
             }
@@ -264,7 +265,7 @@ private extension TaskManager {
 
     func scheduleBackgroundProcessing() {
 
-        let request = BGProcessingTaskRequest(identifier: backgroundTaskIdentifier)
+        let request = BGProcessingTaskRequest(identifier: Constants.backgroundTaskIdentifier)
         request.requiresNetworkConnectivity = true
 
         // Fetch no earlier than 15 minutes from now
