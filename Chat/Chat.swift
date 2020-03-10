@@ -15,10 +15,12 @@ public class Chat {
     public typealias Configuration = ChatNetworkingFirestore.Configuration
 
     let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
+    let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>
 
     public init(config: Configuration) {
         let networking = ChatNetworkingFirestore(config: config)
         let core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
+        self.core = core
         self.interface = ChatUI(core: core)
     }
     
@@ -26,5 +28,9 @@ public class Chat {
         let list = interface.conversationsList()
     
         return list
+    }
+
+    public func runBackgroundTasks(completion: @escaping () -> Void) {
+        core.runBackgroundTasks(completion: completion)
     }
 }

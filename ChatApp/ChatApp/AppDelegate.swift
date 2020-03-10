@@ -58,8 +58,11 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            NotificationCenter.default.post(name: .chatCoreAppPerformBackgroundFetch, object: completionHandler)
+            chat.runBackgroundTasks {
+                completionHandler(.newData)
+            }
             return
         }
+        completionHandler(.noData)
     }
 }

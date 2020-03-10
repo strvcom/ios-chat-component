@@ -47,16 +47,10 @@ final class TaskManager {
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     init() {
         // for ios 13 use backgroundTasks fallback ios to background fetch
         if #available(iOS 13, *) {
             registerBackgroundTaskScheduler()
-        } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(performBackgroundFetch), name: .chatCoreAppPerformBackgroundFetch, object: nil)
         }
     }
 
@@ -220,16 +214,8 @@ private extension TaskManager {
  Handling backgroung calls is quite complex. At first all calls (tasks) which can be longer running are called with backgroundTask attribute. That hooks call to UIApplication register backgroundTask which is automatically continuing work when app goes to background. When task is still not finished manager schedules background processing task to run all stored (unfinished tasks) again until all are finished. For ios version below 13 is observed UIApplication perform method to work similar way.
  */
 
-// MARK: - Scheduled background task handling in ios < 13
-private extension TaskManager {
-    @objc func performBackgroundFetch(notification: Notification) {
-        if let completion = notification.object as? VoidClosure<UIBackgroundFetchResult> {
-            runBackgroundCalls {
-                completion(.newData)
-            }
-        }
-    }
-
+// MARK: - Run stored unfinished background tasks
+extension TaskManager {
     func runBackgroundCalls(completionHandler: @escaping EmptyClosure) {
         let tasks = backgroundCalls
         // run all stored tasks until all are done

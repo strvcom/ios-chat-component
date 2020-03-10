@@ -25,6 +25,12 @@ public protocol ChatCoreServicing {
 
     init(networking: Networking)
 
+    /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.
+    ///
+    /// - Parameters:
+    ///   - completion: Called upon finishing all stored(unfinished) background tasks
+    func runBackgroundTasks(completion: @escaping () -> Void)
+
     /// Send a message to the specified conversation.
     ///
     /// - Parameters:
