@@ -49,7 +49,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     deinit {
         print("\(self) released")
-        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
@@ -61,9 +60,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         self.networking.didFinishedLoading = { [weak self] result in
             self?.didFinishLoading(result: result)
         }
-
-        // Observer for app activation to resend all stored messages
-        NotificationCenter.default.addObserver(self, selector: #selector(resendMessages), name: .chatCoreResendMessages, object: nil)
     }
 
     // Resend stored messages, needs to be in main class scope
@@ -84,16 +80,14 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation)
-        keychainManager.storeUnsentMessage(cachedMessage)
+        let cachedMessage = cacheMessage(message: message, from: conversation)
 
-        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
+                self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
-                    self?.keychainManager.removeMessage(message: cachedMessage)
                     taskCompletion(.success)
                     completion(.success(message.uiModel))
 
@@ -102,6 +96,25 @@ extension ChatCore {
                     completion(.failure(error))
                 }
             }
+        }
+    }
+}
+
+// MARK: - Caching messages
+private extension ChatCore {
+    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier) -> CachedMessage<T> {
+        // store to keychain for purpose message wont send
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation)
+        keychainManager.storeUnsentMessage(cachedMessage)
+
+        return cachedMessage
+    }
+
+    func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
+        // if other than network error remove from cache
+        guard case .failure(let error) = result, case .networking = error else {
+            keychainManager.removeMessage(message: cachedMessage)
+            return
         }
     }
 }
