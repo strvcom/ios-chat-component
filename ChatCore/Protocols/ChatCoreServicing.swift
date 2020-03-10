@@ -46,7 +46,7 @@ public protocol ChatCoreServicing {
     func loadMoreConversations()
     
     /// Creates a listener to messages. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
-    /// 
+    ///
     /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
     ///
     /// - Parameters:
