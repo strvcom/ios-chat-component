@@ -61,17 +61,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
             self?.didFinishLoading(result: result)
         }
     }
-
-    // Resend stored messages, needs to be in main class scope
-    @objc private func resendMessages() {
-        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { [weak self] message in
-            send(message: message.content, to: message.conversationId) { [weak self] result in
-                if case .success = result {
-                    self?.keychainManager.removeMessage(message: message)
-                }
-            }}
-    }
 }
 
 // MARK: - Sending messages
@@ -96,6 +85,13 @@ extension ChatCore {
                     completion(.failure(error))
                 }
             }
+        }
+    }
+
+    open func resendUnsentMessages() {
+        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { message in
+            send(message: message.content, to: message.conversationId, completion: { _ in })
         }
     }
 }

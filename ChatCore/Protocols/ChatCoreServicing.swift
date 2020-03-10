@@ -25,6 +25,10 @@ public protocol ChatCoreServicing {
 
     init(networking: Networking)
 
+    /// Resends all unsent cached messages. Should be used in places when app goes to active state etc.
+    ///
+    func resendUnsentMessages()
+
     /// Send a message to the specified conversation.
     ///
     /// - Parameters:

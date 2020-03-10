@@ -43,6 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Needs to be implemented to hook up default resending unsent messages
-        
+        chat.resendUnsentMessages()
     }
 }
