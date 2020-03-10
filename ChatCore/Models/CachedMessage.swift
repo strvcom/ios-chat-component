@@ -12,8 +12,18 @@ import Foundation
 struct CachedMessage<T: MessageSpecifying & Cachable>: Codable, Equatable {
     var content: T
     var conversationId: ObjectIdentifier
+    var id: ObjectIdentifier
 
+    init(content: T, conversationId: ObjectIdentifier) {
+        id = UUID().uuidString
+        self.content = content
+        self.conversationId = conversationId
+    }
+}
+
+// MARK: - Equatable
+extension CachedMessage {
     static func == (lhs: CachedMessage<T>, rhs: CachedMessage<T>) -> Bool {
-        lhs.content == rhs.content && lhs.conversationId == rhs.conversationId
+        lhs.id == rhs.id
     }
 }

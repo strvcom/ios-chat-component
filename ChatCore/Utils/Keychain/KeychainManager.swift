@@ -21,7 +21,10 @@ final class KeychainManager {
 extension KeychainManager {
     func storeUnsentMessage<T: Cachable & MessageSpecifying>(_ message: CachedMessage<T>) {
         var unsentMessages: [CachedMessage<T>] = object(forKey: .unsentMessages) ?? []
-        unsentMessages.append(message)
+        // append only if not already contained
+        if !unsentMessages.contains(message) {
+            unsentMessages.append(message)
+        }
         storeObject(object: unsentMessages, forKey: .unsentMessages)
     }
 

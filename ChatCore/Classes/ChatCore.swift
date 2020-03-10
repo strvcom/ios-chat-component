@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing where
     
@@ -61,6 +62,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     deinit {
         print("\(self) released")
+        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
@@ -71,6 +73,18 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         self.networking = networking
         self.networking.didFinishedLoading = { [weak self] result in
             self?.didFinishLoading(result: result)
+        }
+
+        // hook to app did become active to resend messages
+        NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+
+    // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
+    @objc open func resendUnsentMessages() {
+        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { message in
+            keychainManager.removeMessage(message: message)
+            send(message: message.content, to: message.conversationId, completion: { _ in })
         }
     }
 }
@@ -97,13 +111,6 @@ extension ChatCore {
                     completion(.failure(error))
                 }
             }
-        }
-    }
-
-    open func resendUnsentMessages() {
-        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { message in
-            send(message: message.content, to: message.conversationId, completion: { _ in })
         }
     }
 }
