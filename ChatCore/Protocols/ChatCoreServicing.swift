@@ -40,7 +40,7 @@ public protocol ChatCoreServicing {
     /// - Parameters:
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ObjectIdentifier
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToConversations`
     func loadMoreConversations()
@@ -53,7 +53,7 @@ public protocol ChatCoreServicing {
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ObjectIdentifier
+    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///
@@ -63,7 +63,7 @@ public protocol ChatCoreServicing {
     /// Used to remove listeners when you no longer need to receive data.
     ///
     /// - Parameter listener: listener identifier obtained when creating a listener to conversations or messages
-    func remove(listener: ObjectIdentifier)
+    func remove(listener: ListenerIdentifier)
     
     /// Send a request to set `message` as the last seen message by current user
     ///
@@ -75,11 +75,11 @@ public protocol ChatCoreServicing {
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToMessages(conversation id: ObjectIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ObjectIdentifier {
+    func listenToMessages(conversation id: ObjectIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
-    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ObjectIdentifier {
+    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
     }
 }

@@ -70,6 +70,6 @@ public protocol ChatNetworkServicing {
 
     /// Used to remove listeners when you no longer need to receive data.
     ///
-    /// - Parameter arguments: set of arguments for which the listener should be removed
-    func remove(arguments: ListenerArguments)
+    /// - Parameter listener: listener to be removed
+    func remove(listener: Listener)
 }

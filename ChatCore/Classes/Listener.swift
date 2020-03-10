@@ -1,5 +1,5 @@
 //
-//  ListenerArguments.swift
+//  Listener.swift
 //  ChatApp
 //
 //  Created by Daniel Pecher on 06/03/2020.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-public enum ListenerArguments: Hashable {
+/// This enum is needed to identify identical listeners so that multiple requests with the same parameters are stored together and don't require extra network listeners.
+public enum Listener: Hashable {
     case conversations(pageSize: Int)
     case messages(pageSize: Int, conversationId: ObjectIdentifier)
     case users
