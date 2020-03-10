@@ -11,11 +11,11 @@ import ChatCore
 
 struct Pagination<T: Decodable> {
     var updateBlock: ((Result<[T], ChatError>) -> Void)?
-    var listener: ListenerIdentifier?
+    var listener: Listener
     var pageSize: Int
     var itemsLoaded: Int
     
-    init(updateBlock: ((Result<[T], ChatError>) -> Void)?, listener: ListenerIdentifier?, pageSize: Int) {
+    init(updateBlock: ((Result<[T], ChatError>) -> Void)?, listener: Listener, pageSize: Int) {
         self.updateBlock = updateBlock
         self.listener = listener
         self.pageSize = pageSize
@@ -31,6 +31,6 @@ struct Pagination<T: Decodable> {
     }
     
     static var empty: Pagination {
-        Pagination(updateBlock: nil, listener: nil, pageSize: 0)
+        Pagination(updateBlock: nil, listener: .empty, pageSize: 0)
     }
 }
