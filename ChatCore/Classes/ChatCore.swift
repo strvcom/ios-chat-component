@@ -36,6 +36,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
     private lazy var taskManager = TaskManager()
+    private lazy var keychainManager = KeychainManager()
+
     private var dataManagers = [Listener: DataManager]()
     
     private var conversationListeners = [
@@ -60,6 +62,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     deinit {
         print("\(self) released")
+        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
@@ -69,18 +72,33 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public required init (networking: Networking) {
         self.networking = networking
         loadNetworkService()
+
+        // hook to app did become active to resend messages
+        NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+
+    // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
+    @objc open func resendUnsentMessages() {
+        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { message in
+            keychainManager.removeMessage(message: message)
+            send(message: message.content, to: message.conversationId, completion: { _ in })
+        }
     }
 }
 
-// MARK: Sending messages
+// MARK: - Sending messages
 extension ChatCore {
 
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
+        let cachedMessage = cacheMessage(message: message, from: conversation)
+
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
+                self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
                     taskCompletion(.success)
@@ -95,7 +113,26 @@ extension ChatCore {
     }
 }
 
-// MARK: Seen flag
+// MARK: - Caching messages
+private extension ChatCore {
+    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier) -> CachedMessage<T> {
+        // store to keychain for purpose message wont send
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation)
+        keychainManager.storeUnsentMessage(cachedMessage)
+
+        return cachedMessage
+    }
+
+    func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
+        // if other than network error remove from cache
+        guard case .failure(let error) = result, case .networking = error else {
+            keychainManager.removeMessage(message: cachedMessage)
+            return
+        }
+    }
+}
+
+// MARK: - Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
         
@@ -111,7 +148,7 @@ extension ChatCore {
     }
 }
 
-// MARK: Listening to updates
+// MARK: - Listening to updates
 extension ChatCore {
     open func listenToConversations(
         pageSize: Int,
@@ -193,7 +230,6 @@ extension ChatCore {
         }
         
         dataManagers[listener] = DataManager(pageSize: pageSize)
-        
         taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
             
             guard let self = self else {
@@ -237,7 +273,7 @@ extension ChatCore {
     }
 }
 
-// MARK: ChatNetworkServicing load state observing
+// MARK: - ChatNetworkServicing load state observing
 private extension ChatCore {
     func loadNetworkService() {
         taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in

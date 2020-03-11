@@ -33,4 +33,8 @@ public class Chat {
     public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
+
+    public func resendUnsentMessages() {
+        core.resendUnsentMessages()
+    }
 }

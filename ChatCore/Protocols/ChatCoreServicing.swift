@@ -32,6 +32,10 @@ public protocol ChatCoreServicing {
     ///   - completion: Called upon finishing all stored(unfinished) background tasks
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
 
+    /// Resends all unsent cached messages. Should be used in places when app goes to active state etc.
+    ///
+    func resendUnsentMessages()
+
     /// Send a message to the specified conversation.
     ///
     /// - Parameters:
