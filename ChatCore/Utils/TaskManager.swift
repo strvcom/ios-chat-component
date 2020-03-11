@@ -250,7 +250,12 @@ private extension TaskManager {
 
 // MARK: - Run stored unfinished background tasks
 extension TaskManager {
-    func runBackgroundCalls(completionHandler: @escaping EmptyClosure) {
+    func runBackgroundCalls(completion: @escaping VoidClosure<UIBackgroundFetchResult>) {
+        guard !backgroundCalls.isEmpty else {
+            completion(.noData)
+            return
+        }
+
         let tasks = backgroundCalls
         // run all stored tasks until all are done
         tasks.forEach { task in
@@ -264,7 +269,7 @@ extension TaskManager {
                     }
 
                     if self.backgroundCalls.isEmpty {
-                        completionHandler()
+                        completion(.newData)
                     }
                 }
             }}
@@ -299,7 +304,7 @@ private extension TaskManager {
     }
 
     func handleBackgroundProcessing(task: BGProcessingTask) {
-        runBackgroundCalls {
+        runBackgroundCalls { _ in
             task.setTaskCompleted(success: true)
         }
 

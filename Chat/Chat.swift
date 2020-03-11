@@ -30,7 +30,7 @@ public class Chat {
         return list
     }
 
-    public func runBackgroundTasks(completion: @escaping () -> Void) {
+    public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
 }

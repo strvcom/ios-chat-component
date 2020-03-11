@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // swiftlint:disable type_name
 public protocol ChatCoreServicing {
@@ -29,7 +30,7 @@ public protocol ChatCoreServicing {
     ///
     /// - Parameters:
     ///   - completion: Called upon finishing all stored(unfinished) background tasks
-    func runBackgroundTasks(completion: @escaping () -> Void)
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
 
     /// Send a message to the specified conversation.
     ///
