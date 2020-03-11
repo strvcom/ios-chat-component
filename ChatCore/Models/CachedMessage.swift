@@ -9,7 +9,7 @@
 import Foundation
 
 // MARK: - Structure wrapping message specification and also allows to cache data
-struct CachedMessage<T: MessageSpecifying & Cachable>: Codable, Equatable {
+struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
     var content: T
     var conversationId: ObjectIdentifier
     var id: ObjectIdentifier
@@ -22,7 +22,7 @@ struct CachedMessage<T: MessageSpecifying & Cachable>: Codable, Equatable {
 }
 
 // MARK: - Equatable
-extension CachedMessage {
+extension CachedMessage: Equatable {
     static func == (lhs: CachedMessage<T>, rhs: CachedMessage<T>) -> Bool {
         lhs.id == rhs.id
     }
