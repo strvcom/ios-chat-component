@@ -67,9 +67,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.didFinishedLoading = { [weak self] result in
-            self?.didFinishLoading(result: result)
-        }
+        loadNetworkService()
     }
 }
 
@@ -79,7 +77,7 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 switch result {
@@ -240,14 +238,18 @@ extension ChatCore {
 
 // MARK: ChatNetworkServicing load state observing
 private extension ChatCore {
-    func didFinishLoading(result: Result<Void, ChatError>) {
-        
-        switch result {
-        case .success:
-            self.taskManager.initialized = true
-        case .failure(let error):
-            print(error)
-        }
+    func loadNetworkService() {
+        taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
+            self?.networking.load(completion: { [weak self] result in
+                switch result {
+                case .success:
+                    self?.taskManager.initialized = true
+                    taskCompletion(.success)
+                case .failure(let error):
+                    taskCompletion(.failure(error))
+                }
+            })
+        })
     }
     
     func removeListener<T>(

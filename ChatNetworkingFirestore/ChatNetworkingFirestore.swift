@@ -25,7 +25,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     let database: Firestore
 
     public private(set) var currentUser: UserFirestore?
-    public var didFinishedLoading: ((Result<Void, ChatError>) -> Void)?
     
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var currentUserId: String?
@@ -52,10 +51,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         
         // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
-        
-        load { [weak self] result in
-            self?.didFinishedLoading?(result)
-        }
     }
     
     deinit {
