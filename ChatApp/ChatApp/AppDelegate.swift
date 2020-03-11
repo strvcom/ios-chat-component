@@ -24,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
         chat = Chat(config: config)
+
+        setupBackgroundFetch()
+
         return true
     }
 
@@ -39,5 +42,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+}
+
+// MARK: - Background fetch
+extension AppDelegate {
+    func setupBackgroundFetch() {
+        // background fetch setup for older ios version
+        guard #available(iOS 13, *) else {
+            UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(10 * 60))
+            return
+        }
+    }
+
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // Needs to pass completion handler to allow finish background fetch
+        guard #available(iOS 13, *) else {
+            chat.runBackgroundTasks { result in
+                completionHandler(result)
+            }
+            return
+        }
+        completionHandler(.noData)
     }
 }

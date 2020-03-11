@@ -306,3 +306,10 @@ private extension ChatCore {
         }
     }
 }
+
+// MARK: - Continue stored background tasks
+public extension ChatCore {
+     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
+        taskManager.runBackgroundCalls(completion: completion)
+    }
+}

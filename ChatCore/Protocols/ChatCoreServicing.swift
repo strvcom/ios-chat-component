@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // swiftlint:disable type_name
 public protocol ChatCoreServicing {
@@ -24,6 +25,12 @@ public protocol ChatCoreServicing {
     var currentUser: U? { get }
 
     init(networking: Networking)
+
+    /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.
+    ///
+    /// - Parameters:
+    ///   - completion: Called upon finishing all stored(unfinished) background tasks
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
 
     /// Resends all unsent cached messages. Should be used in places when app goes to active state etc.
     ///

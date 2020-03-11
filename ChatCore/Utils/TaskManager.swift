@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BackgroundTasks
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
@@ -64,6 +65,13 @@ final class TaskManager {
             if initialized {
                 runCachedTasks()
             }
+        }
+    }
+
+    init() {
+        // for ios 13 use backgroundTasks fallback ios to background fetch
+        if #available(iOS 13, *) {
+            registerBackgroundTaskScheduler()
         }
     }
 
@@ -212,8 +220,17 @@ private extension TaskManager {
     func registerBackgroundTask() {
         print("UIApplication background task registered")
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
+            guard let self = self else {
+                return
+            }
+
+            // Schedule background processing
+            if #available(iOS 13, *), !self.backgroundCalls.isEmpty {
+                self.scheduleBackgroundProcessing()
+            }
+
             // Expiration handler
-            self?.endBackgroundTask()
+            self.endBackgroundTask()
         }
     }
 
@@ -223,7 +240,82 @@ private extension TaskManager {
             // clean up
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
-            backgroundCalls.removeAll()
+        }
+    }
+}
+
+/*
+ Handling backgroung calls is quite complex. At first all calls (tasks) which can be longer running are called with backgroundTask attribute. That hooks call to UIApplication register backgroundTask which is automatically continuing work when app goes to background. When task is still not finished manager schedules background processing task to run all stored (unfinished tasks) again until all are finished. For ios version below 13 is observed UIApplication perform method to work similar way.
+ */
+
+// MARK: - Run stored unfinished background tasks
+extension TaskManager {
+    func runBackgroundCalls(completion: @escaping VoidClosure<UIBackgroundFetchResult>) {
+        guard !backgroundCalls.isEmpty else {
+            completion(.noData)
+            return
+        }
+
+        let tasks = backgroundCalls
+        // run all stored tasks until all are done
+        tasks.forEach { task in
+            task.closure { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                if case .success = result {
+                    if let index = self.backgroundCalls.firstIndex(of: task) {
+                        self.backgroundCalls.remove(at: index)
+                    }
+
+                    if self.backgroundCalls.isEmpty {
+                        completion(.newData)
+                    }
+                }
+            }}
+    }
+}
+
+// MARK: - Scheduled background task handling in ios 13+
+@available(iOS 13.0, *)
+private extension TaskManager {
+    func registerBackgroundTaskScheduler() {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundTaskIdentifier, using: nil) { task in
+            guard let task = task as? BGProcessingTask else {
+                return
+            }
+            self.handleBackgroundProcessing(task: task)
+        }
+    }
+
+    func scheduleBackgroundProcessing() {
+
+        let request = BGProcessingTaskRequest(identifier: Constants.backgroundTaskIdentifier)
+        request.requiresNetworkConnectivity = true
+
+        // Fetch no earlier than 15 minutes from now
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
+
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Could not schedule app refresh: \(error)")
+        }
+    }
+
+    func handleBackgroundProcessing(task: BGProcessingTask) {
+        runBackgroundCalls { _ in
+            task.setTaskCompleted(success: true)
+        }
+
+        task.expirationHandler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+
+            if !self.backgroundCalls.isEmpty {
+                self.scheduleBackgroundProcessing()
+            }
         }
     }
 }
