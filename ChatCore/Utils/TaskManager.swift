@@ -10,17 +10,39 @@ import UIKit
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
-
-    enum TaskAttribute {
-        case afterInit
-        case backgroundTask
-        case backgroundThread
-        case retry
+    enum RetryType {
+        case finite(attempts: Int = 3)
+        case infinite
     }
 
     enum TaskCompletionResult {
         case success
         case failure(ChatError)
+    }
+
+    enum TaskAttribute: Hashable {
+        case afterInit
+        case backgroundTask
+        case backgroundThread
+        case retry(RetryType)
+
+        static func == (lhs: TaskManager.TaskAttribute, rhs: TaskManager.TaskAttribute) -> Bool {
+            lhs.hashValue == rhs.hashValue
+        }
+
+        func hash(into hasher: inout Hasher) {
+            switch self {
+            case .retry(let retryType):
+                switch retryType {
+                case .finite(let attempts):
+                    hasher.combine("finite \(attempts)")
+                default:
+                    hasher.combine("\(self)")
+                }
+            default:
+                hasher.combine("\(self)")
+            }
+        }
     }
 
     typealias TaskCompletionResultHandler = (TaskCompletionResult) -> Void
@@ -35,8 +57,7 @@ final class TaskManager {
     private let dispatchQueue = DispatchQueue(label: "com.strv.taskmanager", qos: .background)
 
     // retry tasks stack
-    private let maxRetryCount = 3
-    private var retryCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Int] = [:]
+    private var retryCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: RetryType] = [:]
 
     var initialized = false {
         didSet {
@@ -86,14 +107,22 @@ private extension TaskManager {
     }
 
     func handleTaskCompletionResult(attributes: Set<TaskAttribute>, result: TaskCompletionResult, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
-        print("Clean up after task id \(identifiableClosure.id) with result \(result)")
+        print("HandleTaskCompletionResult task id \(identifiableClosure.id) with result \(result)")
 
         // retry in case of network error
-        if case .failure(let error) = result, case .networking = error, attributes.contains(.retry), let retryCount = retryCalls[identifiableClosure], retryCount > 0 {
+        if case .failure(let error) = result, case .networking = error, let retryType = retryCalls[identifiableClosure] {
             // run again whole flow
-            print("Retry task id \(identifiableClosure.id), retry count \(retryCount)")
-            run(attributes: attributes, identifiableClosure)
-            retryCalls[identifiableClosure] = retryCount - 1
+            print("Retry task id \(identifiableClosure.id), retry type \(retryType)")
+            if case .finite(let attempts) = retryType, attempts > 0 {
+                run(attributes: attributes, identifiableClosure)
+                retryCalls[identifiableClosure] = .finite(attempts: attempts - 1)
+            } else if case .infinite = retryType {
+                run(attributes: attributes, identifiableClosure)
+            } else {
+                retryCalls.removeValue(forKey: identifiableClosure)
+                // clean up in all cases to release background task
+                finishTask(attributes: attributes, identifiableClosure)
+            }
         } else {
             retryCalls.removeValue(forKey: identifiableClosure)
             // clean up in all cases to release background task
@@ -109,15 +138,21 @@ private extension TaskManager {
             applyBackgroundTask(identifiableClosure)
         }
 
-        if attributes.contains(.retry) && retryCalls[identifiableClosure] == nil {
-            retryCalls[identifiableClosure] = maxRetryCount
+        if case .retry(let retryType) = attributes.first(where: { attribute -> Bool in
+            if case .retry = attribute {
+                return true
+            }
+            return false
+        }), retryCalls[identifiableClosure] == nil {
+            retryCalls[identifiableClosure] = retryType
         }
     }
 }
 
 // MARK: - Clean up management
 private extension TaskManager {
-    private func finishTask(attributes: Set<TaskAttribute>, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
+    func finishTask(attributes: Set<TaskAttribute>, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
+        print("Finish task id \(identifiableClosure.id) with attributes \(attributes)")
         if attributes.contains(.backgroundTask) {
             finishedInBackgroundTask(id: identifiableClosure.id)
         }
@@ -126,8 +161,7 @@ private extension TaskManager {
 
 // MARK: - After initialization handling
 private extension TaskManager {
-
-    private func applyAfterInit(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
+    func applyAfterInit(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
         print("Hook after init task id \(identifiableClosure.id)")
         guard initialized else {
             cachedBeforeInitCalls[identifiableClosure] = attributes
@@ -136,7 +170,7 @@ private extension TaskManager {
         }
     }
 
-    private func runCachedTasks() {
+    func runCachedTasks() {
         guard !cachedBeforeInitCalls.isEmpty else {
             return
         }

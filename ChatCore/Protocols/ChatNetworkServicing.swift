@@ -24,12 +24,15 @@ public protocol ChatNetworkServicing {
 
     /// Current user logged in to the app
     var currentUser: U? { get }
-    
-    /// Allow init network service and observe loading state at different places
-    var didFinishedLoading: ((Result<Void, ChatError>) -> Void)? { get set }
 
     init(config: Config)
-    
+
+    /// Initial loading of network service.
+    ///
+    /// - Parameters:
+    ///   - completion: Called when network service is loaded or error appeared.
+    func load(completion: @escaping (Result<Void, ChatError>) -> Void)
+
     /// Send a message to the specified conversation.
     ///
     /// - Parameters:

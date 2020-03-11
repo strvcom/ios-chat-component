@@ -71,9 +71,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     public required init (networking: Networking) {
         self.networking = networking
-        self.networking.didFinishedLoading = { [weak self] result in
-            self?.didFinishLoading(result: result)
-        }
+        loadNetworkService()
 
         // hook to app did become active to resend messages
         NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -97,7 +95,7 @@ extension ChatCore {
 
         let cachedMessage = cacheMessage(message: message, from: conversation)
 
-        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
@@ -277,14 +275,18 @@ extension ChatCore {
 
 // MARK: - ChatNetworkServicing load state observing
 private extension ChatCore {
-    func didFinishLoading(result: Result<Void, ChatError>) {
-        
-        switch result {
-        case .success:
-            self.taskManager.initialized = true
-        case .failure(let error):
-            print(error)
-        }
+    func loadNetworkService() {
+        taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
+            self?.networking.load(completion: { [weak self] result in
+                switch result {
+                case .success:
+                    self?.taskManager.initialized = true
+                    taskCompletion(.success)
+                case .failure(let error):
+                    taskCompletion(.failure(error))
+                }
+            })
+        })
     }
     
     func removeListener<T>(
