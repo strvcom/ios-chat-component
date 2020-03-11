@@ -17,8 +17,12 @@
 		0DAB17EC70C794C205FE6B14 /* Pods_ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504E138061A8070DD0D90D0F /* Pods_ChatNetworkingFirestore.framework */; };
 		3876B4161B90FCE0F581B293 /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B69888F4C83FA43E8AE09ED8 /* Pods_Chat.framework */; };
 		841711AB2407F1160004FED7 /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841711AA2407F1160004FED7 /* Closure.swift */; };
+		843A583C24114FE4007E6F45 /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583B24114FE4007E6F45 /* Cachable.swift */; };
+		843A5840241283B0007E6F45 /* CachedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583F241283B0007E6F45 /* CachedMessage.swift */; };
+		843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A584424168B1A007E6F45 /* KeychainSwift.swift */; };
 		843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D814D2406D6B100C62656 /* IdentifiableClosure.swift */; };
 		843D81542406E90F00C62656 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D81522406E90200C62656 /* TaskManager.swift */; };
+		84D032D9240F17650017EF88 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D032D8240F17650017EF88 /* KeychainManager.swift */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
 		AD6B5D3F23C32020007F7754 /* ChatUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -36,7 +40,7 @@
 		C11E9E0523EDCCDA005E10A1 /* ChatNetworkingFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DF723EDCCDA005E10A1 /* ChatNetworkingFirestore.swift */; };
 		C11E9E0723EDCCDA005E10A1 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DF923EDCCDA005E10A1 /* ImageUploader.swift */; };
 		C11E9E0823EDCCDA005E10A1 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFB23EDCCDA005E10A1 /* Conversation.swift */; };
-		C11E9E0923EDCCDA005E10A1 /* MessageSpecification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFC23EDCCDA005E10A1 /* MessageSpecification.swift */; };
+		C11E9E0923EDCCDA005E10A1 /* MessageSpecificationFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFC23EDCCDA005E10A1 /* MessageSpecificationFirestore.swift */; };
 		C11E9E0A23EDCCDA005E10A1 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFD23EDCCDA005E10A1 /* Message.swift */; };
 		C11E9E0B23EDCCDA005E10A1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFE23EDCCDA005E10A1 /* User.swift */; };
 		C11E9E0C23EDCCDA005E10A1 /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */; };
@@ -145,8 +149,12 @@
 		519033A4B72B0D6C9BFFD754 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		7B9D820DF49EF067BB164A0D /* Pods-ChatUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatUI.release.xcconfig"; path = "Target Support Files/Pods-ChatUI/Pods-ChatUI.release.xcconfig"; sourceTree = "<group>"; };
 		841711AA2407F1160004FED7 /* Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
+		843A583B24114FE4007E6F45 /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
+		843A583F241283B0007E6F45 /* CachedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMessage.swift; sourceTree = "<group>"; };
+		843A584424168B1A007E6F45 /* KeychainSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwift.swift; sourceTree = "<group>"; };
 		843D814D2406D6B100C62656 /* IdentifiableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClosure.swift; sourceTree = "<group>"; };
 		843D81522406E90200C62656 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		84D032D8240F17650017EF88 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		92868C3552D0458C8EBB07BF /* Pods-ChatNetworkFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkFirebase.debug.xcconfig"; path = "Target Support Files/Pods-ChatNetworkFirebase/Pods-ChatNetworkFirebase.debug.xcconfig"; sourceTree = "<group>"; };
 		92FCD3FE645B94880D0E0CE7 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9BB9D06DDFF6C1B50B35226E /* Pods-STRVChatNetworkingFirebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STRVChatNetworkingFirebase.debug.xcconfig"; path = "Target Support Files/Pods-STRVChatNetworkingFirebase/Pods-STRVChatNetworkingFirebase.debug.xcconfig"; sourceTree = "<group>"; };
@@ -170,7 +178,7 @@
 		C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatNetworkingFirestore.h; sourceTree = "<group>"; };
 		C11E9DF923EDCCDA005E10A1 /* ImageUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		C11E9DFB23EDCCDA005E10A1 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
-		C11E9DFC23EDCCDA005E10A1 /* MessageSpecification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecification.swift; sourceTree = "<group>"; };
+		C11E9DFC23EDCCDA005E10A1 /* MessageSpecificationFirestore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecificationFirestore.swift; sourceTree = "<group>"; };
 		C11E9DFD23EDCCDA005E10A1 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C11E9DFE23EDCCDA005E10A1 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenItem.swift; sourceTree = "<group>"; };
@@ -288,9 +296,19 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		843A584324168AAC007E6F45 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				84D032D8240F17650017EF88 /* KeychainManager.swift */,
+				843A584424168B1A007E6F45 /* KeychainSwift.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
 		843D814C2406D68900C62656 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				843A584324168AAC007E6F45 /* Keychain */,
 				843D81522406E90200C62656 /* TaskManager.swift */,
 			);
 			path = Utils;
@@ -366,7 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				C11E9DFB23EDCCDA005E10A1 /* Conversation.swift */,
-				C11E9DFC23EDCCDA005E10A1 /* MessageSpecification.swift */,
+				C11E9DFC23EDCCDA005E10A1 /* MessageSpecificationFirestore.swift */,
 				C11E9DFD23EDCCDA005E10A1 /* Message.swift */,
 				C11E9DFE23EDCCDA005E10A1 /* User.swift */,
 				C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */,
@@ -440,6 +458,7 @@
 				843D814D2406D6B100C62656 /* IdentifiableClosure.swift */,
 				04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */,
 				C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */,
+				843A583F241283B0007E6F45 /* CachedMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -458,6 +477,7 @@
 				C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */,
 				C11E9E3223EDCD1E005E10A1 /* ChatNetworkingConvertible.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
+				843A583B24114FE4007E6F45 /* Cachable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -898,6 +918,8 @@
 				C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */,
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,
+				843A583C24114FE4007E6F45 /* Cachable.swift in Sources */,
+				843A5840241283B0007E6F45 /* CachedMessage.swift in Sources */,
 				04F62DF92412BEED0061B308 /* Listener.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,
 				04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */,
@@ -910,7 +932,9 @@
 				843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */,
 				049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */,
 				841711AB2407F1160004FED7 /* Closure.swift in Sources */,
+				843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */,
 				843D81542406E90F00C62656 /* TaskManager.swift in Sources */,
+				84D032D9240F17650017EF88 /* KeychainManager.swift in Sources */,
 				C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */,
 				C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */,
 				049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */,
@@ -921,7 +945,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C11E9E0923EDCCDA005E10A1 /* MessageSpecification.swift in Sources */,
+				C11E9E0923EDCCDA005E10A1 /* MessageSpecificationFirestore.swift in Sources */,
 				C11E9E0823EDCCDA005E10A1 /* Conversation.swift in Sources */,
 				C11E9E0523EDCCDA005E10A1 /* ChatNetworkingFirestore.swift in Sources */,
 				C11E9E0C23EDCCDA005E10A1 /* SeenItem.swift in Sources */,
