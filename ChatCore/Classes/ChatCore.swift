@@ -22,7 +22,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
-    Networking.MS.ChatUIModel == Models.MSUI {
+Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -60,6 +60,14 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         return currentUser.uiModel
     }
 
+    // current state observing
+    public private(set) var currentState: ChatCoreState {
+        didSet {
+            stateChanged?(currentState)
+        }
+    }
+    public var stateChanged: ((ChatCoreState) -> Void)?
+
     deinit {
         print("\(self) released")
         NotificationCenter.default.removeObserver(self)
@@ -70,6 +78,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
+        currentState = .connecting
         self.networking = networking
         loadNetworkService()
 
@@ -105,6 +114,7 @@ extension ChatCore {
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
+
                     taskCompletion(.failure(error))
                     completion(.failure(error))
                 }
@@ -280,6 +290,7 @@ private extension ChatCore {
             self?.networking.load(completion: { [weak self] result in
                 switch result {
                 case .success:
+                    self?.currentState = .connected
                     self?.taskManager.initialized = true
                     taskCompletion(.success)
                 case .failure(let error):

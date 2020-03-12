@@ -16,6 +16,7 @@
 		04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */; };
 		0DAB17EC70C794C205FE6B14 /* Pods_ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504E138061A8070DD0D90D0F /* Pods_ChatNetworkingFirestore.framework */; };
 		3876B4161B90FCE0F581B293 /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B69888F4C83FA43E8AE09ED8 /* Pods_Chat.framework */; };
+		8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84149959241AB70600D3EEC6 /* ChatCoreState.swift */; };
 		841711AB2407F1160004FED7 /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841711AA2407F1160004FED7 /* Closure.swift */; };
 		843A583C24114FE4007E6F45 /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583B24114FE4007E6F45 /* Cachable.swift */; };
 		843A5840241283B0007E6F45 /* CachedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583F241283B0007E6F45 /* CachedMessage.swift */; };
@@ -148,6 +149,7 @@
 		504E138061A8070DD0D90D0F /* Pods_ChatNetworkingFirestore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatNetworkingFirestore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519033A4B72B0D6C9BFFD754 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		7B9D820DF49EF067BB164A0D /* Pods-ChatUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatUI.release.xcconfig"; path = "Target Support Files/Pods-ChatUI/Pods-ChatUI.release.xcconfig"; sourceTree = "<group>"; };
+		84149959241AB70600D3EEC6 /* ChatCoreState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoreState.swift; sourceTree = "<group>"; };
 		841711AA2407F1160004FED7 /* Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
 		843A583B24114FE4007E6F45 /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
 		843A583F241283B0007E6F45 /* CachedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMessage.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 				C11E9E3223EDCD1E005E10A1 /* ChatNetworkingConvertible.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
 				843A583B24114FE4007E6F45 /* Cachable.swift */,
+				84149959241AB70600D3EEC6 /* ChatCoreState.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -916,6 +919,7 @@
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
 				C11E9E3823EDCD1E005E10A1 /* ObjectIdentifier.swift in Sources */,
 				C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */,
+				8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */,
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,
 				843A583C24114FE4007E6F45 /* Cachable.swift in Sources */,
