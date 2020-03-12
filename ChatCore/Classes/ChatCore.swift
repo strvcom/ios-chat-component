@@ -101,12 +101,13 @@ extension ChatCore {
                 self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
-                    taskCompletion(.success)
+                    _ = taskCompletion(.success)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
-                    taskCompletion(.failure(error))
-                    completion(.failure(error))
+                    if taskCompletion(.failure(error)) == .finished {
+                        completion(.failure(error))
+                    }
                 }
             }
         }
@@ -187,14 +188,14 @@ extension ChatCore {
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
                     self.conversations = data
-                    taskCompletion(.success)
+                    _ = taskCompletion(.success)
                     
                     // Call each closure registered for this listener
                     self.conversationListeners[listener]?.forEach {
                         $0.closure(.success(data))
                     }
                 case .failure(let error):
-                    taskCompletion(.failure(error))
+                    _ = taskCompletion(.failure(error))
                     self.conversationListeners[listener]?.forEach {
                         $0.closure(.failure(error))
                     }
@@ -246,14 +247,14 @@ extension ChatCore {
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
                     self.messages[id] = data
-                    taskCompletion(.success)
+                    _ = taskCompletion(.success)
                     
                     // Call each closure registered for this listener
                     self.messagesListeners[listener]?.forEach {
                         $0.closure(.success(data))
                     }
                 case .failure(let error):
-                    taskCompletion(.failure(error))
+                    _ = taskCompletion(.failure(error))
                     self.messagesListeners[listener]?.forEach {
                         $0.closure(.failure(error))
                     }
@@ -281,9 +282,9 @@ private extension ChatCore {
                 switch result {
                 case .success:
                     self?.taskManager.initialized = true
-                    taskCompletion(.success)
+                    _ = taskCompletion(.success)
                 case .failure(let error):
-                    taskCompletion(.failure(error))
+                    _ = taskCompletion(.failure(error))
                 }
             })
         })
