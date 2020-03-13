@@ -22,7 +22,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
-Networking.MS.ChatUIModel == Models.MSUI {
+    Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
