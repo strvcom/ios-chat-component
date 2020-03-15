@@ -10,6 +10,8 @@ import Foundation
 
 /// State of chat core
 public enum ChatCoreState {
-    case connecting
+    case initial
+    case loading
     case connected
+    case connecting
 }
