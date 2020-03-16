@@ -78,7 +78,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
-        currentState = .connecting
+        currentState = .initial
         self.networking = networking
         loadNetworkService()
 
@@ -291,6 +291,7 @@ extension ChatCore {
 // MARK: - ChatNetworkServicing load state observing
 private extension ChatCore {
     func loadNetworkService() {
+        currentState = .loading
         taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
             self?.networking.load(completion: { [weak self] result in
                 switch result {
