@@ -340,6 +340,9 @@ private extension ChatCore {
             case .reachable:
                 self.currentState = .connected
             case .unreachable:
+                guard self.currentState != .loading else {
+                    return
+                }
                 self.currentState = .connecting
             }
         })
