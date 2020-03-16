@@ -336,13 +336,13 @@ private extension ChatCore {
     func setReachabilityObserver() {
         // observe network changes
         reachabilityObserver = ReachabilityObserver(reachabilityChanged: { [weak self] state in
+            guard self?.currentState != .loading else {
+                return
+            }
             switch state {
             case .reachable:
                 self?.currentState = .connected
             case .unreachable:
-                guard self?.currentState != .loading else {
-                    return
-                }
                 self?.currentState = .connecting
             }
         })
