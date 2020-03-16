@@ -1,5 +1,5 @@
 //
-//  ReachabilityObserving.swift
+//  ReachabilityObserver.swift
 //  ChatApp
 //
 //  Created by Tomas Cejka on 2/26/20.
@@ -34,17 +34,21 @@ final class ReachabilityObserver {
 private extension ReachabilityObserver {
     // Observe reachability changes
     func startReachabilityObserving() {
-        reachability = try? Reachability()
+        do {
+            reachability = try Reachability()
 
-        reachability?.whenReachable = { [weak self] reachability in
-            self?.reachabilityChanged(.reachable)
+            reachability?.whenReachable = { [weak self] reachability in
+                self?.reachabilityChanged(.reachable)
+            }
+
+            reachability?.whenUnreachable = { [weak self] reachability in
+                self?.reachabilityChanged(.unreachable)
+            }
+
+            try reachability?.startNotifier()
+        } catch {
+            print("Reachability throws \(error.localizedDescription)")
         }
-
-        reachability?.whenUnreachable = { [weak self] reachability in
-            self?.reachabilityChanged(.unreachable)
-        }
-
-        try? reachability?.startNotifier()
     }
 
     // Clean up
