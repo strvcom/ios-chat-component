@@ -37,7 +37,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     private lazy var taskManager = TaskManager()
     private lazy var keychainManager = KeychainManager()
-
+    private var reachability: Reachability?
     private var dataManagers = [Listener: DataManager]()
     
     private var conversationListeners = [
@@ -87,6 +87,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         if #available(iOS 13.0, *) {
             NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIScene.didActivateNotification, object: nil)
         }
+
+        reachability = try? Reachability()
     }
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
@@ -327,3 +329,6 @@ public extension ChatCore {
         taskManager.runBackgroundCalls(completion: completion)
     }
 }
+
+// MARK: - Reachability test
+//private extension ChatCore: Reacha
