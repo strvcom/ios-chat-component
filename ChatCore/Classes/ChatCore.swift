@@ -37,7 +37,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     private lazy var taskManager = TaskManager()
     private lazy var keychainManager = KeychainManager()
-
+    private var reachabilityObserver: ReachabilityObserver?
     private var dataManagers = [Listener: DataManager]()
     
     private var conversationListeners = [
@@ -60,6 +60,14 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         return currentUser.uiModel
     }
 
+    // current state observing
+    public private(set) var currentState: ChatCoreState {
+        didSet {
+            stateChanged?(currentState)
+        }
+    }
+    public var stateChanged: ((ChatCoreState) -> Void)?
+
     deinit {
         print("\(self) released")
         NotificationCenter.default.removeObserver(self)
@@ -70,6 +78,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // Basically any networking agnostic business logic
 
     public required init (networking: Networking) {
+        currentState = .initial
         self.networking = networking
         loadNetworkService()
 
@@ -78,6 +87,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         if #available(iOS 13.0, *) {
             NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIScene.didActivateNotification, object: nil)
         }
+
+        setReachabilityObserver()
     }
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
@@ -276,10 +287,12 @@ extension ChatCore {
 // MARK: - ChatNetworkServicing load state observing, helper methods
 private extension ChatCore {
     func loadNetworkService() {
+        currentState = .loading
         taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
             self?.networking.load(completion: { result in
                 self?.taskHandler(result: result, completion: taskCompletion)
                 if case .success = result {
+                    self?.currentState = .connected
                     self?.taskManager.initialized = true
                 }
             })
@@ -320,5 +333,23 @@ private extension ChatCore {
 public extension ChatCore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         taskManager.runBackgroundCalls(completion: completion)
+    }
+}
+
+// MARK: - Setup reachability observer
+private extension ChatCore {
+    func setReachabilityObserver() {
+        // observe network changes
+        reachabilityObserver = ReachabilityObserver(reachabilityChanged: { [weak self] state in
+            guard self?.currentState != .loading else {
+                return
+            }
+            switch state {
+            case .reachable:
+                self?.currentState = .connected
+            case .unreachable:
+                self?.currentState = .connecting
+            }
+        })
     }
 }
