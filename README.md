@@ -118,7 +118,7 @@ extension ConversationFirestore: ChatUIConvertible {
 and make all your UI models conform to `ChatNetworkingConvertible` like this:
 
 ```swift
-extension Conversation: ChatNetworkingConvertible {
+extension Conversation: ChatNetworkingConvertible {Listeners
     public typealias NetworkingModel = ConversationFirestore
 }
 ```
@@ -224,15 +224,15 @@ To make chat core component well thought out it was enhanced by task manager. Ta
 - after init
 - background task
 - background thread
-- retry(with retry type finite/infinite)
+- retry (with retry type finite/infinite)
 
 ##### After init
 
-Few calls (eg. load conversations) can get into task manager stack even chat core is not connected yet. Those stay in stack and after init is complete are run again. 
+Few calls (eg. load conversations) can get into task manager stack even chat core is not connected yet. Those stay in stack, and after init is completed, are run again. 
 
 ##### Background task
 
-Calls attributed background task will try to continue after app goes to background. At first all tasks are hooked to app register to background. Secondary if ios 13+ and still unfinished tasks in stack then BGSCheduledTask is used to activate app after some time to rerun those tasks. If older version of iOS then background fetch is used.
+Calls attributed background task will try to continue after app goes to background. At first all tasks are hooked to app register to background. Secondary if ios 13+ and still unfinished tasks in stack then BGSCheduledTask is used to activate app after some time to re-run those tasks. If older version of iOS then background fetch is used.
 
 ##### Background thread
 
@@ -242,7 +242,7 @@ Tasks attributed background thread are run in its own dedicated background threa
 
 To allow few tasks retry there are two options how to do it. Finite with limited amount of attempts and infinite. Infinite is used for initial loading of whole chat core. For sending messages is used finite amount with default value of attempts. **Please note that only network errors come in place when handling retry, other errors don't count.**
 
-###### Example of call
+##### Example of call
 
 In example below is send message method. Taks manager wraps network call and applies few attributes. In case of using retry it is necessary to control response of task completion like in failure path of result.
 ``` swift
@@ -265,7 +265,7 @@ taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .re
 ``` 
 
 ### Chat core states
-When chat core is created there are few states which can change during its lifetime. Its possible to observer those changes to UI can react. Core contains reachability observer to check network connection availability.
+When chat core is created there are few states which can change during its lifetime. It's possible to observe those changes so UI can react properly. Core contains reachability observer to check network connection availability.
 
 ###### Available states
  - initial _after core is created_
@@ -275,7 +275,7 @@ When chat core is created there are few states which can change during its lifet
 
 ### Caching unsent messages
 
-When core sends message its automatically stored to local secure cache (keychain). After message is sent (eg. background task) its removed from cache. When sending fails for any reason user has chance to retry or delete message at UI.
+When core sends message, it's automatically stored to local secure cache (keychain). After message is sent (eg. background task) its removed from cache. When sending fails for any reason, user has chance to retry or delete message at UI.
 
 ## Features
 
@@ -349,3 +349,4 @@ pod repo push ChatCore ~/Desktop/ChatCore.podspec
 ```
 
 And that's it. You can check complete [Podspec docs](https://guides.cocoapods.org/syntax/podspec.html) and [Private Pod docs](https://guides.cocoapods.org/making/private-cocoapods.html).
+
