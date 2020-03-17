@@ -115,13 +115,13 @@ extension ChatCore {
                 self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
-                    taskCompletion(.success)
+                    _ = taskCompletion(.success)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
-
-                    taskCompletion(.failure(error))
-                    completion(.failure(error))
+                    if taskCompletion(.failure(error)) == .finished {
+                        completion(.failure(error))
+                    }
                 }
             }
         }
@@ -193,6 +193,7 @@ extension ChatCore {
             }
             
             self.networking.listenToConversations(pageSize: pageSize) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let conversations):
                     
@@ -200,16 +201,13 @@ extension ChatCore {
                     let converted = conversations.compactMap({ $0.uiModel })
                     
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    
                     self.conversations = data
-                    taskCompletion(.success)
                     
                     // Call each closure registered for this listener
                     self.conversationListeners[listener]?.forEach {
                         $0.closure(.success(data))
                     }
                 case .failure(let error):
-                    taskCompletion(.failure(error))
                     self.conversationListeners[listener]?.forEach {
                         $0.closure(.failure(error))
                     }
@@ -252,23 +250,21 @@ extension ChatCore {
             }
             
             self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let messages):
-                    
                     self.dataManagers[listener]?.update(data: messages)
                     
                     let converted = messages.compactMap({ $0.uiModel })
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     
                     self.messages[id] = data
-                    taskCompletion(.success)
                     
                     // Call each closure registered for this listener
                     self.messagesListeners[listener]?.forEach {
                         $0.closure(.success(data))
                     }
                 case .failure(let error):
-                    taskCompletion(.failure(error))
                     self.messagesListeners[listener]?.forEach {
                         $0.closure(.failure(error))
                     }
@@ -288,19 +284,16 @@ extension ChatCore {
     }
 }
 
-// MARK: - ChatNetworkServicing load state observing
+// MARK: - ChatNetworkServicing load state observing, helper methods
 private extension ChatCore {
     func loadNetworkService() {
         currentState = .loading
         taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
-            self?.networking.load(completion: { [weak self] result in
-                switch result {
-                case .success:
+            self?.networking.load(completion: { result in
+                self?.taskHandler(result: result, completion: taskCompletion)
+                if case .success = result {
                     self?.currentState = .connected
                     self?.taskManager.initialized = true
-                    taskCompletion(.success)
-                case .failure(let error):
-                    taskCompletion(.failure(error))
                 }
             })
         })
@@ -322,11 +315,23 @@ private extension ChatCore {
             }
         }
     }
+
+    // This method wraps result from task manager in cases when no need of value
+    // Value has meaning in case when we wanna send completion after retry etc
+    // This happenes eg in send message method, after task manager finishes than completion is called at method caller
+    func taskHandler<T>(result: Result<T, ChatError>, completion: (TaskManager.TaskCompletionResult) -> TaskManager.TaskCompletionState) {
+        switch result {
+        case .success:
+            _ = completion(.success)
+        case .failure(let error):
+            _ = completion(.failure(error))
+        }
+    }
 }
 
 // MARK: - Continue stored background tasks
 public extension ChatCore {
-     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         taskManager.runBackgroundCalls(completion: completion)
     }
 }
