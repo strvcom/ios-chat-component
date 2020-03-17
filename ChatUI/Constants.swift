@@ -10,4 +10,5 @@ import UIKit
 
 enum Constants {
     static let imageMessageSize = (width: 200, height: 200)
+    static let conversationsPageSize = 15
 }

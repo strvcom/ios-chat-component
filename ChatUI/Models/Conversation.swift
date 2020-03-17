@@ -17,12 +17,14 @@ public struct Conversation: ConversationRepresenting {
     public let members: [User]
     public let messages: [MessageKitType]
     public let seen: Seen
+    public let compatibility: Float
 
-    public init(id: ObjectIdentifier, lastMessage: MessageKitType?, members: [User], messages: [MessageKitType], seen: Seen) {
+    public init(id: ObjectIdentifier, lastMessage: MessageKitType?, members: [User], messages: [MessageKitType], seen: Seen, compatibility: Float) {
         self.id = id
         self.lastMessage = lastMessage
         self.members = members
         self.messages = messages
         self.seen = seen
+        self.compatibility = compatibility
     }
 }

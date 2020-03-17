@@ -22,6 +22,17 @@ public class Chat {
         let core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
         self.core = core
         self.interface = ChatUI(core: core)
+        
+        ["Medium", "Regular", "Bold", "ExtraBold"].forEach {
+            UIFont.registerFont(withFilenameString: "Catamaran-\($0).ttf", bundle: Bundle(for: Chat.self))
+        }
+        
+        // swiftlint:disable force_unwrapping
+        self.interface.fontConfig = FontConfig(fonts: [
+            .conversationListName: UIFont(name: "Catamaran-Medium", size: 16)!,
+            .conversationPreview: UIFont(name: "Catamaran-Regular", size: 14)!,
+            .newConversationAlert: UIFont(name: "Catamaran-Bold", size: 14)!
+        ])
     }
     
     public func conversationsList() -> UIViewController {

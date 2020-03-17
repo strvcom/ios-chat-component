@@ -9,8 +9,16 @@
 import UIKit
 import ChatCore
 
+var chatUIFontConfig = FontConfig()
+
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     let core: Core
+    
+    public var fontConfig: FontConfig = FontConfig() {
+        didSet {
+            chatUIFontConfig = fontConfig
+        }
+    }
     
     public required init(core: Core) {
         self.core = core

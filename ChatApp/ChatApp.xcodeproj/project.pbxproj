@@ -8,10 +8,35 @@
 
 /* Begin PBXBuildFile section */
 		008B43311772BA388EBE9E00 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C6B51DE002F61D4DEC0E50 /* Pods_ChatApp.framework */; };
+		0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E768241E5F74008C4412 /* ConversationsListCell.swift */; };
+		0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0490E769241E5F74008C4412 /* ConversationsListCell.xib */; };
+		0490E771241EB778008C4412 /* ConversationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E770241EB778008C4412 /* ConversationsListViewModel.swift */; };
+		0490E774241EB7DF008C4412 /* ReusableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E773241EB7DF008C4412 /* ReusableCell.swift */; };
+		0490E776241EB878008C4412 /* UITableViewCell+Dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */; };
 		04957CC623F306A900AD595B /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC423F3068900AD595B /* Pagination.swift */; };
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
 		049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
+		04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
+		04C0ECD824201B82008A5ADB /* Catamaran-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */; };
+		04C0ECD924201B82008A5ADB /* Catamaran-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */; };
+		04C0ECDA24201B82008A5ADB /* Catamaran-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */; };
+		04C0ECDB24201B82008A5ADB /* Catamaran-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD124201B82008A5ADB /* Catamaran-ExtraLight.ttf */; };
+		04C0ECDC24201B82008A5ADB /* Catamaran-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD224201B82008A5ADB /* Catamaran-Medium.ttf */; };
+		04C0ECDD24201B82008A5ADB /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD324201B82008A5ADB /* OFL.txt */; };
+		04C0ECDE24201B82008A5ADB /* Catamaran-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD424201B82008A5ADB /* Catamaran-Light.ttf */; };
+		04C0ECDF24201B82008A5ADB /* Catamaran-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD524201B82008A5ADB /* Catamaran-Thin.ttf */; };
+		04C0ECE024201B82008A5ADB /* Catamaran-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */; };
+		04C0ECE124201B82008A5ADB /* Catamaran-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */; };
+		04C0ECE224201C3C008A5ADB /* Catamaran-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD224201B82008A5ADB /* Catamaran-Medium.ttf */; };
+		04C0ECE324201C47008A5ADB /* Catamaran-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD224201B82008A5ADB /* Catamaran-Medium.ttf */; };
+		04C0ECE524201E83008A5ADB /* UIFont+Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE424201E83008A5ADB /* UIFont+Register.swift */; };
+		04C0ECE724201F08008A5ADB /* FontConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* FontConfig.swift */; };
+		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
+		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
+		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
+		04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0524200550001F54A9 /* ViewModelingState.swift */; };
+		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
 		04F62DF92412BEED0061B308 /* Listener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DF72412BED60061B308 /* Listener.swift */; };
 		04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */; };
 		0DAB17EC70C794C205FE6B14 /* Pods_ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504E138061A8070DD0D90D0F /* Pods_ChatNetworkingFirestore.framework */; };
@@ -74,7 +99,6 @@
 		C11E9E5D23EDCD34005E10A1 /* MessageKitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E4C23EDCD34005E10A1 /* MessageKitType.swift */; };
 		C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E4D23EDCD34005E10A1 /* User.swift */; };
 		C11E9E5F23EDCD34005E10A1 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E4E23EDCD34005E10A1 /* ImageItem.swift */; };
-		C11E9E6023EDCD34005E10A1 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E4F23EDCD34005E10A1 /* ListCell.swift */; };
 		C11E9E6123EDCD34005E10A1 /* UIImageView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */; };
 		C11E9E6223EDCD34005E10A1 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E5223EDCD34005E10A1 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11E9E6323EDCD34005E10A1 /* ChatUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5323EDCD34005E10A1 /* ChatUI.swift */; };
@@ -135,9 +159,32 @@
 
 /* Begin PBXFileReference section */
 		043CC14123FE9AE30027DD11 /* DataPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPayload.swift; sourceTree = "<group>"; };
+		0490E768241E5F74008C4412 /* ConversationsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCell.swift; sourceTree = "<group>"; };
+		0490E769241E5F74008C4412 /* ConversationsListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationsListCell.xib; sourceTree = "<group>"; };
+		0490E770241EB778008C4412 /* ConversationsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModel.swift; sourceTree = "<group>"; };
+		0490E773241EB7DF008C4412 /* ReusableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCell.swift; sourceTree = "<group>"; };
+		0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Dequeue.swift"; sourceTree = "<group>"; };
 		04957CC423F3068900AD595B /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		04957CC723F375C500AD595B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		049862C523FEEBA200F7EFD6 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGB.swift"; sourceTree = "<group>"; };
+		04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-SemiBold.ttf"; sourceTree = "<group>"; };
+		04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Black.ttf"; sourceTree = "<group>"; };
+		04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-ExtraBold.ttf"; sourceTree = "<group>"; };
+		04C0ECD124201B82008A5ADB /* Catamaran-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-ExtraLight.ttf"; sourceTree = "<group>"; };
+		04C0ECD224201B82008A5ADB /* Catamaran-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Medium.ttf"; sourceTree = "<group>"; };
+		04C0ECD324201B82008A5ADB /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		04C0ECD424201B82008A5ADB /* Catamaran-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Light.ttf"; sourceTree = "<group>"; };
+		04C0ECD524201B82008A5ADB /* Catamaran-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Thin.ttf"; sourceTree = "<group>"; };
+		04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Regular.ttf"; sourceTree = "<group>"; };
+		04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Bold.ttf"; sourceTree = "<group>"; };
+		04C0ECE424201E83008A5ADB /* UIFont+Register.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Register.swift"; sourceTree = "<group>"; };
+		04C0ECE624201F08008A5ADB /* FontConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontConfig.swift; sourceTree = "<group>"; };
+		04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCellViewModel.swift; sourceTree = "<group>"; };
+		04E56CFE242003E7001F54A9 /* UIView+Fill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Fill.swift"; sourceTree = "<group>"; };
+		04E56D012420045B001F54A9 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
+		04E56D0524200550001F54A9 /* ViewModelingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelingState.swift; sourceTree = "<group>"; };
+		04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModelDelegate.swift; sourceTree = "<group>"; };
 		04F62DF72412BED60061B308 /* Listener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listener.swift; sourceTree = "<group>"; };
 		04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenerIdentifier.swift; sourceTree = "<group>"; };
 		1C4C4083313D2344E421D049 /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -215,7 +262,6 @@
 		C11E9E4C23EDCD34005E10A1 /* MessageKitType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageKitType.swift; sourceTree = "<group>"; };
 		C11E9E4D23EDCD34005E10A1 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C11E9E4E23EDCD34005E10A1 /* ImageItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
-		C11E9E4F23EDCD34005E10A1 /* ListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Network.swift"; sourceTree = "<group>"; };
 		C11E9E5223EDCD34005E10A1 /* ChatUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUI.h; sourceTree = "<group>"; };
 		C11E9E5323EDCD34005E10A1 /* ChatUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUI.swift; sourceTree = "<group>"; };
@@ -275,6 +321,92 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0490E76D241EB722008C4412 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				04E56D0424200543001F54A9 /* Common */,
+				0490E76F241EB730008C4412 /* MessagesList */,
+				0490E76E241EB729008C4412 /* ConversationsList */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		0490E76E241EB729008C4412 /* ConversationsList */ = {
+			isa = PBXGroup;
+			children = (
+				C11E9E4723EDCD34005E10A1 /* ConversationsListViewController.swift */,
+				04E56D0A24200581001F54A9 /* View */,
+				04E56D092420057C001F54A9 /* ViewModel */,
+			);
+			path = ConversationsList;
+			sourceTree = "<group>";
+		};
+		0490E76F241EB730008C4412 /* MessagesList */ = {
+			isa = PBXGroup;
+			children = (
+				C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */,
+			);
+			path = MessagesList;
+			sourceTree = "<group>";
+		};
+		0490E772241EB7CF008C4412 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				0490E773241EB7DF008C4412 /* ReusableCell.swift */,
+				0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */,
+				04E56CFE242003E7001F54A9 /* UIView+Fill.swift */,
+				04E56D012420045B001F54A9 /* Array+Subscript.swift */,
+				04C0ECE424201E83008A5ADB /* UIFont+Register.swift */,
+				C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */,
+				04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		04C0ECCD24201B82008A5ADB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */,
+				04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */,
+				04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */,
+				04C0ECD124201B82008A5ADB /* Catamaran-ExtraLight.ttf */,
+				04C0ECD224201B82008A5ADB /* Catamaran-Medium.ttf */,
+				04C0ECD324201B82008A5ADB /* OFL.txt */,
+				04C0ECD424201B82008A5ADB /* Catamaran-Light.ttf */,
+				04C0ECD524201B82008A5ADB /* Catamaran-Thin.ttf */,
+				04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */,
+				04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		04E56D0424200543001F54A9 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				04E56D0524200550001F54A9 /* ViewModelingState.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		04E56D092420057C001F54A9 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0490E770241EB778008C4412 /* ConversationsListViewModel.swift */,
+				04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */,
+				04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		04E56D0A24200581001F54A9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0490E768241E5F74008C4412 /* ConversationsListCell.swift */,
+				0490E769241E5F74008C4412 /* ConversationsListCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		126750A5C60AA2BAA7CD74AA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -404,6 +536,7 @@
 		C11E9E1023EDCD06005E10A1 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				04C0ECCD24201B82008A5ADB /* Fonts */,
 				C11E9E1123EDCD06005E10A1 /* Chat.h */,
 				C11E9E1223EDCD06005E10A1 /* Chat.swift */,
 				C11E9E1323EDCD06005E10A1 /* Helpers */,
@@ -485,16 +618,15 @@
 		C11E9E4623EDCD34005E10A1 /* ChatUI */ = {
 			isa = PBXGroup;
 			children = (
-				C11E9E4723EDCD34005E10A1 /* ConversationsListViewController.swift */,
-				C11E9E4823EDCD34005E10A1 /* Constants.swift */,
-				C11E9E4923EDCD34005E10A1 /* Models */,
-				C11E9E4F23EDCD34005E10A1 /* ListCell.swift */,
-				C11E9E5023EDCD34005E10A1 /* Extensions */,
+				C11E9E5723EDCD34005E10A1 /* Info.plist */,
 				C11E9E5223EDCD34005E10A1 /* ChatUI.h */,
 				C11E9E5323EDCD34005E10A1 /* ChatUI.swift */,
+				C11E9E4823EDCD34005E10A1 /* Constants.swift */,
+				04C0ECE624201F08008A5ADB /* FontConfig.swift */,
 				C11E9E5423EDCD34005E10A1 /* Protocols */,
-				C11E9E5723EDCD34005E10A1 /* Info.plist */,
-				C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */,
+				0490E772241EB7CF008C4412 /* Utilities */,
+				0490E76D241EB722008C4412 /* Scenes */,
+				C11E9E4923EDCD34005E10A1 /* Models */,
 			);
 			name = ChatUI;
 			path = ../ChatUI;
@@ -510,14 +642,6 @@
 				C11E9E4E23EDCD34005E10A1 /* ImageItem.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		C11E9E5023EDCD34005E10A1 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		C11E9E5423EDCD34005E10A1 /* Protocols */ = {
@@ -725,6 +849,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C0ECE224201C3C008A5ADB /* Catamaran-Medium.ttf in Resources */,
+				0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +874,7 @@
 			files = (
 				ADB40CD223C200A5003DC146 /* LaunchScreen.storyboard in Resources */,
 				ADB40CCF23C200A5003DC146 /* Assets.xcassets in Resources */,
+				04C0ECE324201C47008A5ADB /* Catamaran-Medium.ttf in Resources */,
 				AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -756,6 +883,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C0ECDD24201B82008A5ADB /* OFL.txt in Resources */,
+				04C0ECD824201B82008A5ADB /* Catamaran-SemiBold.ttf in Resources */,
+				04C0ECE124201B82008A5ADB /* Catamaran-Bold.ttf in Resources */,
+				04C0ECDE24201B82008A5ADB /* Catamaran-Light.ttf in Resources */,
+				04C0ECE024201B82008A5ADB /* Catamaran-Regular.ttf in Resources */,
+				04C0ECDB24201B82008A5ADB /* Catamaran-ExtraLight.ttf in Resources */,
+				04C0ECD924201B82008A5ADB /* Catamaran-Black.ttf in Resources */,
+				04C0ECDC24201B82008A5ADB /* Catamaran-Medium.ttf in Resources */,
+				04C0ECDF24201B82008A5ADB /* Catamaran-Thin.ttf in Resources */,
+				04C0ECDA24201B82008A5ADB /* Catamaran-ExtraBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,17 +1030,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				C11E9E5D23EDCD34005E10A1 /* MessageKitType.swift in Sources */,
+				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
+				0490E776241EB878008C4412 /* UITableViewCell+Dequeue.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
+				04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */,
+				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
+				04C0ECE724201F08008A5ADB /* FontConfig.swift in Sources */,
 				C11E9E5923EDCD34005E10A1 /* ConversationsListViewController.swift in Sources */,
+				04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */,
 				C11E9E6723EDCD34005E10A1 /* MessagesListViewController.swift in Sources */,
+				04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */,
+				0490E774241EB7DF008C4412 /* ReusableCell.swift in Sources */,
 				C11E9E5A23EDCD34005E10A1 /* Constants.swift in Sources */,
 				C11E9E6523EDCD34005E10A1 /* ChatUICoreServicing.swift in Sources */,
-				C11E9E6023EDCD34005E10A1 /* ListCell.swift in Sources */,
 				C11E9E6423EDCD34005E10A1 /* ChatModelsUI.swift in Sources */,
 				C11E9E5F23EDCD34005E10A1 /* ImageItem.swift in Sources */,
 				C11E9E5C23EDCD34005E10A1 /* MessageSpecification.swift in Sources */,
+				0490E771241EB778008C4412 /* ConversationsListViewModel.swift in Sources */,
 				C11E9E6123EDCD34005E10A1 /* UIImageView+Network.swift in Sources */,
+				04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */,
+				0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */,
 				C11E9E6323EDCD34005E10A1 /* ChatUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -973,6 +1120,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C11E9E1E23EDCD07005E10A1 /* MessageSpecificationConvertible.swift in Sources */,
+				04C0ECE524201E83008A5ADB /* UIFont+Register.swift in Sources */,
 				C11E9E1B23EDCD07005E10A1 /* UserConvertible.swift in Sources */,
 				C11E9E1D23EDCD07005E10A1 /* MessageConvertible.swift in Sources */,
 				C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */,

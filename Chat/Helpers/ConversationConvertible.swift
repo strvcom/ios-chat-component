@@ -17,10 +17,15 @@ extension Conversation: ChatNetworkingConvertible {
 
 extension ConversationFirestore: ChatUIConvertible {
 
+    private static let compatibilityAttribute = "compatibility"
+    
     public var uiModel: Conversation {
         let uiMembers = self.members.compactMap { $0.uiModel }
         let uiMessages = self.messages.compactMap { $0.uiModel }
-        return Conversation(id: self.id, lastMessage: self.lastMessage?.uiModel, members: uiMembers, messages: uiMessages, seen: self.seen)
+        
+        let compatibility = Float(self.extraData[ConversationFirestore.compatibilityAttribute] ?? "") ?? 0
+        
+        return Conversation(id: self.id, lastMessage: self.lastMessage?.uiModel, members: uiMembers, messages: uiMessages, seen: self.seen, compatibility: compatibility)
     }
 
     public init(uiModel: Conversation) {
