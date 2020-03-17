@@ -182,6 +182,7 @@ extension ChatCore {
             }
             
             self.networking.listenToConversations(pageSize: pageSize) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let conversations):
                     
@@ -200,7 +201,6 @@ extension ChatCore {
                         $0.closure(.failure(error))
                     }
                 }
-                self.taskHandler(result: result, completion: taskCompletion)
             }
         })
 
@@ -239,6 +239,7 @@ extension ChatCore {
             }
             
             self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let messages):
                     self.dataManagers[listener]?.update(data: messages)
@@ -257,7 +258,6 @@ extension ChatCore {
                         $0.closure(.failure(error))
                     }
                 }
-                self.taskHandler(result: result, completion: taskCompletion)
             }})
 
         return closure.id
@@ -303,6 +303,9 @@ private extension ChatCore {
         }
     }
 
+    // This method wraps result from task manager in cases when no need of value
+    // Value has meaning in case when we wanna send completion after retry etc
+    // This happenes eg in send message method, after task manager finishes than completion is called at method caller
     func taskHandler<T>(result: Result<T, ChatError>, completion: (TaskManager.TaskCompletionResult) -> TaskManager.TaskCompletionState) {
         switch result {
         case .success:
