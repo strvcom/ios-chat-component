@@ -228,11 +228,11 @@ To make the chat core component well thought out it was enhanced by task manager
 
 ##### After init
 
-Few calls (e.g. load conversations) can get into the task manager's stack, although chat core is not connected yet. Those tasks remain in the queue and, after the core is loaded, are run again.
+Few calls (e.g. load conversations) can get into the task manager's queue, although chat core is not connected yet. Those tasks remain in the queue and, after the core is loaded, are executed again.
 
 ##### Background task
 
-Calls attributed background task will try to continue after app goes to the background. At first all tasks are hooked to app register to background. Secondary if iOS version is 13+ and still unfinished tasks in stack, then BGSCheduledTask is used to activate the app after some time to re-run those tasks. If an older version of iOS then background fetch is used.
+Calls attributed background task will try to continue after app goes to the background. At first all tasks are hooked to app's `beginBackgroundTaskWithName:expirationHandler:` method. Secondary if iOS version is 13+ and still unfinished tasks in queue, then `BGSCheduledTask` is used to activate the app after some time to retry execution of those tasks. If the chat runs on an older version of iOS then background fetch is used.
 
 ##### Background thread
 
