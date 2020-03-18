@@ -118,7 +118,7 @@ extension ConversationFirestore: ChatUIConvertible {
 and make all your UI models conform to `ChatNetworkingConvertible` like this:
 
 ```swift
-extension Conversation: ChatNetworkingConvertible {Listeners
+extension Conversation: ChatNetworkingConvertible {
     public typealias NetworkingModel = ConversationFirestore
 }
 ```
@@ -218,7 +218,7 @@ Whenever you need to load next page of conversations or messages, simply call `c
 
 ### Task management
 
-To make chat core component well thought out it was enhanced by task manager. Task manager class allows chat core to make calls with extra attributes and handles all logic behing. This made also impact in completion handling at chat core itself.
+To make the chat core component well thought out it was enhanced by task manager. The task manager class allows chat core to make calls with extra attributes and handles all logic behind. Using task management impacts on completion handling at chat core itself.
 
 ###### Available attributes
 - after init
@@ -228,11 +228,11 @@ To make chat core component well thought out it was enhanced by task manager. Ta
 
 ##### After init
 
-Few calls (eg. load conversations) can get into task manager stack even chat core is not connected yet. Those stay in stack, and after init is completed, are run again. 
+Few calls (e.g. load conversations) can get into the task manager's stack, although chat core is not connected yet. Those tasks remain in the queue and, after the core is loaded, are run again.
 
 ##### Background task
 
-Calls attributed background task will try to continue after app goes to background. At first all tasks are hooked to app register to background. Secondary if ios 13+ and still unfinished tasks in stack then BGSCheduledTask is used to activate app after some time to re-run those tasks. If older version of iOS then background fetch is used.
+Calls attributed background task will try to continue after app goes to the background. At first all tasks are hooked to app register to background. Secondary if iOS version is 13+ and still unfinished tasks in stack, then BGSCheduledTask is used to activate the app after some time to re-run those tasks. If an older version of iOS then background fetch is used.
 
 ##### Background thread
 
@@ -240,16 +240,17 @@ Tasks attributed background thread are run in its own dedicated background threa
 
 ##### Retry
 
-To allow few tasks retry there are two options how to do it. Finite with limited amount of attempts and infinite. Infinite is used for initial loading of whole chat core. For sending messages is used finite amount with default value of attempts. **Please note that only network errors come in place when handling retry, other errors don't count.**
+To allow tasks retry there are two options how to do it. Finite with limited amount of attempts and infinite. The infinite type is used for initial loading of the whole chat core. The finite retry type with the default value of attempts equal to 3 is used for sending messages.
+**Please note that only the network error comes in place when handling retry, other errors don't count.**
 
 ##### Example of call
 
-In example below is send message method. Taks manager wraps network call and applies few attributes. In case of using retry it is necessary to control response of task completion like in failure path of result.
+You can find an example of the send message task method below. The task manager wraps send message network call and applies few attributes on it. In case of using retry attribute, it is necessary to control the response of **taskCompletion** closure, as it is shown in case of failure in the example.
+
 ``` swift
 taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
-                self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
                     _ = taskCompletion(.success)
@@ -271,7 +272,7 @@ When chat core is created there are few states which can change during its lifet
  - initial _after core is created_
  - loading _after init when core tries to connect to service provider and setup all stuff_
  - connected _all loading work is done and core is ready to make its job_
- - connecting _when core is notified network goes off_
+ - connecting _when core is notified that network went off_
 
 ### Caching unsent messages
 
