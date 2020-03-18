@@ -89,12 +89,15 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         }
 
         setReachabilityObserver()
+        // in case core is initialized but cached messages got stuck in sending state e.g. app crashed
+        restoreUnsentMessages()
     }
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
     @objc open func resendUnsentMessages() {
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { message in
+        // take only messages which are not sending already
+        for message in messages where message.state == .stored {
             keychainManager.removeMessage(message: message)
             send(message: message.content, to: message.conversationId, completion: { _ in })
         }
@@ -107,19 +110,21 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
+        // by default is message in sending state
         let cachedMessage = cacheMessage(message: message, from: conversation)
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
-                self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                 switch result {
                 case .success(let message):
                     _ = taskCompletion(.success)
+                    self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
                     if taskCompletion(.failure(error)) == .finished {
+                        self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                         completion(.failure(error))
                     }
                 }
@@ -132,18 +137,37 @@ extension ChatCore {
 private extension ChatCore {
     func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier) -> CachedMessage<T> {
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, state: .sending)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
     }
 
     func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
-        // if other than network error remove from cache
+        // when other than network error or sucessfully sent remove from cache
+        // in case of network error restore the message with stored state
         guard case .failure(let error) = result, case .networking = error else {
             keychainManager.removeMessage(message: cachedMessage)
             return
         }
+
+        // make message to be stored again
+        changeCachedMessage(cachedMessage: cachedMessage, to: .stored)
+    }
+
+    func restoreUnsentMessages() {
+        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
+        messages.forEach { message in
+            changeCachedMessage(cachedMessage: message, to: .stored)
+        }
+    }
+
+    func changeCachedMessage<T: MessageSpecifying & Cachable>(cachedMessage: CachedMessage<T>, to state: CachedMessageState) {
+        var changedCachedMessage = cachedMessage
+        changedCachedMessage.changeState(state: state)
+        // remove original one, store new one
+        keychainManager.removeMessage(message: cachedMessage)
+        keychainManager.storeUnsentMessage(changedCachedMessage)
     }
 }
 
