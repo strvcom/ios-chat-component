@@ -106,6 +106,12 @@
 		C11E9E6523EDCD34005E10A1 /* ChatUICoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5623EDCD34005E10A1 /* ChatUICoreServicing.swift */; };
 		C11E9E6723EDCD34005E10A1 /* MessagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */; };
 		C11E9E6823EDCF70005E10A1 /* ChatNetworkingFirestore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C196FBC92422272C0077FC49 /* ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; };
+		C196FBCA2422272C0077FC49 /* ChatNetworkingFirestore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C196FBCE242227310077FC49 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; };
+		C196FBCF242227310077FC49 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C196FBD2242227360077FC49 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
+		C196FBD3242227360077FC49 /* ChatUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FC3A38BBD06B189504D29EAC /* Pods_ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B07E7DEF347F0A170FAA619 /* Pods_ChatUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +144,27 @@
 			remoteGlobalIDString = C11E9D8423EDC91B005E10A1;
 			remoteInfo = Chat;
 		};
+		C196FBCB2422272C0077FC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADB40CBA23C200A5003DC146 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD6B5D5923C320E8007F7754;
+			remoteInfo = ChatNetworkingFirestore;
+		};
+		C196FBD0242227310077FC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADB40CBA23C200A5003DC146 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD6B5D4823C320CB007F7754;
+			remoteInfo = ChatCore;
+		};
+		C196FBD4242227360077FC49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADB40CBA23C200A5003DC146 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD6B5D3623C32020007F7754;
+			remoteInfo = ChatUI;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -151,6 +178,19 @@
 				AD6B5D6223C320E8007F7754 /* ChatNetworkingFirestore.framework in Embed Frameworks */,
 				C11E9D8D23EDC91B005E10A1 /* Chat.framework in Embed Frameworks */,
 				AD6B5D3F23C32020007F7754 /* ChatUI.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C196FBCD2422272C0077FC49 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C196FBCA2422272C0077FC49 /* ChatNetworkingFirestore.framework in Embed Frameworks */,
+				C196FBD3242227360077FC49 /* ChatUI.framework in Embed Frameworks */,
+				C196FBCF242227310077FC49 /* ChatCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -314,7 +354,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C196FBC92422272C0077FC49 /* ChatNetworkingFirestore.framework in Frameworks */,
 				3876B4161B90FCE0F581B293 /* Pods_Chat.framework in Frameworks */,
+				C196FBD2242227360077FC49 /* ChatUI.framework in Frameworks */,
+				C196FBCE242227310077FC49 /* ChatCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,10 +824,14 @@
 				C11E9D8123EDC91B005E10A1 /* Sources */,
 				C11E9D8223EDC91B005E10A1 /* Frameworks */,
 				C11E9D8323EDC91B005E10A1 /* Resources */,
+				C196FBCD2422272C0077FC49 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C196FBCC2422272C0077FC49 /* PBXTargetDependency */,
+				C196FBD1242227310077FC49 /* PBXTargetDependency */,
+				C196FBD5242227360077FC49 /* PBXTargetDependency */,
 			);
 			name = Chat;
 			productName = Chat;
@@ -1151,6 +1198,21 @@
 			target = C11E9D8423EDC91B005E10A1 /* Chat */;
 			targetProxy = C11E9D8A23EDC91B005E10A1 /* PBXContainerItemProxy */;
 		};
+		C196FBCC2422272C0077FC49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD6B5D5923C320E8007F7754 /* ChatNetworkingFirestore */;
+			targetProxy = C196FBCB2422272C0077FC49 /* PBXContainerItemProxy */;
+		};
+		C196FBD1242227310077FC49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD6B5D4823C320CB007F7754 /* ChatCore */;
+			targetProxy = C196FBD0242227310077FC49 /* PBXContainerItemProxy */;
+		};
+		C196FBD5242227360077FC49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD6B5D3623C32020007F7754 /* ChatUI */;
+			targetProxy = C196FBD4242227360077FC49 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1174,6 +1236,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = G85XUWJRSL;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1188,6 +1251,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1204,6 +1268,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1218,6 +1283,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1232,6 +1298,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1246,6 +1313,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1261,6 +1329,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1275,6 +1344,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1290,6 +1360,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1304,6 +1375,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatNetworkingFirebase;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1320,6 +1392,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1334,6 +1407,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatNetworkingFirebase;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
