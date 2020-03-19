@@ -182,8 +182,10 @@ extension ChatCore {
         
         let seenMessage = Networking.M(uiModel: message)
         let conversation = Networking.C(uiModel: existingConversation)
-        
-        networking.updateSeenMessage(seenMessage, in: conversation)
+
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+            self?.networking.updateSeenMessage(seenMessage, in: conversation)
+        }
     }
 }
 
