@@ -135,9 +135,9 @@ extension ChatCore {
 
 // MARK: - Caching messages
 private extension ChatCore {
-    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier) -> CachedMessage<T> {
+    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, state: .sending)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
