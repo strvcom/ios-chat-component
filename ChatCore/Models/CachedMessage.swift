@@ -8,14 +8,9 @@
 
 import Foundation
 
-// MARK: - State of cached message
-enum CachedMessageState: String, Codable {
-    case stored
-    case sending
-}
-
 // MARK: - Structure wrapping message specification and also allows to cache data
 struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
+
     let content: T
     let conversationId: ObjectIdentifier
     private let id: ObjectIdentifier = UUID().uuidString
