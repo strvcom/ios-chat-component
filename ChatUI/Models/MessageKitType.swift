@@ -15,16 +15,27 @@ public enum MessageContent {
     case image(imageUrl: String)
 }
 
-public struct MessageKitType: MessageType, MessageRepresenting {
-   public var userId: ObjectIdentifier
+public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible {
 
-   public var sentAt: Date
+    public var userId: ObjectIdentifier
 
-   public var id: ObjectIdentifier
-   public var sender: SenderType
-   public var messageId: String
-   public var sentDate: Date
-   public var kind: MessageKind
+    public var sentAt: Date
+
+    public var id: ObjectIdentifier
+    public var sender: SenderType
+    public var messageId: String
+    public var sentDate: Date
+    public var kind: MessageKind
+
+    public init(messageSpecification: MessageSpecification) {
+        sentAt = Date()
+        sentDate = Date()
+        messageId = UUID().uuidString
+        id = messageId
+        userId = UUID().uuidString
+        kind = .text("TEST")
+        sender = Sender(id: userId, displayName: "")
+    }
 
     init(sender: SenderType, messageId: String, sentDate: Date, kind: MessageKind) {
         self.sender = sender

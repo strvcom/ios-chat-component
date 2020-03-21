@@ -18,6 +18,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.M: ChatUIConvertible,
     Networking.MS: ChatUIConvertible,
     Networking.U: ChatUIConvertible,
+
+    Models.MUI.MessageSpecification == Models.MSUI,
     
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
@@ -110,6 +112,9 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
+        // TODO: temp CJ
+        solveState(message: message, to: conversation)
+
         // by default is message in sending state
         let cachedMessage = cacheMessage(message: message, from: conversation)
 
@@ -129,6 +134,38 @@ extension ChatCore {
                     }
                 }
             }
+        }
+    }
+
+    // TODO: temp method
+    func solveState(message: MessageSpecifyingUI, to conversation: ObjectIdentifier) {
+        // find all listeners for messages and same conversationId
+        let listeners = messagesListeners.filter({ (key, _) -> Bool in
+            if case let .messages(_, conversationId) = key {
+                return conversation == conversationId
+            }
+            return false
+        })
+
+        // check if listeners and data payload are set
+        guard !listeners.isEmpty else {
+            return
+        }
+        guard let messagesPayload = messages[conversation] else {
+            return
+        }
+
+        // create new message, add to messages and let known to listeners
+        let newMessage = MessageUI(messageSpecification: message)
+        var newData = messagesPayload.data
+        newData.append(newMessage)
+        let newPayload = DataPayload(data: newData, reachedEnd: messagesPayload.reachedEnd)
+
+        self.messages[conversation] = newPayload
+
+        // Call each closure registered for this listener
+        listeners.values.flatMap({ $0 }).forEach {
+            $0.closure(.success(newPayload))
         }
     }
 }
@@ -225,7 +262,6 @@ extension ChatCore {
                     
                     self.dataManagers[listener]?.update(data: conversations)
                     let converted = conversations.compactMap({ $0.uiModel })
-                    
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     self.conversations = data
                     
@@ -280,7 +316,6 @@ extension ChatCore {
                 switch result {
                 case .success(let messages):
                     self.dataManagers[listener]?.update(data: messages)
-                    
                     let converted = messages.compactMap({ $0.uiModel })
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     

@@ -11,7 +11,7 @@ import Foundation
 /// This protocol is used to specify concrete implementations of UI models
 public protocol ChatUIModels {
     associatedtype CUI: ConversationRepresenting
-    associatedtype MUI: MessageRepresenting
+    associatedtype MUI: MessageRepresenting & MessageConvertible
     associatedtype MSUI: MessageSpecifying & Cachable
     associatedtype USRUI: UserRepresenting
 }
