@@ -9,15 +9,13 @@
 import UIKit
 
 
-class ConversationsListCell: UITableViewCell, ReusableCell {
+class ConversationsListCell: UITableViewCell {
 
     private enum Constants {
         static let imageSize = CGSize(width: 53, height: 53)
         static let borderColor = UIColor.white.cgColor
         static let borderWidth = CGFloat(2)
     }
-    
-    static let reuseIdentifier = "ConversationsListCell"
     
     @IBOutlet private var nameLabel: UILabel! {
         didSet {

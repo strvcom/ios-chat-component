@@ -27,11 +27,11 @@
 		045A6B3024251A700055B5E1 /* MessagesListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2F24251A700055B5E1 /* MessagesListViewModeling.swift */; };
 		045A6B34242905680055B5E1 /* RootCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B33242905680055B5E1 /* RootCoordinating.swift */; };
 		045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B35242908090055B5E1 /* StyleConfig.swift */; };
+		045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */; };
+		045A6B3B24292CEF0055B5E1 /* UITableViewCell+Nib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3A24292CEF0055B5E1 /* UITableViewCell+Nib.swift */; };
 		0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E768241E5F74008C4412 /* ConversationsListCell.swift */; };
 		0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0490E769241E5F74008C4412 /* ConversationsListCell.xib */; };
 		0490E771241EB778008C4412 /* ConversationsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E770241EB778008C4412 /* ConversationsListViewModel.swift */; };
-		0490E774241EB7DF008C4412 /* ReusableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E773241EB7DF008C4412 /* ReusableCell.swift */; };
-		0490E776241EB878008C4412 /* UITableViewCell+Dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */; };
 		04957CC623F306A900AD595B /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC423F3068900AD595B /* Pagination.swift */; };
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
@@ -214,11 +214,11 @@
 		045A6B2F24251A700055B5E1 /* MessagesListViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModeling.swift; sourceTree = "<group>"; };
 		045A6B33242905680055B5E1 /* RootCoordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinating.swift; sourceTree = "<group>"; };
 		045A6B35242908090055B5E1 /* StyleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleConfig.swift; sourceTree = "<group>"; };
+		045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ReuseIdentifier.swift"; sourceTree = "<group>"; };
+		045A6B3A24292CEF0055B5E1 /* UITableViewCell+Nib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Nib.swift"; sourceTree = "<group>"; };
 		0490E768241E5F74008C4412 /* ConversationsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCell.swift; sourceTree = "<group>"; };
 		0490E769241E5F74008C4412 /* ConversationsListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationsListCell.xib; sourceTree = "<group>"; };
 		0490E770241EB778008C4412 /* ConversationsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModel.swift; sourceTree = "<group>"; };
-		0490E773241EB7DF008C4412 /* ReusableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableCell.swift; sourceTree = "<group>"; };
-		0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Dequeue.swift"; sourceTree = "<group>"; };
 		04957CC423F3068900AD595B /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		04957CC723F375C500AD595B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		049862C523FEEBA200F7EFD6 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
@@ -429,14 +429,14 @@
 		0490E772241EB7CF008C4412 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				0490E773241EB7DF008C4412 /* ReusableCell.swift */,
-				0490E775241EB878008C4412 /* UITableViewCell+Dequeue.swift */,
 				04E56CFE242003E7001F54A9 /* UIView+Fill.swift */,
 				04E56D012420045B001F54A9 /* Array+Subscript.swift */,
 				C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */,
 				04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */,
 				045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */,
 				045A6B222424EC3A0055B5E1 /* UIColor+ChatColors.swift */,
+				045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */,
+				045A6B3A24292CEF0055B5E1 /* UITableViewCell+Nib.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1116,7 +1116,6 @@
 				045A6B25242509130055B5E1 /* ConversationsListViewModeling.swift in Sources */,
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
-				0490E776241EB878008C4412 /* UITableViewCell+Dequeue.swift in Sources */,
 				045A6B3024251A700055B5E1 /* MessagesListViewModeling.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
 				045A6B2E24251A600055B5E1 /* MessagesListViewModel.swift in Sources */,
@@ -1125,10 +1124,11 @@
 				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
 				04C0ECE724201F08008A5ADB /* ChatConfig.swift in Sources */,
 				C11E9E5923EDCD34005E10A1 /* ConversationsListViewController.swift in Sources */,
+				045A6B3B24292CEF0055B5E1 /* UITableViewCell+Nib.swift in Sources */,
+				045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */,
 				04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */,
 				C11E9E6723EDCD34005E10A1 /* MessagesListViewController.swift in Sources */,
 				04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */,
-				0490E774241EB7DF008C4412 /* ReusableCell.swift in Sources */,
 				C11E9E5A23EDCD34005E10A1 /* Constants.swift in Sources */,
 				C11E9E6523EDCD34005E10A1 /* ChatUICoreServicing.swift in Sources */,
 				C11E9E6423EDCD34005E10A1 /* ChatModelsUI.swift in Sources */,

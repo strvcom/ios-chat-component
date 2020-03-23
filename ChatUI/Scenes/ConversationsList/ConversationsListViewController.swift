@@ -75,13 +75,7 @@ private extension ConversationsListViewController {
         tableView.delegate = delegate
         tableView.separatorColor = .clear
         
-        tableView.register(
-            UINib(
-                nibName: ConversationsListCell.reuseIdentifier,
-                bundle: Bundle(for: ConversationsListCell.self)
-            ),
-            forCellReuseIdentifier: ConversationsListCell.reuseIdentifier
-        )
+        tableView.register(ConversationsListCell.nib, forCellReuseIdentifier: ConversationsListCell.reuseIdentifer)
     }
     
     func startLoading() {
@@ -131,7 +125,7 @@ extension ConversationsListViewController {
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueCell(cellType: ConversationsListCell.self, for: indexPath)
+            let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
 
             if let user = viewModel.currentUser, let conversation = viewModel.item(at: indexPath.row) {
                 cell.model = ConversationsListCellViewModel(
