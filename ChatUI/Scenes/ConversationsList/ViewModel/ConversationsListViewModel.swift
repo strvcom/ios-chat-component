@@ -69,7 +69,7 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     }
     
     func loadMore() {
-        guard case .ready = state, reachedEnd == false else {
+        guard case .ready = state, !reachedEnd else {
             return
         }
         
