@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import MessageKit
 
 public protocol ConversationsListViewModeling {
     var currentUser: User? { get }
+    var sender: Sender? { get }
     var itemCount: Int { get }
     var delegate: ConversationsListViewModelDelegate? { get set }
     var state: ViewModelingState<[Conversation]> { get }

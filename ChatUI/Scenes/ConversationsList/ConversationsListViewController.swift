@@ -23,13 +23,7 @@ public class ConversationsListViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var sender: Sender? = {
-        guard let currentUser = viewModel.currentUser else {
-            return nil
-        }
-        
-        return Sender(id: currentUser.id, displayName: currentUser.name)
-    }()
+    private lazy var sender: Sender? = viewModel.sender
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?

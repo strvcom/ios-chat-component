@@ -8,6 +8,7 @@
 
 import Foundation
 import ChatCore
+import MessageKit
 
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
     
@@ -22,6 +23,14 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     
     var currentUser: User? {
         core.currentUser
+    }
+    
+    var sender: Sender? {
+        guard let currentUser = currentUser else {
+            return nil
+        }
+        
+        return Sender(id: currentUser.id, displayName: currentUser.name)
     }
     
     var itemCount: Int {
