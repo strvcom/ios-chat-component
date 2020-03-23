@@ -146,8 +146,6 @@ extension ConversationsListViewController {
                 )
             }
             
-            cell.selectionStyle = .none
-            
             return cell
         }
     }

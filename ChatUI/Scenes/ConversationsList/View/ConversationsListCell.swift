@@ -101,6 +101,8 @@ private extension ConversationsListCell {
         } else {
             avatarImage.image = nil
         }
+        
+        selectionStyle = .none
     }
     
     func circle(forCompatibility compatibility: CGFloat, inside frame: CGRect, color: UIColor, width: CGFloat = 3) -> CAShapeLayer {
