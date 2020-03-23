@@ -13,12 +13,10 @@ public class ChatUI<Core: ChatUICoreServicing, Config: ChatConfig>: ChatUIServic
     
     let core: Core
     
+    private lazy var coordinator = RootCoordinator(core: core)
     
+    public lazy var rootViewController = coordinator.start()
     
-    public func conversationsList() -> UIViewController {
-        let list = ConversationsListViewController(core: core)
-        let navigation = UINavigationController(rootViewController: list)
-        return navigation
     public required init(core: Core, config: ChatConfig) {
         self.core = core
         ChatConfig.current = config

@@ -10,9 +10,11 @@ import UIKit
 import ChatCore
 import MessageKit
 
-public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewController {
+public class ConversationsListViewController: UIViewController {
     
-    private lazy var viewModel = ConversationsListViewModel(core: core, delegate: self)
+    var coordinator: RootCoordinating?
+    
+    private var viewModel: ConversationsListViewModeling
     private lazy var tableView = UITableView()
     private lazy var dataSource = DataSource(viewModel: viewModel)
     private lazy var footerLoader = UIActivityIndicatorView(style: .gray)
@@ -28,14 +30,10 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     
-    private let core: Core
-    
-    init(core: Core) {
-        self.core = core
-        
+    init(viewModel: ConversationsListViewModeling) {
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
-        
-        setup()
     }
     
     @available(*, unavailable)
@@ -45,7 +43,9 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-    
+
+        setup()
+        viewModel.delegate = self
         viewModel.load()
     }
 }
@@ -65,8 +65,7 @@ private extension ConversationsListViewController {
                     return
                 }
                 
-                let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: sender)
-                self.navigationController?.pushViewController(controller, animated: true)
+                self.coordinator?.navigate(to: conversation, sender: sender)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()
@@ -100,7 +99,7 @@ private extension ConversationsListViewController {
 
 // MARK: ConversationsListViewModelDelegate
 extension ConversationsListViewController: ConversationsListViewModelDelegate {
-    func didTransitionToState(_ state: ViewModelingState<[Conversation]>) {
+    public func didTransitionToState(_ state: ViewModelingState<[Conversation]>) {
         
         switch state {
         case .initial:
@@ -123,14 +122,14 @@ extension ConversationsListViewController {
     // MARK: DataSource
     class DataSource: NSObject, UITableViewDataSource {
         
-        private let viewModel: ConversationsListViewModel<Core>
+        private let viewModel: ConversationsListViewModeling
         
-        init(viewModel: ConversationsListViewModel<Core>) {
+        init(viewModel: ConversationsListViewModeling) {
             self.viewModel = viewModel
         }
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            viewModel.count
+            viewModel.itemCount
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

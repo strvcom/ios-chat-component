@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ConversationsListViewModelDelegate: AnyObject {
+public protocol ConversationsListViewModelDelegate: AnyObject {
     func didTransitionToState(_ state: ViewModelingState<[Conversation]>)
 }

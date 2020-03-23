@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ViewModelingState<T> {
+public enum ViewModelingState<T> {
     case initial
     case loading
     case ready(value: T)

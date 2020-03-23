@@ -9,12 +9,12 @@
 import Foundation
 import ChatCore
 
-class ConversationsListViewModel<Core: ChatUICoreServicing> {
+class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
     
     private let core: Core
     private(set) var state: ViewModelingState<[Conversation]> = .initial
     private var items = [Conversation]()
-    private weak var delegate: ConversationsListViewModelDelegate?
+    weak var delegate: ConversationsListViewModelDelegate?
     
     private var listener: ListenerIdentifier?
     
@@ -24,13 +24,12 @@ class ConversationsListViewModel<Core: ChatUICoreServicing> {
         core.currentUser
     }
     
-    var count: Int {
+    var itemCount: Int {
         items.count
     }
     
-    init(core: Core, delegate: ConversationsListViewModelDelegate? = nil) {
+    init(core: Core) {
         self.core = core
-        self.delegate = delegate
     }
     
     deinit {
