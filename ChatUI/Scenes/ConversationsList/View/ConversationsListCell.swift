@@ -13,7 +13,6 @@ class ConversationsListCell: UITableViewCell {
 
     private enum Constants {
         static let imageSize = CGSize(width: 53, height: 53)
-        static let borderColor = UIColor.white.cgColor
         static let borderWidth = CGFloat(2)
     }
     
@@ -33,7 +32,7 @@ class ConversationsListCell: UITableViewCell {
     @IBOutlet private var avatarImage: UIImageView! {
         didSet {
             avatarImage.layer.cornerRadius = Constants.imageSize.width / 2
-            avatarImage.layer.borderColor = Constants.borderColor
+            avatarImage.layer.borderColor = UIColor.conversationsListAvatarInnerBorder.cgColor
             avatarImage.layer.borderWidth = Constants.borderWidth
         }
     }

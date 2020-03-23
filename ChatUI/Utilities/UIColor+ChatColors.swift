@@ -33,6 +33,10 @@ extension UIColor {
         ChatConfig.current.colorFor(.conversationsSubtitleSecondary)
     }
     
+    static var conversationsListAvatarInnerBorder: UIColor {
+        ChatConfig.current.colorFor(.conversationsListAvatarInnerBorder)
+    }
+    
     static var loadingIndicator: UIColor {
         ChatConfig.current.colorFor(.loadingIndicator)
     }

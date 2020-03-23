@@ -53,6 +53,7 @@ public class ChatConfig {
             case conversationsSeparator
             case conversationsCircle
             case conversationsCircleBackground
+            case conversationsListAvatarInnerBorder
             
             case loadingIndicator
         }
@@ -64,6 +65,7 @@ public class ChatConfig {
             let separator: UIColor
             let circle: UIColor
             let circleBackground: UIColor
+            let avatarInnerBorder: UIColor
             
             public init(
                 title: UIColor,
@@ -71,7 +73,8 @@ public class ChatConfig {
                 subtitleSecondary: UIColor,
                 separator: UIColor,
                 circle: UIColor,
-                circleBackground: UIColor
+                circleBackground: UIColor,
+                avatarInnerBorder: UIColor
             ) {
                 self.title = title
                 self.subtitle = subtitle
@@ -79,6 +82,7 @@ public class ChatConfig {
                 self.separator = separator
                 self.circle = circle
                 self.circleBackground = circleBackground
+                self.avatarInnerBorder = avatarInnerBorder
             }
         }
         
@@ -136,6 +140,7 @@ public class ChatConfig {
         case .conversationsCircle: return colors.conversationsList.circle
         case .conversationsCircleBackground: return colors.conversationsList.circleBackground
         case .conversationsSeparator: return colors.conversationsList.separator
+        case .conversationsListAvatarInnerBorder: return colors.conversationsList.avatarInnerBorder
         case .loadingIndicator: return colors.loadingIndicator
         }
     }
