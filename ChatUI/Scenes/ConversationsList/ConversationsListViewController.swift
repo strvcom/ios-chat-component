@@ -17,7 +17,11 @@ public class ConversationsListViewController: UIViewController {
     private var viewModel: ConversationsListViewModeling
     private lazy var tableView = UITableView()
     private lazy var dataSource = DataSource(viewModel: viewModel)
-    private lazy var footerLoader = UIActivityIndicatorView(style: .gray)
+    private lazy var footerLoader: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.color = .loadingIndicator
+        return indicator
+    }()
     
     private lazy var sender: Sender? = {
         guard let currentUser = viewModel.currentUser else {

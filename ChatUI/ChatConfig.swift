@@ -53,6 +53,8 @@ public class ChatConfig {
             case conversationsSeparator
             case conversationsCircle
             case conversationsCircleBackground
+            
+            case loadingIndicator
         }
         
         public struct ConversationsList {
@@ -82,8 +84,14 @@ public class ChatConfig {
         
         let conversationsList: ConversationsList
         
-        public init(conversationsList: ConversationsList) {
+        let loadingIndicator: UIColor
+        
+        public init(
+            conversationsList: ConversationsList,
+            loadingIndicator: UIColor
+        ) {
             self.conversationsList = conversationsList
+            self.loadingIndicator = loadingIndicator
         }
     }
     
@@ -128,6 +136,7 @@ public class ChatConfig {
         case .conversationsCircle: return colors.conversationsList.circle
         case .conversationsCircleBackground: return colors.conversationsList.circleBackground
         case .conversationsSeparator: return colors.conversationsList.separator
+        case .loadingIndicator: return colors.loadingIndicator
         }
     }
 }

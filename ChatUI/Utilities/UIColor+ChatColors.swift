@@ -32,4 +32,8 @@ extension UIColor {
     static var conversationsSubtitleAlert: UIColor {
         ChatConfig.current.colorFor(.conversationsSubtitleSecondary)
     }
+    
+    static var loadingIndicator: UIColor {
+        ChatConfig.current.colorFor(.loadingIndicator)
+    }
 }
