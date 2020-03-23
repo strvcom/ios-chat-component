@@ -152,7 +152,8 @@ extension ConversationsListViewController {
         
         private let footerView: UIView
         
-        private let heightRow: CGFloat = 72
+        private let rowHeight: CGFloat = 72
+        private let footerHeight: CGFloat = 50
         
         init(didSelectBlock: @escaping (Int) -> Void, didReachBottomBlock: @escaping () -> Void, footerView: UIView) {
             self.didSelectBlock = didSelectBlock
@@ -165,11 +166,11 @@ extension ConversationsListViewController {
         }
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            heightRow
+            rowHeight
         }
         
         func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-            50
+            footerHeight
         }
         
         func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
