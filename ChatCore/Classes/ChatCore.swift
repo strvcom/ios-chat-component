@@ -19,6 +19,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.MS: ChatUIConvertible,
     Networking.U: ChatUIConvertible,
 
+    Models.MUI: MessageConvertible,
     Models.MUI.MessageSpecification == Models.MSUI,
     
     Networking.U.ChatUIModel == Models.USRUI,
@@ -44,11 +45,11 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
     private var conversationListeners = [
         Listener: [IdentifiableClosure<ConversationResult, Void>]
-    ]()
+        ]()
     
     private var messagesListeners = [
         Listener: [IdentifiableClosure<MessagesResult, Void>]
-    ]()
+        ]()
     
     private var networking: Networking
     
@@ -112,11 +113,9 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        // TODO: temp CJ
-        solveState(message: message, to: conversation)
-
-        // by default is message in sending state
+        // by default is cached message in sending state, similar as temp message
         let cachedMessage = cacheMessage(message: message, from: conversation)
+        createTempMessage(id: cachedMessage.id, message: message, to: conversation)
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
@@ -125,6 +124,7 @@ extension ChatCore {
                 case .success(let message):
                     _ = taskCompletion(.success)
                     self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                    self?.removeTempMessage(id: cachedMessage.id, to: conversation)
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
@@ -137,8 +137,41 @@ extension ChatCore {
         }
     }
 
-    // TODO: temp method
-    func solveState(message: MessageSpecifyingUI, to conversation: ObjectIdentifier) {
+    private func removeTempMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier) {
+
+        // find all listeners for messages and same conversationId
+        let listeners = messagesListeners.filter({ (key, _) -> Bool in
+            if case let .messages(_, conversationId) = key {
+                return conversation == conversationId
+            }
+            return false
+        })
+
+        // check if listeners and data payload are set
+        guard !listeners.isEmpty else {
+            return
+        }
+        guard let messagesPayload = messages[conversation] else {
+            return
+        }
+
+        let newData = messagesPayload.data.filter { $0.id != id }
+        let newPayload = DataPayload(data: newData, reachedEnd: messagesPayload.reachedEnd)
+
+        self.messages[conversation] = newPayload
+
+        // Call each closure registered for this listener
+        listeners.values.flatMap({ $0 }).forEach {
+            $0.closure(.success(newPayload))
+        }
+    }
+
+    private func createTempMessage(id: ObjectIdentifier, message: MessageSpecifyingUI, to conversation: ObjectIdentifier) {
+        // current uset has to be set
+        guard let userId = currentUser?.id else {
+            return
+        }
+
         // find all listeners for messages and same conversationId
         let listeners = messagesListeners.filter({ (key, _) -> Bool in
             if case let .messages(_, conversationId) = key {
@@ -156,9 +189,9 @@ extension ChatCore {
         }
 
         // create new message, add to messages and let known to listeners
-        let newMessage = MessageUI(messageSpecification: message)
+        let tempMessage = MessageUI(id: id, userId: userId, messageSpecification: message)
         var newData = messagesPayload.data
-        newData.append(newMessage)
+        newData.append(tempMessage)
         let newPayload = DataPayload(data: newData, reachedEnd: messagesPayload.reachedEnd)
 
         self.messages[conversation] = newPayload
@@ -316,9 +349,14 @@ extension ChatCore {
                 switch result {
                 case .success(let messages):
                     self.dataManagers[listener]?.update(data: messages)
-                    let converted = messages.compactMap({ $0.uiModel })
+                    var converted = messages.compactMap({ $0.uiModel })
+                    // add all temp messages at original positions
+                    let tempMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
+
+                    converted += tempMessages
+                    converted.sort { $0.sentAt < $1.sentAt }
+
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    
                     self.messages[id] = data
                     
                     // Call each closure registered for this listener
@@ -334,7 +372,7 @@ extension ChatCore {
 
         return closure.id
     }
-    
+
     open func loadMoreMessages(conversation id: ObjectIdentifier) {
         networking.loadMoreMessages(conversation: id)
     }

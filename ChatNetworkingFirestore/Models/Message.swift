@@ -17,6 +17,7 @@ public struct MessageFirestore: MessageRepresenting, Decodable {
     public let userId: ObjectIdentifier
     public let sentAt: Date
     public let content: MessageFirebaseContent
+    public let state: MessageState = .sent
 
     private enum CodingKeys: String, CodingKey {
         case id

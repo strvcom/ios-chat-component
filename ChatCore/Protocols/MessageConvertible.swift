@@ -14,6 +14,9 @@ public protocol MessageConvertible {
     associatedtype MessageSpecification: MessageSpecifying
 
     /// Initialize from message specifying
-    /// - Parameter messageSpecification: MessageSpecifying to initialize from
-    init(messageSpecification: MessageSpecification)
+    /// - Parameters:
+    ///   - id: Message identifier
+    ///   - userId: User who sends the message
+    ///   - messageSpecification: Message specification content
+    init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification)
 }

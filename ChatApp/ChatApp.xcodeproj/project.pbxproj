@@ -19,6 +19,7 @@
 		8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84149959241AB70600D3EEC6 /* ChatCoreState.swift */; };
 		841711AB2407F1160004FED7 /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841711AA2407F1160004FED7 /* Closure.swift */; };
 		842C71C42426B94F0079145A /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C71C32426B94F0079145A /* MessageConvertible.swift */; };
+		842C71C62426C7230079145A /* MessageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C71C52426C7230079145A /* MessageState.swift */; };
 		843A583C24114FE4007E6F45 /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583B24114FE4007E6F45 /* Cachable.swift */; };
 		843A5840241283B0007E6F45 /* CachedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A583F241283B0007E6F45 /* CachedMessage.swift */; };
 		843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A584424168B1A007E6F45 /* KeychainSwift.swift */; };
@@ -156,6 +157,7 @@
 		84149959241AB70600D3EEC6 /* ChatCoreState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoreState.swift; sourceTree = "<group>"; };
 		841711AA2407F1160004FED7 /* Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
 		842C71C32426B94F0079145A /* MessageConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
+		842C71C52426C7230079145A /* MessageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageState.swift; sourceTree = "<group>"; };
 		843A583B24114FE4007E6F45 /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
 		843A583F241283B0007E6F45 /* CachedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMessage.swift; sourceTree = "<group>"; };
 		843A584424168B1A007E6F45 /* KeychainSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwift.swift; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 				C11E9E2623EDCD1E005E10A1 /* ObjectIdentifier.swift */,
 				843A583F241283B0007E6F45 /* CachedMessage.swift */,
 				8478F5BF24239725002BC890 /* CachedMessageState.swift */,
+				842C71C52426C7230079145A /* MessageState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -940,6 +943,7 @@
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
 				C11E9E3823EDCD1E005E10A1 /* ObjectIdentifier.swift in Sources */,
 				C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */,
+				842C71C62426C7230079145A /* MessageState.swift in Sources */,
 				8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */,
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */,

@@ -26,31 +26,38 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
     public var messageId: String
     public var sentDate: Date
     public var kind: MessageKind
+    public private(set) var state: MessageState
 
-    public init(messageSpecification: MessageSpecification) {
+    public init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification) {
         sentAt = Date()
         sentDate = Date()
-        messageId = UUID().uuidString
-        id = messageId
-        userId = UUID().uuidString
-        kind = .text("TEST")
+        messageId = id
+        self.id = id
         sender = Sender(id: userId, displayName: "")
-    }
+        self.userId = userId
 
-    init(sender: SenderType, messageId: String, sentDate: Date, kind: MessageKind) {
-        self.sender = sender
-        self.messageId = messageId
-        self.sentDate = sentDate
-        self.kind = kind
-        self.sentAt = Date()
-        self.userId = ""
-        self.id = messageId
+        switch messageSpecification {
+        case .text(let message):
+            self.kind = .text(message)
+        case .image(let image):
+            let imageItem = ImageItem(
+                url: nil,
+                image: image,
+                placeholderImage: UIImage(),
+                size: CGSize(width: Constants.imageMessageSize.width,
+                             height: Constants.imageMessageSize.height)
+            )
+            self.kind = .photo(imageItem)
+        }
+
+        // TODO: CJ set it
+        state = .sending
     }
 
     public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
         sender = Sender(id: userId, displayName: "")
         messageId = id
-        self.sentDate = sentAt
+        sentDate = sentAt
         
         switch content {
         case .text(let message):
@@ -66,8 +73,10 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
             self.kind = .photo(imageItem)
         }
         
-        self.sentAt = Date()
+        self.sentAt = sentAt
         self.userId = userId
         self.id = id
+        // TODO: CJ set it
+        state = .sent
     }
 }
