@@ -8,12 +8,18 @@
 
 import UIKit
 import Chat
+import ChatCore
+import ChatNetworkingFirestore
+import ChatUI
 
 // swiftlint:disable implicitly_unwrapped_optional
-var chat: Chat!
+var chat: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>, ChatConfig>!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>!
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // swiftlint:disable force_unwrapping
@@ -23,8 +29,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
         let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
-        chat = Chat(config: config)
-
+        
+        let networking = ChatNetworkingFirestore(config: config)
+        core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
+        chat = ChatUI(
+            core: core,
+            config: ChatConfig(
+                fonts: AppStyleConfig.fonts,
+                colors: AppStyleConfig.colors
+            )
+        )
+        
         setupBackgroundFetch()
 
         return true
@@ -58,7 +73,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            chat.runBackgroundTasks { result in
+            core.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return

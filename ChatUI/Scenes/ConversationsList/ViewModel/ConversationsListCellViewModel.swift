@@ -48,9 +48,9 @@ struct ConversationsListCellViewModel {
         CGFloat(conversation.compatibility)
     }
     
+    // TODO: How is this color determined?
     var circleColor: UIColor {
-        // TODO: How is this color determined?
-        UIColor(r: 19, g: 193, b: 240)
+        .conversationsCircleDefault
     }
     
     init(conversation: Conversation, currentUser: User) {

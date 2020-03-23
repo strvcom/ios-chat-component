@@ -9,24 +9,18 @@
 import UIKit
 import ChatCore
 
-var chatUIFontConfig = FontConfig()
-
-public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
+public class ChatUI<Core: ChatUICoreServicing, Config: ChatConfig>: ChatUIServicing {
+    
     let core: Core
     
-    public var fontConfig: FontConfig = FontConfig() {
-        didSet {
-            chatUIFontConfig = fontConfig
-        }
-    }
     
-    public required init(core: Core) {
-        self.core = core
-    }
     
     public func conversationsList() -> UIViewController {
         let list = ConversationsListViewController(core: core)
         let navigation = UINavigationController(rootViewController: list)
         return navigation
+    public required init(core: Core, config: ChatConfig) {
+        self.core = core
+        ChatConfig.current = config
     }
 }

@@ -13,32 +13,27 @@ import ChatUI
 
 public class Chat {
     public typealias Configuration = ChatNetworkingFirestore.Configuration
+    
+    typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    // swiftlint:disable:next type_name
+    typealias UI = ChatUI<Core, ChatConfig>
 
-    let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
-    let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    let core: Core
+    let interface: UI
 
-    public init(config: Configuration) {
-        let networking = ChatNetworkingFirestore(config: config)
-        let core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
-        self.core = core
-        self.interface = ChatUI(core: core)
+    public init(networkConfig: Configuration, chatConfig: ChatConfig) {
+        let networking = ChatNetworkingFirestore(config: networkConfig)
         
-        ["Medium", "Regular", "Bold", "ExtraBold"].forEach {
-            UIFont.registerFont(withFilenameString: "Catamaran-\($0).ttf", bundle: Bundle(for: Chat.self))
-        }
+        self.core = Core(networking: networking)
         
-        // swiftlint:disable force_unwrapping
-        self.interface.fontConfig = FontConfig(fonts: [
-            .conversationListName: UIFont(name: "Catamaran-Medium", size: 16)!,
-            .conversationPreview: UIFont(name: "Catamaran-Regular", size: 14)!,
-            .newConversationAlert: UIFont(name: "Catamaran-Bold", size: 14)!
-        ])
+        self.interface = UI(
+            core: core,
+            config: chatConfig
+        )
     }
     
     public func conversationsList() -> UIViewController {
-        let list = interface.conversationsList()
-    
-        return list
+        interface.rootViewController
     }
 
     public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {

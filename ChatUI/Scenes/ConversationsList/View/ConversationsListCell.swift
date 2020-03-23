@@ -15,20 +15,20 @@ class ConversationsListCell: UITableViewCell, ReusableCell {
         static let imageSize = CGSize(width: 53, height: 53)
         static let borderColor = UIColor.white.cgColor
         static let borderWidth = CGFloat(2)
-        static let newMessageAlertColor = UIColor(r: 254, g: 129, b: 46)
-        static let messagePreviewColor = UIColor(r: 154, g: 139, b: 136)
-        static let separatorColor = UIColor(r: 87, g: 61, b: 57, a: 0.1)
-        static let unfilledCircleColor = UIColor(r: 229, g: 227, b: 226)
     }
     
     static let reuseIdentifier = "ConversationsListCell"
     
-    @IBOutlet private var nameLabel: UILabel!
+    @IBOutlet private var nameLabel: UILabel! {
+        didSet {
+            nameLabel.font = .conversationListTitle
+        }
+    }
     
     @IBOutlet private var avatarImageWrapper: UIView! {
         didSet {
             avatarImageWrapper.layer.cornerRadius = (Constants.imageSize.width + (avatarImageWrapper.frame.size.width - Constants.imageSize.width)) / 2
-            avatarImageWrapper.backgroundColor = Constants.unfilledCircleColor
+            avatarImageWrapper.backgroundColor = .conversationsCircleBackground
         }
     }
     
@@ -40,11 +40,15 @@ class ConversationsListCell: UITableViewCell, ReusableCell {
         }
     }
     
-    @IBOutlet private var messagePreviewLabel: UILabel!
+    @IBOutlet private var messagePreviewLabel: UILabel! {
+        didSet {
+            messagePreviewLabel.font = .conversationListSubtitle
+        }
+    }
     
     @IBOutlet private var separator: UIView! {
         didSet {
-            separator.backgroundColor = Constants.separatorColor
+            separator.backgroundColor = .conversationsCellSeparator
         }
     }
     
@@ -65,21 +69,17 @@ private extension ConversationsListCell {
             return
         }
         
-        nameLabel.attributedText = NSAttributedString(string: model.title, attributes: [
-            .font: chatUIFontConfig.fontFor(.conversationListName)
-        ])
+        nameLabel.text = model.title
         
         switch model.messagePreview {
         case .message(let message):
-            messagePreviewLabel.attributedText = NSAttributedString(string: message, attributes: [
-                .font: chatUIFontConfig.fontFor(.conversationPreview),
-                .foregroundColor: Constants.messagePreviewColor
-            ])
+            messagePreviewLabel.text = message
+            messagePreviewLabel.font = .conversationListSubtitle
+            messagePreviewLabel.textColor = .conversationsSubtitle
         case .newConversation:
-            messagePreviewLabel.attributedText = NSAttributedString(string: "Wants to chat! 💬", attributes: [
-                .font: chatUIFontConfig.fontFor(.newConversationAlert),
-                .foregroundColor: Constants.newMessageAlertColor
-            ])
+            messagePreviewLabel.text = "Wants to chat!"
+            messagePreviewLabel.font = .conversationListSubtitleSecondary
+            messagePreviewLabel.textColor = .conversationsSubtitleAlert
         case .other:
             messagePreviewLabel.text = ""
         }
