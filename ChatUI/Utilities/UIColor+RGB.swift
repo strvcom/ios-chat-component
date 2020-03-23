@@ -9,8 +9,7 @@
 import UIKit
 
 public extension UIColor {
-    // swiftlint:disable:next identifier_name
-    convenience init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1.0) {
-        self.init(red: r / 255, green: g / 255, blue: b / 255, alpha: a)
+    convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) {
+        self.init(red: CGFloat(red) / 255, green: CGFloat(green) / 255, blue: CGFloat(blue) / 255, alpha: alpha)
     }
 }
