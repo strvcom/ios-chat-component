@@ -177,13 +177,8 @@ extension ConversationsListViewController {
             footerView
         }
         
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            let height = scrollView.frame.size.height
-            let contentYoffset = scrollView.contentOffset.y
-            let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-            let triggerDistance = CGFloat(50)
-            
-            if distanceFromBottom < height - triggerDistance {
+        func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+            if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
                 didReachBottomBlock()
             }
         }
