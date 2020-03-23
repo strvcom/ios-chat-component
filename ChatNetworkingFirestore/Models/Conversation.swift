@@ -20,10 +20,9 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
     public private(set) var members: [UserFirestore] = []
     public private(set) var messages: [MessageFirestore] = []
     public private(set) var seen: Seen
-    public private(set) var extraData: [String: String] = [:]
 
     private enum CodingKeys: CodingKey {
-        case id, lastMessage, messages, members, seen, extraData
+        case id, lastMessage, messages, members, seen
     }
 
     public init(id: ObjectIdentifier, lastMessage: MessageFirestore?, members: [UserFirestore], messages: [MessageFirestore], seen: Seen, memberIds: [ObjectIdentifier]) {
@@ -49,7 +48,6 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
             let (key, value) = item
             result[key] = (messageId: value.messageId, seenAt: value.timestamp)
         }) ?? [:]
-        self.extraData = try values.decodeIfPresent([String: String].self, forKey: .extraData) ?? [:]
     }
 
     public mutating func setMembers(_ members: [UserFirestore]) {

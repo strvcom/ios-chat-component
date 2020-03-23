@@ -20,14 +20,13 @@ struct ConversationsListCellViewModel {
     private let currentUser: User
     
     var title: String {
-        
-        // Filter out current user's name
-        let title = conversation.members
-            .filter { $0.id != currentUser.id }
-            .compactMap { $0.name }
-            .joined(separator: ",")
-        
-        return title.isEmpty ? "Conversation" : title
+        partner?.name ?? "Conversation"
+    }
+    
+    var partner: User? {
+        conversation
+            .members
+            .first { $0.id != currentUser.id }
     }
     
     var messagePreview: MessagePreview {
@@ -50,7 +49,7 @@ struct ConversationsListCellViewModel {
     }
     
     var compatibility: CGFloat {
-        CGFloat(conversation.compatibility)
+        CGFloat(partner?.compatibility ?? 0)
     }
     
     // TODO: How is this color determined?
