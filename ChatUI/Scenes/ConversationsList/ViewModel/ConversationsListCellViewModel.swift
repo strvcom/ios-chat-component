@@ -32,10 +32,10 @@ struct ConversationsListCellViewModel {
     
     var messagePreview: MessagePreview {
         if case let .text(message) = conversation.lastMessage?.kind {
-            return message.isEmpty ? .newConversation : .message(message)
+            return .message(message)
         }
         
-        return .other
+        return .newConversation
     }
     
     var avatarUrl: URL? {
