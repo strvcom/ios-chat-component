@@ -9,6 +9,6 @@
 import Foundation
 
 enum Constants {
-    static let defaultPageSize = 10
+    static let defaultPageSize = 20
     static let backgroundTaskIdentifier = "com.strv.chatcore.backgroundtask"
 }

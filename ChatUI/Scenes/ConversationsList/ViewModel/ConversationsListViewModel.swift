@@ -52,7 +52,7 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     func load() {
         updateState(.loading)
         
-        listener = core.listenToConversations(pageSize: Constants.conversationsPageSize) { [weak self] result in
+        listener = core.listenToConversations { [weak self] result in
             guard let self = self else {
                 return
             }
