@@ -31,11 +31,16 @@ struct ConversationsListCellViewModel {
     }
     
     var messagePreview: MessagePreview {
-        if case let .text(message) = conversation.lastMessage?.kind {
-            return .message(message)
+        guard let lastMessage = conversation.lastMessage else {
+            return .newConversation
         }
         
-        return .newConversation
+        switch lastMessage.kind {
+        case let .text(message):
+            return .message(message)
+        default:
+            return .other
+        }
     }
     
     var avatarUrl: URL? {
