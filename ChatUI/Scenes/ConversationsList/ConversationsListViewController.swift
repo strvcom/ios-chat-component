@@ -73,7 +73,7 @@ private extension ConversationsListViewController {
         
         tableView.dataSource = dataSource
         tableView.delegate = delegate
-        tableView.separatorColor = .clear
+        tableView.separatorStyle = .none
         
         tableView.register(ConversationsListCell.nib, forCellReuseIdentifier: ConversationsListCell.reuseIdentifer)
     }
