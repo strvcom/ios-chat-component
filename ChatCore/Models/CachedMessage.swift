@@ -21,7 +21,6 @@ struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
         self.content = content
         self.conversationId = conversationId
         self.state = state
-        id = UUID().uuidString
     }
 
     // change state of cached message

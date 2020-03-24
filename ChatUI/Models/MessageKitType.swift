@@ -16,7 +16,6 @@ public enum MessageContent {
 }
 
 public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible {
-
     public var userId: ObjectIdentifier
 
     public var sentAt: Date
@@ -26,19 +25,19 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
     public var messageId: String
     public var sentDate: Date
     public var kind: MessageKind
-    public private(set) var state: MessageState
+    public var state: MessageState
 
-    public init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification) {
-        sentAt = Date()
-        sentDate = Date()
-        messageId = id
+    public init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification, state: MessageState = .sending) {
+        self.sentAt = Date()
+        self.sentDate = Date()
+        self.messageId = id
         self.id = id
-        sender = Sender(id: userId, displayName: "")
+        self.sender = Sender(id: userId, displayName: "")
         self.userId = userId
 
         switch messageSpecification {
         case .text(let message):
-            self.kind = .text(message)
+            self.kind = .text("\(message) a \(state)")
         case .image(let image):
             let imageItem = ImageItem(
                 url: nil,
@@ -50,14 +49,13 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
             self.kind = .photo(imageItem)
         }
 
-        // TODO: CJ set it
-        state = .sending
+        self.state = state
     }
 
     public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
-        sender = Sender(id: userId, displayName: "")
-        messageId = id
-        sentDate = sentAt
+        self.sender = Sender(id: userId, displayName: "")
+        self.messageId = id
+        self.sentDate = sentAt
         
         switch content {
         case .text(let message):
@@ -76,7 +74,6 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
         self.sentAt = sentAt
         self.userId = userId
         self.id = id
-        // TODO: CJ set it
-        state = .sent
+        self.state = .sent
     }
 }

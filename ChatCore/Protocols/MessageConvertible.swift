@@ -18,5 +18,5 @@ public protocol MessageConvertible {
     ///   - id: Message identifier
     ///   - userId: User who sends the message
     ///   - messageSpecification: Message specification content
-    init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification)
+    init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification, state: MessageState)
 }
