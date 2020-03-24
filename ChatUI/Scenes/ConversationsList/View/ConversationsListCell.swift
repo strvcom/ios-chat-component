@@ -74,7 +74,7 @@ private extension ConversationsListCell {
             messagePreviewLabel.font = .conversationListSubtitle
             messagePreviewLabel.textColor = .conversationsSubtitle
         case .newConversation:
-            messagePreviewLabel.text = "Wants to chat!"
+            messagePreviewLabel.text = .newConversation
             messagePreviewLabel.font = .conversationListSubtitleSecondary
             messagePreviewLabel.textColor = .conversationsSubtitleAlert
         case .other:

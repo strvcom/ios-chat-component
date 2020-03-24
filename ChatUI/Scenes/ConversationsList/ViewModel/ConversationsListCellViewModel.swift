@@ -20,7 +20,7 @@ struct ConversationsListCellViewModel {
     private let currentUser: User
     
     var title: String {
-        partner?.name ?? "Conversation"
+        partner?.name ?? .conversation
     }
     
     var partner: User? {

@@ -36,7 +36,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             core: core,
             config: ChatConfig(
                 fonts: AppStyleConfig.fonts,
-                colors: AppStyleConfig.colors
+                colors: AppStyleConfig.colors,
+                strings: .init(
+                    newConversation: "Wants to chat!",
+                    conversation: "Conversation"
+                )
             )
         )
         

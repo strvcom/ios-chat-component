@@ -99,20 +99,44 @@ public class ChatConfig {
         }
     }
     
+    // MARK: Strings
+    
+    public struct Strings {
+        
+        public enum Identifier {
+            case newConversation
+            case conversation
+        }
+        
+        let newConversation: String
+        let conversation: String
+        
+        public init(
+            newConversation: String,
+            conversation: String
+        ) {
+            self.newConversation = newConversation
+            self.conversation = conversation
+        }
+    }
+    
     private static var empty = ChatConfig()
     public static var current: ChatConfig = .empty
 
     private let fonts: Fonts?
     private let colors: Colors?
+    private let strings: Strings?
 
-    public init(fonts: Fonts, colors: Colors) {
+    public init(fonts: Fonts, colors: Colors, strings: Strings) {
         self.fonts = fonts
         self.colors = colors
+        self.strings = strings
     }
     
     private init() {
         fonts = nil
         colors = nil
+        strings = nil
     }
 
     // MARK: Getter methods
@@ -142,6 +166,17 @@ public class ChatConfig {
         case .conversationsSeparator: return colors.conversationsList.separator
         case .conversationsListAvatarInnerBorder: return colors.conversationsList.avatarInnerBorder
         case .loadingIndicator: return colors.loadingIndicator
+        }
+    }
+    
+    func stringFor(_ identifier: Strings.Identifier) -> String {
+        guard let strings = strings else {
+            fatalError("Strings not configured!")
+        }
+        
+        switch identifier {
+        case .newConversation: return strings.newConversation
+        case .conversation: return strings.conversation
         }
     }
 }
