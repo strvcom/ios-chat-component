@@ -8,11 +8,9 @@
 
 import UIKit
 
-
 class ConversationsListCell: UITableViewCell {
 
     private enum Constants {
-        static let imageSize = CGSize(width: 53, height: 53)
         static let borderWidth = CGFloat(2)
     }
     
@@ -22,20 +20,9 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    @IBOutlet private var avatarImageWrapper: UIView! {
-        didSet {
-            avatarImageWrapper.layer.cornerRadius = (Constants.imageSize.width + (avatarImageWrapper.frame.size.width - Constants.imageSize.width)) / 2
-            avatarImageWrapper.backgroundColor = .conversationsCircleBackground
-        }
-    }
+    private lazy var progressAvatar = ProgressAvatar(borderWidth: 2)
     
-    @IBOutlet private var avatarImage: UIImageView! {
-        didSet {
-            avatarImage.layer.cornerRadius = Constants.imageSize.width / 2
-            avatarImage.layer.borderColor = UIColor.conversationsListAvatarInnerBorder.cgColor
-            avatarImage.layer.borderWidth = Constants.borderWidth
-        }
-    }
+    @IBOutlet private var progressAvatarWrapper: UIView!
     
     @IBOutlet private var messagePreviewLabel: UILabel! {
         didSet {
@@ -49,14 +36,17 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    private var lineSublayer: CAShapeLayer?
-    
     var model: ConversationsListCellViewModel? {
         didSet {
             updateUI()
         }
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        progressAvatarWrapper.addSubview(progressAvatar)
+    }
 }
 
 // MARK: Helper methods
@@ -81,45 +71,12 @@ private extension ConversationsListCell {
             messagePreviewLabel.text = ""
         }
         
-        lineSublayer?.removeFromSuperlayer()
-        
-        lineSublayer = circle(
-            forCompatibility: model.compatibility,
-            inside: avatarImageWrapper.frame,
-            color: model.circleColor
+        progressAvatar.update(
+            percentage: model.compatibility,
+            imageUrl: model.avatarUrl,
+            circleColor: model.circleColor
         )
-        
-        if let lineSublayer = lineSublayer {
-            avatarImageWrapper.layer.addSublayer(lineSublayer)
-        }
-        
-        if let imageUrl = model.avatarUrl {
-            avatarImage.setImage(with: imageUrl)
-        } else {
-            avatarImage.image = nil
-        }
         
         selectionStyle = .none
-    }
-    
-    func circle(forCompatibility compatibility: CGFloat, inside frame: CGRect, color: UIColor, width: CGFloat = 3) -> CAShapeLayer {
-        
-        let line = UIBezierPath(
-            arcCenter: CGPoint(x: frame.width / 2, y: frame.height / 2),
-            radius: (frame.size.width - width) / 2,
-            startAngle: CGFloat(-90 * Double.pi/180),
-            endAngle: CGFloat(270 * Double.pi/180),
-            clockwise: true
-        )
-        
-        let circleLayer = CAShapeLayer()
-        circleLayer.path = line.cgPath
-        circleLayer.fillColor = UIColor.clear.cgColor
-        circleLayer.strokeColor = color.cgColor
-        circleLayer.lineWidth = width
-        circleLayer.strokeEnd = compatibility
-        circleLayer.lineCap = .round
-        
-        return circleLayer
     }
 }

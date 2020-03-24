@@ -17,23 +17,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="382" height="122"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oPs-h1-qDq" userLabel="ImageWrapper">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oPs-h1-qDq" userLabel="ProgressAvatar">
                         <rect key="frame" x="24" y="31.5" width="59" height="59"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qaG-6Q-w8L">
-                                <rect key="frame" x="3" y="3" width="53" height="53"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="qaG-6Q-w8L" secondAttribute="height" multiplier="1:1" id="9Ky-bY-anl"/>
-                                    <constraint firstAttribute="width" constant="53" id="rQ0-97-6mb"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="qaG-6Q-w8L" firstAttribute="leading" secondItem="oPs-h1-qDq" secondAttribute="leading" constant="3" id="EOh-cq-J6l"/>
-                            <constraint firstAttribute="trailing" secondItem="qaG-6Q-w8L" secondAttribute="trailing" constant="3" id="KCS-lB-sUv"/>
-                            <constraint firstItem="qaG-6Q-w8L" firstAttribute="top" secondItem="oPs-h1-qDq" secondAttribute="top" constant="3" id="PSS-la-9RL"/>
-                            <constraint firstAttribute="bottom" secondItem="qaG-6Q-w8L" secondAttribute="bottom" constant="3" id="uZx-qa-Pm0"/>
+                            <constraint firstAttribute="width" secondItem="oPs-h1-qDq" secondAttribute="height" multiplier="1:1" id="dCz-gQ-9hC"/>
+                            <constraint firstAttribute="width" constant="59" id="lkw-36-bd0"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JyO-7n-9IA" userLabel="Labels">
@@ -83,10 +72,9 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="avatarImage" destination="qaG-6Q-w8L" id="iGI-xf-cDr"/>
-                <outlet property="avatarImageWrapper" destination="oPs-h1-qDq" id="1T8-qm-21k"/>
                 <outlet property="messagePreviewLabel" destination="wIS-WY-PDf" id="kvx-Gi-uIa"/>
                 <outlet property="nameLabel" destination="PES-Tw-khY" id="4pw-BT-QEd"/>
+                <outlet property="progressAvatarWrapper" destination="oPs-h1-qDq" id="WEa-5s-aO2"/>
                 <outlet property="separator" destination="MJJ-8Q-Bvf" id="roR-hK-YKW"/>
             </connections>
             <point key="canvasLocation" x="185.50724637681162" y="179.46428571428569"/>
