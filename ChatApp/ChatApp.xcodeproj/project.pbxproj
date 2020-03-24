@@ -23,8 +23,6 @@
 		045A6B25242509130055B5E1 /* ConversationsListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B24242509130055B5E1 /* ConversationsListViewModeling.swift */; };
 		045A6B2724250A180055B5E1 /* Coordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2624250A180055B5E1 /* Coordinating.swift */; };
 		045A6B2924250A360055B5E1 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2824250A360055B5E1 /* RootCoordinator.swift */; };
-		045A6B2E24251A600055B5E1 /* MessagesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2D24251A600055B5E1 /* MessagesListViewModel.swift */; };
-		045A6B3024251A700055B5E1 /* MessagesListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2F24251A700055B5E1 /* MessagesListViewModeling.swift */; };
 		045A6B34242905680055B5E1 /* RootCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B33242905680055B5E1 /* RootCoordinating.swift */; };
 		045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B35242908090055B5E1 /* StyleConfig.swift */; };
 		045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */; };
@@ -212,8 +210,6 @@
 		045A6B24242509130055B5E1 /* ConversationsListViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModeling.swift; sourceTree = "<group>"; };
 		045A6B2624250A180055B5E1 /* Coordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinating.swift; sourceTree = "<group>"; };
 		045A6B2824250A360055B5E1 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
-		045A6B2D24251A600055B5E1 /* MessagesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModel.swift; sourceTree = "<group>"; };
-		045A6B2F24251A700055B5E1 /* MessagesListViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModeling.swift; sourceTree = "<group>"; };
 		045A6B33242905680055B5E1 /* RootCoordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinating.swift; sourceTree = "<group>"; };
 		045A6B35242908090055B5E1 /* StyleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleConfig.swift; sourceTree = "<group>"; };
 		045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ReuseIdentifier.swift"; sourceTree = "<group>"; };
@@ -392,15 +388,6 @@
 			path = Coordinators;
 			sourceTree = "<group>";
 		};
-		045A6B2C24251A560055B5E1 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				045A6B2D24251A600055B5E1 /* MessagesListViewModel.swift */,
-				045A6B2F24251A700055B5E1 /* MessagesListViewModeling.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		045A6B3E242A1B650055B5E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,7 +419,6 @@
 		0490E76F241EB730008C4412 /* MessagesList */ = {
 			isa = PBXGroup;
 			children = (
-				045A6B2C24251A560055B5E1 /* ViewModel */,
 				C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */,
 			);
 			path = MessagesList;
@@ -1130,9 +1116,7 @@
 				045A6B25242509130055B5E1 /* ConversationsListViewModeling.swift in Sources */,
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
-				045A6B3024251A700055B5E1 /* MessagesListViewModeling.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
-				045A6B2E24251A600055B5E1 /* MessagesListViewModel.swift in Sources */,
 				04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */,
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
