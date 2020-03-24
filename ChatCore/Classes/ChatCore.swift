@@ -212,17 +212,19 @@ extension ChatCore {
                 self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let messages):
-                    self.dataManagers[listener]?.update(data: messages)
-                    var converted = messages.compactMap({ $0.uiModel })
-                    // add all temporary messages at original positions
-                    let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
+                    // network returns at main thread
+                    DispatchQueue.global(qos: .background).async {
+                        self.dataManagers[listener]?.update(data: messages)
+                        var converted = messages.compactMap({ $0.uiModel })
+                        // add all temporary messages at original positions
+                        let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
+                        converted += temporaryMessages
+                        converted.sort { $0.sentAt < $1.sentAt }
 
-                    converted += temporaryMessages
-                    converted.sort { $0.sentAt < $1.sentAt }
-
-                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    self.messages[id] = data
-                    self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, closures: self.messagesListeners[listener] ?? [])
+                        let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                        self.messages[id] = data
+                        self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, closures: self.messagesListeners[listener] ?? [])
+                    }
 
                 case .failure(let error):
                     self.messagesListeners[listener]?.forEach {

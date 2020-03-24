@@ -37,7 +37,7 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
 
         switch messageSpecification {
         case .text(let message):
-            self.kind = .text("\(message) a \(state)")
+            self.kind = .text(message)
         case .image(let image):
             let imageItem = ImageItem(
                 url: nil,
