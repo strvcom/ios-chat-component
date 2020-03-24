@@ -119,9 +119,9 @@ extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
 
-        // by default is cached message in sending state, similar as temp message
+        // by default is cached message in sending state, similar as temporary message
         let cachedMessage = cacheMessage(message: message, from: conversation)
-        handleTempMessage(id: cachedMessage.id, to: conversation, with: .add(message))
+        handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
             let mess = Networking.MS(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
@@ -129,7 +129,7 @@ extension ChatCore {
                 case .success(let message):
                     _ = taskCompletion(.success)
                     self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self?.handleTempMessage(id: cachedMessage.id, to: conversation, with: .remove)
+                    self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
 
                     completion(.success(message.uiModel))
 
@@ -137,7 +137,7 @@ extension ChatCore {
                     if taskCompletion(.failure(error)) == .finished {
                         self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
                         // TODO: solve error type to remove it
-                        self?.handleTempMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
+                        self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
                         completion(.failure(error))
                     }
                 }
@@ -196,7 +196,7 @@ extension ChatCore {
         
         messagesListeners[listener]?.append(closure)
         
-        if let existingListeners = conversationListeners[listener], existingListeners.count > 1 {
+        if let existingListeners = messagesListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
             return closure.id
         }
@@ -214,15 +214,15 @@ extension ChatCore {
                 case .success(let messages):
                     self.dataManagers[listener]?.update(data: messages)
                     var converted = messages.compactMap({ $0.uiModel })
-                    // add all temp messages at original positions
-                    let tempMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
+                    // add all temporary messages at original positions
+                    let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
 
-                    converted += tempMessages
+                    converted += temporaryMessages
                     converted.sort { $0.sentAt < $1.sentAt }
 
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                     self.messages[id] = data
-                    self.closureThrottler?.handleClosures(interval: tempMessages.isEmpty ? 0 : 0.5, payload: data, closures: self.messagesListeners[listener] ?? [])
+                    self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, closures: self.messagesListeners[listener] ?? [])
 
                 case .failure(let error):
                     self.messagesListeners[listener]?.forEach {
@@ -298,18 +298,19 @@ extension ChatCore {
     }
 }
 
-// MARK: - Temp messages
+// MARK: - Temporary messages
 private extension ChatCore {
-    // Actions over temp messages
-    enum TempMessageAction {
+    // Actions over temporary messages
+    enum TemporaryMessageAction {
         case add(MessageSpecifyingUI)
         case remove
         case changeState(MessageState)
     }
 
-    func handleTempMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier, with action: TempMessageAction) {
-        // current uset has to be set
+    func handleTemporaryMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier, with action: TemporaryMessageAction) {
+        // current user has to be set
         guard let userId = currentUser?.id else {
+            print("Unexpected error, currentUser is nil")
             return
         }
 
@@ -334,9 +335,9 @@ private extension ChatCore {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
         case .add(let message):
-            let tempMessage = MessageUI(id: id, userId: userId, messageSpecification: message, state: .sending)
+            let temporaryMessage = MessageUI(id: id, userId: userId, messageSpecification: message, state: .sending)
             newData = messagesPayload.data
-            newData.append(tempMessage)
+            newData.append(temporaryMessage)
         case .changeState(let state):
             newData = messagesPayload.data
             if let index = newData.firstIndex(where: { $0.id == id }) {
