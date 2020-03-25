@@ -436,7 +436,7 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                         return
                     }
                     // Delete up to delimiter
-                    let delimiterLocation = delimiterRange.lowerBound.encodedOffset
+                    let delimiterLocation = delimiterRange.lowerBound.utf16Offset(in: textToReplace)
                     let length = subrange.length - delimiterLocation
                     let rangeFromDelimiter = NSRange(location: delimiterLocation + subrange.location, length: length)
                     textView.attributedText = textView.attributedText.replacingCharacters(in: rangeFromDelimiter, with: nothing)
@@ -447,8 +447,12 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
             }
         } else if range.length >= 0, range.location < totalRange.length {
             
+            // Inserting text before a tag when the tag is at the start of the string
+            guard range.location != 0 else { return true }
+
             // Inserting text in the middle of an autocompleted string
-            let attributes = textView.attributedText.attributes(at: range.location, longestEffectiveRange: nil, in: range)
+            let attributes = textView.attributedText.attributes(at: range.location-1, longestEffectiveRange: nil, in: NSMakeRange(range.location-1, range.length))
+
             let isAutocompleted = attributes[.autocompleted] as? Bool ?? false
             if isAutocompleted {
                 textView.attributedText.enumerateAttribute(.autocompleted, in: totalRange, options: .reverse) { _, subrange, stop in
