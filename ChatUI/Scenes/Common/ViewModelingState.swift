@@ -12,5 +12,6 @@ public enum ViewModelingState<T> {
     case initial
     case loading
     case ready(value: T)
+    case loadingMore
     case failed(error: Error)
 }

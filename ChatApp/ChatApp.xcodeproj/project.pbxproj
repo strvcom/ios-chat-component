@@ -36,6 +36,7 @@
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
 		049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
 		04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
+		04BF1836242BD5BD00C1D626 /* ConversationsListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF1835242BD5BD00C1D626 /* ConversationsListState.swift */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
@@ -223,6 +224,7 @@
 		04957CC723F375C500AD595B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		049862C523FEEBA200F7EFD6 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGB.swift"; sourceTree = "<group>"; };
+		04BF1835242BD5BD00C1D626 /* ConversationsListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListState.swift; sourceTree = "<group>"; };
 		04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-SemiBold.ttf"; sourceTree = "<group>"; };
 		04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Black.ttf"; sourceTree = "<group>"; };
 		04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -467,6 +469,7 @@
 				0490E770241EB778008C4412 /* ConversationsListViewModel.swift */,
 				04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */,
 				04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */,
+				04BF1835242BD5BD00C1D626 /* ConversationsListState.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1102,6 +1105,7 @@
 			files = (
 				C11E9E5D23EDCD34005E10A1 /* MessageKitType.swift in Sources */,
 				045A6B25242509130055B5E1 /* ConversationsListViewModeling.swift in Sources */,
+				04BF1836242BD5BD00C1D626 /* ConversationsListState.swift in Sources */,
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,

@@ -16,7 +16,6 @@ public class ConversationsListViewController: UIViewController {
     
     private let viewModel: ConversationsListViewModeling
     private lazy var tableView = UITableView()
-    private lazy var dataSource = DataSource(viewModel: viewModel)
     private lazy var footerLoader: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.color = .loadingIndicator
@@ -27,7 +26,8 @@ public class ConversationsListViewController: UIViewController {
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
-    
+    private lazy var dataSource = DataSource()
+      
     init(viewModel: ConversationsListViewModeling) {
 
         self.viewModel = viewModel
@@ -60,7 +60,7 @@ private extension ConversationsListViewController {
             didSelectBlock: { [weak self] row in
                 guard
                     let self = self,
-                    let conversation = self.viewModel.item(at: row),
+                    let conversation = self.dataSource.items[safe: row],
                     let sender = self.sender else {
                     return
                 }
@@ -93,19 +93,25 @@ private extension ConversationsListViewController {
 
 // MARK: ConversationsListViewModelDelegate
 extension ConversationsListViewController: ConversationsListViewModelDelegate {
-    public func didTransitionToState(_ state: ViewModelingState<[Conversation]>) {
+    public func didTransitionToState(_ state: ViewModelingState<ConversationsListState>) {
         
         switch state {
         case .initial:
             break
-        case .ready:
+        case let .ready(state):
             stopLoading()
+            dataSource.items = state.items
+            dataSource.currentUser = state.currentUser
             tableView.reloadData()
         case let .failed(error):
             // TODO: UI error
             print(error)
             stopLoading()
         case .loading:
+            startLoading()
+            dataSource.items = []
+            tableView.reloadData()
+        case .loadingMore:
             startLoading()
         }
     }
@@ -116,24 +122,18 @@ extension ConversationsListViewController {
     // MARK: DataSource
     class DataSource: NSObject, UITableViewDataSource {
         
-        private let viewModel: ConversationsListViewModeling
-        
-        init(viewModel: ConversationsListViewModeling) {
-            self.viewModel = viewModel
-        }
+        var currentUser: User?
+        var items: [Conversation] = []
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            viewModel.itemCount
+            items.count
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
-
-            if let user = viewModel.currentUser, let conversation = viewModel.item(at: indexPath.row) {
-                cell.model = ConversationsListCellViewModel(
-                    conversation: conversation,
-                    currentUser: user
-                )
+            
+            if let user = currentUser {
+                cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: user)
             }
             
             return cell

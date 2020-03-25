@@ -13,8 +13,7 @@ import MessageKit
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
     
     private let core: Core
-    private(set) var state: ViewModelingState<[Conversation]> = .initial
-    private var items = [Conversation]()
+    private(set) var state: ViewModelingState<ConversationsListState> = .initial
     weak var delegate: ConversationsListViewModelDelegate?
     
     private var listener: ListenerIdentifier?
@@ -31,10 +30,6 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
         }
         
         return Sender(id: currentUser.id, displayName: currentUser.name)
-    }
-    
-    var itemCount: Int {
-        items.count
     }
     
     init(core: Core) {
@@ -59,9 +54,21 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             
             switch result {
             case .success(let payload):
-                self.items = payload.data
+                guard let currentUser = self.core.currentUser else {
+                    self.updateState(.failed(error: ChatError.unexpectedState))
+                    return
+                }
+                
                 self.reachedEnd = payload.reachedEnd
-                self.updateState(.ready(value: payload.data))
+                self.updateState(
+                    .ready(
+                        value: ConversationsListState(
+                            items: payload.data,
+                            currentUser: currentUser,
+                            reachedEnd: payload.reachedEnd
+                        )
+                    )
+                )
             case .failure(let error):
                 self.updateState(.failed(error: error))
             }
@@ -73,18 +80,14 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             return
         }
         
-        updateState(.loading)
+        updateState(.loadingMore)
         
         core.loadMoreConversations()
-    }
-    
-    func item(at index: Int) -> Conversation? {
-        items[safe: index]
     }
 }
 
 private extension ConversationsListViewModel {
-    func updateState(_ state: ViewModelingState<[Conversation]>) {
+    func updateState(_ state: ViewModelingState<ConversationsListState>) {
         self.state = state
         delegate?.didTransitionToState(state)
     }

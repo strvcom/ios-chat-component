@@ -10,14 +10,10 @@ import Foundation
 import MessageKit
 
 public protocol ConversationsListViewModeling: AnyObject {
-    var currentUser: User? { get }
     var sender: Sender? { get }
-    var itemCount: Int { get }
     var delegate: ConversationsListViewModelDelegate? { get set }
-    var state: ViewModelingState<[Conversation]> { get }
-    var reachedEnd: Bool { get }
+    var state: ViewModelingState<ConversationsListState> { get }
     
     func load()
     func loadMore()
-    func item(at index: Int) -> Conversation?
 }
