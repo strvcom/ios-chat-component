@@ -9,7 +9,7 @@
 import UIKit
 import ChatCore
 
-public class ChatUI<Core: ChatUICoreServicing, Config: ChatConfig>: ChatUIServicing {
+public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     
     let core: Core
     

@@ -16,7 +16,7 @@ public class Chat {
     
     typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
     // swiftlint:disable:next type_name
-    typealias UI = ChatUI<Core, ChatConfig>
+    typealias UI = ChatUI<Core>
 
     let core: Core
     let interface: UI

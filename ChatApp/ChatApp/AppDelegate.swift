@@ -13,7 +13,7 @@ import ChatNetworkingFirestore
 import ChatUI
 
 // swiftlint:disable implicitly_unwrapped_optional
-var chat: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>, ChatConfig>!
+var chat: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
