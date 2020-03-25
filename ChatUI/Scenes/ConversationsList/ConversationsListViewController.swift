@@ -12,7 +12,7 @@ import MessageKit
 
 public class ConversationsListViewController: UIViewController {
     
-    var coordinator: RootCoordinating?
+    weak var coordinator: RootCoordinating?
     
     private var viewModel: ConversationsListViewModeling
     private lazy var tableView = UITableView()

@@ -9,6 +9,6 @@
 import Foundation
 import MessageKit
 
-protocol RootCoordinating {
+protocol RootCoordinating: AnyObject {
     func navigate(to conversation: Conversation, sender: Sender)
 }
