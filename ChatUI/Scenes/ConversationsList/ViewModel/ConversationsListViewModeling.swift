@@ -9,7 +9,7 @@
 import Foundation
 import MessageKit
 
-public protocol ConversationsListViewModeling {
+public protocol ConversationsListViewModeling: AnyObject {
     var currentUser: User? { get }
     var sender: Sender? { get }
     var itemCount: Int { get }

@@ -14,7 +14,7 @@ public class ConversationsListViewController: UIViewController {
     
     weak var coordinator: RootCoordinating?
     
-    private var viewModel: ConversationsListViewModeling
+    private let viewModel: ConversationsListViewModeling
     private lazy var tableView = UITableView()
     private lazy var dataSource = DataSource(viewModel: viewModel)
     private lazy var footerLoader: UIActivityIndicatorView = {
@@ -29,9 +29,12 @@ public class ConversationsListViewController: UIViewController {
     private var delegate: Delegate?
     
     init(viewModel: ConversationsListViewModeling) {
-        self.viewModel = viewModel
 
+        self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
+        
+        self.viewModel.delegate = self
     }
     
     @available(*, unavailable)
@@ -43,7 +46,6 @@ public class ConversationsListViewController: UIViewController {
         super.viewDidLoad()
 
         setup()
-        viewModel.delegate = self
         viewModel.load()
     }
 }
