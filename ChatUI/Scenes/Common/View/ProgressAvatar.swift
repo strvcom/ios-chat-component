@@ -12,28 +12,10 @@ class ProgressAvatar: UIView {
     
     private let imagePadding: CGFloat = 3
     
-    private let borderWidth: CGFloat
+    var borderWidth: CGFloat = 2
     private var lineSublayer: CAShapeLayer?
     
     private lazy var avatarImageView = UIImageView()
-    
-    init(borderWidth: CGFloat) {
-        self.borderWidth = borderWidth
-        
-        super.init(frame: .zero)
-        
-        setupUI()
-    }
-    
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        
-        guard let superview = superview else {
-            return
-        }
-        
-        fill(superview)
-    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -46,16 +28,6 @@ class ProgressAvatar: UIView {
     }
     
     func update(percentage: CGFloat, imageUrl: URL?, circleColor: UIColor) {
-        
-        if frame == .zero {
-            // Schedule update after the views are laid out
-            DispatchQueue.main.async { [weak self] in
-                self?.update(percentage: percentage, imageUrl: imageUrl, circleColor: circleColor)
-            }
-            
-            return
-        }
-        
         lineSublayer?.removeFromSuperlayer()
         
         lineSublayer = circle(
@@ -75,20 +47,23 @@ class ProgressAvatar: UIView {
         }
     }
     
-    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        
+        setupUI()
     }
 }
 
 private extension ProgressAvatar {
     func setupUI() {
         addSubview(avatarImageView)
+        
         avatarImageView.fill(
             self,
             padding: UIEdgeInsets(top: imagePadding, left: imagePadding, bottom: imagePadding, right: imagePadding)
         )
         avatarImageView.clipsToBounds = true
+        
         clipsToBounds = true
         backgroundColor = .conversationsCircleBackground
     }

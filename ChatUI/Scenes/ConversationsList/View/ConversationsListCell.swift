@@ -20,9 +20,7 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    private lazy var progressAvatar = ProgressAvatar(borderWidth: 2)
-    
-    @IBOutlet private var progressAvatarWrapper: UIView!
+    @IBOutlet private var progressAvatar: ProgressAvatar!
     
     @IBOutlet private var messagePreviewLabel: UILabel! {
         didSet {
@@ -40,12 +38,6 @@ class ConversationsListCell: UITableViewCell {
         didSet {
             updateUI()
         }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        progressAvatarWrapper.addSubview(progressAvatar)
     }
 }
 
