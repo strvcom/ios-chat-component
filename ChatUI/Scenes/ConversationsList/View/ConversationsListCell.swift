@@ -39,6 +39,12 @@ class ConversationsListCell: UITableViewCell {
             updateUI()
         }
     }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        selectionStyle = .none
+    }
 }
 
 // MARK: Helper methods
@@ -68,7 +74,5 @@ private extension ConversationsListCell {
             imageUrl: model.avatarUrl,
             circleColor: model.circleColor
         )
-        
-        selectionStyle = .none
     }
 }
