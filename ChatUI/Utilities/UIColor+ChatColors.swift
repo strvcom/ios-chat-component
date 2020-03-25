@@ -10,34 +10,34 @@ import UIKit
 
 extension UIColor {
     static var conversationsTitle: UIColor {
-        ChatConfig.current.colorFor(.conversationsTitle)
+        UIConfig.current.colors.conversationsList.title
     }
     
     static var conversationsSubtitle: UIColor {
-        ChatConfig.current.colorFor(.conversationsSubtitle)
+        UIConfig.current.colors.conversationsList.subtitle
     }
     
     static var conversationsCellSeparator: UIColor {
-        ChatConfig.current.colorFor(.conversationsSeparator)
+        UIConfig.current.colors.conversationsList.separator
     }
     
     static var conversationsCircleDefault: UIColor {
-        ChatConfig.current.colorFor(.conversationsCircle)
+        UIConfig.current.colors.conversationsList.circle
     }
     
     static var conversationsCircleBackground: UIColor {
-        ChatConfig.current.colorFor(.conversationsCircleBackground)
+        UIConfig.current.colors.conversationsList.circleBackground
     }
     
     static var conversationsSubtitleAlert: UIColor {
-        ChatConfig.current.colorFor(.conversationsSubtitleSecondary)
+        UIConfig.current.colors.conversationsList.subtitleSecondary
     }
     
     static var conversationsListAvatarInnerBorder: UIColor {
-        ChatConfig.current.colorFor(.conversationsListAvatarInnerBorder)
+        UIConfig.current.colors.conversationsList.avatarInnerBorder
     }
     
     static var loadingIndicator: UIColor {
-        ChatConfig.current.colorFor(.loadingIndicator)
+        UIConfig.current.colors.loadingIndicator
     }
 }

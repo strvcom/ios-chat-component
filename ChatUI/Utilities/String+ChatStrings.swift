@@ -10,10 +10,10 @@ import Foundation
 
 extension String {
     static var newConversation: String {
-        ChatConfig.current.stringFor(.newConversation)
+        UIConfig.current.strings.newConversation
     }
     
     static var conversation: String {
-        ChatConfig.current.stringFor(.conversation)
+        UIConfig.current.strings.conversation
     }
 }

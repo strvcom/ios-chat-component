@@ -10,14 +10,14 @@ import UIKit
 
 extension UIFont {
     static var conversationListTitle: UIFont {
-        ChatConfig.current.fontFor(.conversationsTitle)
+        UIConfig.current.fonts.conversationsList.title
     }
     
     static var conversationListSubtitle: UIFont {
-        ChatConfig.current.fontFor(.conversationsSubtitle)
+        UIConfig.current.fonts.conversationsList.subtitle
     }
     
     static var conversationListSubtitleSecondary: UIFont {
-        ChatConfig.current.fontFor(.conversationsSubtitleSecondary)
+        UIConfig.current.fonts.conversationsList.subtitleSecondary
     }
 }

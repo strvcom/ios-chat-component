@@ -14,12 +14,6 @@ public class UIConfig {
     // MARK: Fonts
     public struct Fonts {
         
-        public enum Location {
-            case conversationsTitle
-            case conversationsSubtitle
-            case conversationsSubtitleSecondary
-        }
-        
         public struct ConversationsList {
             let title: UIFont
             let subtitle: UIFont
@@ -45,18 +39,6 @@ public class UIConfig {
     
     // MARK: Colors
     public struct Colors {
-        
-        public enum Location {
-            case conversationsTitle
-            case conversationsSubtitle
-            case conversationsSubtitleSecondary
-            case conversationsSeparator
-            case conversationsCircle
-            case conversationsCircleBackground
-            case conversationsListAvatarInnerBorder
-            
-            case loadingIndicator
-        }
         
         public struct ConversationsList {
             let title: UIColor
@@ -100,7 +82,6 @@ public class UIConfig {
     }
     
     // MARK: Strings
-    
     public struct Strings {
         
         public enum Identifier {
@@ -120,63 +101,37 @@ public class UIConfig {
         }
     }
     
-    private static var empty = UIConfig()
-    public static var current: UIConfig = .empty
+    private static let missingString = "(Missing string)"
+    
+    private static var `default` = UIConfig(
+        fonts: Fonts(conversationsList: .init(
+            title: .systemFont(ofSize: 14),
+            subtitle: .systemFont(ofSize: 12),
+            subtitleSecondary: .systemFont(ofSize: 12)
+            )
+        ),
+        colors: Colors(conversationsList: .init(
+            title: .black,
+            subtitle: .black,
+            subtitleSecondary: .black,
+            separator: .black,
+            circle: .black,
+            circleBackground: .black,
+            avatarInnerBorder: .black
+            ), loadingIndicator: .gray
+        ),
+        strings: Strings(newConversation: missingString, conversation: missingString)
+    )
+    
+    public static var current: UIConfig = .default
 
-    private let fonts: Fonts?
-    private let colors: Colors?
-    private let strings: Strings?
+    let fonts: Fonts
+    let colors: Colors
+    let strings: Strings
 
     public init(fonts: Fonts, colors: Colors, strings: Strings) {
         self.fonts = fonts
         self.colors = colors
         self.strings = strings
-    }
-    
-    private init() {
-        fonts = nil
-        colors = nil
-        strings = nil
-    }
-
-    // MARK: Getter methods
-    func fontFor(_ location: Fonts.Location) -> UIFont {
-        guard let fonts = fonts else {
-            fatalError("Fonts not configured!")
-        }
-        
-        switch location {
-        case .conversationsTitle: return fonts.conversationsList.title
-        case .conversationsSubtitle: return fonts.conversationsList.subtitle
-        case .conversationsSubtitleSecondary: return fonts.conversationsList.subtitleSecondary
-        }
-    }
-    
-    func colorFor(_ location: Colors.Location) -> UIColor {
-        guard let colors = colors else {
-            fatalError("Colors not configured!")
-        }
-        
-        switch location {
-        case .conversationsTitle: return colors.conversationsList.title
-        case .conversationsSubtitle: return colors.conversationsList.subtitle
-        case .conversationsSubtitleSecondary: return colors.conversationsList.subtitleSecondary
-        case .conversationsCircle: return colors.conversationsList.circle
-        case .conversationsCircleBackground: return colors.conversationsList.circleBackground
-        case .conversationsSeparator: return colors.conversationsList.separator
-        case .conversationsListAvatarInnerBorder: return colors.conversationsList.avatarInnerBorder
-        case .loadingIndicator: return colors.loadingIndicator
-        }
-    }
-    
-    func stringFor(_ identifier: Strings.Identifier) -> String {
-        guard let strings = strings else {
-            fatalError("Strings not configured!")
-        }
-        
-        switch identifier {
-        case .newConversation: return strings.newConversation
-        case .conversation: return strings.conversation
-        }
     }
 }
