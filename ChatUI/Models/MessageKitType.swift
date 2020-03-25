@@ -15,7 +15,7 @@ public enum MessageContent {
     case image(imageUrl: String)
 }
 
-public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible {
+public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible, MessageStateReflecting {
     public var userId: ObjectIdentifier
 
     public var sentAt: Date

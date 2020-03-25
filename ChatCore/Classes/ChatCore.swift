@@ -19,9 +19,13 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.MS: ChatUIConvertible,
     Networking.U: ChatUIConvertible,
 
+    // Extra requirements on models for this core implementation
+    // supports message caching, message states, temp messages when sending
+    Models.MSUI: Cachable,
     Models.MUI: MessageConvertible,
+    Models.MUI: MessageStateReflecting,
     Models.MUI.MessageSpecification == Models.MSUI,
-    
+
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
@@ -136,7 +140,6 @@ extension ChatCore {
                 case .failure(let error):
                     if taskCompletion(.failure(error)) == .finished {
                         self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                        // TODO: solve error type to remove it
                         self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
                         completion(.failure(error))
                     }
@@ -223,7 +226,9 @@ extension ChatCore {
 
                         let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                         self.messages[id] = data
-                        self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, closures: self.messagesListeners[listener] ?? [])
+                        DispatchQueue.main.async {
+                            self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
+                        }
                     }
 
                 case .failure(let error):
@@ -353,7 +358,9 @@ private extension ChatCore {
         self.messages[conversation] = newPayload
 
         // Call each closure registered for this listener
-        closureThrottler?.handleClosures(payload: newPayload, closures: listeners.values.flatMap({ $0 }))
+        listeners.forEach { (listener, closures) in
+            closureThrottler?.handleClosures(payload: newPayload, listener: listener, closures: closures)
+        }
     }
 
     func callListenerClosures(payload: DataPayload<[MessageUI]>, closures: [IdentifiableClosure<MessagesResult, Void>]) {

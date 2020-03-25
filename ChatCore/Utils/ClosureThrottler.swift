@@ -12,7 +12,7 @@ import Foundation
 final class ListenerThrottler<MessageUI, MessagesResult> {
     let closure: (DataPayload<[MessageUI]>, [IdentifiableClosure<MessagesResult, Void>]) -> Void
 
-    private var workItem: DispatchWorkItem?
+    private var workItems: [Listener: DispatchWorkItem] = [:]
 
     init(closure: @escaping (DataPayload<[MessageUI]>, [IdentifiableClosure<MessagesResult, Void>]) -> Void) {
         self.closure = closure
@@ -21,15 +21,16 @@ final class ListenerThrottler<MessageUI, MessagesResult> {
 
 // MARK: - Handling delay & cancel logic
 extension ListenerThrottler {
-    func handleClosures(interval: TimeInterval = 0.0, payload: DataPayload<[MessageUI]>, closures: [IdentifiableClosure<MessagesResult, Void>]) {
-        workItem?.cancel()
+    func handleClosures(interval: TimeInterval = 0.0, payload: DataPayload<[MessageUI]>, listener: Listener, closures: [IdentifiableClosure<MessagesResult, Void>]) {
 
-        workItem = DispatchWorkItem { [weak self] in
+        workItems[listener]?.cancel()
+        workItems.removeValue(forKey: listener)
+
+        let workItem = DispatchWorkItem { [weak self] in
             self?.closure(payload, closures)
         }
+        workItems[listener] = workItem
 
-        if let workItem = workItem {
-            DispatchQueue.main.asyncAfter(deadline: .now() + interval, execute: workItem)
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + interval, execute: workItem)
     }
 }

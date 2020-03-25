@@ -16,7 +16,4 @@ public protocol MessageRepresenting: ObjectIdentifiable {
     
     /// Date and time this message was sent at
     var sentAt: Date { get }
-
-    /// State of message for UI representation
-    var state: MessageState { get set }
 }
