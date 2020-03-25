@@ -12,7 +12,6 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct MessageFirestore: MessageRepresenting, Decodable {
-    
     public let id: ObjectIdentifier
     public let userId: ObjectIdentifier
     public let sentAt: Date
