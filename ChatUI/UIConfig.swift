@@ -1,5 +1,5 @@
 //
-//  FontConfig.swift
+//  UIConfig.swift
 //  ChatUI
 //
 //  Created by Daniel Pecher on 16/03/2020.
@@ -9,7 +9,7 @@
 import UIKit
 
 // swiftlint:disable nesting
-public class ChatConfig {
+public class UIConfig {
     
     // MARK: Fonts
     public struct Fonts {
@@ -120,8 +120,8 @@ public class ChatConfig {
         }
     }
     
-    private static var empty = ChatConfig()
-    public static var current: ChatConfig = .empty
+    private static var empty = UIConfig()
+    public static var current: UIConfig = .empty
 
     private let fonts: Fonts?
     private let colors: Colors?

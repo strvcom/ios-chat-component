@@ -36,7 +36,7 @@
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
 		049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
 		04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
-		04C0ECE724201F08008A5ADB /* ChatConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* ChatConfig.swift */; };
+		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
@@ -233,7 +233,7 @@
 		04C0ECD524201B82008A5ADB /* Catamaran-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Thin.ttf"; sourceTree = "<group>"; };
 		04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Regular.ttf"; sourceTree = "<group>"; };
 		04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Bold.ttf"; sourceTree = "<group>"; };
-		04C0ECE624201F08008A5ADB /* ChatConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConfig.swift; sourceTree = "<group>"; };
+		04C0ECE624201F08008A5ADB /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
 		04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCellViewModel.swift; sourceTree = "<group>"; };
 		04E56CFE242003E7001F54A9 /* UIView+Fill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Fill.swift"; sourceTree = "<group>"; };
 		04E56D012420045B001F54A9 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
@@ -679,7 +679,7 @@
 				C11E9E5223EDCD34005E10A1 /* ChatUI.h */,
 				C11E9E5323EDCD34005E10A1 /* ChatUI.swift */,
 				C11E9E4823EDCD34005E10A1 /* Constants.swift */,
-				04C0ECE624201F08008A5ADB /* ChatConfig.swift */,
+				04C0ECE624201F08008A5ADB /* UIConfig.swift */,
 				C11E9E5423EDCD34005E10A1 /* Protocols */,
 				045A6B032424DD200055B5E1 /* Coordinators */,
 				0490E772241EB7CF008C4412 /* Utilities */,
@@ -1108,7 +1108,7 @@
 				04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */,
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
-				04C0ECE724201F08008A5ADB /* ChatConfig.swift in Sources */,
+				04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */,
 				045A6B40242A1B860055B5E1 /* ProgressAvatar.swift in Sources */,
 				C11E9E5923EDCD34005E10A1 /* ConversationsListViewController.swift in Sources */,
 				045A6B3B24292CEF0055B5E1 /* UITableViewCell+Nib.swift in Sources */,

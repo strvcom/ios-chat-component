@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
         chat = ChatUI(
             core: core,
-            config: ChatConfig(
+            config: UIConfig(
                 fonts: AppStyleConfig.fonts,
                 colors: AppStyleConfig.colors,
                 strings: .init(

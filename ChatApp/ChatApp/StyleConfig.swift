@@ -10,7 +10,7 @@ import UIKit
 import ChatUI
 
 enum AppStyleConfig {
-    static let fonts = ChatConfig.Fonts(
+    static let fonts = UIConfig.Fonts(
         conversationsList: .init(
             title: UIFont(name: "Catamaran-Medium", size: 16)!,
             subtitle: UIFont(name: "Catamaran-Regular", size: 14)!,
@@ -18,7 +18,7 @@ enum AppStyleConfig {
         )
     )
     
-    static let colors = ChatConfig.Colors(
+    static let colors = UIConfig.Colors(
         conversationsList: .init(
             title: UIColor(red: 87, green: 61, blue: 57),
             subtitle: UIColor(red: 154, green: 139, blue: 136),

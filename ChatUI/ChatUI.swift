@@ -17,8 +17,8 @@ public class ChatUI<Core: ChatUICoreServicing, Config: ChatConfig>: ChatUIServic
     
     public lazy var rootViewController = coordinator.start()
     
-    public required init(core: Core, config: ChatConfig) {
+    public required init(core: Core, config: UIConfig) {
         self.core = core
-        ChatConfig.current = config
+        UIConfig.current = config
     }
 }

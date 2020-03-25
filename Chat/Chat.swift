@@ -21,7 +21,7 @@ public class Chat {
     let core: Core
     let interface: UI
 
-    public init(networkConfig: Configuration, chatConfig: ChatConfig) {
+    public init(networkConfig: Configuration, chatConfig: UIConfig) {
         let networking = ChatNetworkingFirestore(config: networkConfig)
         
         self.core = Core(networking: networking)
