@@ -8,17 +8,12 @@
 
 import UIKit
 import Chat
-import ChatCore
-import ChatNetworkingFirestore
-import ChatUI
 
 // swiftlint:disable implicitly_unwrapped_optional
-var chat: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>!
+var chat: Chat!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    var core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -28,21 +23,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // userFirebaseID is an information that backend is providing
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
-        let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
-        
-        let networking = ChatNetworkingFirestore(config: config)
-        core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
-        chat = ChatUI(
-            core: core,
-            config: UIConfig(
-                fonts: AppStyleConfig.fonts,
-                colors: AppStyleConfig.colors,
-                strings: .init(
-                    newConversation: "Wants to chat!",
-                    conversation: "Conversation"
-                )
+        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
+        let uiConfig = Chat.UIConfiguration(
+            fonts: AppStyleConfig.fonts,
+            colors: AppStyleConfig.colors,
+            strings: Chat.UIConfiguration.Strings(
+                newConversation: "Wants to chat!", conversation: "Conversation"
             )
         )
+        
+        chat = Chat(networkConfig: networkConfig, chatConfig: uiConfig)
         
         setupBackgroundFetch()
 
@@ -77,7 +67,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            core.runBackgroundTasks { result in
+            chat.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return
