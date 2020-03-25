@@ -9,24 +9,10 @@
 import UIKit
 import Chat
 
-// swiftlint:disable implicitly_unwrapped_optional
-var chat: Chat!
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // swiftlint:disable force_unwrapping
-        let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
-
-        // userFirebaseID is an information that backend is providing
-        let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
-
-        let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
-        chat = Chat(config: config)
-
         setupBackgroundFetch()
-
         return true
     }
 
@@ -58,7 +44,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            chat.runBackgroundTasks { result in
+            chat?.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return

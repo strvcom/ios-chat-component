@@ -46,7 +46,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
 
         currentUserId = config.userId
         FirebaseApp.configure(options: options)
-        
         self.database = Firestore.firestore()
         
         // FIXME: Remove this temporary code when UI for conversation creating is ready
@@ -94,6 +93,7 @@ public extension ChatNetworkingFirestore {
                 self?.users = users
                 completion(.success(()))
             case let .failure(error):
+                print(error)
                 completion(.failure(.networking(error: error)))
             }
         }

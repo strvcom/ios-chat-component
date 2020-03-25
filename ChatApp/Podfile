@@ -10,9 +10,10 @@ def networking_pods
   pod 'FirebaseFirestore'
   pod 'FirebaseStorage'
   pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Auth'
   pod 'FirebaseUI/Auth'
   pod 'FirebaseUI/Google'
-  pod 'Firebase/Auth'
+  pod 'FirebaseUI/Email'
 end
 
 def ui_pods
