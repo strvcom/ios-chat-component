@@ -35,8 +35,8 @@
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
 		049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
-		04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
 		04BF1836242BD5BD00C1D626 /* ConversationsListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF1835242BD5BD00C1D626 /* ConversationsListState.swift */; };
+		04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
@@ -426,12 +426,19 @@
 				04E56CFE242003E7001F54A9 /* UIView+Fill.swift */,
 				04E56D012420045B001F54A9 /* Array+Subscript.swift */,
 				C11E9E5123EDCD34005E10A1 /* UIImageView+Network.swift */,
-				04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */,
 				045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */,
 				045A6B222424EC3A0055B5E1 /* UIColor+ChatColors.swift */,
 				045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */,
 				045A6B3A24292CEF0055B5E1 /* UITableViewCell+Nib.swift */,
 				045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		04BF183A242CD08500C1D626 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -552,6 +559,7 @@
 				ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */,
 				ADB40CD323C200A5003DC146 /* Info.plist */,
 				AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */,
+				04BF183A242CD08500C1D626 /* Utilities */,
 				04C0ECCD24201B82008A5ADB /* Fonts */,
 			);
 			path = ChatApp;
@@ -1109,7 +1117,6 @@
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
-				04B28B9024212C1F006B1B06 /* UIColor+RGB.swift in Sources */,
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
 				04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */,
@@ -1196,6 +1203,7 @@
 				ADB40CC623C200A5003DC146 /* AppDelegate.swift in Sources */,
 				ADB40CC823C200A5003DC146 /* SceneDelegate.swift in Sources */,
 				045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */,
+				04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
