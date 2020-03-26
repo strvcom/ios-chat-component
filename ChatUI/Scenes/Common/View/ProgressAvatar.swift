@@ -12,7 +12,12 @@ class ProgressAvatar: UIView {
     
     private let imagePadding: CGFloat = 3
     
-    var borderWidth: CGFloat = 2
+    var borderWidth: CGFloat = 2 {
+        didSet {
+            avatarImageView.layer.borderWidth = borderWidth
+        }
+    }
+    
     private var lineSublayer: CAShapeLayer?
     
     private lazy var avatarImageView = UIImageView()
