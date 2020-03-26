@@ -43,9 +43,7 @@ struct ConversationsListCellViewModel {
     }
     
     var avatarUrl: URL? {
-        return conversation.members
-            .first { $0.id != currentUser.id }?
-            .imageUrl
+        partner?.imageUrl
     }
     
     var compatibility: CGFloat {
