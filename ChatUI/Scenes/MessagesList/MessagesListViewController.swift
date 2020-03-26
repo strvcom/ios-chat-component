@@ -17,7 +17,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     private let dataSource = DataSource()
 
     private var listener: ListenerIdentifier?
-    private let sender: Sender
+    private let sender: SenderType
     
     private var loadMoreButtonVisible = true {
         didSet {
@@ -27,7 +27,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     
     let photoPickerIconSize: CGFloat = 36
 
-    init(conversation: Conversation, core: Core, sender: Sender) {
+    init(conversation: Conversation, core: Core, sender: SenderType) {
         self.core = core
         self.conversation = conversation
         self.sender = sender

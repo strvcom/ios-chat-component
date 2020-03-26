@@ -8,7 +8,6 @@
 
 import UIKit
 import ChatCore
-import MessageKit
 
 public class ConversationsListViewController: UIViewController {
     
@@ -21,8 +20,6 @@ public class ConversationsListViewController: UIViewController {
         indicator.color = .loadingIndicator
         return indicator
     }()
-    
-    private lazy var sender: Sender? = viewModel.sender
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
@@ -61,11 +58,11 @@ private extension ConversationsListViewController {
                 guard
                     let self = self,
                     let conversation = self.dataSource.items[safe: row],
-                    let sender = self.sender else {
+                    let sender = self.viewModel.currentUser else {
                     return
                 }
                 
-                self.coordinator?.navigate(to: conversation, sender: sender)
+                self.coordinator?.navigate(to: conversation, user: sender)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()
@@ -101,7 +98,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
         case let .ready(state):
             stopLoading()
             dataSource.items = state.items
-            dataSource.currentUser = state.currentUser
+            dataSource.currentUser = viewModel.currentUser
             tableView.reloadData()
         case let .failed(error):
             // TODO: UI error

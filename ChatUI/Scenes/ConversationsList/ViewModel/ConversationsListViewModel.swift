@@ -8,7 +8,6 @@
 
 import Foundation
 import ChatCore
-import MessageKit
 
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
     
@@ -20,14 +19,6 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     
     var currentUser: User? {
         core.currentUser
-    }
-    
-    var sender: Sender? {
-        guard let currentUser = currentUser else {
-            return nil
-        }
-        
-        return Sender(id: currentUser.id, displayName: currentUser.name)
     }
     
     init(core: Core) {
@@ -51,17 +42,11 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             }
             
             switch result {
-            case .success(let payload):
-                guard let currentUser = self.core.currentUser else {
-                    self.updateState(.failed(error: ChatError.unexpectedState))
-                    return
-                }
-                
+            case .success(let payload):                
                 self.updateState(
                     .ready(
                         value: ConversationsListState(
                             items: payload.data,
-                            currentUser: currentUser,
                             reachedEnd: payload.reachedEnd
                         )
                     )

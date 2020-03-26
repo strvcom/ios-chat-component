@@ -7,12 +7,11 @@
 //
 
 import Foundation
-import MessageKit
 
 public protocol ConversationsListViewModeling: AnyObject {
-    var sender: Sender? { get }
     var delegate: ConversationsListViewModelDelegate? { get set }
     var state: ViewModelingState<ConversationsListState> { get }
+    var currentUser: User? { get }
     
     func load()
     func loadMore()

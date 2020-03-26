@@ -37,7 +37,7 @@ public struct MessageKitType: MessageType, MessageRepresenting {
     }
 
     public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
-        sender = Sender(id: userId, displayName: "")
+        sender = User(id: userId, name: "", imageUrl: nil, compatibility: 0)
         messageId = id
         self.sentDate = sentAt
         

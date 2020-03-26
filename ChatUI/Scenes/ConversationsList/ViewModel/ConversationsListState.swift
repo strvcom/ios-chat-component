@@ -10,6 +10,5 @@ import Foundation
 
 public struct ConversationsListState {
     let items: [Conversation]
-    let currentUser: User
     let reachedEnd: Bool
 }
