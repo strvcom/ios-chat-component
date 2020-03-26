@@ -294,6 +294,7 @@ When core sends message, it's automatically stored to local secure cache (keycha
 - [X] Cache messages that failed to be sent
 - [X] Retry mechanism for sending messages
 - [X] Continue with sending a message even if user sends an app to background
+- [X] Delete a message
 
 ### User
 
