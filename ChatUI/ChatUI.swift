@@ -10,15 +10,15 @@ import UIKit
 import ChatCore
 
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
+    
     let core: Core
     
-    public required init(core: Core) {
-        self.core = core
-    }
+    private lazy var coordinator = RootCoordinator(core: core)
     
-    public func conversationsList() -> UIViewController {
-        let list = ConversationsListViewController(core: core)
-        let navigation = UINavigationController(rootViewController: list)
-        return navigation
+    public lazy var rootViewController = coordinator.start()
+    
+    public required init(core: Core, config: UIConfig) {
+        self.core = core
+        UIConfig.current = config
     }
 }

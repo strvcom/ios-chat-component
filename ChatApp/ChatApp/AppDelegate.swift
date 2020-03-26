@@ -14,6 +14,7 @@ var chat: Chat!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // swiftlint:disable force_unwrapping
@@ -22,9 +23,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // userFirebaseID is an information that backend is providing
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
-        let config = Chat.Configuration(configUrl: configUrl, userId: userFirebaseID)
-        chat = Chat(config: config)
-
+        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
+        let uiConfig = Chat.UIConfiguration(
+            fonts: AppStyleConfig.fonts,
+            colors: AppStyleConfig.colors,
+            strings: Chat.UIConfiguration.Strings(
+                newConversation: "Wants to chat!", conversation: "Conversation"
+            )
+        )
+        
+        chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
+        
         setupBackgroundFetch()
 
         return true
