@@ -18,8 +18,6 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     
     private var listener: ListenerIdentifier?
     
-    private(set) var reachedEnd = false
-    
     var currentUser: User? {
         core.currentUser
     }
@@ -59,7 +57,6 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
                     return
                 }
                 
-                self.reachedEnd = payload.reachedEnd
                 self.updateState(
                     .ready(
                         value: ConversationsListState(
@@ -76,7 +73,7 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     }
     
     func loadMore() {
-        guard case .ready = state, !reachedEnd else {
+        guard case let .ready(data) = state, !data.reachedEnd else {
             return
         }
         
