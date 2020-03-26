@@ -13,21 +13,20 @@ import ChatUI
 
 public class Chat {
     public typealias NetworkConfiguration = ChatNetworkingFirestore.Configuration
-    public typealias UIConfiguration = UI.Config
+    public typealias UIConfiguration = Interface.Config
     
     public typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
-    // swiftlint:disable:next type_name
-    public typealias UI = ChatUI<Core>
+    public typealias Interface = ChatUI<Core>
 
     let core: Core
-    let interface: UI
+    let interface: Interface
 
     public init(networkConfig: NetworkConfiguration, chatConfig: UIConfiguration) {
         let networking = ChatNetworkingFirestore(config: networkConfig)
         
         self.core = Core(networking: networking)
         
-        self.interface = UI(
+        self.interface = Interface(
             core: core,
             config: chatConfig
         )
