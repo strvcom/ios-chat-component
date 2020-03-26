@@ -32,7 +32,7 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
         self.sentDate = Date()
         self.messageId = id
         self.id = id
-        self.sender = Sender(id: userId, displayName: "")
+        self.sender = User(id: userId, name: "", imageUrl: nil, compatibility: 0)
         self.userId = userId
 
         switch messageSpecification {
