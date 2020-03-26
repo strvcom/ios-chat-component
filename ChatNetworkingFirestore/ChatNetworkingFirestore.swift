@@ -305,7 +305,6 @@ private extension ChatNetworkingFirestore {
         
         return query
     }
-
 }
 
 // MARK: Private methods

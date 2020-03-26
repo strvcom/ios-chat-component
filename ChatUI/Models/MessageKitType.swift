@@ -15,30 +15,46 @@ public enum MessageContent {
     case image(imageUrl: String)
 }
 
-public struct MessageKitType: MessageType, MessageRepresenting {
-   public var userId: ObjectIdentifier
+public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible, MessageStateReflecting {
+    public var userId: ObjectIdentifier
 
-   public var sentAt: Date
+    public var sentAt: Date
 
-   public var id: ObjectIdentifier
-   public var sender: SenderType
-   public var messageId: String
-   public var sentDate: Date
-   public var kind: MessageKind
+    public var id: ObjectIdentifier
+    public var sender: SenderType
+    public var messageId: String
+    public var sentDate: Date
+    public var kind: MessageKind
+    public var state: MessageState
 
-    init(sender: SenderType, messageId: String, sentDate: Date, kind: MessageKind) {
-        self.sender = sender
-        self.messageId = messageId
-        self.sentDate = sentDate
-        self.kind = kind
+    public init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification, state: MessageState = .sending) {
         self.sentAt = Date()
-        self.userId = ""
-        self.id = messageId
+        self.sentDate = Date()
+        self.messageId = id
+        self.id = id
+        self.sender = Sender(id: userId, displayName: "")
+        self.userId = userId
+
+        switch messageSpecification {
+        case .text(let message):
+            self.kind = .text(message)
+        case .image(let image):
+            let imageItem = ImageItem(
+                url: nil,
+                image: image,
+                placeholderImage: UIImage(),
+                size: CGSize(width: Constants.imageMessageSize.width,
+                             height: Constants.imageMessageSize.height)
+            )
+            self.kind = .photo(imageItem)
+        }
+
+        self.state = state
     }
 
     public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
-        sender = User(id: userId, name: "", imageUrl: nil, compatibility: 0)
-        messageId = id
+        self.sender = User(id: userId, name: "", imageUrl: nil, compatibility: 0)
+        self.messageId = id
         self.sentDate = sentAt
         
         switch content {
@@ -55,8 +71,9 @@ public struct MessageKitType: MessageType, MessageRepresenting {
             self.kind = .photo(imageItem)
         }
         
-        self.sentAt = Date()
+        self.sentAt = sentAt
         self.userId = userId
         self.id = id
+        self.state = .sent
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Test.swift
+//  TaskManager.swift
 //  ChatApp
 //
 //  Created by Tomas Cejka on 2/26/20.
@@ -19,6 +19,11 @@ final class TaskManager {
     enum TaskCompletionResult {
         case success
         case failure(ChatError)
+    }
+
+    enum TaskCompletionState {
+        case finished
+        case retrying
     }
 
     enum TaskAttribute: Hashable {
@@ -46,7 +51,8 @@ final class TaskManager {
         }
     }
 
-    typealias TaskCompletionResultHandler = (TaskCompletionResult) -> Void
+    // Validate state of task after result on internal call
+    typealias TaskCompletionResultHandler = (TaskCompletionResult) -> TaskCompletionState
 
     // closure storage for calls before init
     private var cachedBeforeInitCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
@@ -98,13 +104,19 @@ private extension TaskManager {
             dispatchQueue.async { [weak self] in
                 print("Run in background thread task id \(identifiableClosure.id)")
                 self?.runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
-                    self?.handleTaskCompletionResult(attributes: attributes, result: result, identifiableClosure)
+                    guard let self = self else {
+                        return .finished
+                    }
+                    return self.handleTaskCompletionResult(attributes: attributes, result: result, identifiableClosure)
                 })
             }
         } else {
             print("Run in main thread task id \(identifiableClosure.id)")
             runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
-                self?.handleTaskCompletionResult(attributes: attributes, result: result, identifiableClosure)
+                guard let self = self else {
+                    return .finished
+                }
+                return self.handleTaskCompletionResult(attributes: attributes, result: result, identifiableClosure)
             })
         }
     }
@@ -114,7 +126,7 @@ private extension TaskManager {
         identifiableClosure.closure(completionHandler)
     }
 
-    func handleTaskCompletionResult(attributes: Set<TaskAttribute>, result: TaskCompletionResult, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
+    func handleTaskCompletionResult(attributes: Set<TaskAttribute>, result: TaskCompletionResult, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) -> TaskCompletionState {
         print("HandleTaskCompletionResult task id \(identifiableClosure.id) with result \(result)")
 
         // retry in case of network error
@@ -124,17 +136,21 @@ private extension TaskManager {
             if case .finite(let attempts) = retryType, attempts > 0 {
                 run(attributes: attributes, identifiableClosure)
                 retryCalls[identifiableClosure] = .finite(attempts: attempts - 1)
+                return .retrying
             } else if case .infinite = retryType {
                 run(attributes: attributes, identifiableClosure)
+                return .retrying
             } else {
                 retryCalls.removeValue(forKey: identifiableClosure)
                 // clean up in all cases to release background task
                 finishTask(attributes: attributes, identifiableClosure)
+                return .finished
             }
         } else {
             retryCalls.removeValue(forKey: identifiableClosure)
             // clean up in all cases to release background task
             finishTask(attributes: attributes, identifiableClosure)
+            return .finished
         }
     }
 }
@@ -261,7 +277,7 @@ extension TaskManager {
         tasks.forEach { task in
             task.closure { [weak self] result in
                 guard let self = self else {
-                    return
+                    return .finished
                 }
                 if case .success = result {
                     if let index = self.backgroundCalls.firstIndex(of: task) {
@@ -272,6 +288,7 @@ extension TaskManager {
                         completion(.newData)
                     }
                 }
+                return .finished
             }}
     }
 }
