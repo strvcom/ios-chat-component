@@ -21,14 +21,14 @@ public class Chat {
     let core: Core
     let interface: Interface
 
-    public init(networkConfig: NetworkConfiguration, chatConfig: UIConfiguration) {
+    public init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
         let networking = ChatNetworkingFirestore(config: networkConfig)
         
         self.core = Core(networking: networking)
         
         self.interface = Interface(
             core: core,
-            config: chatConfig
+            config: uiConfig
         )
     }
     

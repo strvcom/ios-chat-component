@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             )
         )
         
-        chat = Chat(networkConfig: networkConfig, chatConfig: uiConfig)
+        chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
         
         setupBackgroundFetch()
 
