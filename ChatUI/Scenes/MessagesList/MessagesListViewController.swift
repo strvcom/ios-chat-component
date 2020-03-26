@@ -126,7 +126,7 @@ extension MessagesListViewController: MessagesDataSource {
 
         let seenMessages: [String: (messageId: ObjectIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
 
-        if conversation.members.count == 2 && seenMessages.contains { $0.key != self.sender.senderId } {
+        if conversation.members.count == 2 && seenMessages.contains(where: { $0.key != self.sender.senderId }) {
             text = "Seen"
         } else if conversation.members.count > 2 && seenMessages.count == conversation.members.count - 1 {
             text = "Seen by All"
