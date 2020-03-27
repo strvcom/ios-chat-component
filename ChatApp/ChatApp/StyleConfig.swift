@@ -12,9 +12,9 @@ import ChatUI
 enum AppStyleConfig {
     static let fonts = UIConfig.Fonts(
         conversationsList: .init(
-            title: UIFont(name: "Catamaran-Medium", size: 16)!,
-            subtitle: UIFont(name: "Catamaran-Regular", size: 14)!,
-            subtitleSecondary: UIFont(name: "Catamaran-Bold", size: 14)!
+            title: medium(ofSize: 16),
+            subtitle: regular(ofSize: 14),
+            subtitleSecondary: bold(ofSize: 14),
         )
     )
     
@@ -32,3 +32,22 @@ enum AppStyleConfig {
     )
 }
 
+private extension AppStyleConfig {
+    
+    static func regular(ofSize size: CGFloat) -> UIFont {
+        UIFont(name: "Catamaran-Regular", size: size)!
+    }
+    
+    static func medium(ofSize size: CGFloat) -> UIFont {
+        UIFont(name: "Catamaran-Medium", size: size)!
+    }
+    
+    static func bold(ofSize size: CGFloat) -> UIFont {
+        UIFont(name: "Catamaran-Bold", size: size)!
+    }
+    
+    static func extraBold(ofSize size: CGFloat) -> UIFont {
+        UIFont(name: "Catamaran-ExtraBold", size: size)!
+    }
+    
+}
