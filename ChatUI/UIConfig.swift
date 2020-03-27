@@ -95,12 +95,6 @@ public class UIConfig {
     
     // MARK: Strings
     public struct Strings {
-        
-        public enum Identifier {
-            case newConversation
-            case conversation
-        }
-        
         let newConversation: String
         let conversation: String
         let emptyConversationsTitle: String
