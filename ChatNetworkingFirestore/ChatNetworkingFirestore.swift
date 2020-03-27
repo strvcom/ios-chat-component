@@ -181,14 +181,19 @@ public extension ChatNetworkingFirestore {
 
 // MARK: - Delete message
 public extension ChatNetworkingFirestore {
-    func delete(message: MessageFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
+    func delete(message: MessageFirestore, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let document = self.database
             .collection(Constants.conversationsPath)
             .document(conversation)
             .collection(Constants.messagesPath)
             .document(message.id)
-        document.delete()
-        completion(.success(()))
+        document.delete { error in
+            if let error = error {
+                completion(.failure(.networking(error: error)))
+            } else {
+                completion(.success(()))
+            }
+        }
     }
 }
 

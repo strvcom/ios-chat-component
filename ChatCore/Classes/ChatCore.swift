@@ -156,7 +156,7 @@ extension ChatCore {
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
             let deleteMessage = Networking.M(uiModel: message)
-            self?.networking.delete(message: deleteMessage, to: conversation) { result in
+            self?.networking.delete(message: deleteMessage, from: conversation) { result in
                 self?.taskHandler(result: result, completion: taskCompletion)
                 completion(result)
             }
