@@ -65,5 +65,12 @@
 	<array>
 		<string>com.strv.chatcore.backgroundtask</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Catamaran-Medium.ttf</string>
+		<string>Catamaran-ExtraBold.ttf</string>
+		<string>Catamaran-Bold.ttf</string>
+		<string>Catamaran-Regular.ttf</string>
+	</array>
 </dict>
 </plist>

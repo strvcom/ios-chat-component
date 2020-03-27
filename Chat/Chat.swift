@@ -12,22 +12,28 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public class Chat {
-    public typealias Configuration = ChatNetworkingFirestore.Configuration
+    public typealias NetworkConfiguration = ChatNetworkingFirestore.Configuration
+    public typealias UIConfiguration = Interface.Config
+    
+    public typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    public typealias Interface = ChatUI<Core>
 
-    let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
-    let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    let core: Core
+    let interface: Interface
 
-    public init(config: Configuration) {
-        let networking = ChatNetworkingFirestore(config: config)
-        let core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
-        self.core = core
-        self.interface = ChatUI(core: core)
+    public init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
+        let networking = ChatNetworkingFirestore(config: networkConfig)
+        
+        self.core = Core(networking: networking)
+        
+        self.interface = Interface(
+            core: core,
+            config: uiConfig
+        )
     }
     
     public func conversationsList() -> UIViewController {
-        let list = interface.conversationsList()
-    
-        return list
+        interface.rootViewController
     }
 
     public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
