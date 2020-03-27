@@ -46,6 +46,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         if let listener = listener {
             core.remove(listener: listener)
         }
+        print("\(self) deinit")
     }
 
     private func setup() {

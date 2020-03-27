@@ -149,6 +149,21 @@ extension ChatCore {
     }
 }
 
+// MARK: - Deleting messages
+extension ChatCore {
+
+    open func delete(message: MessageUI, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
+
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+            let deleteMessage = Networking.M(uiModel: message)
+            self?.networking.delete(message: deleteMessage, from: conversation) { result in
+                self?.taskHandler(result: result, completion: taskCompletion)
+                completion(result)
+            }
+        }
+    }
+}
+
 // MARK: - Continue stored background tasks
 public extension ChatCore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -172,11 +187,10 @@ extension ChatCore {
             print("Conversation with id \(conversation) not found")
             return
         }
-        
-        let seenMessage = Networking.M(uiModel: message)
-        let conversation = Networking.C(uiModel: existingConversation)
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+            let seenMessage = Networking.M(uiModel: message)
+            let conversation = Networking.C(uiModel: existingConversation)
             self?.networking.updateSeenMessage(seenMessage, in: conversation)
         }
     }

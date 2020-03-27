@@ -40,6 +40,14 @@ public protocol ChatNetworkServicing {
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
     func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+
+    /// Delete a message from the specified conversation
+    ///
+    /// - Parameters:
+    ///   - message: Message data
+    ///   - conversation: Conversation ID
+    ///   - completion: Called upon deleting message (or encountering an error)
+    func delete(message: M, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
     
     /// Send a request to set `message` as the last seen message by current user
     ///
