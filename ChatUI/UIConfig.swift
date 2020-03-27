@@ -18,21 +18,29 @@ public class UIConfig {
             let title: UIFont
             let subtitle: UIFont
             let subtitleSecondary: UIFont
+            let emptyTitle: UIFont
+            let emptySubtitle: UIFont
             
             public init(
                 title: UIFont,
                 subtitle: UIFont,
-                subtitleSecondary: UIFont
+                subtitleSecondary: UIFont,
+                emptyTitle: UIFont,
+                emptySubtitle: UIFont
             ) {
                 self.title = title
                 self.subtitle = subtitle
                 self.subtitleSecondary = subtitleSecondary
+                self.emptyTitle = emptyTitle
+                self.emptySubtitle = emptySubtitle
             }
         }
         
         let conversationsList: ConversationsList
+        let buttonTitle: UIFont
         
-        public init(conversationsList: ConversationsList) {
+        public init(buttonTitle: UIFont, conversationsList: ConversationsList) {
+            self.buttonTitle = buttonTitle
             self.conversationsList = conversationsList
         }
     }
@@ -43,6 +51,8 @@ public class UIConfig {
         let text: UIColor
         let lightText: UIColor
         let primary: UIColor
+        let buttonForeground: UIColor
+        
         public struct ConversationsList {
             let separator: UIColor
             let circle: UIColor
@@ -71,13 +81,15 @@ public class UIConfig {
             lightText: UIColor,
             primary: UIColor,
             conversationsList: ConversationsList,
-            loadingIndicator: UIColor
+            loadingIndicator: UIColor,
+            buttonForeground: UIColor
         ) {
             self.text = text
             self.lightText = lightText
             self.primary = primary
             self.conversationsList = conversationsList
             self.loadingIndicator = loadingIndicator
+            self.buttonForeground = buttonForeground
         }
     }
     
@@ -91,36 +103,58 @@ public class UIConfig {
         
         let newConversation: String
         let conversation: String
+        let emptyConversationsTitle: String
+        let emptyConversationsSubtitle: String
+        let takeAQuizButton: String
         
         public init(
             newConversation: String,
-            conversation: String
+            conversation: String,
+            emptyConversationsTitle: String,
+            emptyConversationsSubtitle: String,
+            takeAQuizButton: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
+            self.emptyConversationsTitle = emptyConversationsTitle
+            self.emptyConversationsSubtitle = emptyConversationsSubtitle
+            self.takeAQuizButton = takeAQuizButton
         }
     }
     
     private static let missingString = "(Missing string)"
     
     private static var `default` = UIConfig(
-        fonts: Fonts(conversationsList: .init(
-            title: .systemFont(ofSize: 14),
-            subtitle: .systemFont(ofSize: 12),
-            subtitleSecondary: .systemFont(ofSize: 12)
+        fonts: Fonts(
+            buttonTitle: .systemFont(ofSize: 12),
+            conversationsList: .init(
+                title: .systemFont(ofSize: 14),
+                subtitle: .systemFont(ofSize: 12),
+                subtitleSecondary: .systemFont(ofSize: 12),
+                emptyTitle: .systemFont(ofSize: 14),
+                emptySubtitle: .systemFont(ofSize: 12)
             )
         ),
-        colors: Colors(conversationsList: .init(
-            title: .black,
-            subtitle: .black,
-            subtitleSecondary: .black,
-            separator: .black,
-            circle: .black,
-            circleBackground: .black,
-            avatarInnerBorder: .black
-            ), loadingIndicator: .gray
+        colors: Colors(
+            text: .black,
+            lightText: .black,
+            primary: .black,
+            conversationsList: .init(
+                separator: .black,
+                circle: .black,
+                circleBackground: .black,
+                avatarInnerBorder: .black
+            ),
+            loadingIndicator: .gray,
+            buttonForeground: .white
         ),
-        strings: Strings(newConversation: missingString, conversation: missingString)
+        strings: Strings(
+            newConversation: missingString,
+            conversation: missingString,
+            emptyConversationsTitle: missingString,
+            emptyConversationsSubtitle: missingString,
+            takeAQuizButton: missingString
+        )
     )
     
     public static var current: UIConfig = .default

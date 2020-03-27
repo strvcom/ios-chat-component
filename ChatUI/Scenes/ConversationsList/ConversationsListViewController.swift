@@ -21,6 +21,8 @@ public class ConversationsListViewController: UIViewController {
         return indicator
     }()
     
+    private lazy var emptyStateView = EmptyConversationsList.nibInstance
+    
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     private lazy var dataSource = DataSource()
@@ -50,8 +52,19 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
+        view.backgroundColor = .white
         view.addSubview(tableView)
         tableView.fill(view)
+        
+        view.addSubview(emptyStateView)
+        emptyStateView.isHidden = true
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraints([
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
@@ -86,6 +99,11 @@ private extension ConversationsListViewController {
         footerLoader.isHidden = true
         footerLoader.stopAnimating()
     }
+    
+    func toggleEmptyState(isEmpty: Bool) {
+        tableView.isHidden = isEmpty
+        emptyStateView.isHidden = !isEmpty
+    }
 }
 
 // MARK: ConversationsListViewModelDelegate
@@ -100,6 +118,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
             dataSource.items = state.items
             dataSource.currentUser = viewModel.currentUser
             tableView.reloadData()
+            toggleEmptyState(isEmpty: state.items.isEmpty)
         case let .failed(error):
             // TODO: UI error
             print(error)

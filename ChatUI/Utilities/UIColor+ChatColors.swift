@@ -40,4 +40,20 @@ extension UIColor {
     static var loadingIndicator: UIColor {
         UIConfig.current.colors.loadingIndicator
     }
+    
+    static var conversationsEmptyTitle: UIColor {
+        UIConfig.current.colors.text
+    }
+    
+    static var conversationsEmptySubtitle: UIColor {
+        UIConfig.current.colors.lightText
+    }
+    
+    static var buttonBackground: UIColor {
+        UIConfig.current.colors.primary
+    }
+    
+    static var buttonForeground: UIColor {
+        UIConfig.current.colors.buttonForeground
+    }
 }

@@ -9,6 +9,10 @@
 import UIKit
 
 extension UIFont {
+    static var buttonTitle: UIFont {
+        UIConfig.current.fonts.buttonTitle
+    }
+    
     static var conversationsListTitle: UIFont {
         UIConfig.current.fonts.conversationsList.title
     }
@@ -19,5 +23,13 @@ extension UIFont {
     
     static var conversationsListSubtitleSecondary: UIFont {
         UIConfig.current.fonts.conversationsList.subtitleSecondary
+    }
+    
+    static var conversationListEmptyTitle: UIFont {
+        UIConfig.current.fonts.conversationsList.emptyTitle
+    }
+    
+    static var conversationListEmptySubtitle: UIFont {
+        UIConfig.current.fonts.conversationsList.emptySubtitle
     }
 }

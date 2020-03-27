@@ -16,4 +16,15 @@ extension String {
     static var conversation: String {
         UIConfig.current.strings.conversation
     }
+    static var emptyConversationsTitle: String {
+        UIConfig.current.strings.emptyConversationsTitle
+    }
+    
+    static var emptyConversationsSubtitle: String {
+        UIConfig.current.strings.emptyConversationsSubtitle
+    }
+    
+    static var takeAQuizButton: String {
+        UIConfig.current.strings.takeAQuizButton
+    }
 }

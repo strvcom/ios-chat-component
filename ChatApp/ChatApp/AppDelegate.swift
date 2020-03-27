@@ -28,7 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
             strings: Chat.UIConfiguration.Strings(
-                newConversation: "Wants to chat!", conversation: "Conversation"
+                newConversation: "Wants to chat!",
+                conversation: "Conversation",
+                emptyConversationsTitle: "No matches yet",
+                emptyConversationsSubtitle: "Finish quizzes and get more matches",
+                takeAQuizButton: "Take a Quiz"
             )
         )
         
