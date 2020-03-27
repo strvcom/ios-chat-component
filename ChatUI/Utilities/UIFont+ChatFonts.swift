@@ -9,15 +9,15 @@
 import UIKit
 
 extension UIFont {
-    static var conversationListTitle: UIFont {
+    static var conversationsListTitle: UIFont {
         UIConfig.current.fonts.conversationsList.title
     }
     
-    static var conversationListSubtitle: UIFont {
+    static var conversationsListSubtitle: UIFont {
         UIConfig.current.fonts.conversationsList.subtitle
     }
     
-    static var conversationListSubtitleSecondary: UIFont {
+    static var conversationsListSubtitleSecondary: UIFont {
         UIConfig.current.fonts.conversationsList.subtitleSecondary
     }
 }
