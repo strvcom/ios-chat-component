@@ -40,27 +40,21 @@ public class UIConfig {
     // MARK: Colors
     public struct Colors {
         
+        let text: UIColor
+        let lightText: UIColor
+        let primary: UIColor
         public struct ConversationsList {
-            let title: UIColor
-            let subtitle: UIColor
-            let subtitleSecondary: UIColor
             let separator: UIColor
             let circle: UIColor
             let circleBackground: UIColor
             let avatarInnerBorder: UIColor
             
             public init(
-                title: UIColor,
-                subtitle: UIColor,
-                subtitleSecondary: UIColor,
                 separator: UIColor,
                 circle: UIColor,
                 circleBackground: UIColor,
                 avatarInnerBorder: UIColor
             ) {
-                self.title = title
-                self.subtitle = subtitle
-                self.subtitleSecondary = subtitleSecondary
                 self.separator = separator
                 self.circle = circle
                 self.circleBackground = circleBackground
@@ -73,9 +67,15 @@ public class UIConfig {
         let loadingIndicator: UIColor
         
         public init(
+            text: UIColor,
+            lightText: UIColor,
+            primary: UIColor,
             conversationsList: ConversationsList,
             loadingIndicator: UIColor
         ) {
+            self.text = text
+            self.lightText = lightText
+            self.primary = primary
             self.conversationsList = conversationsList
             self.loadingIndicator = loadingIndicator
         }

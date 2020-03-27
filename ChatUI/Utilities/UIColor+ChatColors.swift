@@ -10,11 +10,11 @@ import UIKit
 
 extension UIColor {
     static var conversationsTitle: UIColor {
-        UIConfig.current.colors.conversationsList.title
+        UIConfig.current.colors.text
     }
     
     static var conversationsSubtitle: UIColor {
-        UIConfig.current.colors.conversationsList.subtitle
+        UIConfig.current.colors.lightText
     }
     
     static var conversationsCellSeparator: UIColor {
@@ -30,7 +30,7 @@ extension UIColor {
     }
     
     static var conversationsSubtitleAlert: UIColor {
-        UIConfig.current.colors.conversationsList.subtitleSecondary
+        UIConfig.current.colors.primary
     }
     
     static var conversationsListAvatarInnerBorder: UIColor {
