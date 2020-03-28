@@ -21,7 +21,15 @@ public class ConversationsListViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var emptyStateView = EmptyConversationsList.nibInstance
+    private lazy var emptyStateView: EmptyConversationsList = {
+        let view = EmptyConversationsList.nibInstance
+        
+        view.buttonAction = { [weak self] in
+            self?.coordinator?.emptyStateAction()
+        }
+        
+        return view
+    }()
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?

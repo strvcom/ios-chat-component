@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04383896242F841900491FC9 /* ChatUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04383895242F841900491FC9 /* ChatUIDelegate.swift */; };
 		045A6B162424E4E00055B5E1 /* Catamaran-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */; };
 		045A6B172424E4E00055B5E1 /* Catamaran-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */; };
 		045A6B182424E4E00055B5E1 /* Catamaran-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */; };
@@ -219,6 +220,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04383895242F841900491FC9 /* ChatUIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIDelegate.swift; sourceTree = "<group>"; };
 		043CC14123FE9AE30027DD11 /* DataPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPayload.swift; sourceTree = "<group>"; };
 		045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+ChatFonts.swift"; sourceTree = "<group>"; };
 		045A6B222424EC3A0055B5E1 /* UIColor+ChatColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+ChatColors.swift"; sourceTree = "<group>"; };
@@ -765,6 +767,7 @@
 			children = (
 				C11E9E5523EDCD34005E10A1 /* ChatModelsUI.swift */,
 				C11E9E5623EDCD34005E10A1 /* ChatUICoreServicing.swift */,
+				04383895242F841900491FC9 /* ChatUIDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1166,6 +1169,7 @@
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
+				04383896242F841900491FC9 /* ChatUIDelegate.swift in Sources */,
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */,
 				04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */,

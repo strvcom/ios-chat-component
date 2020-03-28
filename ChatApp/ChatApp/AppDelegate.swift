@@ -12,8 +12,16 @@ import Chat
 // swiftlint:disable implicitly_unwrapped_optional
 var chat: Chat!
 
+class ChatDelegate: Chat.UIDelegate {
+    public func emptyConversationsListAction() {
+        print("didTapTakeAQuiz")
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    private let chatDelegate = ChatDelegate()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -37,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
+        chat.uiDelegate = chatDelegate
         
         setupBackgroundFetch()
 

@@ -35,6 +35,9 @@
                     </constraints>
                     <inset key="contentEdgeInsets" minX="22" minY="0.0" maxX="22" maxY="0.0"/>
                     <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="onActionButtonTap:" destination="iN0-l3-epB" eventType="touchUpInside" id="gMC-7d-ylE"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WYC-55-V9M">
                     <rect key="frame" x="20" y="116" width="404" height="21"/>

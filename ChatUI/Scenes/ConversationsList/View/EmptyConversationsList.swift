@@ -10,6 +10,8 @@ import UIKit
 
 class EmptyConversationsList: UIView {
     
+    var buttonAction: (() -> Void)?
+    
     @IBOutlet private var iconImage: UIImageView!
     
     @IBOutlet private var titleLabel: UILabel! {
@@ -36,5 +38,9 @@ class EmptyConversationsList: UIView {
             actionButton.layer.cornerRadius = Constants.buttonCornerRadius
             actionButton.titleLabel?.font = .buttonTitle
         }
+    }
+    
+    @IBAction private func onActionButtonTap(_ sender: UIButton) {
+        buttonAction?()
     }
 }
