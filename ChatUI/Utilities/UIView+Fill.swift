@@ -14,7 +14,7 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         guard let superview = superview else {
-            fatalError("View does not have a superview!")
+            return
         }
         
         if edges.contains(.top) {
@@ -38,7 +38,7 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         guard let superview = superview else {
-            fatalError("View does not have a superview!")
+            return
         }
         
         if axis.contains(.horizontal) {
