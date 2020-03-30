@@ -116,6 +116,17 @@ public class UIConfig {
         }
     }
     
+    // MARK: Images
+    public struct Images {
+        let emptyConversationsIcon: UIImage
+        
+        public init(
+            emptyConversationsIcon: UIImage
+        ) {
+            self.emptyConversationsIcon = emptyConversationsIcon
+        }
+    }
+    
     private static let missingString = "(Missing string)"
     
     private static var `default` = UIConfig(
@@ -148,6 +159,9 @@ public class UIConfig {
             emptyConversationsTitle: missingString,
             emptyConversationsSubtitle: missingString,
             emptyConversationsActionTitle: missingString
+        ),
+        images: Images(
+            emptyConversationsIcon: UIImage()
         )
     )
     
@@ -156,10 +170,12 @@ public class UIConfig {
     let fonts: Fonts
     let colors: Colors
     let strings: Strings
+    let images: Images
 
-    public init(fonts: Fonts, colors: Colors, strings: Strings) {
+    public init(fonts: Fonts, colors: Colors, strings: Strings, images: Images) {
         self.fonts = fonts
         self.colors = colors
         self.strings = strings
+        self.images = images
     }
 }

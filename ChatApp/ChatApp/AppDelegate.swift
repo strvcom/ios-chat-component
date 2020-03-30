@@ -33,7 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 emptyConversationsTitle: "No matches yet",
                 emptyConversationsSubtitle: "Finish quizzes and get more matches",
                 emptyConversationsActionTitle: "Take a Quiz"
-            )
+            ),
+            images: AppStyleConfig.images
         )
         
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)

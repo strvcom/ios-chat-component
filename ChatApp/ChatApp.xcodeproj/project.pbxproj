@@ -40,13 +40,14 @@
 		04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
 		04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */; };
 		04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */; };
-		04BF1845242E11A600C1D626 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BF1844242E11A600C1D626 /* Images.xcassets */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
 		04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0524200550001F54A9 /* ViewModelingState.swift */; };
 		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
+		04E74E7824323F3800401222 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BF1844242E11A600C1D626 /* Images.xcassets */; };
+		04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E792432440800401222 /* UIImage+ChatImages.swift */; };
 		04F62DF92412BEED0061B308 /* Listener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DF72412BED60061B308 /* Listener.swift */; };
 		04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */; };
 		1338DC09ECEBC09E839AFBFE /* (null) in Frameworks */ = {isa = PBXBuildFile; };
@@ -260,6 +261,7 @@
 		04E56D012420045B001F54A9 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
 		04E56D0524200550001F54A9 /* ViewModelingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelingState.swift; sourceTree = "<group>"; };
 		04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModelDelegate.swift; sourceTree = "<group>"; };
+		04E74E792432440800401222 /* UIImage+ChatImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+ChatImages.swift"; sourceTree = "<group>"; };
 		04F62DF72412BED60061B308 /* Listener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listener.swift; sourceTree = "<group>"; };
 		04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenerIdentifier.swift; sourceTree = "<group>"; };
 		0B4637025817341405045197 /* Pods-ChatNetworkingFirestore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirestore.debug.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirestore/Pods-ChatNetworkingFirestore.debug.xcconfig"; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 				045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */,
 				045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */,
 				045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */,
+				04E74E792432440800401222 /* UIImage+ChatImages.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -599,6 +602,7 @@
 				ADB40CC723C200A5003DC146 /* SceneDelegate.swift */,
 				045A6B35242908090055B5E1 /* StyleConfig.swift */,
 				ADB40CCE23C200A5003DC146 /* Assets.xcassets */,
+				04BF1844242E11A600C1D626 /* Images.xcassets */,
 				ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */,
 				ADB40CD323C200A5003DC146 /* Info.plist */,
 				AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */,
@@ -744,7 +748,6 @@
 				0490E772241EB7CF008C4412 /* Utilities */,
 				0490E76D241EB722008C4412 /* Scenes */,
 				C11E9E4923EDCD34005E10A1 /* Models */,
-				04BF1844242E11A600C1D626 /* Images.xcassets */,
 			);
 			name = ChatUI;
 			path = ../ChatUI;
@@ -983,7 +986,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BF1845242E11A600C1D626 /* Images.xcassets in Resources */,
 				04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */,
 				0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */,
 			);
@@ -1016,6 +1018,7 @@
 				045A6B162424E4E00055B5E1 /* Catamaran-SemiBold.ttf in Resources */,
 				AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */,
 				045A6B182424E4E00055B5E1 /* Catamaran-ExtraBold.ttf in Resources */,
+				04E74E7824323F3800401222 /* Images.xcassets in Resources */,
 				045A6B1F2424E4E00055B5E1 /* Catamaran-Bold.ttf in Resources */,
 				045A6B1A2424E4E00055B5E1 /* Catamaran-Medium.ttf in Resources */,
 				045A6B192424E4E00055B5E1 /* Catamaran-ExtraLight.ttf in Resources */,
@@ -1194,6 +1197,7 @@
 				045A6B212424EC300055B5E1 /* UIFont+ChatFonts.swift in Sources */,
 				04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */,
 				0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */,
+				04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */,
 				C11E9E6323EDCD34005E10A1 /* ChatUI.swift in Sources */,
 				045A6B3D242A10F60055B5E1 /* String+ChatStrings.swift in Sources */,
 			);

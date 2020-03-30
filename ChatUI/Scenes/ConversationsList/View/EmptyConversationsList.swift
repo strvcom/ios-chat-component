@@ -12,7 +12,11 @@ class EmptyConversationsList: UIView {
     
     var buttonAction: (() -> Void)?
     
-    @IBOutlet private var iconImage: UIImageView!
+    @IBOutlet private var iconImage: UIImageView! {
+        didSet {
+            iconImage.image = .emptyConversationsIcon
+        }
+    }
     
     @IBOutlet private var titleLabel: UILabel! {
         didSet {

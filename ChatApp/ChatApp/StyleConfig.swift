@@ -35,6 +35,10 @@ enum AppStyleConfig {
         loadingIndicator: .gray,
         buttonForeground: .white
     )
+    
+    static let images = UIConfig.Images(
+        emptyConversationsIcon: UIImage(named: "connectionsEmpty")!
+    )
 }
 
 private extension AppStyleConfig {
