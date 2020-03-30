@@ -11,7 +11,7 @@ import UIKit
 extension UIColor {
     
     static var conversationsBackground: UIColor {
-        UIConfig.current.colors.conversationsList.background
+        UIConfig.current.colors.background
     }
     
     static var conversationsTitle: UIColor {

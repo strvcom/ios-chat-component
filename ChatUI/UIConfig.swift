@@ -48,13 +48,13 @@ public class UIConfig {
     // MARK: Colors
     public struct Colors {
         
+        let background: UIColor
         let text: UIColor
         let lightText: UIColor
         let primary: UIColor
         let buttonForeground: UIColor
         
         public struct ConversationsList {
-            let background: UIColor
             let separator: UIColor
             let circle: UIColor
             let circleBackground: UIColor
@@ -64,14 +64,12 @@ public class UIConfig {
                 separator: UIColor,
                 circle: UIColor,
                 circleBackground: UIColor,
-                avatarInnerBorder: UIColor,
-                background: UIColor
+                avatarInnerBorder: UIColor
             ) {
                 self.separator = separator
                 self.circle = circle
                 self.circleBackground = circleBackground
                 self.avatarInnerBorder = avatarInnerBorder
-                self.background = background
             }
         }
         
@@ -80,6 +78,7 @@ public class UIConfig {
         let loadingIndicator: UIColor
         
         public init(
+            background: UIColor,
             text: UIColor,
             lightText: UIColor,
             primary: UIColor,
@@ -87,6 +86,7 @@ public class UIConfig {
             loadingIndicator: UIColor,
             buttonForeground: UIColor
         ) {
+            self.background = background
             self.text = text
             self.lightText = lightText
             self.primary = primary
@@ -144,6 +144,7 @@ public class UIConfig {
             )
         ),
         colors: Colors(
+            background: .white,
             text: .black,
             lightText: .black,
             primary: .black,
@@ -151,8 +152,7 @@ public class UIConfig {
                 separator: .black,
                 circle: .black,
                 circleBackground: .black,
-                avatarInnerBorder: .black,
-                background: .white
+                avatarInnerBorder: .black
             ),
             loadingIndicator: .gray,
             buttonForeground: .white
