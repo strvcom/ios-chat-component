@@ -9,6 +9,7 @@
 import UIKit
 import ChatUI
 
+// swiftlint:disable force_unwrapping
 enum AppStyleConfig {
 
     static let fonts = UIConfig.Fonts(
