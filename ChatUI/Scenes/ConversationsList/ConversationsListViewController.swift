@@ -62,7 +62,7 @@ private extension ConversationsListViewController {
     func setup() {
         view.backgroundColor = .conversationsBackground
         view.addSubview(tableView)
-        tableView.fill(view)
+        tableView.pinToSuperview()
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
@@ -102,13 +102,9 @@ private extension ConversationsListViewController {
         if emptyStateView.superview == nil, isEmpty {
             view.addSubview(emptyStateView)
             emptyStateView.isHidden = true
-            emptyStateView.translatesAutoresizingMaskIntoConstraints = false
-            view.addConstraints([
-                emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
+            
+            emptyStateView.pinToSuperview(edges: [.left, .right])
+            emptyStateView.centerInSuperview()
         }
         
         tableView.isHidden = isEmpty

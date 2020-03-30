@@ -48,6 +48,7 @@
 		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
 		04E74E7824323F3800401222 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BF1844242E11A600C1D626 /* Images.xcassets */; };
 		04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E792432440800401222 /* UIImage+ChatImages.swift */; };
+		04E74E7C2432593B00401222 /* Axis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E7B2432593B00401222 /* Axis.swift */; };
 		04F62DF92412BEED0061B308 /* Listener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DF72412BED60061B308 /* Listener.swift */; };
 		04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */; };
 		1338DC09ECEBC09E839AFBFE /* (null) in Frameworks */ = {isa = PBXBuildFile; };
@@ -262,6 +263,7 @@
 		04E56D0524200550001F54A9 /* ViewModelingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelingState.swift; sourceTree = "<group>"; };
 		04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModelDelegate.swift; sourceTree = "<group>"; };
 		04E74E792432440800401222 /* UIImage+ChatImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+ChatImages.swift"; sourceTree = "<group>"; };
+		04E74E7B2432593B00401222 /* Axis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Axis.swift; sourceTree = "<group>"; };
 		04F62DF72412BED60061B308 /* Listener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listener.swift; sourceTree = "<group>"; };
 		04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenerIdentifier.swift; sourceTree = "<group>"; };
 		0B4637025817341405045197 /* Pods-ChatNetworkingFirestore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatNetworkingFirestore.debug.xcconfig"; path = "Target Support Files/Pods-ChatNetworkingFirestore/Pods-ChatNetworkingFirestore.debug.xcconfig"; sourceTree = "<group>"; };
@@ -464,6 +466,7 @@
 				045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */,
 				045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */,
 				04E74E792432440800401222 /* UIImage+ChatImages.swift */,
+				04E74E7B2432593B00401222 /* Axis.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1182,6 +1185,7 @@
 				045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */,
 				04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */,
 				C11E9E6723EDCD34005E10A1 /* MessagesListViewController.swift in Sources */,
+				04E74E7C2432593B00401222 /* Axis.swift in Sources */,
 				04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */,
 				04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */,
 				C11E9E5A23EDCD34005E10A1 /* Constants.swift in Sources */,
