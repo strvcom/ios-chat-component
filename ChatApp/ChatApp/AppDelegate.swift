@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 conversation: "Conversation",
                 emptyConversationsTitle: "No matches yet",
                 emptyConversationsSubtitle: "Finish quizzes and get more matches",
-                takeAQuizButton: "Take a Quiz"
+                emptyConversationsActionTitle: "Take a Quiz"
             )
         )
         

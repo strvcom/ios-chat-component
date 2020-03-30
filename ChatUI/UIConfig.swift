@@ -99,20 +99,20 @@ public class UIConfig {
         let conversation: String
         let emptyConversationsTitle: String
         let emptyConversationsSubtitle: String
-        let takeAQuizButton: String
+        let emptyConversationsActionTitle: String
         
         public init(
             newConversation: String,
             conversation: String,
             emptyConversationsTitle: String,
             emptyConversationsSubtitle: String,
-            takeAQuizButton: String
+            emptyConversationsActionTitle: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
             self.emptyConversationsTitle = emptyConversationsTitle
             self.emptyConversationsSubtitle = emptyConversationsSubtitle
-            self.takeAQuizButton = takeAQuizButton
+            self.emptyConversationsActionTitle = emptyConversationsActionTitle
         }
     }
     
@@ -147,7 +147,7 @@ public class UIConfig {
             conversation: missingString,
             emptyConversationsTitle: missingString,
             emptyConversationsSubtitle: missingString,
-            takeAQuizButton: missingString
+            emptyConversationsActionTitle: missingString
         )
     )
     

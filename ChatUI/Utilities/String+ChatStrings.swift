@@ -25,6 +25,6 @@ extension String {
     }
     
     static var takeAQuizButton: String {
-        UIConfig.current.strings.takeAQuizButton
+        UIConfig.current.strings.emptyConversationsActionTitle
     }
 }
