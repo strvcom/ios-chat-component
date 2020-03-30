@@ -16,6 +16,7 @@ extension String {
     static var conversation: String {
         UIConfig.current.strings.conversation
     }
+    
     static var emptyConversationsTitle: String {
         UIConfig.current.strings.emptyConversationsTitle
     }
