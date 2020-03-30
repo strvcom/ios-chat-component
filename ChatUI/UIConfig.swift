@@ -54,6 +54,7 @@ public class UIConfig {
         let buttonForeground: UIColor
         
         public struct ConversationsList {
+            let background: UIColor
             let separator: UIColor
             let circle: UIColor
             let circleBackground: UIColor
@@ -63,12 +64,14 @@ public class UIConfig {
                 separator: UIColor,
                 circle: UIColor,
                 circleBackground: UIColor,
-                avatarInnerBorder: UIColor
+                avatarInnerBorder: UIColor,
+                background: UIColor
             ) {
                 self.separator = separator
                 self.circle = circle
                 self.circleBackground = circleBackground
                 self.avatarInnerBorder = avatarInnerBorder
+                self.background = background
             }
         }
         
@@ -148,7 +151,8 @@ public class UIConfig {
                 separator: .black,
                 circle: .black,
                 circleBackground: .black,
-                avatarInnerBorder: .black
+                avatarInnerBorder: .black,
+                background: .white
             ),
             loadingIndicator: .gray,
             buttonForeground: .white

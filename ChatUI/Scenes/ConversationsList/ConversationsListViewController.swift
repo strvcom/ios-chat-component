@@ -60,7 +60,7 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = .conversationsBackground
         view.addSubview(tableView)
         tableView.fill(view)
         

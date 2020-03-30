@@ -9,6 +9,11 @@
 import UIKit
 
 extension UIColor {
+    
+    static var conversationsBackground: UIColor {
+        UIConfig.current.colors.conversationsList.background
+    }
+    
     static var conversationsTitle: UIColor {
         UIConfig.current.colors.text
     }
