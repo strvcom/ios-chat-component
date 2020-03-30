@@ -99,16 +99,14 @@ private extension ConversationsListViewController {
     }
     
     func toggleEmptyState(isEmpty: Bool) {
-        if emptyStateView.superview == nil, isEmpty {
-            view.addSubview(emptyStateView)
-            emptyStateView.isHidden = true
-            
+        if isEmpty, emptyStateView.superview == nil {
+            view.insertSubview(emptyStateView, belowSubview: tableView)
+
             emptyStateView.pinToSuperview(edges: [.left, .right])
             emptyStateView.centerInSuperview()
         }
         
         tableView.isHidden = isEmpty
-        emptyStateView.isHidden = !isEmpty
     }
 }
 
