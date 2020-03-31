@@ -53,6 +53,14 @@ public protocol ChatCoreServicing {
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
     func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+
+    /// Delete a message
+    ///
+    /// - Parameters:
+    ///   - message: Message data
+    ///   - conversation: Conversation ID
+    ///   - completion: Called upon deleting message (or encountering an error)
+    func delete(message: M, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
     
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///

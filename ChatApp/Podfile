@@ -26,7 +26,6 @@ target 'ChatApp' do
 end
 
 target 'Chat' do
-  networking_pods
 end
 
 target 'ChatNetworkingFirestore' do

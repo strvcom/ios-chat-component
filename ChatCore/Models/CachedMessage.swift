@@ -13,10 +13,11 @@ struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
 
     let content: T
     let conversationId: ObjectIdentifier
-    private let id: ObjectIdentifier = UUID().uuidString
+    let id: ObjectIdentifier
     private(set) var state: CachedMessageState
 
     init(content: T, conversationId: ObjectIdentifier, state: CachedMessageState) {
+        self.id = UUID().uuidString
         self.content = content
         self.conversationId = conversationId
         self.state = state

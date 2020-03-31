@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 private extension SceneDelegate {
 
     func setRootViewController() {
+        try? Auth.auth().signOut()
         if let user = firebaseAuthentication.user {
             showChat(user: user)
         } else {

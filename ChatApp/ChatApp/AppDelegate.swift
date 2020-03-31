@@ -16,8 +16,9 @@ var firebaseAuthentication: FirebaseAuthentication!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
+        
         guard let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") else {
             fatalError("Missing firebase configuration file")
         }
@@ -28,7 +29,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure(options: options)
         let database = Firestore.firestore()
         firebaseAuthentication = FirebaseAuthentication(database: database)
-        chat = Chat(config: Chat.Configuration(type: .configUrl(configUrl)))
+        
+        let uiConfig = Chat.UIConfiguration(
+            fonts: AppStyleConfig.fonts,
+            colors: AppStyleConfig.colors,
+            strings: Chat.UIConfiguration.Strings(
+                newConversation: "Wants to chat!", conversation: "Conversation"
+            )
+        )
+        let networkConfig = Chat.NetworkConfiguration(type: .configUrl(configUrl))
+        chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
         setupBackgroundFetch()
         return true
     }

@@ -12,24 +12,32 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public class Chat {
-    public typealias Configuration = ChatNetworkingFirestoreConfig
+    public typealias NetworkConfiguration = ChatNetworkingFirestoreConfig
+    public typealias UIConfiguration = Interface.Config
+    
+    public typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    public typealias Interface = ChatUI<Core>
 
-    let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
-    let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>
+    let core: Core
+    let interface: Interface
 
-    public init(config: Configuration) {
-        let networking = ChatNetworkingFirestore(config: config)
-        let core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>(networking: networking)
-        self.core = core
-        self.interface = ChatUI(core: core)
+    public init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
+        let networking = ChatNetworkingFirestore(config: networkConfig)
+        
+        self.core = Core(networking: networking)
+        
+        self.interface = Interface(
+            core: core,
+            config: uiConfig
+        )
     }
 }
 
 // MARK: - UI
 public extension Chat {
     func conversationsList() -> UIViewController {
-        let list = interface.conversationsList()
-        return list
+interface.rootViewController
+
     }
 }
 
@@ -47,7 +55,7 @@ public extension Chat {
 // MARK: - Users
 public extension Chat {
     func setCurrentUser(userId: ObjectIdentifier, name: String) {
-        let user = User(id: userId, name: name, imageUrl: nil)
+        let user = User(id: userId, name: name, imageUrl: nil, compatibility: .randomCompatibility)
         core.setCurrentUser(user: user)
     }
 }
