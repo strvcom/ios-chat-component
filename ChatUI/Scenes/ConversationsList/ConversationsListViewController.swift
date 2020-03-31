@@ -104,7 +104,7 @@ private extension ConversationsListViewController {
 
             emptyStateView.pinToSuperview(edges: [.left, .right])
             emptyStateView.centerInSuperview()
-        } else if tableView.isHidden {
+        } else if !isEmpty, tableView.isHidden {
             // If the tableView is currently hidden it means the emptyStateView
             // is about to be hidden and we can remove it from its superview.
             // Also we don't want to check for emptyStateView.superview != nil to avoid unnecessary instantiation of the view
