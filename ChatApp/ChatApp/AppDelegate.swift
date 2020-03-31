@@ -23,11 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // userFirebaseID is an information that backend is providing
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
-        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
-        let uiConfig = Chat.UIConfiguration(
+        let networkConfig = ChatMessageKitFirestore.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
+        let uiConfig = ChatMessageKitFirestore.UIConfiguration(
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
-            strings: Chat.UIConfiguration.Strings(
+            strings: ChatMessageKitFirestore.UIConfiguration.Strings(
                 newConversation: "Wants to chat!", conversation: "Conversation"
             )
         )

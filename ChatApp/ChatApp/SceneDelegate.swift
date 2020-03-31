@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 
         window = UIWindow(windowScene: windowScene)
 
-        window?.rootViewController = chat.conversationsList()
+        window?.rootViewController = chat.interface(for: scene)
         window?.makeKeyAndVisible()
     }
 }
