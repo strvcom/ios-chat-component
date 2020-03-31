@@ -10,7 +10,7 @@ import UIKit
 
 extension UIColor {
     
-    static var conversationsBackground: UIColor {
+    static var chatBackground: UIColor {
         UIConfig.current.colors.background
     }
     

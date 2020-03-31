@@ -14,13 +14,13 @@ class EmptyConversationsList: UIView {
     
     @IBOutlet private var iconImage: UIImageView! {
         didSet {
-            iconImage.image = .emptyConversationsIcon
+            iconImage.image = .conversationsListEmptyIcon
         }
     }
     
     @IBOutlet private var titleLabel: UILabel! {
         didSet {
-            titleLabel.font = .conversationListEmptyTitle
+            titleLabel.font = .conversationsListEmptyTitle
             titleLabel.textColor = .conversationsEmptyTitle
             titleLabel.text = .emptyConversationsTitle
         }
@@ -28,7 +28,7 @@ class EmptyConversationsList: UIView {
     
     @IBOutlet private var subtitleLabel: UILabel! {
         didSet {
-            subtitleLabel.font = .conversationListEmptySubtitle
+            subtitleLabel.font = .conversationsListEmptySubtitle
             subtitleLabel.textColor = .conversationsEmptySubtitle
             subtitleLabel.text = .emptyConversationsSubtitle
         }
@@ -36,7 +36,7 @@ class EmptyConversationsList: UIView {
     
     @IBOutlet private var actionButton: UIButton! {
         didSet {
-            actionButton.setTitle(.takeAQuizButton, for: .normal)
+            actionButton.setTitle(.emptyConversationsActionTitle, for: .normal)
             actionButton.setTitleColor(.buttonForeground, for: .normal)
             actionButton.backgroundColor = .buttonBackground
             actionButton.layer.cornerRadius = Constants.buttonCornerRadius

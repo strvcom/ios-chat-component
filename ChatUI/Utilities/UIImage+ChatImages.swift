@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIImage {
-    static var emptyConversationsIcon: UIImage {
+    static var conversationsListEmptyIcon: UIImage {
         UIConfig.current.images.emptyConversationsIcon
     }
 }

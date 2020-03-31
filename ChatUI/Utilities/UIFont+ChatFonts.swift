@@ -25,11 +25,11 @@ extension UIFont {
         UIConfig.current.fonts.conversationsList.subtitleSecondary
     }
     
-    static var conversationListEmptyTitle: UIFont {
+    static var conversationsListEmptyTitle: UIFont {
         UIConfig.current.fonts.conversationsList.emptyTitle
     }
     
-    static var conversationListEmptySubtitle: UIFont {
+    static var conversationsListEmptySubtitle: UIFont {
         UIConfig.current.fonts.conversationsList.emptySubtitle
     }
 }
