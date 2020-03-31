@@ -30,6 +30,9 @@ public protocol ChatCoreServicing {
 
     init(networking: Networking)
 
+    // TODO: docs
+    func setCurrentUser(user: U)
+
     /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.
     ///
     /// - Parameters:

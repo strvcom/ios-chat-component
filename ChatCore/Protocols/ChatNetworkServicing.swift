@@ -23,9 +23,13 @@ public protocol ChatNetworkServicing {
     typealias U = C.User
 
     /// Current user logged in to the app
-    var currentUser: U? { get }
+    // TODO: needed? knows core
+    //var currentUser: U? { get }
 
     init(config: Config)
+
+    // TODO: comment
+    func setCurrentUser(user id: ObjectIdentifier)
 
     /// Initial loading of network service.
     ///

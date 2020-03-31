@@ -53,12 +53,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
-    public var currentUser: UserUI? {
-        guard let currentUser = networking.currentUser else {
-            return nil
-        }
-        return currentUser.uiModel
-    }
+    public private(set) var currentUser: UserUI?
 
     // current state observing
     public private(set) var currentState: ChatCoreState {
@@ -80,7 +75,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public required init (networking: Networking) {
         currentState = .initial
         self.networking = networking
-        loadNetworkService()
+
+        // TODO: Cj
+//        loadNetworkService()
 
         // hook to app did become active to resend messages
         NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -377,5 +374,14 @@ private extension ChatCore {
                 self?.currentState = .connecting
             }
         })
+    }
+}
+
+// MARK: - User management
+extension ChatCore {
+    open func setCurrentUser(user: UserUI) {
+        currentUser = user
+        networking.setCurrentUser(user: user.id)
+        loadNetworkService()
     }
 }

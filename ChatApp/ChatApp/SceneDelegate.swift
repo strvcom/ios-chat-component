@@ -8,9 +8,7 @@
 
 import UIKit
 import Chat
-
-/// Global chat component for simplicity
-var chat: Chat?
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,39 +16,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // swiftlint:disable:next force_unwrapping
     private let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
+    private var firebaseAuthentication: FirebaseAuthentication?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else {
             return
         }
 
-        let firebaseAuthentication = FirebaseAuthentication(configUrl: configUrl)
-
         self.window = UIWindow(windowScene: windowScene)
-
-        if let userId = firebaseAuthentication.userId {
-            showChat(userId: userId)
-        } else {
-            let authenticationViewController = firebaseAuthentication.authenticationViewController { [weak self] result in
-                switch result {
-                case .success(let user):
-                    self?.showChat(userId: user.providerID)
-                case .failure(let error):
-                    print("Firebase authentication failed \(error)")
-                }
-            }
-            self.window?.rootViewController = authenticationViewController
-        }
-
+        setRootViewController()
         self.window?.makeKeyAndVisible()
     }
 }
 
-// MARK: - Create chat and present
+// MARK: - Create chat and present if a
 private extension SceneDelegate {
-    func showChat(userId: String) {
-        let config = Chat.Configuration(configUrl: configUrl, userId: userId)
-        chat = Chat(config: config)
-        self.window?.rootViewController = chat?.conversationsList()
+
+    func setRootViewController() {
+        firebaseAuthentication = FirebaseAuthentication(configUrl: configUrl)
+        // TODO:
+        try? Auth.auth().signOut()
+
+        if let user = firebaseAuthentication?.user {
+            showChat(user: user)
+        } else {
+            guard let authenticationViewController = firebaseAuthentication?.authenticationViewController(loginCompletion: { [weak self] result in
+                switch result {
+                case .success(let user):
+                    self?.showChat(user: user)
+                case .failure(let error):
+                    print("Firebase authentication failed \(error)")
+                }
+            }) else {
+                fatalError("Firebase login UI failed")
+            }
+            self.window?.rootViewController = authenticationViewController
+        }
+    }
+
+    func showChat(user: FirebaseAuth.User) {
+        chat.setCurrentUser(userId: user.uid, name: (user.displayName ?? user.email) ?? "")
+        window?.rootViewController = chat.conversationsList()
     }
 }

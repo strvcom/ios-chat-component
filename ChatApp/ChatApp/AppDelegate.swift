@@ -8,10 +8,24 @@
 
 import UIKit
 import Chat
+import Firebase
+
+/// Global chat component for simplicity
+var chat: Chat!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+        guard let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") else {
+            fatalError("Missing firebase configuration file")
+        }
+        guard let options = FirebaseOptions(contentsOfFile: configUrl) else {
+            fatalError("Can't configure Firebase")
+        }
+
+        FirebaseApp.configure(options: options)
+        chat = Chat(config: Chat.Configuration(configUrl: configUrl))
         setupBackgroundFetch()
         return true
     }
@@ -44,7 +58,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            chat?.runBackgroundTasks { result in
+            chat.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return

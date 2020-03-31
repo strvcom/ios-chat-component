@@ -23,17 +23,31 @@ public class Chat {
         self.core = core
         self.interface = ChatUI(core: core)
     }
-    
-    public func conversationsList() -> UIViewController {
+}
+
+// MARK: - UI
+public extension Chat {
+    func conversationsList() -> UIViewController {
         let list = interface.conversationsList()
         return list
     }
+}
 
-    public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
+// MARK: - Messages
+public extension Chat {
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
 
-    public func resendUnsentMessages() {
+    func resendUnsentMessages() {
         core.resendUnsentMessages()
+    }
+}
+
+// MARK: - Users
+public extension Chat {
+    func setCurrentUser(userId: ObjectIdentifier, name: String) {
+        let user = User(id: userId, name: name, imageUrl: nil)
+        core.setCurrentUser(user: user)
     }
 }

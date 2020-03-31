@@ -12,22 +12,20 @@ import FirebaseFirestore
 import FirebaseCore
 
 public class ChatNetworkingFirestore: ChatNetworkServicing {
+
     public struct Configuration {
         let configUrl: String
-        let userId: String
 
-        public init(configUrl: String, userId: String) {
-            self.userId = userId
+        public init(configUrl: String) {
             self.configUrl = configUrl
         }
     }
     
     let database: Firestore
 
-    public private(set) var currentUser: UserFirestore?
-    
-    private var listeners: [Listener: ListenerRegistration] = [:]
+    // user management
     private var currentUserId: String?
+    private var currentUser: UserFirestore?
     private var users: [UserFirestore] = [] {
         didSet {
             if let currentUserId = currentUserId {
@@ -36,17 +34,20 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         }
     }
     
+    private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
     public required init(config: Configuration) {
-        guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
-            fatalError("Can't configure Firebase")
+        // test whether default firebase app is not already instantiated
+        if FirebaseApp.app() == nil {
+            guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
+                fatalError("Can't configure Firebase")
+            }
+            FirebaseApp.configure(options: options)
         }
 
-        currentUserId = config.userId
-        FirebaseApp.configure(options: options)
-        self.database = Firestore.firestore()
+        database = Firestore.firestore()
         
         // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
@@ -81,6 +82,14 @@ private extension ChatNetworkingFirestore {
                         "members": users.map { $0.id }
                     ])
         }
+    }
+}
+
+// MARK: - User setup
+public extension ChatNetworkingFirestore {
+    func setCurrentUser(user id: ObjectIdentifier) {
+        self.currentUserId = id
+
     }
 }
 
@@ -274,7 +283,6 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Queries
 private extension ChatNetworkingFirestore {
-    
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         
         guard let userId = currentUserId else {
