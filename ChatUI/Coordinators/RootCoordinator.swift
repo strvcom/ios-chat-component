@@ -37,7 +37,7 @@ extension RootCoordinator: RootCoordinating {
     }
     
     func emptyStateAction() {
-        delegate?.emptyConversationsListAction()
+        delegate?.conversationsListEmptyListAction()
     }
 }
 

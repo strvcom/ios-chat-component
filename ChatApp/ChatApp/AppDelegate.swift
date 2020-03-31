@@ -30,9 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             strings: Chat.UIConfiguration.Strings(
                 newConversation: "Wants to chat!",
                 conversation: "Conversation",
-                emptyConversationsTitle: "No matches yet",
-                emptyConversationsSubtitle: "Finish quizzes and get more matches",
-                emptyConversationsActionTitle: "Take a Quiz"
+                conversationsListEmptyTitle: "No matches yet",
+                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
+                conversationsListEmptyActionTitle: "Take a Quiz"
             ),
             images: AppStyleConfig.images
         )
@@ -83,7 +83,7 @@ extension AppDelegate {
 }
 
 extension AppDelegate: Chat.UIDelegate {
-    func emptyConversationsListAction() {
+    func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
     }
 }

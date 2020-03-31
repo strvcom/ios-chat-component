@@ -39,7 +39,7 @@ enum AppStyleConfig {
     )
     
     static let images = UIConfig.Images(
-        emptyConversationsIcon: UIImage(named: "connectionsEmpty")!
+        conversationsListEmptyIcon: UIImage(named: "connectionsEmpty")!
     )
 }
 

@@ -22,7 +22,7 @@ class EmptyConversationsList: UIView {
         didSet {
             titleLabel.font = .conversationsListEmptyTitle
             titleLabel.textColor = .conversationsEmptyTitle
-            titleLabel.text = .emptyConversationsTitle
+            titleLabel.text = .conversationsListEmptyTitle
         }
     }
     
@@ -30,13 +30,13 @@ class EmptyConversationsList: UIView {
         didSet {
             subtitleLabel.font = .conversationsListEmptySubtitle
             subtitleLabel.textColor = .conversationsEmptySubtitle
-            subtitleLabel.text = .emptyConversationsSubtitle
+            subtitleLabel.text = .conversationsListEmptySubtitle
         }
    }
     
     @IBOutlet private var actionButton: UIButton! {
         didSet {
-            actionButton.setTitle(.emptyConversationsActionTitle, for: .normal)
+            actionButton.setTitle(.conversationsListEmptyActionTitle, for: .normal)
             actionButton.setTitleColor(.buttonForeground, for: .normal)
             actionButton.backgroundColor = .buttonBackground
             actionButton.layer.cornerRadius = Constants.buttonCornerRadius

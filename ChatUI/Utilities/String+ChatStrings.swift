@@ -17,15 +17,15 @@ extension String {
         UIConfig.current.strings.conversation
     }
     
-    static var emptyConversationsTitle: String {
-        UIConfig.current.strings.emptyConversationsTitle
+    static var conversationsListEmptyTitle: String {
+        UIConfig.current.strings.conversationsListEmptyTitle
     }
     
-    static var emptyConversationsSubtitle: String {
-        UIConfig.current.strings.emptyConversationsSubtitle
+    static var conversationsListEmptySubtitle: String {
+        UIConfig.current.strings.conversationsListEmptySubtitle
     }
     
-    static var emptyConversationsActionTitle: String {
-        UIConfig.current.strings.emptyConversationsActionTitle
+    static var conversationsListEmptyActionTitle: String {
+        UIConfig.current.strings.conversationsListEmptyActionTitle
     }
 }

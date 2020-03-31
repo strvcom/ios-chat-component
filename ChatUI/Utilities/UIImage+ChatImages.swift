@@ -10,6 +10,6 @@ import UIKit
 
 extension UIImage {
     static var conversationsListEmptyIcon: UIImage {
-        UIConfig.current.images.emptyConversationsIcon
+        UIConfig.current.images.conversationsListEmptyIcon
     }
 }

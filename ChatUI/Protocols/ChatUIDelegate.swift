@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol ChatUIDelegate: AnyObject {
-    func emptyConversationsListAction()
+    func conversationsListEmptyListAction()
 }

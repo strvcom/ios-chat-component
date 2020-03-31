@@ -100,33 +100,33 @@ public class UIConfig {
     public struct Strings {
         let newConversation: String
         let conversation: String
-        let emptyConversationsTitle: String
-        let emptyConversationsSubtitle: String
-        let emptyConversationsActionTitle: String
+        let conversationsListEmptyTitle: String
+        let conversationsListEmptySubtitle: String
+        let conversationsListEmptyActionTitle: String
         
         public init(
             newConversation: String,
             conversation: String,
-            emptyConversationsTitle: String,
-            emptyConversationsSubtitle: String,
-            emptyConversationsActionTitle: String
+            conversationsListEmptyTitle: String,
+            conversationsListEmptySubtitle: String,
+            conversationsListEmptyActionTitle: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
-            self.emptyConversationsTitle = emptyConversationsTitle
-            self.emptyConversationsSubtitle = emptyConversationsSubtitle
-            self.emptyConversationsActionTitle = emptyConversationsActionTitle
+            self.conversationsListEmptyTitle = conversationsListEmptyTitle
+            self.conversationsListEmptySubtitle = conversationsListEmptySubtitle
+            self.conversationsListEmptyActionTitle = conversationsListEmptyActionTitle
         }
     }
     
     // MARK: Images
     public struct Images {
-        let emptyConversationsIcon: UIImage
+        let conversationsListEmptyIcon: UIImage
         
         public init(
-            emptyConversationsIcon: UIImage
+            conversationsListEmptyIcon: UIImage
         ) {
-            self.emptyConversationsIcon = emptyConversationsIcon
+            self.conversationsListEmptyIcon = conversationsListEmptyIcon
         }
     }
     
@@ -160,12 +160,12 @@ public class UIConfig {
         strings: Strings(
             newConversation: missingString,
             conversation: missingString,
-            emptyConversationsTitle: missingString,
-            emptyConversationsSubtitle: missingString,
-            emptyConversationsActionTitle: missingString
+            conversationsListEmptyTitle: missingString,
+            conversationsListEmptySubtitle: missingString,
+            conversationsListEmptyActionTitle: missingString
         ),
         images: Images(
-            emptyConversationsIcon: UIImage()
+            conversationsListEmptyIcon: UIImage()
         )
     )
     
