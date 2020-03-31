@@ -45,9 +45,9 @@
 		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
 		04F62DF92412BEED0061B308 /* Listener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DF72412BED60061B308 /* Listener.swift */; };
 		04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */; };
-		1338DC09ECEBC09E839AFBFE /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		17B0C00CC1EF8669E3C77DF0 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		1E8447A4DCFC8F8B87EEBF4E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		1338DC09ECEBC09E839AFBFE /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		17B0C00CC1EF8669E3C77DF0 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		1E8447A4DCFC8F8B87EEBF4E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7607544B606BAEED6BC1917D /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBF495779AD7A83A102D5B39 /* Pods_ChatApp.framework */; };
 		8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84149959241AB70600D3EEC6 /* ChatCoreState.swift */; };
 		841711AB2407F1160004FED7 /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841711AA2407F1160004FED7 /* Closure.swift */; };
@@ -348,7 +348,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17B0C00CC1EF8669E3C77DF0 /* BuildFile in Frameworks */,
+				17B0C00CC1EF8669E3C77DF0 /* (null) in Frameworks */,
 				DFF6C5D4A543195C74725B24 /* Pods_ChatUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -364,7 +364,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E8447A4DCFC8F8B87EEBF4E /* BuildFile in Frameworks */,
+				1E8447A4DCFC8F8B87EEBF4E /* (null) in Frameworks */,
 				EF221BE2869E7C22EA2BFC52 /* Pods_ChatNetworkingFirestore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +388,7 @@
 				C196FBC92422272C0077FC49 /* ChatNetworkingFirestore.framework in Frameworks */,
 				C196FBD2242227360077FC49 /* ChatUI.framework in Frameworks */,
 				C196FBCE242227310077FC49 /* ChatCore.framework in Frameworks */,
-				1338DC09ECEBC09E839AFBFE /* BuildFile in Frameworks */,
+				1338DC09ECEBC09E839AFBFE /* (null) in Frameworks */,
 				96870B2A804B334846C2178C /* Pods_Chat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1327,7 +1327,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = G85XUWJRSL;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1359,7 +1359,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1389,7 +1389,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1420,7 +1420,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1451,7 +1451,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1483,7 +1483,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1714,7 +1714,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1746,7 +1746,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = D6532TRNCE;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
