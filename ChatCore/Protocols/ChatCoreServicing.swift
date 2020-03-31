@@ -30,7 +30,10 @@ public protocol ChatCoreServicing {
 
     init(networking: Networking)
 
-    // TODO: docs
+    /// Sets current user for chat core
+    ///
+    /// - Parameters:
+    ///   - user: Current user
     func setCurrentUser(user: U)
 
     /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.

@@ -12,15 +12,6 @@ import FirebaseFirestore
 import FirebaseCore
 
 public class ChatNetworkingFirestore: ChatNetworkServicing {
-
-    public struct Configuration {
-        let configUrl: String
-
-        public init(configUrl: String) {
-            self.configUrl = configUrl
-        }
-    }
-    
     let database: Firestore
 
     // user management
@@ -38,17 +29,23 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
-    public required init(config: Configuration) {
-        // test whether default firebase app is not already instantiated
-        if FirebaseApp.app() == nil {
-            guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
-                fatalError("Can't configure Firebase")
+    public required init(config: ChatNetworkingFirestoreConfig) {
+
+        // setup from config
+        switch config.type {
+        case .configUrl(let url):
+            // test whether default firebase app is not already instantiated
+            if FirebaseApp.app() == nil {
+                guard let options = FirebaseOptions(contentsOfFile: url) else {
+                    fatalError("Can't configure Firebase")
+                }
+                FirebaseApp.configure(options: options)
             }
-            FirebaseApp.configure(options: options)
+            database = Firestore.firestore()
+        case .database(let database):
+            self.database = database
         }
 
-        database = Firestore.firestore()
-        
         // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
     }

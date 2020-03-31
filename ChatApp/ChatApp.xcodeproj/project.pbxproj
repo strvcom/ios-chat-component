@@ -23,6 +23,7 @@
 		843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843A584424168B1A007E6F45 /* KeychainSwift.swift */; };
 		843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D814D2406D6B100C62656 /* IdentifiableClosure.swift */; };
 		843D81542406E90F00C62656 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843D81522406E90200C62656 /* TaskManager.swift */; };
+		846905422433328200807AFF /* ChatNetworkingFirestoreConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846905412433328200807AFF /* ChatNetworkingFirestoreConfig.swift */; };
 		8478F5C024239725002BC890 /* CachedMessageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8478F5BF24239725002BC890 /* CachedMessageState.swift */; };
 		8488DE41241EDB8000AC5651 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8488DE40241EDB8000AC5651 /* Reachability.swift */; };
 		8488DE43241EEA5100AC5651 /* ReachabilityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8488DE42241EEA5100AC5651 /* ReachabilityObserver.swift */; };
@@ -160,6 +161,7 @@
 		843A584424168B1A007E6F45 /* KeychainSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwift.swift; sourceTree = "<group>"; };
 		843D814D2406D6B100C62656 /* IdentifiableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClosure.swift; sourceTree = "<group>"; };
 		843D81522406E90200C62656 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		846905412433328200807AFF /* ChatNetworkingFirestoreConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkingFirestoreConfig.swift; sourceTree = "<group>"; };
 		8478F5BF24239725002BC890 /* CachedMessageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMessageState.swift; sourceTree = "<group>"; };
 		8488DE40241EDB8000AC5651 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		8488DE42241EEA5100AC5651 /* ReachabilityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityObserver.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 			isa = PBXGroup;
 			children = (
 				C11E9DF623EDCCDA005E10A1 /* Constants.swift */,
+				846905412433328200807AFF /* ChatNetworkingFirestoreConfig.swift */,
 				C11E9DF723EDCCDA005E10A1 /* ChatNetworkingFirestore.swift */,
 				C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */,
 				C11E9DF923EDCCDA005E10A1 /* ImageUploader.swift */,
@@ -1034,6 +1037,7 @@
 				C11E9E0A23EDCCDA005E10A1 /* Message.swift in Sources */,
 				C11E9E0423EDCCDA005E10A1 /* Constants.swift in Sources */,
 				04957CC623F306A900AD595B /* Pagination.swift in Sources */,
+				846905422433328200807AFF /* ChatNetworkingFirestoreConfig.swift in Sources */,
 				C11E9E0D23EDCCDA005E10A1 /* MesageContent.swift in Sources */,
 				C11E9E0723EDCCDA005E10A1 /* ImageUploader.swift in Sources */,
 				C11E9E0B23EDCCDA005E10A1 /* User.swift in Sources */,

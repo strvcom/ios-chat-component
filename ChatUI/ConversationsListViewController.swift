@@ -21,9 +21,6 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
     private lazy var tableView = UITableView()
     private var listener: ListenerIdentifier?
 
-    // FIXME: this is just a temporary solution
-    private var sender = Sender(id: "", displayName: "")
-    
     init(core: Core) {
         self.core = core
 
@@ -53,7 +50,7 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
                 }
                 
                 let conversation = self.dataSource.conversations[row]
-                let controller = MessagesListViewController(conversation: conversation, core: self.core, sender: self.sender)
+                let controller = MessagesListViewController(conversation: conversation, core: self.core)
                 self.navigationController?.pushViewController(controller, animated: true)
             },
             loadMoreBlock: { [weak self] in
@@ -83,11 +80,6 @@ public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewC
             case .success(let payload):
                 self.delegate?.loadMoreButtonVisible = !payload.reachedEnd
                 self.dataSource.conversations = payload.data
-
-                if let user = self.core.currentUser {
-                    self.sender = Sender(id: user.id, displayName: user.name)
-                }
-
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)

@@ -17,8 +17,6 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     private let dataSource = DataSource()
 
     private var listener: ListenerIdentifier?
-    private let sender: Sender
-    
     private var loadMoreButtonVisible = true {
         didSet {
             loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
@@ -26,10 +24,15 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     }
     
     let photoPickerIconSize: CGFloat = 36
+    let sender: SenderType
 
-    init(conversation: Conversation, core: Core, sender: Sender) {
+    init(conversation: Conversation, core: Core) {
         self.core = core
         self.conversation = conversation
+
+        guard let sender = core.currentUser else {
+            fatalError("Unexpected error, current user is nil at chat core")
+        }
         self.sender = sender
 
         super.init(nibName: nil, bundle: nil)
@@ -106,19 +109,19 @@ extension MessagesListViewController {
 // MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
-        return sender
+        sender
     }
 
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return self.dataSource.messages[indexPath.section]
+        dataSource.messages[indexPath.section]
     }
 
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return self.dataSource.messages.count
+        dataSource.messages.count
     }
 
     public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return conversation.seen.contains { $0.value.messageId == message.messageId } ? 20 : 0
+        conversation.seen.contains { $0.value.messageId == message.messageId } ? 20 : 0
     }
 
     public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {

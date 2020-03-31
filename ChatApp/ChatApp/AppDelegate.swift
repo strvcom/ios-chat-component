@@ -12,6 +12,7 @@ import Firebase
 
 /// Global chat component for simplicity
 var chat: Chat!
+var firebaseAuthentication: FirebaseAuthentication!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,7 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         FirebaseApp.configure(options: options)
-        chat = Chat(config: Chat.Configuration(configUrl: configUrl))
+        let database = Firestore.firestore()
+        firebaseAuthentication = FirebaseAuthentication(database: database)
+        chat = Chat(config: Chat.Configuration(type: .configUrl(configUrl)))
         setupBackgroundFetch()
         return true
     }

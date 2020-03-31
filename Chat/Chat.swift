@@ -12,7 +12,7 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public class Chat {
-    public typealias Configuration = ChatNetworkingFirestore.Configuration
+    public typealias Configuration = ChatNetworkingFirestoreConfig
 
     let interface: ChatUI<ChatCore<ChatNetworkingFirestore, ChatModelsUI>>
     let core: ChatCore<ChatNetworkingFirestore, ChatModelsUI>

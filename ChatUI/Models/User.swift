@@ -8,6 +8,7 @@
 
 import Foundation
 import ChatCore
+import MessageKit
 
 public struct User: UserRepresenting {
     public let id: ObjectIdentifier
@@ -18,5 +19,16 @@ public struct User: UserRepresenting {
         self.id = id
         self.name = name
         self.imageUrl = imageUrl
+    }
+}
+
+// MARK: MessageKit sender type
+extension User: SenderType {
+    public var senderId: String {
+        id
+    }
+
+    public var displayName: String {
+        name
     }
 }

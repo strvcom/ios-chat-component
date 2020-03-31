@@ -22,13 +22,12 @@ public protocol ChatNetworkServicing {
     typealias M = C.Message
     typealias U = C.User
 
-    /// Current user logged in to the app
-    // TODO: needed? knows core
-    //var currentUser: U? { get }
-
     init(config: Config)
 
-    // TODO: comment
+    /// Set current user
+    ///
+    /// - Parameters:
+    ///   - id: User identifier
     func setCurrentUser(user id: ObjectIdentifier)
 
     /// Initial loading of network service.

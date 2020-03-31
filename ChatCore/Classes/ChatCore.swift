@@ -18,7 +18,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.M: ChatUIConvertible,
     Networking.MS: ChatUIConvertible,
     Networking.U: ChatUIConvertible,
-    
+
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
@@ -75,9 +75,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public required init (networking: Networking) {
         currentState = .initial
         self.networking = networking
-
-        // TODO: Cj
-//        loadNetworkService()
 
         // hook to app did become active to resend messages
         NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
