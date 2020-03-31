@@ -106,6 +106,10 @@ private extension ConversationsListViewController {
             emptyStateView.centerInSuperview()
         }
         
+        if !isEmpty, tableView.isHidden {
+            emptyStateView.removeFromSuperview()
+        }
+        
         tableView.isHidden = isEmpty
     }
 }
