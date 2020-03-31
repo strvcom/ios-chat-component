@@ -46,7 +46,6 @@
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
 		04E56D0624200550001F54A9 /* ViewModelingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0524200550001F54A9 /* ViewModelingState.swift */; };
 		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
-		04E74E7824323F3800401222 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BF1844242E11A600C1D626 /* Images.xcassets */; };
 		04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E792432440800401222 /* UIImage+ChatImages.swift */; };
 		04E74E7C2432593B00401222 /* Axis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E7B2432593B00401222 /* Axis.swift */; };
 		04F62DF92412BEED0061B308 /* Listener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F62DF72412BED60061B308 /* Listener.swift */; };
@@ -245,7 +244,6 @@
 		04BF1835242BD5BD00C1D626 /* ConversationsListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListState.swift; sourceTree = "<group>"; };
 		04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyConversationsList.xib; sourceTree = "<group>"; };
 		04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyConversationsList.swift; sourceTree = "<group>"; };
-		04BF1844242E11A600C1D626 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-SemiBold.ttf"; sourceTree = "<group>"; };
 		04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Black.ttf"; sourceTree = "<group>"; };
 		04C0ECD024201B82008A5ADB /* Catamaran-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -605,7 +603,6 @@
 				ADB40CC723C200A5003DC146 /* SceneDelegate.swift */,
 				045A6B35242908090055B5E1 /* StyleConfig.swift */,
 				ADB40CCE23C200A5003DC146 /* Assets.xcassets */,
-				04BF1844242E11A600C1D626 /* Images.xcassets */,
 				ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */,
 				ADB40CD323C200A5003DC146 /* Info.plist */,
 				AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */,
@@ -1021,7 +1018,6 @@
 				045A6B162424E4E00055B5E1 /* Catamaran-SemiBold.ttf in Resources */,
 				AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */,
 				045A6B182424E4E00055B5E1 /* Catamaran-ExtraBold.ttf in Resources */,
-				04E74E7824323F3800401222 /* Images.xcassets in Resources */,
 				045A6B1F2424E4E00055B5E1 /* Catamaran-Bold.ttf in Resources */,
 				045A6B1A2424E4E00055B5E1 /* Catamaran-Medium.ttf in Resources */,
 				045A6B192424E4E00055B5E1 /* Catamaran-ExtraLight.ttf in Resources */,
