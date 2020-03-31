@@ -16,4 +16,16 @@ extension String {
     static var conversation: String {
         UIConfig.current.strings.conversation
     }
+    
+    static var conversationsListEmptyTitle: String {
+        UIConfig.current.strings.conversationsListEmptyTitle
+    }
+    
+    static var conversationsListEmptySubtitle: String {
+        UIConfig.current.strings.conversationsListEmptySubtitle
+    }
+    
+    static var conversationsListEmptyActionTitle: String {
+        UIConfig.current.strings.conversationsListEmptyActionTitle
+    }
 }

@@ -9,12 +9,17 @@
 import UIKit
 
 extension UIColor {
+    
+    static var chatBackground: UIColor {
+        UIConfig.current.colors.background
+    }
+    
     static var conversationsTitle: UIColor {
-        UIConfig.current.colors.conversationsList.title
+        UIConfig.current.colors.text
     }
     
     static var conversationsSubtitle: UIColor {
-        UIConfig.current.colors.conversationsList.subtitle
+        UIConfig.current.colors.lightText
     }
     
     static var conversationsCellSeparator: UIColor {
@@ -30,7 +35,7 @@ extension UIColor {
     }
     
     static var conversationsSubtitleAlert: UIColor {
-        UIConfig.current.colors.conversationsList.subtitleSecondary
+        UIConfig.current.colors.primary
     }
     
     static var conversationsListAvatarInnerBorder: UIColor {
@@ -39,5 +44,21 @@ extension UIColor {
     
     static var loadingIndicator: UIColor {
         UIConfig.current.colors.loadingIndicator
+    }
+    
+    static var conversationsEmptyTitle: UIColor {
+        UIConfig.current.colors.text
+    }
+    
+    static var conversationsEmptySubtitle: UIColor {
+        UIConfig.current.colors.lightText
+    }
+    
+    static var buttonBackground: UIColor {
+        UIConfig.current.colors.primary
+    }
+    
+    static var buttonForeground: UIColor {
+        UIConfig.current.colors.buttonForeground
     }
 }

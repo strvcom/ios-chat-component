@@ -42,7 +42,7 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             }
             
             switch result {
-            case .success(let payload):                
+            case .success(let payload):
                 self.updateState(
                     .ready(
                         value: ConversationsListState(

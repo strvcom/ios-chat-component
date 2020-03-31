@@ -28,11 +28,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
             strings: Chat.UIConfiguration.Strings(
-                newConversation: "Wants to chat!", conversation: "Conversation"
-            )
+                newConversation: "Wants to chat!",
+                conversation: "Conversation",
+                conversationsListEmptyTitle: "No matches yet",
+                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
+                conversationsListEmptyActionTitle: "Take a Quiz"
+            ),
+            images: AppStyleConfig.images
         )
         
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
+        chat.uiDelegate = self
         
         setupBackgroundFetch()
 
@@ -73,5 +79,11 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
+    }
+}
+
+extension AppDelegate: Chat.UIDelegate {
+    func conversationsListEmptyListAction() {
+        print("Take a Quiz button tapped!")
     }
 }

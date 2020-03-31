@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EmptyConversationsList" customModule="ChatUI" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="444" height="400"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N6G-1W-mzt">
+                    <rect key="frame" x="198" y="44" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="48" id="FmN-wd-4De"/>
+                        <constraint firstAttribute="height" constant="48" id="iWk-k0-a2K"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7o-ro-XRd">
+                    <rect key="frame" x="20" y="145" width="404" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ph-XI-2gv">
+                    <rect key="frame" x="158.5" y="198" width="127" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="Qo8-pW-w89"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="127" id="pSg-sa-HPl"/>
+                    </constraints>
+                    <inset key="contentEdgeInsets" minX="22" minY="0.0" maxX="22" maxY="0.0"/>
+                    <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="onActionButtonTap:" destination="iN0-l3-epB" eventType="touchUpInside" id="gMC-7d-ylE"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WYC-55-V9M">
+                    <rect key="frame" x="20" y="116" width="404" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="5ph-XI-2gv" secondAttribute="bottom" priority="250" id="AD3-7P-DnW"/>
+                <constraint firstItem="Y7o-ro-XRd" firstAttribute="top" secondItem="WYC-55-V9M" secondAttribute="bottom" constant="8" symbolic="YES" id="LiD-fj-bNZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WYC-55-V9M" secondAttribute="trailing" constant="20" id="Sti-Qg-N2f"/>
+                <constraint firstItem="WYC-55-V9M" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="WrY-qs-cQs"/>
+                <constraint firstItem="WYC-55-V9M" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Zru-S7-bdB"/>
+                <constraint firstItem="WYC-55-V9M" firstAttribute="top" secondItem="N6G-1W-mzt" secondAttribute="bottom" constant="24" id="a2E-MX-n9U"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Y7o-ro-XRd" secondAttribute="trailing" constant="20" id="cNS-3V-0m6"/>
+                <constraint firstItem="N6G-1W-mzt" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="ckv-58-bT4"/>
+                <constraint firstItem="5ph-XI-2gv" firstAttribute="top" secondItem="Y7o-ro-XRd" secondAttribute="bottom" constant="32" id="hTH-QX-N6k"/>
+                <constraint firstItem="Y7o-ro-XRd" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="oO2-8N-hUS"/>
+                <constraint firstItem="5ph-XI-2gv" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="sUd-uW-IsS"/>
+                <constraint firstItem="N6G-1W-mzt" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="tul-MY-uEF"/>
+                <constraint firstItem="Y7o-ro-XRd" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vIW-xG-N90"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="actionButton" destination="5ph-XI-2gv" id="AvS-mq-ayL"/>
+                <outlet property="iconImage" destination="N6G-1W-mzt" id="uf8-ck-Ymu"/>
+                <outlet property="subtitleLabel" destination="Y7o-ro-XRd" id="dgQ-RT-CUI"/>
+                <outlet property="titleLabel" destination="WYC-55-V9M" id="aqM-RG-6QU"/>
+            </connections>
+            <point key="canvasLocation" x="-100.00000000000001" y="3.3482142857142856"/>
+        </view>
+    </objects>
+</document>

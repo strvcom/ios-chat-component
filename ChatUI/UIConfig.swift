@@ -18,21 +18,29 @@ public class UIConfig {
             let title: UIFont
             let subtitle: UIFont
             let subtitleSecondary: UIFont
+            let emptyTitle: UIFont
+            let emptySubtitle: UIFont
             
             public init(
                 title: UIFont,
                 subtitle: UIFont,
-                subtitleSecondary: UIFont
+                subtitleSecondary: UIFont,
+                emptyTitle: UIFont,
+                emptySubtitle: UIFont
             ) {
                 self.title = title
                 self.subtitle = subtitle
                 self.subtitleSecondary = subtitleSecondary
+                self.emptyTitle = emptyTitle
+                self.emptySubtitle = emptySubtitle
             }
         }
         
         let conversationsList: ConversationsList
+        let buttonTitle: UIFont
         
-        public init(conversationsList: ConversationsList) {
+        public init(buttonTitle: UIFont, conversationsList: ConversationsList) {
+            self.buttonTitle = buttonTitle
             self.conversationsList = conversationsList
         }
     }
@@ -40,27 +48,24 @@ public class UIConfig {
     // MARK: Colors
     public struct Colors {
         
+        let background: UIColor
+        let text: UIColor
+        let lightText: UIColor
+        let primary: UIColor
+        let buttonForeground: UIColor
+        
         public struct ConversationsList {
-            let title: UIColor
-            let subtitle: UIColor
-            let subtitleSecondary: UIColor
             let separator: UIColor
             let circle: UIColor
             let circleBackground: UIColor
             let avatarInnerBorder: UIColor
             
             public init(
-                title: UIColor,
-                subtitle: UIColor,
-                subtitleSecondary: UIColor,
                 separator: UIColor,
                 circle: UIColor,
                 circleBackground: UIColor,
                 avatarInnerBorder: UIColor
             ) {
-                self.title = title
-                self.subtitle = subtitle
-                self.subtitleSecondary = subtitleSecondary
                 self.separator = separator
                 self.circle = circle
                 self.circleBackground = circleBackground
@@ -73,54 +78,95 @@ public class UIConfig {
         let loadingIndicator: UIColor
         
         public init(
+            background: UIColor,
+            text: UIColor,
+            lightText: UIColor,
+            primary: UIColor,
             conversationsList: ConversationsList,
-            loadingIndicator: UIColor
+            loadingIndicator: UIColor,
+            buttonForeground: UIColor
         ) {
+            self.background = background
+            self.text = text
+            self.lightText = lightText
+            self.primary = primary
             self.conversationsList = conversationsList
             self.loadingIndicator = loadingIndicator
+            self.buttonForeground = buttonForeground
         }
     }
     
     // MARK: Strings
     public struct Strings {
-        
-        public enum Identifier {
-            case newConversation
-            case conversation
-        }
-        
         let newConversation: String
         let conversation: String
+        let conversationsListEmptyTitle: String
+        let conversationsListEmptySubtitle: String
+        let conversationsListEmptyActionTitle: String
         
         public init(
             newConversation: String,
-            conversation: String
+            conversation: String,
+            conversationsListEmptyTitle: String,
+            conversationsListEmptySubtitle: String,
+            conversationsListEmptyActionTitle: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
+            self.conversationsListEmptyTitle = conversationsListEmptyTitle
+            self.conversationsListEmptySubtitle = conversationsListEmptySubtitle
+            self.conversationsListEmptyActionTitle = conversationsListEmptyActionTitle
+        }
+    }
+    
+    // MARK: Images
+    public struct Images {
+        let conversationsListEmptyIcon: UIImage
+        
+        public init(
+            conversationsListEmptyIcon: UIImage
+        ) {
+            self.conversationsListEmptyIcon = conversationsListEmptyIcon
         }
     }
     
     private static let missingString = "(Missing string)"
     
     private static var `default` = UIConfig(
-        fonts: Fonts(conversationsList: .init(
-            title: .systemFont(ofSize: 14),
-            subtitle: .systemFont(ofSize: 12),
-            subtitleSecondary: .systemFont(ofSize: 12)
+        fonts: Fonts(
+            buttonTitle: .systemFont(ofSize: 12),
+            conversationsList: .init(
+                title: .systemFont(ofSize: 14),
+                subtitle: .systemFont(ofSize: 12),
+                subtitleSecondary: .systemFont(ofSize: 12),
+                emptyTitle: .systemFont(ofSize: 14),
+                emptySubtitle: .systemFont(ofSize: 12)
             )
         ),
-        colors: Colors(conversationsList: .init(
-            title: .black,
-            subtitle: .black,
-            subtitleSecondary: .black,
-            separator: .black,
-            circle: .black,
-            circleBackground: .black,
-            avatarInnerBorder: .black
-            ), loadingIndicator: .gray
+        colors: Colors(
+            background: .white,
+            text: .black,
+            lightText: .black,
+            primary: .black,
+            conversationsList: .init(
+                separator: .black,
+                circle: .black,
+                circleBackground: .black,
+                avatarInnerBorder: .black
+            ),
+            loadingIndicator: .gray,
+            buttonForeground: .white
         ),
-        strings: Strings(newConversation: missingString, conversation: missingString)
+        strings: Strings(
+            newConversation: missingString,
+            conversation: missingString,
+            conversationsListEmptyTitle: missingString,
+            conversationsListEmptySubtitle: missingString,
+            conversationsListEmptyActionTitle: missingString
+        ),
+        images: Images(
+            conversationsListEmptyIcon: UIImage()
+        )
     )
     
     public static var current: UIConfig = .default
@@ -128,10 +174,12 @@ public class UIConfig {
     let fonts: Fonts
     let colors: Colors
     let strings: Strings
+    let images: Images
 
-    public init(fonts: Fonts, colors: Colors, strings: Strings) {
+    public init(fonts: Fonts, colors: Colors, strings: Strings, images: Images) {
         self.fonts = fonts
         self.colors = colors
         self.strings = strings
+        self.images = images
     }
 }
