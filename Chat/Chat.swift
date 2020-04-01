@@ -46,8 +46,7 @@ public class Chat {
 // MARK: - UI
 public extension Chat {
     func conversationsList() -> UIViewController {
-interface.rootViewController
-
+        interface.rootViewController
     }
 }
 
@@ -64,8 +63,8 @@ public extension Chat {
 
 // MARK: - Users
 public extension Chat {
-    func setCurrentUser(userId: ObjectIdentifier, name: String) {
-        let user = User(id: userId, name: name, imageUrl: nil, compatibility: .randomCompatibility)
+    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+        let user = User(id: userId, name: name, imageUrl: imageUrl, compatibility: nil)
         core.setCurrentUser(user: user)
     }
 }

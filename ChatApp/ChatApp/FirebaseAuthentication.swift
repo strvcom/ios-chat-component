@@ -10,18 +10,21 @@ import Foundation
 import FirebaseAuth
 import FirebaseUI
 import FirebaseFirestore
-import FirebaseCore
 
 // MARK: - Simple solution for firebase authentication
 final class FirebaseAuthentication: NSObject {
 
     private lazy var auth: Auth = Auth.auth()
-    var user: FirebaseAuth.User? {
-        auth.currentUser
+    var user: User? {
+        guard let firUser = auth.currentUser else {
+            return nil
+        }
+        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: nil)
+        return user
     }
 
     let database: Firestore
-    private var loginCompletion: ((Result<FirebaseAuth.User, Error>) -> Void)?
+    private var loginCompletion: ((Result<User, Error>) -> Void)?
 
     deinit {
         print("\(self) deinit")
@@ -34,34 +37,27 @@ final class FirebaseAuthentication: NSObject {
 
 // MARK: - Login view controller
 extension FirebaseAuthentication {
-    func authenticationViewController(loginCompletion: @escaping (Result<FirebaseAuth.User, Error>) -> Void) -> UIViewController {
+    func authenticationViewController(loginCompletion: @escaping (Result<User, Error>) -> Void) -> UIViewController {
         self.loginCompletion = loginCompletion
-        let authUI = FUIAuth.defaultAuthUI()!
+        guard let authUI = FUIAuth.defaultAuthUI() else {
+            fatalError("Unable to create login UI")
+        }
         authUI.delegate = self
         authUI.providers = [FUIGoogleAuth(), FUIEmailAuth()]
         return authUI.authViewController()
     }
 }
 
-
 // MARK: - Store user
 private extension FirebaseAuthentication {
-    func storeUser(user: FirebaseAuth.User) {
-        let reference = database.collection("users").document(user.uid)
-        var userJson: [String: Any] = [:]
-        if let photoUrl = user.photoURL {
-            userJson["imageUrl"] = photoUrl
-        }
-
-        let displayName = user.displayName ?? user.email ?? ""
-        userJson["name"] = displayName
-
-        if let email = user.email {
-            userJson["email"] = email
-        }
-        reference.setData(userJson)
-        database.terminate { [weak self] error in
-            self?.loginCompletion?(.success(user))
+    func storeUser(user: User, completion: @escaping ((Error?) -> Void)) {
+        let reference = database.collection("users").document(user.id)
+        do {
+            try reference.setData(from: user) { error in
+                completion(error)
+            }
+        } catch {
+            fatalError("Unexpected error occured while storing user")
         }
     }
 }
@@ -69,9 +65,16 @@ private extension FirebaseAuthentication {
 // MARK: - FUIAuthDelegate
 extension FirebaseAuthentication: FUIAuthDelegate {
     func authUI(_ authUI: FUIAuth, didSignInWith user: FirebaseAuth.User?, error: Error?) {
-        if let user = user {
-            storeUser(user: user)
-
+        if let firUser = user {
+            let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: nil)
+            storeUser(user: user) { [weak self] error in
+                if let error = error {
+                    self?.loginCompletion?(.failure(error))
+                } else {
+                    self?.loginCompletion?(.success(user))
+                }
+            }
+            loginCompletion?(.success(user))
         } else if let error = error {
             loginCompletion?(.failure(error))
         }

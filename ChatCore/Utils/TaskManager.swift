@@ -297,12 +297,12 @@ extension TaskManager {
 @available(iOS 13.0, *)
 private extension TaskManager {
     func registerBackgroundTaskScheduler() {
-//        BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundTaskIdentifier, using: nil) { task in
-//            guard let task = task as? BGProcessingTask else {
-//                return
-//            }
-//            self.handleBackgroundProcessing(task: task)
-//        }
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundTaskIdentifier, using: nil) { task in
+            guard let task = task as? BGProcessingTask else {
+                return
+            }
+            self.handleBackgroundProcessing(task: task)
+        }
     }
 
     func scheduleBackgroundProcessing() {

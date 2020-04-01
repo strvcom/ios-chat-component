@@ -29,7 +29,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 private extension SceneDelegate {
 
     func setRootViewController() {
+        // TODO: CJ TEST PURPOSE
         try? Auth.auth().signOut()
+
         if let user = firebaseAuthentication.user {
             showChat(user: user)
         } else {
@@ -45,8 +47,8 @@ private extension SceneDelegate {
         }
     }
 
-    func showChat(user: FirebaseAuth.User) {
-        chat.setCurrentUser(userId: user.uid, name: (user.displayName ?? user.email) ?? "")
+    func showChat(user: User) {
+        chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: user.imageUrl)
         window?.rootViewController = chat.conversationsList()
     }
 }

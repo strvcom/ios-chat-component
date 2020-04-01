@@ -14,9 +14,9 @@ public struct User: UserRepresenting {
     public let id: ObjectIdentifier
     public let name: String
     public let imageUrl: URL?
-    public let compatibility: Float
+    public let compatibility: Float?
 
-    public init(id: ObjectIdentifier, name: String, imageUrl: URL?, compatibility: Float) {
+    public init(id: ObjectIdentifier, name: String, imageUrl: URL?, compatibility: Float?) {
         self.id = id
         self.name = name
         self.imageUrl = imageUrl
