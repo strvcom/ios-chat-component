@@ -63,10 +63,10 @@ private extension ProgressAvatar {
     func setupUI() {
         addSubview(avatarImageView)
         
-        avatarImageView.fill(
-            self,
+        avatarImageView.pinToSuperview(
             padding: UIEdgeInsets(top: imagePadding, left: imagePadding, bottom: imagePadding, right: imagePadding)
         )
+        
         avatarImageView.clipsToBounds = true
         
         clipsToBounds = true

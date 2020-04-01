@@ -14,9 +14,19 @@ import ChatUI
 public class Chat {
     public typealias NetworkConfiguration = ChatNetworkingFirestoreConfig
     public typealias UIConfiguration = Interface.Config
+    public typealias UIDelegate = ChatUIDelegate
     
     public typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
     public typealias Interface = ChatUI<Core>
+    
+    public var uiDelegate: UIDelegate? {
+        get {
+            interface.delegate
+        }
+        set {
+            interface.delegate = newValue
+        }
+    }
 
     let core: Core
     let interface: Interface

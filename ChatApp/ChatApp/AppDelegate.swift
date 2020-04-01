@@ -10,6 +10,7 @@ import UIKit
 import Chat
 import Firebase
 
+// swiftlint:disable implicitly_unwrapped_optional
 /// Global chat component for simplicity
 var chat: Chat!
 var firebaseAuthentication: FirebaseAuthentication!
@@ -34,11 +35,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
             strings: Chat.UIConfiguration.Strings(
-                newConversation: "Wants to chat!", conversation: "Conversation"
-            )
+                newConversation: "Wants to chat!",
+                conversation: "Conversation",
+                conversationsListEmptyTitle: "No matches yet",
+                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
+                conversationsListEmptyActionTitle: "Take a Quiz"
+            ),
+            images: AppStyleConfig.images
         )
         let networkConfig = Chat.NetworkConfiguration(type: .configUrl(configUrl))
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
+        chat.uiDelegate = self
+        
         setupBackgroundFetch()
         return true
     }
@@ -77,5 +85,11 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
+    }
+}
+
+extension AppDelegate: Chat.UIDelegate {
+    func conversationsListEmptyListAction() {
+        print("Take a Quiz button tapped!")
     }
 }

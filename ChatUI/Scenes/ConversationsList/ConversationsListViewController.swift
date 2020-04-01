@@ -21,6 +21,16 @@ public class ConversationsListViewController: UIViewController {
         return indicator
     }()
     
+    private lazy var emptyStateView: EmptyConversationsList = {
+        let view = EmptyConversationsList.nibInstance
+        
+        view.buttonAction = { [weak self] in
+            self?.coordinator?.emptyStateAction()
+        }
+        
+        return view
+    }()
+    
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     private lazy var dataSource = DataSource()
@@ -50,19 +60,20 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
+        view.backgroundColor = .chatBackground
         view.addSubview(tableView)
-        tableView.fill(view)
+        tableView.pinToSuperview()
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
                 guard
                     let self = self,
                     let conversation = self.dataSource.items[safe: row],
-                    self.viewModel.currentUser != nil else {
+                    let sender = self.viewModel.currentUser else {
                     return
                 }
                 
-                self.coordinator?.navigate(to: conversation)
+                self.coordinator?.navigate(to: conversation, user: sender)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()
@@ -86,6 +97,22 @@ private extension ConversationsListViewController {
         footerLoader.isHidden = true
         footerLoader.stopAnimating()
     }
+    
+    func toggleEmptyState(isEmpty: Bool) {
+        if isEmpty, emptyStateView.superview == nil {
+            view.insertSubview(emptyStateView, belowSubview: tableView)
+
+            emptyStateView.pinToSuperview(edges: [.left, .right])
+            emptyStateView.centerInSuperview()
+        } else if !isEmpty, tableView.isHidden {
+            // If the tableView is currently hidden it means the emptyStateView
+            // is about to be hidden and we can remove it from its superview.
+            // Also we don't want to check for emptyStateView.superview != nil to avoid unnecessary instantiation of the view
+            emptyStateView.removeFromSuperview()
+        }
+        
+        tableView.isHidden = isEmpty
+    }
 }
 
 // MARK: ConversationsListViewModelDelegate
@@ -100,6 +127,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
             dataSource.items = state.items
             dataSource.currentUser = viewModel.currentUser
             tableView.reloadData()
+            toggleEmptyState(isEmpty: state.items.isEmpty)
         case let .failed(error):
             // TODO: UI error
             print(error)

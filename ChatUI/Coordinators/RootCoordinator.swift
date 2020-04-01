@@ -15,9 +15,11 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     }()
     
     private let core: Core
+    private weak var delegate: ChatUIDelegate?
     
-    init(core: Core) {
+    init(core: Core, delegate: ChatUIDelegate?) {
         self.core = core
+        self.delegate = delegate
     }
     
     func start() -> UIViewController {
@@ -27,11 +29,15 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 
 
 extension RootCoordinator: RootCoordinating {
-    func navigate(to conversation: Conversation) {
+    func navigate(to conversation: Conversation, user: User) {
         navigationController.pushViewController(
-            messagesListController(conversation: conversation),
+            messagesListController(conversation: conversation, user: user),
             animated: true
         )
+    }
+    
+    func emptyStateAction() {
+        delegate?.conversationsListEmptyListAction()
     }
 }
 
@@ -46,7 +52,7 @@ private extension RootCoordinator {
         return controller
     }
     
-    func messagesListController(conversation: Conversation) -> UIViewController {
-        MessagesListViewController(conversation: conversation, core: core)
+    func messagesListController(conversation: Conversation, user: User) -> UIViewController {
+        MessagesListViewController(conversation: conversation, core: core, sender: user)
     }
 }
