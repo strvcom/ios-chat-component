@@ -14,14 +14,18 @@ import ChatUI
 public class ChatMessageKitFirestore: ChatType {
     public typealias NetworkConfiguration = ChatNetworkingFirestore.Configuration
     public typealias UIConfiguration = Interface.Config
-    
+    public typealias UIDelegate = ChatUIDelegate
+
     public typealias Core = ChatCore<ChatNetworkingFirestore, ChatModelsUI>
     public typealias Interface = ChatUI<Core>
 
     let core: Core
     let uiConfig: UIConfiguration
     private(set) var interfaces: [String: Interface] = [:]
-    
+      
+    // TODO: Missing implementation
+    public weak var uiDelegate: AnyObject?
+
     public init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
         self.core = Chat.core(networkConfig: networkConfig, models: ChatModelsUI.self)
         self.uiConfig = uiConfig

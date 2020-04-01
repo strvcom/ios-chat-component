@@ -28,11 +28,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
             strings: ChatMessageKitFirestore.UIConfiguration.Strings(
-                newConversation: "Wants to chat!", conversation: "Conversation"
-            )
+                newConversation: "Wants to chat!",
+                conversation: "Conversation",
+                conversationsListEmptyTitle: "No matches yet",
+                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
+                conversationsListEmptyActionTitle: "Take a Quiz"
+            ),
+            images: AppStyleConfig.images
         )
         
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
+        // TODO: Set ui delegate
+        // chat.uiDelegate = self
         
         setupBackgroundFetch()
 
@@ -73,5 +80,12 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
+    }
+}
+
+// TODO: Conform to UI delegate
+extension AppDelegate {
+    func conversationsListEmptyListAction() {
+        print("Take a Quiz button tapped!")
     }
 }

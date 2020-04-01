@@ -16,7 +16,7 @@ class ConversationsListCell: UITableViewCell {
     
     @IBOutlet private var nameLabel: UILabel! {
         didSet {
-            nameLabel.font = .conversationListTitle
+            nameLabel.font = .conversationsListTitle
         }
     }
     
@@ -24,7 +24,7 @@ class ConversationsListCell: UITableViewCell {
     
     @IBOutlet private var messagePreviewLabel: UILabel! {
         didSet {
-            messagePreviewLabel.font = .conversationListSubtitle
+            messagePreviewLabel.font = .conversationsListSubtitle
         }
     }
     
@@ -59,11 +59,11 @@ private extension ConversationsListCell {
         switch model.messagePreview {
         case .message(let message):
             messagePreviewLabel.text = message
-            messagePreviewLabel.font = .conversationListSubtitle
+            messagePreviewLabel.font = .conversationsListSubtitle
             messagePreviewLabel.textColor = .conversationsSubtitle
         case .newConversation:
             messagePreviewLabel.text = .newConversation
-            messagePreviewLabel.font = .conversationListSubtitleSecondary
+            messagePreviewLabel.font = .conversationsListSubtitleSecondary
             messagePreviewLabel.textColor = .conversationsSubtitleAlert
         case .other:
             messagePreviewLabel.text = ""

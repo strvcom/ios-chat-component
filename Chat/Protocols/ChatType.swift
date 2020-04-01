@@ -9,6 +9,8 @@
 import UIKit
 
 protocol ChatType {
+    var uiDelegate: AnyObject? { get set }
+    
     func interface(with id: String) -> UIViewController
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
     func resendUnsentMessages()

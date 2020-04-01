@@ -15,9 +15,11 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     }()
     
     private let core: Core
+    private weak var delegate: ChatUIDelegate?
     
-    init(core: Core) {
+    init(core: Core, delegate: ChatUIDelegate?) {
         self.core = core
+        self.delegate = delegate
     }
     
     func start() -> UIViewController {
@@ -32,6 +34,10 @@ extension RootCoordinator: RootCoordinating {
             messagesListController(conversation: conversation, user: user),
             animated: true
         )
+    }
+    
+    func emptyStateAction() {
+        delegate?.conversationsListEmptyListAction()
     }
 }
 

@@ -13,7 +13,9 @@ public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     
     let core: Core
     
-    private lazy var coordinator = RootCoordinator(core: core)
+    public weak var delegate: ChatUIDelegate?
+    
+    private lazy var coordinator = RootCoordinator(core: core, delegate: delegate)
     
     public lazy var rootViewController = coordinator.start()
     
