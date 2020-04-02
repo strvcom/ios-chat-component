@@ -8,7 +8,6 @@
 
 import UIKit
 import Chat
-import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -29,9 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 private extension SceneDelegate {
 
     func setRootViewController() {
-        // TODO: CJ TEST PURPOSE
-        try? Auth.auth().signOut()
-
         if let user = firebaseAuthentication.user {
             showChat(user: user)
         } else {
@@ -48,7 +44,11 @@ private extension SceneDelegate {
     }
 
     func showChat(user: User) {
-        chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: user.imageUrl)
+        var imageUrl: URL?
+        if let userImageUrl = user.imageUrl {
+            imageUrl = URL(string: userImageUrl)
+        }
+        chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
         window?.rootViewController = chat.conversationsList()
     }
 }

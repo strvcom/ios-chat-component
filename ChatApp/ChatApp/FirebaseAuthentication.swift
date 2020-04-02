@@ -19,7 +19,7 @@ final class FirebaseAuthentication: NSObject {
         guard let firUser = auth.currentUser else {
             return nil
         }
-        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: nil)
+        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL?.absoluteString)
         return user
     }
 
@@ -61,12 +61,12 @@ private extension FirebaseAuthentication {
         }
     }
 }
-
+ 
 // MARK: - FUIAuthDelegate
 extension FirebaseAuthentication: FUIAuthDelegate {
     func authUI(_ authUI: FUIAuth, didSignInWith user: FirebaseAuth.User?, error: Error?) {
         if let firUser = user {
-            let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: nil)
+            let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL?.absoluteString)
             storeUser(user: user) { [weak self] error in
                 if let error = error {
                     self?.loginCompletion?(.failure(error))

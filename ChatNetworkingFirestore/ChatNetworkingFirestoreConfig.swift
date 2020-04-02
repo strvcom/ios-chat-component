@@ -11,16 +11,9 @@ import FirebaseFirestore
 
 // MARK: - Configuration of firestore network
 public struct ChatNetworkingFirestoreConfig {
+    let configUrl: String
 
-    // allow pass firebase configuration file url or firestore reference itself to avoid multiple referencing and crashes
-    public enum ConfigurationType {
-        case configUrl(String)
-        case database(Firestore)
-    }
-
-    let type: ConfigurationType
-
-    public init(type: ConfigurationType) {
-        self.type = type
+    public init(configUrl: String) {
+        self.configUrl = configUrl
     }
 }

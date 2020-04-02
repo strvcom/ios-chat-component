@@ -9,6 +9,7 @@
 import UIKit
 import Chat
 import Firebase
+import FirebaseUI
 
 // swiftlint:disable implicitly_unwrapped_optional
 /// Global chat component for simplicity
@@ -43,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ),
             images: AppStyleConfig.images
         )
-        let networkConfig = Chat.NetworkConfiguration(type: .configUrl(configUrl))
+        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl)
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
         chat.uiDelegate = self
         
@@ -85,6 +86,21 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
+    }
+}
+
+// MARK: Firebase auth UI callback
+extension AppDelegate {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
+
+        guard let sourceApplication = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String else {
+            return false
+        }
+        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
+            return true
+        }
+        // other URL handling goes here.
+        return false
     }
 }
 

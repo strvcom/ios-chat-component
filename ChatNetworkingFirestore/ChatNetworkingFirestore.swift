@@ -28,23 +28,17 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-
     public required init(config: ChatNetworkingFirestoreConfig) {
 
         // setup from config
-        switch config.type {
-        case .configUrl(let url):
-            // test whether default firebase app is not already instantiated
-            if FirebaseApp.app() == nil {
-                guard let options = FirebaseOptions(contentsOfFile: url) else {
-                    fatalError("Can't configure Firebase")
-                }
-                FirebaseApp.configure(options: options)
-            }
-            database = Firestore.firestore()
-        case .database(let database):
-            self.database = database
+        guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
+            fatalError("Can't configure Firebase")
         }
+        FirebaseApp.configure(name: Constants.firebaseAppName, options: options)
+        guard let firebaseApp = FirebaseApp.app(name: Constants.firebaseAppName) else {
+            fatalError("Can't configure Firebase app \(Constants.firebaseAppName)")
+        }
+        database = Firestore.firestore(app: firebaseApp)
 
         // FIXME: Remove this temporary code when UI for conversation creating is ready
         NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
@@ -250,7 +244,6 @@ public extension ChatNetworkingFirestore {
     
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
         let query = database.collection(Constants.usersPath)
-        
         listenTo(query: query, listener: .users, completion: completion)
     }
     

@@ -9,8 +9,12 @@
 import Foundation
 
 // MARK: - App user model
-struct User: Codable {
+struct User: Encodable {
     let id: String
     let name: String
-    let imageUrl: URL?
+    let imageUrl: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case name, imageUrl
+    }
 }

@@ -42,7 +42,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias ConversationResult = Result<DataPayload<[ConversationUI]>, ChatError>
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
-    private lazy var taskManager = TaskManager()
+    // needs to be instantiated immediatelly to register scheduled tasks
+    private let taskManager = TaskManager()
     private lazy var keychainManager = KeychainManager()
     private var closureThrottler: ListenerThrottler<MessageUI, MessagesResult>?
     private var reachabilityObserver: ReachabilityObserver?
