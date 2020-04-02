@@ -111,7 +111,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
         // take only messages which are not sending already
         // for unsent try to resend for failed add as temporary messages with failed state
-        for message in messages where message.state == .unsent {
+        for message in messages {
             if message.state == .unsent {
                 keychainManager.removeMessage(message: message)
                 send(message: message.content, to: message.conversationId, completion: { _ in })
