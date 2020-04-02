@@ -361,7 +361,7 @@ private extension ChatCore {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
         case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: userId, messageSpecification: message, state: state)
+            let temporaryMessage = MessageUI(id: id, userId: user.id, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
         case .changeState(let state):
