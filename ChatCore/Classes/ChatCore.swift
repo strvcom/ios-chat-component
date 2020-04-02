@@ -112,9 +112,15 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
         // take only messages which are not sending already
-        for message in messages where message.state == .stored {
-            keychainManager.removeMessage(message: message)
-            send(message: message.content, to: message.conversationId, completion: { _ in })
+        // for unsent try to resend for failed add as temporary messages with failed state
+        for message in messages {
+            if message.state == .unsent {
+                keychainManager.removeMessage(message: message)
+                send(message: message.content, to: message.conversationId, completion: { _ in })
+            } else if message.state == .failed {
+                keychainManager.removeMessage(message: message)
+                handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
+            }
         }
     }
 }
@@ -325,7 +331,7 @@ extension ChatCore {
 private extension ChatCore {
     // Actions over temporary messages
     enum TemporaryMessageAction {
-        case add(MessageSpecifyingUI)
+        case add(MessageSpecifyingUI, MessageState = .sending)
         case remove
         case changeState(MessageState)
     }
@@ -354,8 +360,8 @@ private extension ChatCore {
         switch action {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
-        case .add(let message):
-            let temporaryMessage = MessageUI(id: id, userId: user.id, messageSpecification: message, state: .sending)
+        case .add(let message, let state):
+            let temporaryMessage = MessageUI(id: id, userId: userId, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
         case .changeState(let state):
@@ -394,21 +400,26 @@ private extension ChatCore {
     }
 
     func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
-        // when other than network error or sucessfully sent remove from cache
+        // when sucessfully sent remove from cache
         // in case of network error restore the message with stored state
-        guard case .failure(let error) = result, case .networking = error else {
+        // other than network error set status as failed
+        switch result {
+        case .success:
             keychainManager.removeMessage(message: cachedMessage)
-            return
+        case .failure(let error):
+            if case .networking = error {
+                changeCachedMessage(cachedMessage: cachedMessage, to: .unsent)
+            } else {
+                changeCachedMessage(cachedMessage: cachedMessage, to: .failed)
+            }
         }
-
-        // make message to be stored again
-        changeCachedMessage(cachedMessage: cachedMessage, to: .stored)
     }
 
     func restoreUnsentMessages() {
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        messages.forEach { message in
-            changeCachedMessage(cachedMessage: message, to: .stored)
+        // for case app was closed while sending
+        for message in messages where message.state == .sending {
+            changeCachedMessage(cachedMessage: message, to: .unsent)
         }
     }
 
