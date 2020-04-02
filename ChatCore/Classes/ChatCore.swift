@@ -108,15 +108,23 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
     @objc open func resendUnsentMessages() {
+
+        // TODO: CJ: merge this & fix with new user flow
+        guard let userId = currentUser?.id else {
+            return
+        }
+
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
         // take only messages which are not sending already
         // for unsent try to resend for failed add as temporary messages with failed state
         for message in messages {
-            if message.state == .unsent {
+            if message.userId != userId || message.state == .unsent || message.state == .failed {
                 keychainManager.removeMessage(message: message)
+            }
+
+            if message.state == .unsent {
                 send(message: message.content, to: message.conversationId, completion: { _ in })
             } else if message.state == .failed {
-                keychainManager.removeMessage(message: message)
                 handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
             }
         }
@@ -393,8 +401,12 @@ private extension ChatCore {
 // MARK: - Caching messages
 private extension ChatCore {
     func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
+        // TODO: CJ: merge this & fix with new user flow
+        guard let userId = currentUser?.id else {
+            fatalError("Current user is nil")
+        }
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, state: state)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: userId, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
