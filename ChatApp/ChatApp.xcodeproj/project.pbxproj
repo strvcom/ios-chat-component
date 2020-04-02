@@ -68,6 +68,7 @@
 		8488DE41241EDB8000AC5651 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8488DE40241EDB8000AC5651 /* Reachability.swift */; };
 		8488DE43241EEA5100AC5651 /* ReachabilityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8488DE42241EEA5100AC5651 /* ReachabilityObserver.swift */; };
 		84ACD50C2434D07900446DE1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ACD50B2434D07900446DE1 /* User.swift */; };
+		84ACD512243641CC00446DE1 /* Required.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ACD511243641CC00446DE1 /* Required.swift */; };
 		84BE30CE2429326D00DA8664 /* ClosureThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BE30CD2429326D00DA8664 /* ClosureThrottler.swift */; };
 		84BE30D0242B46B900DA8664 /* MessageStateReflecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */; };
 		84BE30D2242BC21F00DA8664 /* FirebaseAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BE30D1242BC21F00DA8664 /* FirebaseAuthentication.swift */; };
@@ -283,6 +284,7 @@
 		8488DE40241EDB8000AC5651 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		8488DE42241EEA5100AC5651 /* ReachabilityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityObserver.swift; sourceTree = "<group>"; };
 		84ACD50B2434D07900446DE1 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		84ACD511243641CC00446DE1 /* Required.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Required.swift; sourceTree = "<group>"; };
 		84BE30CD2429326D00DA8664 /* ClosureThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureThrottler.swift; sourceTree = "<group>"; };
 		84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStateReflecting.swift; sourceTree = "<group>"; };
 		84BE30D1242BC21F00DA8664 /* FirebaseAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthentication.swift; sourceTree = "<group>"; };
@@ -563,6 +565,7 @@
 				843A584324168AAC007E6F45 /* Keychain */,
 				843D81522406E90200C62656 /* TaskManager.swift */,
 				84BE30CD2429326D00DA8664 /* ClosureThrottler.swift */,
+				84ACD511243641CC00446DE1 /* Required.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1294,6 +1297,7 @@
 				C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */,
 				C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */,
 				049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */,
+				84ACD512243641CC00446DE1 /* Required.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,15 +15,8 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     let database: Firestore
 
     // user management
-    private var currentUserId: String?
-    private var currentUser: UserFirestore?
-    private var users: [UserFirestore] = [] {
-        didSet {
-            if let currentUserId = currentUserId {
-                currentUser = users.first { $0.id == currentUserId }
-            }
-        }
-    }
+    @Required private var currentUserId: String
+    private var users: [UserFirestore] = []
     
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
@@ -80,7 +73,6 @@ private extension ChatNetworkingFirestore {
 public extension ChatNetworkingFirestore {
     func setCurrentUser(user id: ObjectIdentifier) {
         self.currentUserId = id
-
     }
 }
 
@@ -103,10 +95,6 @@ public extension ChatNetworkingFirestore {
 // MARK: Write data
 public extension ChatNetworkingFirestore {
     func send(message: MessageSpecificationFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-        guard let currentUserId = self.currentUser?.id else {
-            completion(.failure(.internal(message: "User not found")))
-            return
-        }
 
         message.toJSON { [weak self] result in
             guard let self = self, case let .success(json) = result else {
@@ -118,7 +106,7 @@ public extension ChatNetworkingFirestore {
             }
 
             var newJSON: [String: Any] = json
-            newJSON[Constants.Message.senderIdAttributeName] = currentUserId
+            newJSON[Constants.Message.senderIdAttributeName] = self.currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
@@ -148,12 +136,7 @@ public extension ChatNetworkingFirestore {
     }
 
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
-        
-        guard let currentUserId = self.currentUser?.id else {
-            print("User not found")
-            return
-        }
-        
+
         var conversation = conversation
         conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
         
@@ -292,14 +275,9 @@ public extension ChatNetworkingFirestore {
 // MARK: Queries
 private extension ChatNetworkingFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
-        
-        guard let userId = currentUserId else {
-            fatalError("Current user must be set")
-        }
-        
         let query = database
             .collection(Constants.conversationsPath)
-            .whereField(Constants.Message.membersAttributeName, arrayContains: userId)
+            .whereField(Constants.Message.membersAttributeName, arrayContains: currentUserId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)
