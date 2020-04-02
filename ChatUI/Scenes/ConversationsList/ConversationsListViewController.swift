@@ -34,6 +34,12 @@ public class ConversationsListViewController: UIViewController {
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
     private lazy var dataSource = DataSource()
+    
+    var currentUser: User? {
+        didSet {
+            dataSource.currentUser = currentUser
+        }
+    }
       
     init(viewModel: ConversationsListViewModeling) {
 
@@ -66,14 +72,11 @@ private extension ConversationsListViewController {
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
-                guard
-                    let self = self,
-                    let conversation = self.dataSource.items[safe: row],
-                    let sender = self.viewModel.currentUser else {
+                guard let conversation = self?.dataSource.items[safe: row] else {
                     return
                 }
                 
-                self.coordinator?.navigate(to: conversation, user: sender)
+                self?.coordinator?.navigate(to: conversation)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()
@@ -117,7 +120,7 @@ private extension ConversationsListViewController {
 
 // MARK: ConversationsListViewModelDelegate
 extension ConversationsListViewController: ConversationsListViewModelDelegate {
-    public func didTransitionToState(_ state: ViewModelingState<ConversationsListState>) {
+    public func didTransitionToState(_ state: ViewModelingState<ListState<Conversation>>) {
         
         switch state {
         case .initial:
@@ -125,7 +128,6 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
         case let .ready(state):
             stopLoading()
             dataSource.items = state.items
-            dataSource.currentUser = viewModel.currentUser
             tableView.reloadData()
             toggleEmptyState(isEmpty: state.items.isEmpty)
         case let .failed(error):

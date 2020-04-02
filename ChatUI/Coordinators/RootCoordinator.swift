@@ -7,19 +7,26 @@
 //
 
 import UIKit
+import ChatCore
 
 class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
     private lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: conversationsListController())
+        return UINavigationController(rootViewController: makeConversationsListController())
     }()
     
-    private let core: Core
+    private var conversationsListController: ConversationsListViewController?
+    
+    private var core: Core
     private weak var delegate: ChatUIDelegate?
     
     init(core: Core, delegate: ChatUIDelegate?) {
         self.core = core
         self.delegate = delegate
+        
+        self.core.stateChanged = { [weak self] state in
+            self?.setCurrentUser(forState: state)
+        }
     }
     
     func start() -> UIViewController {
@@ -29,9 +36,13 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 
 
 extension RootCoordinator: RootCoordinating {
-    func navigate(to conversation: Conversation, user: User) {
+    func navigate(to conversation: Conversation) {
+        guard let currentUser = core.currentUser else {
+            return
+        }
+        
         navigationController.pushViewController(
-            messagesListController(conversation: conversation, user: user),
+            makeMessagesListController(conversation: conversation, user: currentUser),
             animated: true
         )
     }
@@ -41,18 +52,40 @@ extension RootCoordinator: RootCoordinating {
     }
 }
 
+// MARK: Controllers
 private extension RootCoordinator {
-    func conversationsListController() -> ConversationsListViewController {
-        let controller = ConversationsListViewController(
-            viewModel: ConversationsListViewModel(core: core)
+    func makeConversationsListController() -> ConversationsListViewController {
+        conversationsListController = ConversationsListViewController(
+            viewModel: ConversationsListViewModel(dataFetcher: DataFetcher(core: core))
         )
         
+        guard let controller = conversationsListController else {
+            fatalError("Couldn't instantiate ConversationsListController")
+        }
+
         controller.coordinator = self
         
         return controller
     }
     
-    func messagesListController(conversation: Conversation, user: User) -> UIViewController {
-        MessagesListViewController(conversation: conversation, core: core, sender: user)
+    func makeMessagesListController(conversation: Conversation, user: User) -> UIViewController {
+        MessagesListViewController(
+            viewModel: MessagesListViewModel(
+                conversation: conversation,
+                core: core,
+                dataFetcher: DataFetcher(core: core)
+            ),
+            user: user
+        )
+    }
+}
+
+private extension RootCoordinator {
+    func setCurrentUser(forState state: ChatCoreState) {
+        guard case .connected = state, let user = core.currentUser else {
+            return
+        }
+        
+        conversationsListController?.currentUser = user
     }
 }
