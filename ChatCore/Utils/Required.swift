@@ -11,18 +11,15 @@ import Foundation
 // MARK: - Property wrapper to validate value has been set
 @propertyWrapper
 public struct Required<T> {
-    private var value: T?
-    public var wrappedValue: T {
-        get {
-            guard let value = value else {
-                fatalError("Unexpected error, \(T.self) is nil")
-            }
-            return value
+    public var wrappedValue: T?
+    public var projectedValue: T {
+        guard let value = wrappedValue else {
+            fatalError("Unexpected error, \(T.self) is nil")
         }
-        set { value = newValue }
+        return value
     }
 
     public init() {
-        self.value = nil
+        self.wrappedValue = nil
     }
 }

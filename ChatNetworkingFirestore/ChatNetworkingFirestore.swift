@@ -15,7 +15,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     let database: Firestore
 
     // user management
-    @Required private var currentUserId: String
+    @Required private var currentUserId: String?
     private var users: [UserFirestore] = []
     
     private var listeners: [Listener: ListenerRegistration] = [:]
@@ -28,9 +28,10 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
-        FirebaseApp.configure(name: Constants.firebaseAppName, options: options)
-        guard let firebaseApp = FirebaseApp.app(name: Constants.firebaseAppName) else {
-            fatalError("Can't configure Firebase app \(Constants.firebaseAppName)")
+        let appName = UUID().uuidString
+        FirebaseApp.configure(name: appName, options: options)
+        guard let firebaseApp = FirebaseApp.app(name: appName) else {
+            fatalError("Can't configure Firebase app \(appName)")
         }
         database = Firestore.firestore(app: firebaseApp)
 
@@ -73,7 +74,7 @@ private extension ChatNetworkingFirestore {
 // MARK: - User setup
 public extension ChatNetworkingFirestore {
     func setCurrentUser(user id: ObjectIdentifier) {
-        self.currentUserId = id
+        currentUserId = id
     }
 }
 
@@ -107,7 +108,7 @@ public extension ChatNetworkingFirestore {
             }
 
             var newJSON: [String: Any] = json
-            newJSON[Constants.Message.senderIdAttributeName] = self.currentUserId
+            newJSON[Constants.Message.senderIdAttributeName] = self.$currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
@@ -139,7 +140,7 @@ public extension ChatNetworkingFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
 
         var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: $currentUserId)
         
         var newJson: [String: Any] = [:]
 
@@ -278,7 +279,7 @@ private extension ChatNetworkingFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         let query = database
             .collection(Constants.conversationsPath)
-            .whereField(Constants.Message.membersAttributeName, arrayContains: currentUserId)
+            .whereField(Constants.Message.membersAttributeName, arrayContains: $currentUserId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)

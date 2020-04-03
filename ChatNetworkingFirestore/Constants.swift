@@ -9,8 +9,6 @@
 import Foundation
 
 enum Constants {
-    // name for firebase named app
-    static let firebaseAppName = "ChatNetworkingFirestore"
     static let defaultIdAttributeName = "id"
     static let conversationsPath = "conversations"
     static let messagesPath = "messages"

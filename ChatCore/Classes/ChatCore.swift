@@ -62,7 +62,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
-    public private(set) var currentUser: UserUI?
+    @Required public private(set) var currentUser: UserUI?
 
     // current state observing
     public private(set) var currentState: ChatCoreState {
@@ -130,7 +130,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         // by default is cached message in sending state, similar as temporary message
         let cachedMessage = cacheMessage(message: message, from: conversation)
         handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
@@ -160,7 +161,8 @@ extension ChatCore {
 // MARK: - Deleting messages
 extension ChatCore {
     open func delete(message: MessageUI, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
             let deleteMessage = Networking.M(uiModel: message)
             self?.networking.delete(message: deleteMessage, from: conversation) { result in
@@ -174,7 +176,8 @@ extension ChatCore {
 // MARK: - Continue stored background tasks
 public extension ChatCore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         taskManager.runBackgroundCalls(completion: completion)
     }
 }
@@ -190,7 +193,8 @@ extension ChatCore {
 // MARK: - Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
             print("Conversation with id \(conversation) not found")
             return
@@ -211,7 +215,8 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (MessagesResult) -> Void
     ) -> ListenerIdentifier {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         let closure = IdentifiableClosure<MessagesResult, Void>(completion)
         let listener = Listener.messages(pageSize: pageSize, conversationId: id)
         
@@ -269,7 +274,8 @@ extension ChatCore {
     }
 
     open func loadMoreMessages(conversation id: ObjectIdentifier) {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         networking.loadMoreMessages(conversation: id)
     }
 }
@@ -280,7 +286,8 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (ConversationResult) -> Void
     ) -> ListenerIdentifier {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
         let listener = Listener.conversations(pageSize: pageSize)
 
@@ -330,7 +337,8 @@ extension ChatCore {
     }
 
     open func loadMoreConversations() {
-        checkCurrentUser()
+        assert(currentUser != nil)
+
         networking.loadMoreConversations()
     }
 }
@@ -345,8 +353,7 @@ private extension ChatCore {
     }
 
     func handleTemporaryMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier, with action: TemporaryMessageAction) {
-
-        let user = checkCurrentUser()
+        assert(currentUser != nil)
 
         // find all listeners for messages and same conversationId
         let listeners = messagesListeners.filter({ (key, _) -> Bool in
@@ -369,7 +376,7 @@ private extension ChatCore {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
         case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: user.id, messageSpecification: message, state: state)
+            let temporaryMessage = MessageUI(id: id, userId: $currentUser.id, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
         case .changeState(let state):
@@ -401,9 +408,8 @@ private extension ChatCore {
 private extension ChatCore {
     func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
 
-        let user = checkCurrentUser()
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: user.id, state: state)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: $currentUser.id, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
@@ -511,16 +517,5 @@ extension ChatCore {
         currentUser = user
         networking.setCurrentUser(user: user.id)
         loadNetworkService()
-    }
-}
-
-// MARK: - Check user setup
-private extension ChatCore {
-    @discardableResult
-    func checkCurrentUser() -> UserUI {
-        guard let currentUser = currentUser else {
-            fatalError("Unexpected error, current user is nil")
-        }
-        return currentUser
     }
 }
