@@ -9,38 +9,43 @@
 import UIKit
 import ChatCore
 
-public class Chat {
+public protocol ChatSpecifying {
+    associatedtype UIModels
+    associatedtype Networking
+    associatedtype Core where Core.Networking == Networking, Core.UIModels == UIModels
+    associatedtype Interface: ChatInterface where Interface.UIService.Core == Core, Interface.UIService.Models == UIModels
+    
+    func interface(with id: String) -> Interface
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
+    func resendUnsentMessages()
+}
+
+public typealias ChatMessageKitFirestore = Chat<MessageKitFirestore>
+
+public class Chat<Implementation: ChatSpecifying> {
     private let defaultInterfaceId = UUID().uuidString
     private var idForScene: [AnyHashable: String] = [:]
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    var implementation: ChatType!
+
+    private let implementation: Implementation
     
-    public func interface() -> UIViewController {
+    init(implementation: Implementation) {
+        self.implementation = implementation
+    }
+    
+    public func interface() -> Implementation.Interface {
         return interface(with: defaultInterfaceId)
     }
 
-    public func interface(with identifier: String) -> UIViewController {
-        guard let chat = implementation else {
-            fatalError("Chat hasn't been configured")
-        }
-        
-        return chat.interface(with: identifier)
+    public func interface(with identifier: String) -> Implementation.Interface {
+        return implementation.interface(with: identifier)
     }
 
     public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
-        guard let chat = implementation else {
-            fatalError("Chat hasn't been configured")
-        }
-        
-        chat.runBackgroundTasks(completion: completion)
+        implementation.runBackgroundTasks(completion: completion)
     }
 
     public func resendUnsentMessages() {
-        guard let chat = implementation else {
-            fatalError("Chat hasn't been configured")
-        }
-        
-        chat.resendUnsentMessages()
+        implementation.resendUnsentMessages()
     }
 }
 
@@ -48,7 +53,7 @@ public class Chat {
 @available(iOS 13.0, *)
 public extension Chat {
     
-    func interface(for scene: UIScene) -> UIViewController {
+    func interface(for scene: UIScene) -> Implementation.Interface {
         let identifier: String
         
         if let existing = idForScene[scene] {
@@ -64,18 +69,32 @@ public extension Chat {
 }
 
 // MARK: Class methods
-public extension Chat {
+public protocol ChatCoreUsing: ChatSpecifying where
+    Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.U: ChatUIConvertible, Networking.MS: ChatUIConvertible,
+    UIModels.CUI == Networking.C.ChatUIModel, UIModels.MUI == Networking.M.ChatUIModel, UIModels.USRUI == Networking.U.ChatUIModel, UIModels.MSUI == Networking.MS.ChatUIModel,
+    UIModels.MSUI: Cachable, UIModels.MUI: MessageConvertible, UIModels.MUI: MessageStateReflecting, UIModels.MSUI == UIModels.MUI.MessageSpecification,
+    Core: ChatCore<Networking, UIModels> {
     
-    class func interface<UI: ChatUIServicing>(core: UI.Core, uiConfig: UI.Config) -> UI {
-        let interface = UI(core: core, config: uiConfig)
-        return interface
-    }
-    
-    class func core<Networking, Models: ChatUIModels>(networkConfig: Networking.Config, models: Models.Type) -> ChatCore<Networking, Models> where Networking.C: ChatUIConvertible, Networking.M: ChatUIConvertible, Networking.U: ChatUIConvertible, Networking.MS: ChatUIConvertible, Models.CUI == Networking.C.ChatUIModel, Models.MUI == Networking.M.ChatUIModel, Models.USRUI == Networking.U.ChatUIModel, Models.MSUI: Cachable, Models.MSUI == Networking.MS.ChatUIModel, Models.MUI: MessageConvertible, Models.MUI: MessageStateReflecting {
-        
+    init(networkConfig: Networking.Config, uiConfig: Interface.UIService.Config)
+}
+
+extension ChatCoreUsing {
+    static func core(networkConfig: Networking.Config) -> ChatCore<Networking, UIModels> {
         let networking = Networking(config: networkConfig)
-        let core = ChatCore<Networking, Models>(networking: networking)
+        let core = ChatCore<Networking, UIModels>(networking: networking)
         return core
     }
+    
+    static func uiService(core: Interface.UIService.Core, uiConfig: Interface.UIService.Config) -> Interface.UIService {
+        let interface = Interface.UIService(core: core, config: uiConfig)
+        return interface
+    }
+}
 
+public extension Chat where Implementation: ChatCoreUsing {
+    convenience init(networkConfig: Implementation.Networking.Config, uiConfig: Implementation.Interface.UIService.Config) {
+        let implementation = Implementation(networkConfig: networkConfig, uiConfig: uiConfig)
+        
+        self.init(implementation: implementation)
+    }
 }

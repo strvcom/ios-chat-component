@@ -10,6 +10,7 @@ import UIKit
 import ChatCore
 
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
+    public typealias Models = ChatModelsUI
     
     let core: Core
     

@@ -10,7 +10,7 @@ import UIKit
 import Chat
 
 // swiftlint:disable implicitly_unwrapped_optional
-var chat: Chat!
+var chat: ChatMessageKitFirestore!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,11 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // userFirebaseID is an information that backend is providing
         let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
 
-        let networkConfig = ChatMessageKitFirestore.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
-        let uiConfig = ChatMessageKitFirestore.UIConfiguration(
+        let networkConfig = MessageKitFirestore.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
+        let uiConfig = MessageKitFirestore.UIConfiguration(
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
-            strings: ChatMessageKitFirestore.UIConfiguration.Strings(
+            strings: MessageKitFirestore.UIConfiguration.Strings(
                 newConversation: "Wants to chat!",
                 conversation: "Conversation",
                 conversationsListEmptyTitle: "No matches yet",
@@ -38,8 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
-        // TODO: Set ui delegate
-        // chat.uiDelegate = self
         
         setupBackgroundFetch()
 
@@ -80,12 +78,5 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
-    }
-}
-
-// TODO: Conform to UI delegate
-extension AppDelegate {
-    func conversationsListEmptyListAction() {
-        print("Take a Quiz button tapped!")
     }
 }
