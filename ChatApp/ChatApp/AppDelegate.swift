@@ -15,6 +15,7 @@ import FirebaseUI
 /// Global chat component for simplicity
 var chat: Chat!
 var firebaseAuthentication: FirebaseAuthentication!
+// swiftlint:enable implicitly_unwrapped_optional
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -263,6 +263,7 @@ extension ChatCore {
     }
 
     open func loadMoreMessages(conversation id: ObjectIdentifier) {
+        checkCurrentUser()
         networking.loadMoreMessages(conversation: id)
     }
 }

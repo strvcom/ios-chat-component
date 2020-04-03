@@ -50,31 +50,34 @@ extension FirebaseAuthentication {
 
 // MARK: - Store user
 private extension FirebaseAuthentication {
-    func storeUser(user: User, completion: @escaping ((Error?) -> Void)) {
+    func storeUser(user: User, completion: @escaping (Result<Void, Error>) -> Void) {
         let reference = database.collection("users").document(user.id)
         do {
             try reference.setData(from: user) { error in
-                completion(error)
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
             }
         } catch {
-            fatalError("Unexpected error occured while storing user")
+            completion(.failure(error))
         }
     }
 }
- 
+
 // MARK: - FUIAuthDelegate
 extension FirebaseAuthentication: FUIAuthDelegate {
     func authUI(_ authUI: FUIAuth, didSignInWith user: FirebaseAuth.User?, error: Error?) {
-        if let firUser = user {
-            let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL?.absoluteString)
-            storeUser(user: user) { [weak self] error in
-                if let error = error {
-                    self?.loginCompletion?(.failure(error))
-                } else {
+        if let user = self.user {
+            storeUser(user: user) { [weak self] result in
+                switch result {
+                case .success:
                     self?.loginCompletion?(.success(user))
+                case .failure(let error):
+                    self?.loginCompletion?(.failure(error))
                 }
             }
-            loginCompletion?(.success(user))
         } else if let error = error {
             loginCompletion?(.failure(error))
         }

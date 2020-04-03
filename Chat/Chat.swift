@@ -64,7 +64,7 @@ public extension Chat {
 // MARK: - Users
 public extension Chat {
     func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
-        let user = User(id: userId, name: name, imageUrl: imageUrl, compatibility: nil)
+        let user = User(id: userId, name: name, imageUrl: imageUrl)
         core.setCurrentUser(user: user)
     }
 }

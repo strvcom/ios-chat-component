@@ -18,6 +18,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     private var listener: ListenerIdentifier?
     private let sender: SenderType
+
     private var loadMoreButtonVisible = true {
         didSet {
             loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
@@ -110,11 +111,11 @@ extension MessagesListViewController: MessagesDataSource {
     }
 
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return dataSource.messages[indexPath.section]
+        return self.dataSource.messages[indexPath.section]
     }
 
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return dataSource.messages.count
+        return self.dataSource.messages.count
     }
 
     public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {

@@ -21,6 +21,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
+
     public required init(config: ChatNetworkingFirestoreConfig) {
 
         // setup from config
