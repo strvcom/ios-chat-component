@@ -221,8 +221,10 @@ extension ChatCore {
         
         if let existingListeners = messagesListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
-            if let data = messages[id] {
-                closure.closure(.success(data))
+            defer {
+                if let data = messages[id] {
+                    closure.closure(.success(data))
+                }
             }
             return closure.id
         }
@@ -287,7 +289,7 @@ extension ChatCore {
 
         if let existingListeners = conversationListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
-            closure.closure(.success(conversations))
+            defer { closure.closure(.success(conversations)) }
             return closure.id
         }
 
