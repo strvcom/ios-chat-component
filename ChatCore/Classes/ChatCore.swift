@@ -104,9 +104,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
     @objc open func resendUnsentMessages() {
-
         // at this place check user without crashying
-        guard currentUser != nil else {
+        guard let userId = currentUser?.id else {
             return
         }
 
@@ -114,11 +113,13 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         // take only messages which are not sending already
         // for unsent try to resend for failed add as temporary messages with failed state
         for message in messages {
-            if message.state == .unsent {
+            if message.userId != userId || message.state == .unsent || message.state == .failed {
                 keychainManager.removeMessage(message: message)
+            }
+
+            if message.state == .unsent {
                 send(message: message.content, to: message.conversationId, completion: { _ in })
             } else if message.state == .failed {
-                keychainManager.removeMessage(message: message)
                 handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
             }
         }
@@ -222,6 +223,11 @@ extension ChatCore {
         
         if let existingListeners = messagesListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
+            defer {
+                if let data = messages[id] {
+                    closure.closure(.success(data))
+                }
+            }
             return closure.id
         }
         
@@ -286,6 +292,7 @@ extension ChatCore {
 
         if let existingListeners = conversationListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
+            defer { closure.closure(.success(conversations)) }
             return closure.id
         }
 
@@ -393,8 +400,10 @@ private extension ChatCore {
 // MARK: - Caching messages
 private extension ChatCore {
     func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
+
+        let user = checkCurrentUser()
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, state: state)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: user.id, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
