@@ -88,9 +88,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         // hook to app did become active to resend messages
         if #available(iOS 13.0, *) {
             NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIScene.didActivateNotification, object: nil)
-        } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(resendUnsentMessages), name: UIApplication.didBecomeActiveNotification, object: nil)
 
         setReachabilityObserver()
         // in case core is initialized but cached messages got stuck in sending state e.g. app crashed
@@ -112,7 +111,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
         // take only messages which are not sending already
         // for unsent try to resend for failed add as temporary messages with failed state
-        for message in messages {
+        for message in messages where message.state != .sending {
             if message.userId != currentUser.id || message.state == .unsent || message.state == .failed {
                 keychainManager.removeMessage(message: message)
             }

@@ -82,7 +82,7 @@ public extension ChatNetworkingFirestore {
             }
 
             var newJSON: [String: Any] = json
-            newJSON[Constants.Message.senderIdAttributeName] = self.$currentUserId
+            newJSON[Constants.Message.senderIdAttributeName] = self.currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
@@ -253,7 +253,7 @@ private extension ChatNetworkingFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         let query = database
             .collection(Constants.conversationsPath)
-            .whereField(Constants.Message.membersAttributeName, arrayContains: $currentUserId)
+            .whereField(Constants.Message.membersAttributeName, arrayContains: currentUserId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)

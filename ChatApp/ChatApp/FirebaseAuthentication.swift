@@ -13,6 +13,7 @@ import FirebaseFirestore
 
 // MARK: - Simple solution for firebase authentication
 final class FirebaseAuthentication: NSObject {
+    private let usersPath = "users"
 
     private lazy var auth: Auth = Auth.auth()
     var user: User? {
@@ -51,7 +52,7 @@ extension FirebaseAuthentication {
 // MARK: - Store user
 private extension FirebaseAuthentication {
     func storeUser(user: User, completion: @escaping (Result<Void, Error>) -> Void) {
-        let reference = database.collection("users").document(user.id)
+        let reference = database.collection(usersPath).document(user.id)
         do {
             try reference.setData(from: user) { error in
                 if let error = error {

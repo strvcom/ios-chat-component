@@ -26,6 +26,7 @@ public struct Required<T> {
             value = newValue
         }
     }
+
     public init() {
         self.value = nil
     }
