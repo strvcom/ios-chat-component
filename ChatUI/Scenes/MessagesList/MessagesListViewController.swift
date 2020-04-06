@@ -18,7 +18,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
 
     private var listener: ListenerIdentifier?
     private let sender: SenderType
-    
+
     private var loadMoreButtonVisible = true {
         didSet {
             loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()

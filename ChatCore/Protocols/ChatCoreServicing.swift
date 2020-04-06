@@ -22,13 +22,19 @@ public protocol ChatCoreServicing {
     typealias U = UIModels.USRUI
     
     /// Current user logged in to the app
-    var currentUser: U? { get }
+    var currentUser: U { get }
 
     /// Current state of chat core and its observing
     var currentState: ChatCoreState { get }
     var stateChanged: ((ChatCoreState) -> Void)? { get set }
 
     init(networking: Networking)
+
+    /// Sets current user for chat core
+    ///
+    /// - Parameters:
+    ///   - user: Current user
+    func setCurrentUser(user: U)
 
     /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.
     ///

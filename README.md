@@ -39,6 +39,10 @@ target 'TARGET_NAME' do
 end
 ```
 
+## Initialization
+
+Default chat component implementation uses background fetches and scheduled task and has to be instantiated in app's delegate `didFinishLaunchingWithOptions` method.
+
 ## Example
 
 See the [sample app](ChatApp/) for an example how to use this pod.
@@ -351,4 +355,5 @@ pod repo push ChatCore ~/Desktop/ChatCore.podspec
 ```
 
 And that's it. You can check complete [Podspec docs](https://guides.cocoapods.org/syntax/podspec.html) and [Private Pod docs](https://guides.cocoapods.org/making/private-cocoapods.html).
+
 

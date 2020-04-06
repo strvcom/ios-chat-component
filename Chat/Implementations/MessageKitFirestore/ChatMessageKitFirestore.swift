@@ -19,7 +19,7 @@ public class MessageKitFirestore: ChatCoreUsing {
     public typealias Interface = MessageKitInterface
     
     public typealias UIConfiguration = UIService.Config
-    public typealias NetworkConfiguration = ChatNetworkingFirestore.Configuration
+    public typealias NetworkConfiguration = ChatNetworkingFirestoreConfig
     public typealias UIDelegate = ChatUIDelegate
 
     let core: Core
@@ -47,6 +47,14 @@ public class MessageKitFirestore: ChatCoreUsing {
 
     public func resendUnsentMessages() {
         core.resendUnsentMessages()
+    }
+}
+
+// MARK: - Users
+public extension MessageKitFirestore {
+    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+        let user = User(id: userId, name: name, imageUrl: imageUrl)
+        core.setCurrentUser(user: user)
     }
 }
 

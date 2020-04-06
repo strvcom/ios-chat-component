@@ -18,6 +18,7 @@ public protocol ChatSpecifying {
     func interface(with id: String) -> Interface
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
     func resendUnsentMessages()
+    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?)
 }
 
 public typealias ChatMessageKitFirestore = Chat<MessageKitFirestore>
@@ -47,12 +48,15 @@ public class Chat<Implementation: ChatSpecifying> {
     public func resendUnsentMessages() {
         implementation.resendUnsentMessages()
     }
+    
+    public func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+        implementation.setCurrentUser(userId: userId, name: name, imageUrl: imageUrl)
+    }
 }
 
 // MARK: iOS 13
 @available(iOS 13.0, *)
 public extension Chat {
-    
     func interface(for scene: UIScene) -> Implementation.Interface {
         let identifier: String
         
@@ -65,7 +69,6 @@ public extension Chat {
         
         return interface(with: identifier)
     }
-    
 }
 
 // MARK: Class methods
