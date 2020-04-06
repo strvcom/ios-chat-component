@@ -10,6 +10,7 @@ import Foundation
 
 // MARK: - State of cached message
 enum CachedMessageState: String, Codable {
-    case stored
+    case unsent
     case sending
+    case failed
 }

@@ -12,45 +12,29 @@ import FirebaseFirestore
 import FirebaseCore
 
 public class ChatNetworkingFirestore: ChatNetworkServicing {
-    public struct Configuration {
-        let configUrl: String
-        let userId: String
-
-        public init(configUrl: String, userId: String) {
-            self.userId = userId
-            self.configUrl = configUrl
-        }
-    }
-    
     let database: Firestore
 
-    public private(set) var currentUser: UserFirestore?
+    // user management
+    @Required private var currentUserId: String
+    private var users: [UserFirestore] = []
     
     private var listeners: [Listener: ListenerRegistration] = [:]
-    private var currentUserId: String?
-    private var users: [UserFirestore] = [] {
-        didSet {
-            if let currentUserId = currentUserId {
-                currentUser = users.first { $0.id == currentUserId }
-            }
-        }
-    }
-    
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
-    public required init(config: Configuration) {
+    public required init(config: ChatNetworkingFirestoreConfig) {
+
+        // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
+        let appName = UUID().uuidString
+        FirebaseApp.configure(name: appName, options: options)
+        guard let firebaseApp = FirebaseApp.app(name: appName) else {
+            fatalError("Can't configure Firebase app \(appName)")
+        }
+        database = Firestore.firestore(app: firebaseApp)
 
-        currentUserId = config.userId
-        FirebaseApp.configure(options: options)
-        
-        self.database = Firestore.firestore()
-        
-        // FIXME: Remove this temporary code when UI for conversation creating is ready
-        NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
     }
     
     deinit {
@@ -61,27 +45,10 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     }
 }
 
-// FIXME: Remove this temporary method when UI for conversation creating is ready
-private extension ChatNetworkingFirestore {
-    @objc func createTestConversation() {
-        database
-            .collection(Constants.usersPath)
-            .getDocuments { [weak self] (querySnapshot, _) in
-                guard
-                    let self = self,
-                    let querySnapshot = querySnapshot,
-                    let users = try? querySnapshot.documents.compactMap({
-                        try $0.data(as: UserFirestore.self)
-                    }) else {
-                        return
-                }
-                
-                self.database
-                    .collection(Constants.conversationsPath)
-                    .addDocument(data: [
-                        "members": users.map { $0.id }
-                    ])
-        }
+// MARK: - User management
+public extension ChatNetworkingFirestore {
+    func setCurrentUser(user id: ObjectIdentifier) {
+        currentUserId = id
     }
 }
 
@@ -94,6 +61,7 @@ public extension ChatNetworkingFirestore {
                 self?.users = users
                 completion(.success(()))
             case let .failure(error):
+                print(error)
                 completion(.failure(.networking(error: error)))
             }
         }
@@ -103,10 +71,6 @@ public extension ChatNetworkingFirestore {
 // MARK: Write data
 public extension ChatNetworkingFirestore {
     func send(message: MessageSpecificationFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-        guard let currentUserId = self.currentUser?.id else {
-            completion(.failure(.internal(message: "User not found")))
-            return
-        }
 
         message.toJSON { [weak self] result in
             guard let self = self, case let .success(json) = result else {
@@ -118,7 +82,7 @@ public extension ChatNetworkingFirestore {
             }
 
             var newJSON: [String: Any] = json
-            newJSON[Constants.Message.senderIdAttributeName] = currentUserId
+            newJSON[Constants.Message.senderIdAttributeName] = self.currentUserId
             newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
 
             let reference = self.database
@@ -148,12 +112,7 @@ public extension ChatNetworkingFirestore {
     }
 
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
-        
-        guard let currentUserId = self.currentUser?.id else {
-            print("User not found")
-            return
-        }
-        
+
         var conversation = conversation
         conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
         
@@ -244,7 +203,6 @@ public extension ChatNetworkingFirestore {
     
     func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
         let query = database.collection(Constants.usersPath)
-        
         listenTo(query: query, listener: .users, completion: completion)
     }
     
@@ -292,16 +250,10 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Queries
 private extension ChatNetworkingFirestore {
-    
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
-        
-        guard let userId = currentUserId else {
-            fatalError("Current user must be set")
-        }
-        
         let query = database
             .collection(Constants.conversationsPath)
-            .whereField(Constants.Message.membersAttributeName, arrayContains: userId)
+            .whereField(Constants.Message.membersAttributeName, arrayContains: currentUserId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)

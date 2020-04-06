@@ -10,6 +10,10 @@ def networking_pods
   pod 'FirebaseFirestore'
   pod 'FirebaseStorage'
   pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Auth'
+  pod 'FirebaseUI/Auth'
+  pod 'FirebaseUI/Google'
+  pod 'FirebaseUI/Email'
 end
 
 def ui_pods
@@ -17,6 +21,7 @@ def ui_pods
 end
 
 target 'ChatApp' do
+  networking_pods
   pod 'SwiftLint'
 end
 

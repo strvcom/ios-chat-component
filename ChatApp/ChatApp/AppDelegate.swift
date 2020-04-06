@@ -8,22 +8,31 @@
 
 import UIKit
 import Chat
+import Firebase
+import FirebaseUI
 
 // swiftlint:disable implicitly_unwrapped_optional
+/// Global chat component for simplicity
 var chat: Chat!
+var firebaseAuthentication: FirebaseAuthentication!
+// swiftlint:enable implicitly_unwrapped_optional
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // swiftlint:disable force_unwrapping
-        let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
+        guard let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") else {
+            fatalError("Missing firebase configuration file")
+        }
+        guard let options = FirebaseOptions(contentsOfFile: configUrl) else {
+            fatalError("Can't configure Firebase")
+        }
 
-        // userFirebaseID is an information that backend is providing
-        let userFirebaseID = "vvvDpH50aRIWQdxvjtos"
-
-        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl, userId: userFirebaseID)
+        FirebaseApp.configure(options: options)
+        let database = Firestore.firestore()
+        firebaseAuthentication = FirebaseAuthentication(database: database)
+        
         let uiConfig = Chat.UIConfiguration(
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
@@ -36,12 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ),
             images: AppStyleConfig.images
         )
-        
+        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl)
         chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
         chat.uiDelegate = self
         
         setupBackgroundFetch()
-
         return true
     }
 
@@ -79,6 +87,21 @@ extension AppDelegate {
             return
         }
         completionHandler(.noData)
+    }
+}
+
+// MARK: Firebase auth UI callback
+extension AppDelegate {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
+
+        guard let sourceApplication = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String else {
+            return false
+        }
+        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
+            return true
+        }
+        // other URL handling goes here.
+        return false
     }
 }
 

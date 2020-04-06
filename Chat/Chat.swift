@@ -12,7 +12,7 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public class Chat {
-    public typealias NetworkConfiguration = ChatNetworkingFirestore.Configuration
+    public typealias NetworkConfiguration = ChatNetworkingFirestoreConfig
     public typealias UIConfiguration = Interface.Config
     public typealias UIDelegate = ChatUIDelegate
     
@@ -41,16 +41,30 @@ public class Chat {
             config: uiConfig
         )
     }
-    
-    public func conversationsList() -> UIViewController {
+}
+
+// MARK: - UI
+public extension Chat {
+    func conversationsList() -> UIViewController {
         interface.rootViewController
     }
+}
 
-    public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
+// MARK: - Messages
+public extension Chat {
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
 
-    public func resendUnsentMessages() {
+    func resendUnsentMessages() {
         core.resendUnsentMessages()
+    }
+}
+
+// MARK: - Users
+public extension Chat {
+    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+        let user = User(id: userId, name: name, imageUrl: imageUrl)
+        core.setCurrentUser(user: user)
     }
 }

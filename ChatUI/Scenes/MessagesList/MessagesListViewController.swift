@@ -17,7 +17,6 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
 
     private var listener: ListenerIdentifier?
     private let sender: SenderType
-    private let viewModel: MessagesListViewModeling
     
     private var loadMoreButtonVisible = true {
         didSet {
