@@ -62,7 +62,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
-    @Required public private(set) var currentUser: UserUI?
+    @Required public private(set) var currentUser: UserUI
 
     // current state observing
     public private(set) var currentState: ChatCoreState {
@@ -105,7 +105,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
     @objc open func resendUnsentMessages() {
         // at this place check user without crashying
-        guard let userId = currentUser?.id else {
+        guard $currentUser else {
             return
         }
 
@@ -113,7 +113,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         // take only messages which are not sending already
         // for unsent try to resend for failed add as temporary messages with failed state
         for message in messages {
-            if message.userId != userId || message.state == .unsent || message.state == .failed {
+            if message.userId != currentUser.id || message.state == .unsent || message.state == .failed {
                 keychainManager.removeMessage(message: message)
             }
 
@@ -130,7 +130,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         // by default is cached message in sending state, similar as temporary message
         let cachedMessage = cacheMessage(message: message, from: conversation)
@@ -161,7 +161,7 @@ extension ChatCore {
 // MARK: - Deleting messages
 extension ChatCore {
     open func delete(message: MessageUI, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
             let deleteMessage = Networking.M(uiModel: message)
@@ -176,7 +176,7 @@ extension ChatCore {
 // MARK: - Continue stored background tasks
 public extension ChatCore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         taskManager.runBackgroundCalls(completion: completion)
     }
@@ -193,7 +193,7 @@ extension ChatCore {
 // MARK: - Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
             print("Conversation with id \(conversation) not found")
@@ -215,7 +215,7 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (MessagesResult) -> Void
     ) -> ListenerIdentifier {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<MessagesResult, Void>(completion)
         let listener = Listener.messages(pageSize: pageSize, conversationId: id)
@@ -274,7 +274,7 @@ extension ChatCore {
     }
 
     open func loadMoreMessages(conversation id: ObjectIdentifier) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         networking.loadMoreMessages(conversation: id)
     }
@@ -286,7 +286,7 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (ConversationResult) -> Void
     ) -> ListenerIdentifier {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
         let listener = Listener.conversations(pageSize: pageSize)
@@ -337,7 +337,7 @@ extension ChatCore {
     }
 
     open func loadMoreConversations() {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         networking.loadMoreConversations()
     }
@@ -353,7 +353,7 @@ private extension ChatCore {
     }
 
     func handleTemporaryMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier, with action: TemporaryMessageAction) {
-        assert(currentUser != nil)
+        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         // find all listeners for messages and same conversationId
         let listeners = messagesListeners.filter({ (key, _) -> Bool in
@@ -376,7 +376,7 @@ private extension ChatCore {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
         case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: $currentUser.id, messageSpecification: message, state: state)
+            let temporaryMessage = MessageUI(id: id, userId: currentUser.id, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
         case .changeState(let state):
@@ -409,7 +409,7 @@ private extension ChatCore {
     func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
 
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: $currentUser.id, state: state)
+        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: currentUser.id, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage

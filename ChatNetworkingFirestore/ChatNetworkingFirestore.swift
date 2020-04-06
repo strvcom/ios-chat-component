@@ -15,7 +15,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     let database: Firestore
 
     // user management
-    @Required private var currentUserId: String?
+    @Required private var currentUserId: String
     private var users: [UserFirestore] = []
     
     private var listeners: [Listener: ListenerRegistration] = [:]
@@ -140,7 +140,7 @@ public extension ChatNetworkingFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
 
         var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: $currentUserId)
+        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
         
         var newJson: [String: Any] = [:]
 

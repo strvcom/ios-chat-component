@@ -22,7 +22,7 @@ public protocol ChatCoreServicing {
     typealias U = UIModels.USRUI
     
     /// Current user logged in to the app
-    var currentUser: U? { get }
+    var currentUser: U { get }
 
     /// Current state of chat core and its observing
     var currentState: ChatCoreState { get }
