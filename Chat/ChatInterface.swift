@@ -13,7 +13,7 @@ public protocol ChatInterface {
     associatedtype UIService: ChatUIServicing
     associatedtype Delegate
     
-    var identifier: String { get }
+    var identifier: ObjectIdentifier { get }
     var uiService: UIService { get }
     var delegate: Delegate? { get set }
     var rootViewController: UIViewController { get }

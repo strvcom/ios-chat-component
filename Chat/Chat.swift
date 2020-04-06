@@ -15,7 +15,7 @@ public protocol ChatSpecifying {
     associatedtype Core where Core.Networking == Networking, Core.UIModels == UIModels
     associatedtype Interface: ChatInterface where Interface.UIService.Core == Core, Interface.UIService.Models == UIModels
     
-    func interface(with id: String) -> Interface
+    func interface(with identifier: ObjectIdentifier) -> Interface
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
     func resendUnsentMessages()
     func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?)
@@ -24,9 +24,6 @@ public protocol ChatSpecifying {
 public typealias ChatMessageKitFirestore = Chat<MessageKitFirestore>
 
 public class Chat<Implementation: ChatSpecifying> {
-    private let defaultInterfaceId = UUID().uuidString
-    private var idForScene: [AnyHashable: String] = [:]
-
     private let implementation: Implementation
     
     init(implementation: Implementation) {
@@ -34,11 +31,7 @@ public class Chat<Implementation: ChatSpecifying> {
     }
     
     public func interface() -> Implementation.Interface {
-        return interface(with: defaultInterfaceId)
-    }
-
-    public func interface(with identifier: String) -> Implementation.Interface {
-        return implementation.interface(with: identifier)
+        return implementation.interface(with: ObjectIdentifier(self))
     }
 
     public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -58,16 +51,7 @@ public class Chat<Implementation: ChatSpecifying> {
 @available(iOS 13.0, *)
 public extension Chat {
     func interface(for scene: UIScene) -> Implementation.Interface {
-        let identifier: String
-        
-        if let existing = idForScene[scene] {
-            identifier = existing
-        } else {
-            identifier = UUID().uuidString
-            idForScene[scene] = identifier
-        }
-        
-        return interface(with: identifier)
+        return implementation.interface(with: ObjectIdentifier(scene))
     }
 }
 

@@ -24,19 +24,19 @@ public class MessageKitFirestore: ChatCoreUsing {
 
     let core: Core
     let uiConfig: UIService.Config
-    private(set) var interfaces: [String: MessageKitInterface] = [:]
+    private(set) var interfaces: [ObjectIdentifier: MessageKitInterface] = [:]
       
     public required init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
         self.core = Self.core(networkConfig: networkConfig)
         self.uiConfig = uiConfig
     }
     
-    public func interface(with id: String) -> MessageKitInterface {
-        if let interface = interfaces[id] {
+    public func interface(with identifier: ObjectIdentifier) -> MessageKitInterface {
+        if let interface = interfaces[identifier] {
             return interface
         } else {
-            let interface: Interface = MessageKitInterface(identifier: id, core: core, config: uiConfig)
-            interfaces[id] = interface
+            let interface: Interface = MessageKitInterface(identifier: identifier, core: core, config: uiConfig)
+            interfaces[identifier] = interface
             return interface
         }
     }
@@ -59,7 +59,7 @@ public extension MessageKitFirestore {
 }
 
 public class MessageKitInterface: ChatInterface {
-    public let identifier: String
+    public let identifier: ObjectIdentifier
     public var delegate: MessageKitFirestore.UIDelegate? {
         get {
             uiService.delegate
@@ -74,7 +74,7 @@ public class MessageKitInterface: ChatInterface {
     
     public let uiService: MessageKitFirestore.UIService
     
-    init(identifier: String = UUID().uuidString, core: MessageKitFirestore.Core, config: MessageKitFirestore.UIService.Config) {
+    init(identifier: ObjectIdentifier, core: MessageKitFirestore.Core, config: MessageKitFirestore.UIService.Config) {
         self.identifier = identifier
         self.uiService = MessageKitFirestore.uiService(core: core, uiConfig: config)
     }
