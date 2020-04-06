@@ -222,7 +222,7 @@ private extension TaskManager {
         }
     }
 
-    func finishedInBackgroundTask(id: ObjectIdentifier) {
+    func finishedInBackgroundTask(id: EntityIdentifier) {
         print("Finished closure with \(id) in background task")
         if let index = backgroundCalls.firstIndex(where: { $0.id == id }) {
             backgroundCalls.remove(at: index)

@@ -18,7 +18,7 @@ public protocol ChatSpecifying {
     func interface(with id: String) -> Interface
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void)
     func resendUnsentMessages()
-    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?)
+    func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?)
 }
 
 public typealias ChatMessageKitFirestore = Chat<MessageKitFirestore>
@@ -49,7 +49,7 @@ public class Chat<Implementation: ChatSpecifying> {
         implementation.resendUnsentMessages()
     }
     
-    public func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+    public func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?) {
         implementation.setCurrentUser(userId: userId, name: name, imageUrl: imageUrl)
     }
 }

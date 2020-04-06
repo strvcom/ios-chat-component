@@ -52,7 +52,7 @@ public class MessageKitFirestore: ChatCoreUsing {
 
 // MARK: - Users
 public extension MessageKitFirestore {
-    func setCurrentUser(userId: ObjectIdentifier, name: String, imageUrl: URL?) {
+    func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?) {
         let user = User(id: userId, name: name, imageUrl: imageUrl)
         core.setCurrentUser(user: user)
     }

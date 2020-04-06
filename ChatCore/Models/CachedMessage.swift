@@ -12,12 +12,12 @@ import Foundation
 struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
 
     let content: T
-    let conversationId: ObjectIdentifier
-    let id: ObjectIdentifier
-    let userId: ObjectIdentifier
+    let conversationId: EntityIdentifier
+    let id: EntityIdentifier
+    let userId: EntityIdentifier
     private(set) var state: CachedMessageState
 
-    init(content: T, conversationId: ObjectIdentifier, userId: ObjectIdentifier, state: CachedMessageState) {
+    init(content: T, conversationId: EntityIdentifier, userId: EntityIdentifier, state: CachedMessageState) {
         self.id = UUID().uuidString
         self.content = content
         self.conversationId = conversationId

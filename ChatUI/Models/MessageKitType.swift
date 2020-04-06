@@ -16,18 +16,18 @@ public enum MessageContent {
 }
 
 public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertible, MessageStateReflecting {
-    public var userId: ObjectIdentifier
+    public var userId: EntityIdentifier
 
     public var sentAt: Date
 
-    public var id: ObjectIdentifier
+    public var id: EntityIdentifier
     public var sender: SenderType
     public var messageId: String
     public var sentDate: Date
     public var kind: MessageKind
     public var state: MessageState
 
-    public init(id: ObjectIdentifier, userId: ObjectIdentifier, messageSpecification: MessageSpecification, state: MessageState = .sending) {
+    public init(id: EntityIdentifier, userId: EntityIdentifier, messageSpecification: MessageSpecification, state: MessageState = .sending) {
         self.sentAt = Date()
         self.sentDate = Date()
         self.messageId = id
@@ -52,7 +52,7 @@ public struct MessageKitType: MessageType, MessageRepresenting, MessageConvertib
         self.state = state
     }
 
-    public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageContent) {
+    public init(id: EntityIdentifier, userId: EntityIdentifier, sentAt: Date, content: MessageContent) {
         self.sender = User(id: userId, name: "", imageUrl: nil, compatibility: 0)
         self.messageId = id
         self.sentDate = sentAt

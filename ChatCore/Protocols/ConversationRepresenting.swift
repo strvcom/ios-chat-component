@@ -23,5 +23,5 @@ public protocol ConversationRepresenting: ObjectIdentifiable {
     var messages: [Message] { get }
     
     /// Dictionary of seen timestamps with userId as the key
-    var seen: [String: (messageId: ObjectIdentifier, seenAt: Date)] { get }
+    var seen: [String: (messageId: EntityIdentifier, seenAt: Date)] { get }
 }
