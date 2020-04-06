@@ -9,27 +9,70 @@
 import Foundation
 import ChatCore
 
-class ConversationsListViewModel: ConversationsListViewModeling {
+class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
     
+    public typealias ConversationsListState = ListState<Conversation>
+    
+    private let core: Core
+    private(set) var state: ViewModelingState<ConversationsListState> = .initial
     weak var delegate: ConversationsListViewModelDelegate?
     
-    private let dataFetcher: DataFetching
-
-    init(dataFetcher: DataFetching) {
-        self.dataFetcher = dataFetcher
+    private var listener: ListenerIdentifier?
+    
+    var currentUser: User {
+        core.currentUser
+    }
+    
+    init(core: Core) {
+        self.core = core
+    }
+    
+    deinit {
+        guard let listener = listener else {
+            return
+        }
+        
+        core.remove(listener: listener)
     }
     
     func load() {
-        dataFetcher.load { [weak self] in self?.updateState(state: $0) }
+        updateState(.loading)
+        
+        listener = core.listenToConversations { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(let payload):
+                self.updateState(
+                    .ready(
+                        value: ConversationsListState(
+                            items: payload.data,
+                            reachedEnd: payload.reachedEnd
+                        )
+                    )
+                )
+            case .failure(let error):
+                self.updateState(.failed(error: error))
+            }
+        }
     }
     
     func loadMore() {
-        dataFetcher.loadMore { [weak self]  in self?.updateState(state: $0) }
+        guard case let .ready(data) = state, !data.reachedEnd else {
+            return
+        }
+        
+        updateState(.loadingMore)
+        
+        core.loadMoreConversations()
     }
 }
 
 private extension ConversationsListViewModel {
-    func updateState(state: DataFetching.ConversationState) {
+    func updateState(_ state: ViewModelingState<ConversationsListState>) {
+        self.state = state
         delegate?.didTransitionToState(state)
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 public protocol ConversationsListViewModeling: AnyObject {
     var delegate: ConversationsListViewModelDelegate? { get set }
+    var currentUser: User { get }
 
     func load()
     func loadMore()

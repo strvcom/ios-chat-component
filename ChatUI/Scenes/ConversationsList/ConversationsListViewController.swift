@@ -33,14 +33,8 @@ public class ConversationsListViewController: UIViewController {
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
-    private lazy var dataSource = DataSource()
-    
-    var currentUser: User? {
-        didSet {
-            dataSource.currentUser = currentUser
-        }
-    }
-      
+    private lazy var dataSource = DataSource(currentUser: viewModel.currentUser)
+
     init(viewModel: ConversationsListViewModeling) {
 
         self.viewModel = viewModel
@@ -149,8 +143,12 @@ extension ConversationsListViewController {
     // MARK: DataSource
     class DataSource: NSObject, UITableViewDataSource {
         
-        var currentUser: User?
+        var currentUser: User
         var items: [Conversation] = []
+        
+        init(currentUser: User) {
+            self.currentUser = currentUser
+        }
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             items.count
@@ -159,9 +157,7 @@ extension ConversationsListViewController {
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
             
-            if let user = currentUser {
-                cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: user)
-            }
+            cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: currentUser)
             
             return cell
         }

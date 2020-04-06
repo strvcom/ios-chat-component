@@ -16,8 +16,8 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     private let dataSource = DataSource()
 
     private var listener: ListenerIdentifier?
-    private let sender: SenderType
-    
+    private let viewModel: MessagesListViewModeling
+
     private var loadMoreButtonVisible = true {
         didSet {
             loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
@@ -26,9 +26,8 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     let photoPickerIconSize: CGFloat = 36
 
-    init(viewModel: MessagesListViewModeling, user: User) {
+    init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
-        self.sender = user
 
         super.init(nibName: nil, bundle: nil)
         
@@ -88,7 +87,7 @@ extension MessagesListViewController {
 // MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
-        return sender
+        return viewModel.currentUser
     }
 
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -100,11 +99,11 @@ extension MessagesListViewController: MessagesDataSource {
     }
 
     public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        viewModel.messageBottomLabelHeight(for: message)
+        viewModel.seen(message: message.messageId) ? 20 : 0
     }
 
     public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let text = viewModel.messageBottomLabelText(for: message)
+        let text = viewModel.seenLabel(for: message.messageId)
 
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
@@ -193,6 +192,8 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
     func didTransitionToState(_ state: ViewModelingState<ListState<MessageKitType>>) {
         
         switch state {
+        case .initial:
+            break
         case .ready(let data):
             loadMoreButtonVisible = !data.reachedEnd
             
@@ -204,7 +205,7 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .loading:
             dataSource.messages = []
             messagesCollectionView.reloadData()
-        default:
+        case .loadingMore:
             break
         }
     }

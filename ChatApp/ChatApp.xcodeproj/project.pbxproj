@@ -46,10 +46,8 @@
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
 		04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */; };
 		04E5CEAC2435E62600C9532F /* MessagesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEAB2435E62600C9532F /* MessagesListViewModel.swift */; };
-		04E5CEAE243620D300C9532F /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEAD243620D300C9532F /* DataFetcher.swift */; };
 		04E5CEB024365F3E00C9532F /* MessagesListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEAF24365F3E00C9532F /* MessagesListViewModeling.swift */; };
 		04E5CEB224365F5600C9532F /* MessagesListViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEB124365F5600C9532F /* MessagesListViewModelDelegate.swift */; };
-		04E5CEB424365F9200C9532F /* DataFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEB324365F9200C9532F /* DataFetching.swift */; };
 		04E5CEB624365FA300C9532F /* ListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E5CEB524365FA300C9532F /* ListState.swift */; };
 		04E5CEB82436600600C9532F /* ViewModelingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D0524200550001F54A9 /* ViewModelingState.swift */; };
 		04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E74E792432440800401222 /* UIImage+ChatImages.swift */; };
@@ -270,10 +268,8 @@
 		04E56D0524200550001F54A9 /* ViewModelingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelingState.swift; sourceTree = "<group>"; };
 		04E56D0724200566001F54A9 /* ConversationsListViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModelDelegate.swift; sourceTree = "<group>"; };
 		04E5CEAB2435E62600C9532F /* MessagesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModel.swift; sourceTree = "<group>"; };
-		04E5CEAD243620D300C9532F /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
 		04E5CEAF24365F3E00C9532F /* MessagesListViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModeling.swift; sourceTree = "<group>"; };
 		04E5CEB124365F5600C9532F /* MessagesListViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewModelDelegate.swift; sourceTree = "<group>"; };
-		04E5CEB324365F9200C9532F /* DataFetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetching.swift; sourceTree = "<group>"; };
 		04E5CEB524365FA300C9532F /* ListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListState.swift; sourceTree = "<group>"; };
 		04E74E792432440800401222 /* UIImage+ChatImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+ChatImages.swift"; sourceTree = "<group>"; };
 		04E74E7B2432593B00401222 /* Axis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Axis.swift; sourceTree = "<group>"; };
@@ -475,8 +471,8 @@
 		0490E76F241EB730008C4412 /* MessagesList */ = {
 			isa = PBXGroup;
 			children = (
-				048ED59224339B0300F9C7BA /* ViewModel */,
 				048ED59324339BD500F9C7BA /* MessagesListViewController.swift */,
+				048ED59224339B0300F9C7BA /* ViewModel */,
 			);
 			path = MessagesList;
 			sourceTree = "<group>";
@@ -559,8 +555,6 @@
 			children = (
 				04E56D0524200550001F54A9 /* ViewModelingState.swift */,
 				04E5CEB524365FA300C9532F /* ListState.swift */,
-				04E5CEAD243620D300C9532F /* DataFetcher.swift */,
-				04E5CEB324365F9200C9532F /* DataFetching.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1259,7 +1253,6 @@
 				04E5CEB024365F3E00C9532F /* MessagesListViewModeling.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
 				04383896242F841900491FC9 /* ChatUIDelegate.swift in Sources */,
-				04E5CEAE243620D300C9532F /* DataFetcher.swift in Sources */,
 				04E5CEAC2435E62600C9532F /* MessagesListViewModel.swift in Sources */,
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */,
@@ -1267,7 +1260,6 @@
 				C11E9E5923EDCD34005E10A1 /* ConversationsListViewController.swift in Sources */,
 				045A6B3B24292CEF0055B5E1 /* UIView+Nib.swift in Sources */,
 				045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */,
-				04E5CEB424365F9200C9532F /* DataFetching.swift in Sources */,
 				04E5CEB224365F5600C9532F /* MessagesListViewModelDelegate.swift in Sources */,
 				04E56D0824200566001F54A9 /* ConversationsListViewModelDelegate.swift in Sources */,
 				04E74E7C2432593B00401222 /* Axis.swift in Sources */,

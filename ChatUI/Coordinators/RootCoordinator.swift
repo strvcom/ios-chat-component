@@ -17,16 +17,12 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
     private var conversationsListController: ConversationsListViewController?
     
-    private var core: Core
+    private let core: Core
     private weak var delegate: ChatUIDelegate?
     
     init(core: Core, delegate: ChatUIDelegate?) {
         self.core = core
         self.delegate = delegate
-        
-        self.core.stateChanged = { [weak self] state in
-            self?.setCurrentUser(forState: state)
-        }
     }
     
     func start() -> UIViewController {
@@ -37,12 +33,8 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 
 extension RootCoordinator: RootCoordinating {
     func navigate(to conversation: Conversation) {
-        guard let currentUser = core.currentUser else {
-            return
-        }
-        
         navigationController.pushViewController(
-            makeMessagesListController(conversation: conversation, user: currentUser),
+            makeMessagesListController(conversation: conversation, user: core.currentUser),
             animated: true
         )
     }
@@ -56,7 +48,7 @@ extension RootCoordinator: RootCoordinating {
 private extension RootCoordinator {
     func makeConversationsListController() -> ConversationsListViewController {
         conversationsListController = ConversationsListViewController(
-            viewModel: ConversationsListViewModel(dataFetcher: DataFetcher(core: core))
+            viewModel: ConversationsListViewModel(core: core)
         )
         
         guard let controller = conversationsListController else {
@@ -72,20 +64,8 @@ private extension RootCoordinator {
         MessagesListViewController(
             viewModel: MessagesListViewModel(
                 conversation: conversation,
-                core: core,
-                dataFetcher: DataFetcher(core: core)
-            ),
-            user: user
+                core: core
+            )
         )
-    }
-}
-
-private extension RootCoordinator {
-    func setCurrentUser(forState state: ChatCoreState) {
-        guard case .connected = state, let user = core.currentUser else {
-            return
-        }
-        
-        conversationsListController?.currentUser = user
     }
 }

@@ -12,11 +12,13 @@ import MessageKit
 
 protocol MessagesListViewModeling: AnyObject {
     var delegate: MessagesListViewModelDelegate? { get set }
+    
+    var currentUser: User { get }
 
     func load()
     func loadMore()
     func updateSeenMessage(_ message: MessageKitType)
     func send(message: MessageSpecification, completion: @escaping (Result<MessageKitType, ChatError>) -> Void)
-    func messageBottomLabelHeight(for message: MessageType) -> CGFloat
-    func messageBottomLabelText(for message: MessageType) -> String
+    func seen(message: ObjectIdentifier) -> Bool
+    func seenLabel(for: ObjectIdentifier) -> String
 }
