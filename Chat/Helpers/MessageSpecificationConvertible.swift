@@ -22,7 +22,6 @@ extension MessageSpecification: ChatNetworkingConvertible {
             self = MessageSpecification.text(message: message)
         }
     }
-
 }
 
 extension MessageSpecificationFirestore: ChatUIConvertible {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Chat
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,10 +17,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else {
             return
         }
-                
-        window = UIWindow(windowScene: windowScene)
 
+        self.window = UIWindow(windowScene: windowScene)
+        setRootViewController()
+        self.window?.makeKeyAndVisible()
+    }
+}
+
+// MARK: - Create chat and present if a
+private extension SceneDelegate {
+
+    func setRootViewController() {
+        if let user = firebaseAuthentication.user {
+            showChat(user: user)
+        } else {
+            let authenticationViewController = firebaseAuthentication.authenticationViewController(loginCompletion: { [weak self] result in
+                switch result {
+                case .success(let user):
+                    self?.showChat(user: user)
+                case .failure(let error):
+                    print("Firebase authentication failed \(error)")
+                }
+            })
+            self.window?.rootViewController = authenticationViewController
+        }
+    }
+
+    func showChat(user: User) {
+        var imageUrl: URL?
+        if let userImageUrl = user.imageUrl {
+            imageUrl = URL(string: userImageUrl)
+        }
+        chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
         window?.rootViewController = chat.conversationsList()
-        window?.makeKeyAndVisible()
     }
 }
