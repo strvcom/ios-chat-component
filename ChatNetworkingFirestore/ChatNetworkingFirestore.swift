@@ -45,6 +45,13 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     }
 }
 
+// MARK: - User management
+public extension ChatNetworkingFirestore {
+    func setCurrentUser(user id: ObjectIdentifier) {
+        currentUserId = id
+    }
+}
+
 // MARK: - Load
 public extension ChatNetworkingFirestore {
     func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
