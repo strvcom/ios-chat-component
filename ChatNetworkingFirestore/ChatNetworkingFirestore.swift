@@ -35,8 +35,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         }
         database = Firestore.firestore(app: firebaseApp)
 
-        // FIXME: Remove this temporary code when UI for conversation creating is ready
-        NotificationCenter.default.addObserver(self, selector: #selector(createTestConversation), name: NSNotification.Name(rawValue: "TestConversation"), object: nil)
     }
     
     deinit {
@@ -44,37 +42,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
         listeners.forEach {
             remove(listener: $0.key)
         }
-    }
-}
-
-// FIXME: Remove this temporary method when UI for conversation creating is ready
-private extension ChatNetworkingFirestore {
-    @objc func createTestConversation() {
-        database
-            .collection(Constants.usersPath)
-            .getDocuments { [weak self] (querySnapshot, _) in
-                guard
-                    let self = self,
-                    let querySnapshot = querySnapshot,
-                    let users = try? querySnapshot.documents.compactMap({
-                        try $0.data(as: UserFirestore.self)
-                    }) else {
-                        return
-                }
-                
-                self.database
-                    .collection(Constants.conversationsPath)
-                    .addDocument(data: [
-                        "members": users.map { $0.id }
-                    ])
-        }
-    }
-}
-
-// MARK: - User setup
-public extension ChatNetworkingFirestore {
-    func setCurrentUser(user id: ObjectIdentifier) {
-        currentUserId = id
     }
 }
 
