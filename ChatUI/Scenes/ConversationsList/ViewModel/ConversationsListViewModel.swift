@@ -10,9 +10,7 @@ import Foundation
 import ChatCore
 
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
-    
-    public typealias ConversationsListState = ListState<Conversation>
-    
+
     private let core: Core
     private(set) var state: ViewModelingState<ConversationsListState> = .initial
     weak var delegate: ConversationsListViewModelDelegate?
@@ -37,6 +35,10 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     
     func load() {
         updateState(.loading)
+        
+        if let existingListener = listener {
+            core.remove(listener: existingListener)
+        }
         
         listener = core.listenToConversations { [weak self] result in
             guard let self = self else {

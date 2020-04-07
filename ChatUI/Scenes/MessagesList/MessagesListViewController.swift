@@ -128,20 +128,12 @@ extension MessagesListViewController: MessagesDisplayDelegate {
 extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        self.messageInputBar.sendButton.isEnabled = false
-        self.messageInputBar.sendButton.alpha = 0.3
-
         let specs = MessageSpecification.text(message: text)
         
-        viewModel.send(message: specs) { _ in
-            self.messageInputBar.inputTextView.text = nil
-            
-            self.messagesCollectionView.scrollToBottom(animated: true)
-            
-            
-            self.messageInputBar.sendButton.isEnabled = true
-            self.messageInputBar.sendButton.alpha = 1.0
-        }
+        messageInputBar.inputTextView.text = nil
+        messagesCollectionView.scrollToBottom(animated: true)
+
+        viewModel.send(message: specs) { _ in }
     }
 }
 
@@ -189,7 +181,7 @@ private extension MessagesListViewController {
 
 // MARK: MessagesListViewModelDelegate
 extension MessagesListViewController: MessagesListViewModelDelegate {
-    func didTransitionToState(_ state: ViewModelingState<ListState<MessageKitType>>) {
+    func didTransitionToState(_ state: ViewModelingState<MessagesListState>) {
         
         switch state {
         case .initial:

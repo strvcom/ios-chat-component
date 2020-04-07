@@ -12,8 +12,6 @@ import MessageKit
 
 class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling {
     
-    public typealias MessagesListState = ListState<MessageKitType>
-    
     weak var delegate: MessagesListViewModelDelegate?
     
     private let core: Core
@@ -41,6 +39,10 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     
     func load() {
         updateState(.loading)
+        
+        if let existingListener = listener {
+            core.remove(listener: existingListener)
+        }
         
         listener = core.listenToMessages(conversation: conversation.id) { [weak self] result in
             guard let self = self else {
@@ -81,25 +83,16 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         core.send(message: message, to: conversation.id, completion: completion)
     }
     
-    func seen(message id: ObjectIdentifier) -> Bool {
-        conversation.seen.contains { $0.value.messageId == id }
+    func seen(message: ObjectIdentifier) -> Bool {
+        conversation.seen.contains { $0.value.messageId == message }
     }
     
     func seenLabel(for message: ObjectIdentifier) -> String {
-        let seenMessages: [String: (messageId: ObjectIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message && $0.key != core.currentUser.senderId }
-
-        if conversation.members.count == 2 && seenMessages.contains(where: { $0.key != core.currentUser.senderId }) {
-            return "Seen"
-        } else if conversation.members.count > 2 && seenMessages.count == conversation.members.count - 1 {
-            return "Seen by All"
-        } else if conversation.members.count > 2 && !seenMessages.isEmpty {
-            let usersIds = seenMessages.compactMap { $0.key }
-
-            let seenUsers = conversation.members.filter { usersIds.contains($0.id) }.compactMap { $0.name }.joined(separator: ",")
-            return "Seen by \(seenUsers)"
-        }
-        
-        return ""
+        conversation
+            .seen
+            .filter { (senderId, data) in
+                data.messageId == message && senderId != core.currentUser.senderId
+            }.contains { $0.key != core.currentUser.senderId } ? "Seen" : ""
     }
 }
 

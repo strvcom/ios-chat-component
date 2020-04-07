@@ -9,5 +9,5 @@
 import Foundation
 
 protocol MessagesListViewModelDelegate: AnyObject {
-    func didTransitionToState(_ state: ViewModelingState<ListState<MessageKitType>>)
+    func didTransitionToState(_ state: ViewModelingState<MessagesListState>)
 }

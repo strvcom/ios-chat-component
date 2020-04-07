@@ -114,7 +114,7 @@ private extension ConversationsListViewController {
 
 // MARK: ConversationsListViewModelDelegate
 extension ConversationsListViewController: ConversationsListViewModelDelegate {
-    public func didTransitionToState(_ state: ViewModelingState<ListState<Conversation>>) {
+    public func didTransitionToState(_ state: ViewModelingState<ConversationsListState>) {
         
         switch state {
         case .initial:

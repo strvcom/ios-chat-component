@@ -34,7 +34,7 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 extension RootCoordinator: RootCoordinating {
     func navigate(to conversation: Conversation) {
         navigationController.pushViewController(
-            makeMessagesListController(conversation: conversation, user: core.currentUser),
+            makeMessagesListController(conversation: conversation),
             animated: true
         )
     }
@@ -60,7 +60,7 @@ private extension RootCoordinator {
         return controller
     }
     
-    func makeMessagesListController(conversation: Conversation, user: User) -> UIViewController {
+    func makeMessagesListController(conversation: Conversation) -> UIViewController {
         MessagesListViewController(
             viewModel: MessagesListViewModel(
                 conversation: conversation,

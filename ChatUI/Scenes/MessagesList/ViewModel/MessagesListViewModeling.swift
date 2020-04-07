@@ -10,9 +10,11 @@ import UIKit
 import ChatCore
 import MessageKit
 
+public typealias MessagesListState = ListState<MessageKitType>
+
 protocol MessagesListViewModeling: AnyObject {
     var delegate: MessagesListViewModelDelegate? { get set }
-    
+    var state: ViewModelingState<MessagesListState> { get }
     var currentUser: User { get }
 
     func load()
