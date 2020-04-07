@@ -11,7 +11,7 @@ import UIKit
 class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
     private lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: conversationsListController())
+        return UINavigationController(rootViewController: makeConversationsListController())
     }()
     
     private let core: Core
@@ -29,9 +29,9 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 
 
 extension RootCoordinator: RootCoordinating {
-    func navigate(to conversation: Conversation, user: User) {
+    func navigate(to conversation: Conversation) {
         navigationController.pushViewController(
-            messagesListController(conversation: conversation, user: user),
+            makeMessagesListController(conversation: conversation),
             animated: true
         )
     }
@@ -41,18 +41,24 @@ extension RootCoordinator: RootCoordinating {
     }
 }
 
+// MARK: Controllers
 private extension RootCoordinator {
-    func conversationsListController() -> ConversationsListViewController {
+    func makeConversationsListController() -> ConversationsListViewController {
         let controller = ConversationsListViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
-        
+
         controller.coordinator = self
         
         return controller
     }
     
-    func messagesListController(conversation: Conversation, user: User) -> UIViewController {
-        MessagesListViewController(conversation: conversation, core: core, sender: user)
+    func makeMessagesListController(conversation: Conversation) -> UIViewController {
+        MessagesListViewController(
+            viewModel: MessagesListViewModel(
+                conversation: conversation,
+                core: core
+            )
+        )
     }
 }

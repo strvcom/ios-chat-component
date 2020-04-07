@@ -10,14 +10,14 @@ import Foundation
 import ChatCore
 
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
-    
+
     private let core: Core
     private(set) var state: ViewModelingState<ConversationsListState> = .initial
     weak var delegate: ConversationsListViewModelDelegate?
     
     private var listener: ListenerIdentifier?
     
-    var currentUser: User? {
+    var currentUser: User {
         core.currentUser
     }
     
@@ -35,6 +35,10 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     
     func load() {
         updateState(.loading)
+        
+        if let existingListener = listener {
+            core.remove(listener: existingListener)
+        }
         
         listener = core.listenToConversations { [weak self] result in
             guard let self = self else {

@@ -33,8 +33,8 @@ public class ConversationsListViewController: UIViewController {
     
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
-    private lazy var dataSource = DataSource()
-      
+    private lazy var dataSource = DataSource(currentUser: viewModel.currentUser)
+
     init(viewModel: ConversationsListViewModeling) {
 
         self.viewModel = viewModel
@@ -66,14 +66,11 @@ private extension ConversationsListViewController {
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
-                guard
-                    let self = self,
-                    let conversation = self.dataSource.items[safe: row],
-                    let sender = self.viewModel.currentUser else {
+                guard let conversation = self?.dataSource.items[safe: row] else {
                     return
                 }
                 
-                self.coordinator?.navigate(to: conversation, user: sender)
+                self?.coordinator?.navigate(to: conversation)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()
@@ -125,7 +122,6 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
         case let .ready(state):
             stopLoading()
             dataSource.items = state.items
-            dataSource.currentUser = viewModel.currentUser
             tableView.reloadData()
             toggleEmptyState(isEmpty: state.items.isEmpty)
         case let .failed(error):
@@ -147,8 +143,12 @@ extension ConversationsListViewController {
     // MARK: DataSource
     class DataSource: NSObject, UITableViewDataSource {
         
-        var currentUser: User?
+        var currentUser: User
         var items: [Conversation] = []
+        
+        init(currentUser: User) {
+            self.currentUser = currentUser
+        }
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             items.count
@@ -157,9 +157,7 @@ extension ConversationsListViewController {
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
             
-            if let user = currentUser {
-                cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: user)
-            }
+            cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: currentUser)
             
             return cell
         }
