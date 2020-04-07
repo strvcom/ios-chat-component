@@ -12,7 +12,7 @@ import Chat
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var interface: MessageKitInterface?
+    var interface: PumpkinPieChat.Interface?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else {
@@ -61,7 +61,7 @@ private extension SceneDelegate {
     }
 }
 
-extension SceneDelegate: MessageKitInterface.Delegate {
+extension SceneDelegate: PumpkinPieChat.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
     }

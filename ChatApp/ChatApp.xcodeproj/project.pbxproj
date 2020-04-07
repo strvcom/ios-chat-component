@@ -98,7 +98,6 @@
 		C11E9E0D23EDCCDA005E10A1 /* MesageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E0023EDCCDA005E10A1 /* MesageContent.swift */; };
 		C11E9E0E23EDCCDA005E10A1 /* UIImage+Resizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E0223EDCCDA005E10A1 /* UIImage+Resizing.swift */; };
 		C11E9E1923EDCD07005E10A1 /* Chat.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E1123EDCD06005E10A1 /* Chat.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C11E9E1A23EDCD07005E10A1 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1223EDCD06005E10A1 /* Chat.swift */; };
 		C11E9E1B23EDCD07005E10A1 /* UserConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1423EDCD06005E10A1 /* UserConvertible.swift */; };
 		C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1523EDCD06005E10A1 /* ConversationConvertible.swift */; };
 		C11E9E1D23EDCD07005E10A1 /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1623EDCD06005E10A1 /* MessageConvertible.swift */; };
@@ -132,8 +131,13 @@
 		C11E9E6523EDCD34005E10A1 /* ChatUICoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5623EDCD34005E10A1 /* ChatUICoreServicing.swift */; };
 		C11E9E6723EDCD34005E10A1 /* MessagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */; };
 		C11E9E6823EDCF70005E10A1 /* ChatNetworkingFirestore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C18574132433678500F08E78 /* ChatMessageKitFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574122433678500F08E78 /* ChatMessageKitFirestore.swift */; };
-		C18574192434D59B00F08E78 /* ChatInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574182434D59B00F08E78 /* ChatInterface.swift */; };
+		C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7B243C755C00733A95 /* PumpkinPieInterface.swift */; };
+		C1253A80243C961900733A95 /* ChatSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7E243C961600733A95 /* ChatSpecifying.swift */; };
+		C1253A83243C984400733A95 /* ChatSpecifying+Scenes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */; };
+		C1253A85243C98AA00733A95 /* DefaultChatSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A84243C98AA00733A95 /* DefaultChatSpecifying.swift */; };
+		C1253A87243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */; };
+		C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574122433678500F08E78 /* PumpkinPieChat.swift */; };
+		C18574192434D59B00F08E78 /* ChatInterfacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574182434D59B00F08E78 /* ChatInterfacing.swift */; };
 		C196FBC92422272C0077FC49 /* ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; };
 		C196FBCA2422272C0077FC49 /* ChatNetworkingFirestore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C196FBCE242227310077FC49 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; };
@@ -319,7 +323,6 @@
 		C11E9E0223EDCCDA005E10A1 /* UIImage+Resizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resizing.swift"; sourceTree = "<group>"; };
 		C11E9E0323EDCCDA005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11E9E1123EDCD06005E10A1 /* Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
-		C11E9E1223EDCD06005E10A1 /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		C11E9E1423EDCD06005E10A1 /* UserConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserConvertible.swift; sourceTree = "<group>"; };
 		C11E9E1523EDCD06005E10A1 /* ConversationConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationConvertible.swift; sourceTree = "<group>"; };
 		C11E9E1623EDCD06005E10A1 /* MessageConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
@@ -355,9 +358,14 @@
 		C11E9E5623EDCD34005E10A1 /* ChatUICoreServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUICoreServicing.swift; sourceTree = "<group>"; };
 		C11E9E5723EDCD34005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11E9E5823EDCD34005E10A1 /* MessagesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesListViewController.swift; sourceTree = "<group>"; };
+		C1253A7B243C755C00733A95 /* PumpkinPieInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpkinPieInterface.swift; sourceTree = "<group>"; };
+		C1253A7E243C961600733A95 /* ChatSpecifying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSpecifying.swift; sourceTree = "<group>"; };
+		C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+Scenes.swift"; sourceTree = "<group>"; };
+		C1253A84243C98AA00733A95 /* DefaultChatSpecifying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultChatSpecifying.swift; sourceTree = "<group>"; };
+		C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DefaultChatSpecifying+Convenience.swift"; sourceTree = "<group>"; };
 		C185740A24333BA300F08E78 /* ChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatApp.entitlements; sourceTree = "<group>"; };
-		C18574122433678500F08E78 /* ChatMessageKitFirestore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageKitFirestore.swift; sourceTree = "<group>"; };
-		C18574182434D59B00F08E78 /* ChatInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInterface.swift; sourceTree = "<group>"; };
+		C18574122433678500F08E78 /* PumpkinPieChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PumpkinPieChat.swift; sourceTree = "<group>"; };
+		C18574182434D59B00F08E78 /* ChatInterfacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInterfacing.swift; sourceTree = "<group>"; };
 		C95D0BFE7F8EC8D86ECA6D1D /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		D4959AC9B159D3FF9E8E6E52 /* Pods-ChatUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatUI.debug.xcconfig"; path = "Target Support Files/Pods-ChatUI/Pods-ChatUI.debug.xcconfig"; sourceTree = "<group>"; };
 		E421DE27EFBFA52EC3F99694 /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -679,9 +687,9 @@
 			isa = PBXGroup;
 			children = (
 				C11E9E1123EDCD06005E10A1 /* Chat.h */,
-				C11E9E1223EDCD06005E10A1 /* Chat.swift */,
-				C18574182434D59B00F08E78 /* ChatInterface.swift */,
+				C1253A81243C981E00733A95 /* Extensions */,
 				C1857410243366F000F08E78 /* Implementations */,
+				C1253A7D243C95EE00733A95 /* Protocols */,
 				C11E9E1823EDCD06005E10A1 /* Info.plist */,
 			);
 			name = Chat;
@@ -702,8 +710,8 @@
 		C11E9E2023EDCD1E005E10A1 /* ChatCore */ = {
 			isa = PBXGroup;
 			children = (
-				C11E9E2123EDCD1E005E10A1 /* Classes */,
 				C11E9E2323EDCD1E005E10A1 /* ChatCore.h */,
+				C11E9E2123EDCD1E005E10A1 /* Classes */,
 				C11E9E2423EDCD1E005E10A1 /* Models */,
 				C11E9E2823EDCD1E005E10A1 /* Protocols */,
 				843D814C2406D68900C62656 /* Utils */,
@@ -802,19 +810,39 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
-		C185740F243366E300F08E78 /* MessageKitFirestore */ = {
+		C1253A7D243C95EE00733A95 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				C18574182434D59B00F08E78 /* ChatInterfacing.swift */,
+				C1253A7E243C961600733A95 /* ChatSpecifying.swift */,
+				C1253A84243C98AA00733A95 /* DefaultChatSpecifying.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		C1253A81243C981E00733A95 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */,
+				C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C185740F243366E300F08E78 /* PumpkinPie */ = {
 			isa = PBXGroup;
 			children = (
 				C11E9E1323EDCD06005E10A1 /* ModelConverting */,
-				C18574122433678500F08E78 /* ChatMessageKitFirestore.swift */,
+				C18574122433678500F08E78 /* PumpkinPieChat.swift */,
+				C1253A7B243C755C00733A95 /* PumpkinPieInterface.swift */,
 			);
-			path = MessageKitFirestore;
+			path = PumpkinPie;
 			sourceTree = "<group>";
 		};
 		C1857410243366F000F08E78 /* Implementations */ = {
 			isa = PBXGroup;
 			children = (
-				C185740F243366E300F08E78 /* MessageKitFirestore */,
+				C185740F243366E300F08E78 /* PumpkinPie */,
 			);
 			path = Implementations;
 			sourceTree = "<group>";
@@ -1362,12 +1390,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				C11E9E1E23EDCD07005E10A1 /* MessageSpecificationConvertible.swift in Sources */,
+				C1253A87243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift in Sources */,
 				C11E9E1B23EDCD07005E10A1 /* UserConvertible.swift in Sources */,
 				C11E9E1D23EDCD07005E10A1 /* MessageConvertible.swift in Sources */,
 				C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */,
-				C11E9E1A23EDCD07005E10A1 /* Chat.swift in Sources */,
-				C18574132433678500F08E78 /* ChatMessageKitFirestore.swift in Sources */,
-				C18574192434D59B00F08E78 /* ChatInterface.swift in Sources */,
+				C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */,
+				C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */,
+				C1253A85243C98AA00733A95 /* DefaultChatSpecifying.swift in Sources */,
+				C1253A83243C984400733A95 /* ChatSpecifying+Scenes.swift in Sources */,
+				C1253A80243C961900733A95 /* ChatSpecifying.swift in Sources */,
+				C18574192434D59B00F08E78 /* ChatInterfacing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

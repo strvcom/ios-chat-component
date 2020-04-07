@@ -1,5 +1,5 @@
 //
-//  ChatInterface.swift
+//  ChatInterfacing.swift
 //  Chat
 //
 //  Created by Jan on 01/04/2020.
@@ -9,9 +9,9 @@
 import UIKit
 import ChatCore
 
-public protocol ChatInterface {
+public protocol ChatInterfacing {
     associatedtype UIService: ChatUIServicing
-    associatedtype Delegate
+    associatedtype Delegate where Delegate == UIService.Delegate
     
     var identifier: ObjectIdentifier { get }
     var uiService: UIService { get }

@@ -1,5 +1,5 @@
 //
-//  ChatInteracting.swift
+//  ChatUIServicing.swift
 //  ChatCore
 //
 //  Created by Jan Schwarz on 05/01/2020.
@@ -13,6 +13,7 @@ public protocol ChatUIServicing {
     associatedtype Core: ChatCoreServicing
     associatedtype Models: ChatUIModels
     associatedtype Config
+    associatedtype Delegate
     
     init(core: Core, config: Config)
 }

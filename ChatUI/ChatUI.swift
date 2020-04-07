@@ -10,11 +10,12 @@ import UIKit
 import ChatCore
 
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
+    public typealias Delegate = ChatUIDelegate
     public typealias Models = ChatModelsUI
     
     let core: Core
     
-    public weak var delegate: ChatUIDelegate?
+    public weak var delegate: Delegate?
     
     private lazy var coordinator = RootCoordinator(core: core, delegate: delegate)
     
