@@ -26,6 +26,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Models.MUI: MessageStateReflecting,
     Models.MUI.MessageSpecification == Models.MSUI,
 
+    // Specify that all UI and networking models are inter-convertible
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,

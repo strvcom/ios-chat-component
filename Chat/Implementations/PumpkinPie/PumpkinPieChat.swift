@@ -11,6 +11,7 @@ import ChatCore
 import ChatNetworkingFirestore
 import ChatUI
 
+/// Chat implementation for Pumpkin Pie project
 public class PumpkinPieChat: DefaultChatSpecifying {
     public typealias UIModels = ChatModelsUI
     public typealias Networking = ChatNetworkingFirestore
@@ -27,8 +28,11 @@ public class PumpkinPieChat: DefaultChatSpecifying {
         self.core = Self.core(networkConfig: networkConfig)
         self.uiConfig = uiConfig
     }
-    
-    public func interface(with identifier: ObjectIdentifier) -> Interface {
+}
+
+// MARK: - UI
+public extension PumpkinPieChat {
+    func interface(with identifier: ObjectIdentifier) -> Interface {
         if let interface = interfaces[identifier] {
             return interface
         } else {
@@ -37,12 +41,15 @@ public class PumpkinPieChat: DefaultChatSpecifying {
             return interface
         }
     }
+}
 
-    public func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
+// MARK: - Messages
+public extension PumpkinPieChat {
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
 
-    public func resendUnsentMessages() {
+    func resendUnsentMessages() {
         core.resendUnsentMessages()
     }
 }
