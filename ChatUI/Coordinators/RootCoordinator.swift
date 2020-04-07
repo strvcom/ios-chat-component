@@ -14,8 +14,6 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
         return UINavigationController(rootViewController: makeConversationsListController())
     }()
     
-    private var conversationsListController: ConversationsListViewController?
-    
     private let core: Core
     private weak var delegate: ChatUIDelegate?
     
@@ -46,13 +44,9 @@ extension RootCoordinator: RootCoordinating {
 // MARK: Controllers
 private extension RootCoordinator {
     func makeConversationsListController() -> ConversationsListViewController {
-        conversationsListController = ConversationsListViewController(
+        let controller = ConversationsListViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
-        
-        guard let controller = conversationsListController else {
-            fatalError("Couldn't instantiate ConversationsListController")
-        }
 
         controller.coordinator = self
         
