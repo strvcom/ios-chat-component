@@ -16,8 +16,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
 
     // user management
     @Required private var currentUserId: String
-    private var users: [UserFirestore] = []
-    
+
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
@@ -34,7 +33,6 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
             fatalError("Can't configure Firebase app \(appName)")
         }
         database = Firestore.firestore(app: firebaseApp)
-
     }
     
     deinit {
@@ -55,16 +53,7 @@ public extension ChatNetworkingFirestore {
 // MARK: - Load
 public extension ChatNetworkingFirestore {
     func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
-        listenToUsers { [weak self] (result: Result<[UserFirestore], ChatError>) in
-            switch result {
-            case let .success(users):
-                self?.users = users
-                completion(.success(()))
-            case let .failure(error):
-                print(error)
-                completion(.failure(.networking(error: error)))
-            }
-        }
+        completion(.success(()))
     }
 }
 
@@ -181,8 +170,10 @@ public extension ChatNetworkingFirestore {
                 return
             }
 
+            // TODO: CJ
+            completion(.success(conversations))
             // Set members from previously downloaded users
-            completion(.success(self.conversationsWithMembers(conversations: conversations)))
+//            completion(.success(self.conversationsWithMembers(conversations: conversations)))
         })
     }
 
@@ -200,12 +191,7 @@ public extension ChatNetworkingFirestore {
             pageSize: pageSize
         )
     }
-    
-    func listenToUsers(completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
-        let query = database.collection(Constants.usersPath)
-        listenTo(query: query, listener: .users, completion: completion)
-    }
-    
+
     func remove(listener: Listener) {
         listeners[listener]?.remove()
     }
@@ -218,10 +204,12 @@ public extension ChatNetworkingFirestore {
                 guard let self = self else {
                     return
                 }
-                
+
+                // TODO: CJ
                 switch result {
                 case .success(let conversations):
-                    self.conversationsPagination.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
+//                    self.conversationsPagination.updateBlock?(.success(self.conversationsWithMembers(conversations: conversations)))
+                    self.conversationsPagination.updateBlock?(.success(conversations))
                 case .failure(let error):
                     self.conversationsPagination.updateBlock?(.failure(error))
                 }
@@ -300,15 +288,16 @@ private extension ChatNetworkingFirestore {
         
         listeners[listener] = networkListener
     }
-    
-    func conversationsWithMembers(conversations: [ConversationFirestore]) -> [ConversationFirestore] {
-        conversations.map { conversation in
-            var result = conversation
-            result.setMembers(users.filter { result.memberIds.contains($0.id) })
-            return result
-        }
-    }
-    
+
+    // TODO: CJ
+//    func conversationsWithMembers(conversations: [ConversationFirestore]) -> [ConversationFirestore] {
+//        conversations.map { conversation in
+//            var result = conversation
+//            result.setMembers(users.filter { result.memberIds.contains($0.id) })
+//            return result
+//        }
+//    }
+//
     func advancePaginator<T: Decodable>(paginator: Pagination<T>, query: Query, listenerCompletion: @escaping (Result<[T], ChatError>) -> Void) -> Pagination<T> {
         
         var paginator = paginator
