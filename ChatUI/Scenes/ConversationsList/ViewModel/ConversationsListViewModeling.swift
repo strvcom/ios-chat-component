@@ -8,11 +8,13 @@
 
 import Foundation
 
+public typealias ConversationsListState = ListState<Conversation>
+
 public protocol ConversationsListViewModeling: AnyObject {
     var delegate: ConversationsListViewModelDelegate? { get set }
     var state: ViewModelingState<ConversationsListState> { get }
-    var currentUser: User? { get }
-    
+    var currentUser: User { get }
+
     func load()
     func loadMore()
 }
