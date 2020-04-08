@@ -7,18 +7,30 @@
 //
 
 import Foundation
+import FirebaseCore
 import FirebaseFirestore
 import ChatCore
 
 // MARK: - Default firestore implementation of user managing
-public class UserManagerFirestore: UserManaging {
-    let database: Firestore
+public class UserManagingFirestore: UserManaging {
 
+    private let database: Firestore
     private var users: [Listener: [UserFirestore]] = [:]
     private var listeners: [Listener: ListenerRegistration] = [:]
 
-    public init(database: Firestore) {
-        self.database = database
+    public init(config: ChatNetworkingFirestoreConfig) {
+        // setup from config
+        guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
+            fatalError("Can't configure Firebase")
+        }
+
+        let appName = UUID().uuidString
+        FirebaseApp.configure(name: appName, options: options)
+        guard let firebaseApp = FirebaseApp.app(name: appName) else {
+            fatalError("Can't configure Firebase app \(appName)")
+        }
+
+        database = Firestore.firestore(app: firebaseApp)
     }
 
     public func users(userIds: [EntityIdentifier], completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {

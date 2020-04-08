@@ -13,7 +13,8 @@ import Foundation
 /// It's used by the core for all networking operations.
 public protocol ChatNetworkServicing {
     associatedtype Config
-    
+    associatedtype UserManager: UserManaging
+
     // Specific conversation type
     associatedtype C: ConversationRepresenting
     // Message description used for sending a message
@@ -22,7 +23,7 @@ public protocol ChatNetworkServicing {
     typealias M = C.Message
     typealias U = C.User
 
-    init(config: Config)
+    init(config: Config, userManager: UserManager)
 
     /// Set current user
     ///

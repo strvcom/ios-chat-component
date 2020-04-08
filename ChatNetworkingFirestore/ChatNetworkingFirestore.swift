@@ -20,22 +20,23 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
+    private let userManager: UserManagingFirestore
 
-    private let userManager: UserManagerFirestore
-
-    public required init(config: ChatNetworkingFirestoreConfig) {
+    public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagingFirestore) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
+
         let appName = UUID().uuidString
         FirebaseApp.configure(name: appName, options: options)
         guard let firebaseApp = FirebaseApp.app(name: appName) else {
             fatalError("Can't configure Firebase app \(appName)")
         }
+
         database = Firestore.firestore(app: firebaseApp)
-        userManager = UserManagerFirestore(database: database)
+        self.userManager = userManager
     }
     
     deinit {

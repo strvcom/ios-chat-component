@@ -25,7 +25,7 @@ public class PumpkinPieChat: DefaultChatSpecifying {
     private(set) var interfaces: [ObjectIdentifier: Interface] = [:]
       
     public required init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration) {
-        self.core = Self.core(networkConfig: networkConfig)
+        self.core = Self.core(networkConfig: networkConfig, userManager: UserManagingFirestore(config: networkConfig))
         self.uiConfig = uiConfig
     }
 }
