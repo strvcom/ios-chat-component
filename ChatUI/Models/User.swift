@@ -11,12 +11,12 @@ import ChatCore
 import MessageKit
 
 public struct User: UserRepresenting {
-    public let id: ObjectIdentifier
+    public let id: EntityIdentifier
     public let name: String
     public let imageUrl: URL?
     public let compatibility: Float?
 
-    public init(id: ObjectIdentifier, name: String, imageUrl: URL?, compatibility: Float? = nil) {
+    public init(id: EntityIdentifier, name: String, imageUrl: URL?, compatibility: Float? = nil) {
         self.id = id
         self.name = name
         self.imageUrl = imageUrl

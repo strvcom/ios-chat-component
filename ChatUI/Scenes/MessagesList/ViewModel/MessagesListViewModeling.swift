@@ -21,6 +21,6 @@ protocol MessagesListViewModeling: AnyObject {
     func loadMore()
     func updateSeenMessage(_ message: MessageKitType)
     func send(message: MessageSpecification, completion: @escaping (Result<MessageKitType, ChatError>) -> Void)
-    func seen(message: ObjectIdentifier) -> Bool
-    func seenLabel(for: ObjectIdentifier) -> String
+    func seen(message: EntityIdentifier) -> Bool
+    func seenLabel(for: EntityIdentifier) -> String
 }

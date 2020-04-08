@@ -13,7 +13,7 @@ import FirebaseUI
 
 // swiftlint:disable implicitly_unwrapped_optional
 /// Global chat component for simplicity
-var chat: Chat!
+var chat: PumpkinPieChat!
 var firebaseAuthentication: FirebaseAuthentication!
 // swiftlint:enable implicitly_unwrapped_optional
 
@@ -33,10 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let database = Firestore.firestore()
         firebaseAuthentication = FirebaseAuthentication(database: database)
         
-        let uiConfig = Chat.UIConfiguration(
+        let uiConfig = PumpkinPieChat.UIConfiguration(
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
-            strings: Chat.UIConfiguration.Strings(
+            strings: PumpkinPieChat.UIConfiguration.Strings(
                 newConversation: "Wants to chat!",
                 conversation: "Conversation",
                 conversationsListEmptyTitle: "No matches yet",
@@ -45,9 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ),
             images: AppStyleConfig.images
         )
-        let networkConfig = Chat.NetworkConfiguration(configUrl: configUrl)
-        chat = Chat(networkConfig: networkConfig, uiConfig: uiConfig)
-        chat.uiDelegate = self
+        let networkConfig = PumpkinPieChat.NetworkConfiguration(configUrl: configUrl)
+        chat = PumpkinPieChat(networkConfig: networkConfig, uiConfig: uiConfig)
         
         setupBackgroundFetch()
         return true
@@ -102,11 +101,5 @@ extension AppDelegate {
         }
         // other URL handling goes here.
         return false
-    }
-}
-
-extension AppDelegate: Chat.UIDelegate {
-    func conversationsListEmptyListAction() {
-        print("Take a Quiz button tapped!")
     }
 }

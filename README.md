@@ -78,7 +78,7 @@ You can use this pod if your project uses Firestore as the database for the chat
 Simple UI implementation for testing. Most projects will probably want to write their own UI. See [Writing custom UI layer](#writing-custom-ui-layer).
 
 ### Chat – Glue
-You can use this part of the library in case you want to use both ChatNetworkingFirestore and ChatUI and don't need anything custom. It contains the glue code necessary for all of the parts to work. If you use custom UI or networking layer, you will have to write this yourself – it's very simple though. See [Gluing UI layer and networking layer](#gluing-ui-layer-and-networking-layer)
+You can use this part of the library in case you want to use existing implementations of `ChatCoreServicing`, `ChatNetworkServicing` and `ChatUIServicing` and you don't need anything custom. It contains the glue code necessary for all of the parts to work. Right now it contains only a chat solution for Pumpkin Pie project, but if you want to consruct your chat from different components, it's very simple. See [Gluing UI layer and networking layer](#gluing-ui-layer-and-networking-layer)
 
 ## Writing custom UI layer
 
@@ -103,9 +103,11 @@ The only thing needed to implement custom networking layer is conforming to the 
 
 ## Gluing UI layer and networking layer
 
-Let's take the Chat module mentioned above as an example.
+Let's take the complete [Pumpkin Pie](Chat/Implementations/PumpkinPie) solution mentioned above as an example.
 
-First, you need to make all your networking models conform to `ChatUIConvertible`, for example:
+First, you need your implementations of `ChatNetworkServicing`, `ChatCoreServicing` and `ChatUIServicing`. From now on, let's assume you want to use `ChatCore` as the implementation of `ChatCoreServicing` because it is written generically enough to work with any tuple of implementations of `ChatNetworkServicing` and `ChatUIServicing`. In case of Pumpkin Pie, those implementations are `ChatNetworkFirestore` and `ChatUI`.
+
+Second, you need to make all your networking models conform to `ChatUIConvertible`, for example:
 
 ``` swift
 extension ConversationFirestore: ChatUIConvertible {
@@ -127,21 +129,7 @@ extension Conversation: ChatNetworkingConvertible {
 }
 ```
 
-Second step is to instantiate `ChatCore` class.
-
-The main [`Chat`](Chat/Chat.swift) class in this example instantiates the whole mechanism like this:
-
-``` swift
-let interface: ChatUI<ChatCore<ChatNetworkFirestore, ChatModelsUI>>
-
-public init(config: Configuration) {
-    let networking = ChatNetworkFirestore(config: config)
-    let core = ChatCore<ChatNetworkFirestore, ChatModelsUI>(networking: networking)
-    self.interface = ChatUI(core: core)
-}
-```
-
-In this case, the class `ChatUI` specializes the `ChatCoreServicing` protocol to specify UIModels like this:
+Third, you need to make your implementation of `ChatUIServicing` compatible with `ChatCore` simply like this:
 
 ``` swift
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
@@ -153,12 +141,39 @@ public protocol ChatUICoreServicing: ChatCoreServicing where C == Conversation, 
 extension ChatCore: ChatUICoreServicing where Models.CUI == Conversation, Models.MSUI == MessageSpecification, Models.MUI == MessageKitType, Models.USRUI == User { }
 ```
 
-and then it's used in a controller like this:
+Next, you need to wrap your implementation of `ChatUIServicing`in `ChatInterfacing` to manage different instances of UI for different scenes:
 
 ``` swift
-public class ConversationsListViewController<Core: ChatUICoreServicing>: UIViewController {
-    let core: Core
-    ...
+public class PumpkinPieInterface: ChatInterfacing {
+    public let identifier: ObjectIdentifier
+    public let uiService: ChatUI<...>    
+    public weak var delegate: Delegate?
+    public var rootViewController: UIViewController {
+        uiService.rootViewController
+    }
+        
+    init(...) {...}
+}
+```
+
+Finally, you glue everything together by implementing `ChatSpecifying` protocol:
+
+``` swift
+public class PumpkinPieChat: DefaultChatSpecifying {
+    public typealias UIModels = ChatModelsUI
+    public typealias Networking = ChatNetworkingFirestore
+    public typealias Core = ChatCore<ChatNetworkingFirestore, UIModels>
+    public typealias Interface = PumpkinPieInterface
+
+    public init(...) {...}
+
+    func interface(with identifier: ObjectIdentifier) -> Interface {...}
+
+    func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {...}
+
+    func resendUnsentMessages() {...}
+
+    func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?) {...}
 }
 ```
 

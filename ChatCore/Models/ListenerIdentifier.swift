@@ -8,4 +8,4 @@
 
 import Foundation
 
-public typealias ListenerIdentifier = ObjectIdentifier
+public typealias ListenerIdentifier = EntityIdentifier

@@ -83,11 +83,11 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         core.send(message: message, to: conversation.id, completion: completion)
     }
     
-    func seen(message: ObjectIdentifier) -> Bool {
+    func seen(message: EntityIdentifier) -> Bool {
         conversation.seen.contains { $0.value.messageId == message }
     }
     
-    func seenLabel(for message: ObjectIdentifier) -> String {
+    func seenLabel(for message: EntityIdentifier) -> String {
         conversation
             .seen
             .filter { (senderId, data) in
