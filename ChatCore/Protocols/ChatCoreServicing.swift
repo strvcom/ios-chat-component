@@ -28,7 +28,7 @@ public protocol ChatCoreServicing {
     var currentState: ChatCoreState { get }
     var stateChanged: ((ChatCoreState) -> Void)? { get set }
 
-    init (networking: Networking)
+    init(networking: Networking)
 
     /// Sets current user for chat core
     ///

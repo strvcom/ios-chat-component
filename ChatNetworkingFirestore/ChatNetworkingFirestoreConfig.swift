@@ -12,7 +12,7 @@ import FirebaseFirestore
 // MARK: - Configuration of firestore network
 public struct ChatNetworkingFirestoreConfig {
     let configUrl: String
-    
+
     public init(configUrl: String) {
         self.configUrl = configUrl
     }

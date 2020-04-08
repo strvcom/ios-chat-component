@@ -210,7 +210,6 @@ public extension ChatNetworkingFirestore {
                 switch result {
                 case .success(let conversations):
                     self.loadUsersForConversations(conversations: conversations, completion: completion)
-                    self.conversationsPagination.updateBlock?(.success(conversations))
                 case .failure(let error):
                     completion(.failure(error))
                 }
