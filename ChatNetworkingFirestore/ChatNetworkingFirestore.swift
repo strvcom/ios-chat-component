@@ -18,7 +18,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     @Required private var currentUserId: String
 
     private var listeners: [Listener: ListenerRegistration] = [:]
-    private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
+    private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
     private let userManager: UserManagerFirestore
@@ -48,7 +48,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
 
 // MARK: - User management
 public extension ChatNetworkingFirestore {
-    func setCurrentUser(user id: ObjectIdentifier) {
+    func setCurrentUser(user id: EntityIdentifier) {
         currentUserId = id
     }
 }
@@ -62,7 +62,7 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Write data
 public extension ChatNetworkingFirestore {
-    func send(message: MessageSpecificationFirestore, to conversation: ObjectIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
 
         message.toJSON { [weak self] result in
             guard let self = self, case let .success(json) = result else {
@@ -132,7 +132,7 @@ public extension ChatNetworkingFirestore {
 
 // MARK: - Delete message
 public extension ChatNetworkingFirestore {
-    func delete(message: MessageFirestore, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
+    func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let document = self.database
             .collection(Constants.conversationsPath)
             .document(conversation)
@@ -183,7 +183,7 @@ public extension ChatNetworkingFirestore {
         })
     }
 
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
+    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<[MessageFirestore], ChatError>) -> Void) {
         
         let completion = reversedDataCompletion(completion: completion)
         let listener = Listener.messages(pageSize: pageSize, conversationId: id)

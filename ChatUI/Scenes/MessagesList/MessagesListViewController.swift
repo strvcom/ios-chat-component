@@ -11,13 +11,12 @@ import ChatCore
 import MessageKit
 import InputBarAccessoryView
 
-public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    let core: Core
-    let conversation: Conversation
+public class MessagesListViewController: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     private let dataSource = DataSource()
 
     private var listener: ListenerIdentifier?
-    private let sender: SenderType
+    private let viewModel: MessagesListViewModeling
 
     private var loadMoreButtonVisible = true {
         didSet {
@@ -27,12 +26,12 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     
     let photoPickerIconSize: CGFloat = 36
 
-    init(conversation: Conversation, core: Core, sender: SenderType) {
-        self.core = core
-        self.conversation = conversation
-        self.sender = sender
+    init(viewModel: MessagesListViewModeling) {
+        self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
+        
+        self.viewModel.delegate = self
 
         setup()
     }
@@ -40,13 +39,6 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        if let listener = listener {
-            core.remove(listener: listener)
-        }
-        print("\(self) deinit")
     }
 
     private func setup() {
@@ -58,31 +50,19 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
 
-        listener = core.listenToMessages(conversation: conversation.id) { [weak self] result in
-            
-            switch result {
-            case .success(let payload):
-                self?.loadMoreButtonVisible = payload.reachedEnd == false
-                
-                self?.dataSource.messages = payload.data
-                self?.markSeenMessage()
-                self?.messagesCollectionView.reloadData()
-            case .failure(let error):
-                print(error)
-            }
-        }
+        viewModel.load()
     }
 
     @objc
     func loadMore() {
-        core.loadMoreMessages(conversation: conversation.id)
+        viewModel.loadMore()
     }
 
     func markSeenMessage() {
         guard let lastMessage = self.dataSource.messages.last else {
             return
         }
-        core.updateSeenMessage(lastMessage, in: conversation.id)
+        viewModel.updateSeenMessage(lastMessage)
     }
 
     // MARK: - UIImagePickerControllerDelegate
@@ -94,7 +74,7 @@ public class MessagesListViewController<Core: ChatUICoreServicing>: MessagesView
         
         picker.dismiss(animated: true)
         
-        self.core.send(message: .image(image: image), to: self.conversation.id) { _ in }
+        viewModel.send(message: .image(image: image)) { _ in }
     }
 }
 
@@ -107,7 +87,7 @@ extension MessagesListViewController {
 // MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
-        return sender
+        return viewModel.currentUser
     }
 
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -119,24 +99,11 @@ extension MessagesListViewController: MessagesDataSource {
     }
 
     public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return conversation.seen.contains { $0.value.messageId == message.messageId } ? 20 : 0
+        viewModel.seen(message: message.messageId) ? 20 : 0
     }
 
     public func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        var text: String = ""
-
-        let seenMessages: [String: (messageId: ObjectIdentifier, seenAt: Date)] = conversation.seen.filter { $0.value.messageId == message.messageId && $0.key != self.sender.senderId }
-
-        if conversation.members.count == 2 && seenMessages.contains(where: { $0.key != self.sender.senderId }) {
-            text = "Seen"
-        } else if conversation.members.count > 2 && seenMessages.count == conversation.members.count - 1 {
-            text = "Seen by All"
-        } else if conversation.members.count > 2 && !seenMessages.isEmpty {
-            let usersIds = seenMessages.compactMap { $0.key }
-
-            let seenUsers = conversation.members.filter { usersIds.contains($0.id) }.compactMap { $0.name }.joined(separator: ",")
-            text = "Seen by \(seenUsers)"
-        }
+        let text = viewModel.seenLabel(for: message.messageId)
 
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
@@ -161,20 +128,12 @@ extension MessagesListViewController: MessagesDisplayDelegate {
 extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        self.messageInputBar.sendButton.isEnabled = false
-        self.messageInputBar.sendButton.alpha = 0.3
-
         let specs = MessageSpecification.text(message: text)
-        core.send(message: specs, to: conversation.id) { _ in
+        
+        messageInputBar.inputTextView.text = nil
+        messagesCollectionView.scrollToBottom(animated: true)
 
-            self.messageInputBar.inputTextView.text = nil
-
-            self.messagesCollectionView.scrollToBottom(animated: true)
-
-
-            self.messageInputBar.sendButton.isEnabled = true
-            self.messageInputBar.sendButton.alpha = 1.0
-        }
+        viewModel.send(message: specs) { _ in }
     }
 }
 
@@ -217,5 +176,29 @@ private extension MessagesListViewController {
     
     func hideLoadMoreButton() {
         navigationItem.rightBarButtonItems = []
+    }
+}
+
+// MARK: MessagesListViewModelDelegate
+extension MessagesListViewController: MessagesListViewModelDelegate {
+    func didTransitionToState(_ state: ViewModelingState<MessagesListState>) {
+        
+        switch state {
+        case .initial:
+            break
+        case .ready(let data):
+            loadMoreButtonVisible = !data.reachedEnd
+            
+            dataSource.messages = data.items
+            markSeenMessage()
+            messagesCollectionView.reloadData()
+        case .failed(let error):
+            print(error)
+        case .loading:
+            dataSource.messages = []
+            messagesCollectionView.reloadData()
+        case .loadingMore:
+            break
+        }
     }
 }

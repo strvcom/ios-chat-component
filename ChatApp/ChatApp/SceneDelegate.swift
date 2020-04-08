@@ -12,6 +12,7 @@ import Chat
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var interface: PumpkinPieChat.Interface?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else {
@@ -49,6 +50,19 @@ private extension SceneDelegate {
             imageUrl = URL(string: userImageUrl)
         }
         chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
-        window?.rootViewController = chat.conversationsList()
+        
+        guard let window = self.window, let scene = window.windowScene else {
+            fatalError("Scene delegate doesn't have main window")
+        }
+        
+        interface = chat.interface(for: scene)
+        interface?.delegate = self
+        window.rootViewController = interface?.rootViewController
+    }
+}
+
+extension SceneDelegate: PumpkinPieChat.UIDelegate {
+    func conversationsListEmptyListAction() {
+        print("Take a Quiz button tapped!")
     }
 }

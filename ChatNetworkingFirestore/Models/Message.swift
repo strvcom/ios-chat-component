@@ -12,8 +12,8 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct MessageFirestore: MessageRepresenting, Decodable {
-    public let id: ObjectIdentifier
-    public let userId: ObjectIdentifier
+    public let id: EntityIdentifier
+    public let userId: EntityIdentifier
     public let sentAt: Date
     public let content: MessageFirebaseContent
 
@@ -24,7 +24,7 @@ public struct MessageFirestore: MessageRepresenting, Decodable {
         case sentAt
     }
 
-    public init(id: ObjectIdentifier, userId: ObjectIdentifier, sentAt: Date, content: MessageFirebaseContent) {
+    public init(id: EntityIdentifier, userId: EntityIdentifier, sentAt: Date, content: MessageFirebaseContent) {
         self.id = id
         self.userId = userId
         self.sentAt = sentAt
@@ -39,7 +39,7 @@ public struct MessageFirestore: MessageRepresenting, Decodable {
         }
         
         self.id = id
-        self.userId = try values.decode(ObjectIdentifier.self, forKey: .userId)
+        self.userId = try values.decode(EntityIdentifier.self, forKey: .userId)
         self.sentAt = try values.decode(Timestamp.self, forKey: .sentAt).dateValue()
         self.content = try values.decode(MessageFirebaseContent.self, forKey: .content)
     }
