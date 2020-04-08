@@ -8,9 +8,9 @@
 
 import Foundation
 
+///
 public protocol UserManaging {
+    associatedtype User: UserRepresenting
 
-    associatedtype U: UserRepresenting
-
-    func users(userIds: [ObjectIdentifier], completion: @escaping (Result<[U], ChatError>) -> Void)
+    func users(userIds: [EntityIdentifier], completion: @escaping (Result<[User], ChatError>) -> Void)
 }

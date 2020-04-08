@@ -50,11 +50,9 @@ public struct ConversationFirestore: ConversationRepresenting, Decodable {
         }) ?? [:]
     }
 
-// TODO: CJ
-
-//    public mutating func setMembers(_ members: [UserFirestore]) {
-//        self.members = members
-//    }
+    public mutating func setMembers(_ members: [UserFirestore]) {
+        self.members = members
+    }
 
     public mutating func setSeenMessages(_ seen: (messageId: EntityIdentifier, seenAt: Date), currentUserId: EntityIdentifier) {
         self.seen.updateValue(seen, forKey: currentUserId)
