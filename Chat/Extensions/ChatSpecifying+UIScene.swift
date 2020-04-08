@@ -1,5 +1,5 @@
 //
-//  ChatSpecifying+Scenes.swift
+//  ChatSpecifying+UIScene.swift
 //  Chat
 //
 //  Created by Jan on 07/04/2020.

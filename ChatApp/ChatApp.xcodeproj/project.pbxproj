@@ -136,7 +136,7 @@
 		C11E9E6823EDCF70005E10A1 /* ChatNetworkingFirestore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7B243C755C00733A95 /* PumpkinPieInterface.swift */; };
 		C1253A80243C961900733A95 /* ChatSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7E243C961600733A95 /* ChatSpecifying.swift */; };
-		C1253A83243C984400733A95 /* ChatSpecifying+Scenes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */; };
+		C1253A83243C984400733A95 /* ChatSpecifying+UIScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A82243C984400733A95 /* ChatSpecifying+UIScene.swift */; };
 		C1253A85243C98AA00733A95 /* DefaultChatSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A84243C98AA00733A95 /* DefaultChatSpecifying.swift */; };
 		C1253A87243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */; };
 		C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574122433678500F08E78 /* PumpkinPieChat.swift */; };
@@ -366,7 +366,7 @@
 		C11E9E5723EDCD34005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1253A7B243C755C00733A95 /* PumpkinPieInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpkinPieInterface.swift; sourceTree = "<group>"; };
 		C1253A7E243C961600733A95 /* ChatSpecifying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSpecifying.swift; sourceTree = "<group>"; };
-		C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+Scenes.swift"; sourceTree = "<group>"; };
+		C1253A82243C984400733A95 /* ChatSpecifying+UIScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+UIScene.swift"; sourceTree = "<group>"; };
 		C1253A84243C98AA00733A95 /* DefaultChatSpecifying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultChatSpecifying.swift; sourceTree = "<group>"; };
 		C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DefaultChatSpecifying+Convenience.swift"; sourceTree = "<group>"; };
 		C185740A24333BA300F08E78 /* ChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatApp.entitlements; sourceTree = "<group>"; };
@@ -848,7 +848,7 @@
 		C1253A81243C981E00733A95 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C1253A82243C984400733A95 /* ChatSpecifying+Scenes.swift */,
+				C1253A82243C984400733A95 /* ChatSpecifying+UIScene.swift */,
 				C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */,
 			);
 			path = Extensions;
@@ -1425,7 +1425,7 @@
 				C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */,
 				C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */,
 				C1253A85243C98AA00733A95 /* DefaultChatSpecifying.swift in Sources */,
-				C1253A83243C984400733A95 /* ChatSpecifying+Scenes.swift in Sources */,
+				C1253A83243C984400733A95 /* ChatSpecifying+UIScene.swift in Sources */,
 				C1253A80243C961900733A95 /* ChatSpecifying.swift in Sources */,
 				C18574192434D59B00F08E78 /* ChatInterfacing.swift in Sources */,
 			);
