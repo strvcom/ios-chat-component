@@ -21,6 +21,8 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var messagesPaginators: [ObjectIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
+    private let userManager: UserManagerFirestore
+
     public required init(config: ChatNetworkingFirestoreConfig) {
 
         // setup from config
@@ -33,6 +35,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
             fatalError("Can't configure Firebase app \(appName)")
         }
         database = Firestore.firestore(app: firebaseApp)
+        userManager = UserManagerFirestore(database: database)
     }
     
     deinit {
@@ -171,6 +174,9 @@ public extension ChatNetworkingFirestore {
             }
 
             // TODO: CJ
+            self.userManager.users(userIds: Array(Set(conversations.flatMap { $0.memberIds }))) { result in
+                print(result)
+            }
             completion(.success(conversations))
             // Set members from previously downloaded users
 //            completion(.success(self.conversationsWithMembers(conversations: conversations)))

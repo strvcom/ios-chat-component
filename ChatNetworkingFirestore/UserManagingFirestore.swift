@@ -13,21 +13,18 @@ import ChatCore
 public class UserManagerFirestore: UserManaging {
     let database: Firestore
 
-    private var listeners: [Listener: ListenerRegistration] = [:]
     private var users: [UserFirestore] = []
+    private var listener: ListenerRegistration?
 
-    init(database: Firestore) {
+    public init(database: Firestore) {
         self.database = database
     }
 
+    // TODO listeners ala core
     public func users(userIds: [ObjectIdentifier], completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
-        let listener = Listener.users
-
-        let query = database.collection(Constants.usersPath)
-        query.whereField(FieldPath.documentID(), in: userIds)
-
-        let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
+        let query = database.collection(Constants.usersPath).whereField(FieldPath.documentID(), in: userIds)
+        listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
                 let list: [UserFirestore] = snapshot.documents.compactMap {
                     do {
@@ -37,6 +34,7 @@ public class UserManagerFirestore: UserManaging {
                         return nil
                     }
                 }
+                self.users = list
                 completion(.success(list))
             } else if let error = error {
                 completion(.failure(.networking(error: error)))
@@ -44,7 +42,5 @@ public class UserManagerFirestore: UserManaging {
                 completion(.failure(.internal(message: "Unknown")))
             }
         }
-
-        listeners[listener] = networkListener
     }
 }

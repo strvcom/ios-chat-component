@@ -12,6 +12,7 @@ import Foundation
 public enum Listener: Hashable {
     case conversations(pageSize: Int)
     case messages(pageSize: Int, conversationId: ObjectIdentifier)
+    // TODO: CJ
     case users
     case empty
 }
