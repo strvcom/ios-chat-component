@@ -26,6 +26,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Models.MUI: MessageStateReflecting,
     Models.MUI.MessageSpecification == Models.MSUI,
 
+    // Specify that all UI and networking models are inter-convertible
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
@@ -59,7 +60,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     
     private var networking: Networking
     
-    private var messages = [ObjectIdentifier: DataPayload<[MessageUI]>]()
+    private var messages = [EntityIdentifier: DataPayload<[MessageUI]>]()
     private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
 
     @Required public private(set) var currentUser: UserUI
@@ -127,7 +128,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
 // MARK: - Sending messages
 extension ChatCore {
-    open func send(message: MessageSpecifyingUI, to conversation: ObjectIdentifier,
+    open func send(message: MessageSpecifyingUI, to conversation: EntityIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
@@ -159,7 +160,7 @@ extension ChatCore {
 
 // MARK: - Deleting messages
 extension ChatCore {
-    open func delete(message: MessageUI, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
+    open func delete(message: MessageUI, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
@@ -191,7 +192,7 @@ extension ChatCore {
 
 // MARK: - Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: MessageUI, in conversation: ObjectIdentifier) {
+    open func updateSeenMessage(_ message: MessageUI, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
@@ -210,7 +211,7 @@ extension ChatCore {
 // MARK: - Listening to messages
 extension ChatCore {
     open func listenToMessages(
-        conversation id: ObjectIdentifier,
+        conversation id: EntityIdentifier,
         pageSize: Int,
         completion: @escaping (MessagesResult) -> Void
     ) -> ListenerIdentifier {
@@ -272,7 +273,7 @@ extension ChatCore {
         return closure.id
     }
 
-    open func loadMoreMessages(conversation id: ObjectIdentifier) {
+    open func loadMoreMessages(conversation id: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         networking.loadMoreMessages(conversation: id)
@@ -351,7 +352,7 @@ private extension ChatCore {
         case changeState(MessageState)
     }
 
-    func handleTemporaryMessage(id: ObjectIdentifier, to conversation: ObjectIdentifier, with action: TemporaryMessageAction) {
+    func handleTemporaryMessage(id: EntityIdentifier, to conversation: EntityIdentifier, with action: TemporaryMessageAction) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         // find all listeners for messages and same conversationId
@@ -405,7 +406,7 @@ private extension ChatCore {
 
 // MARK: - Caching messages
 private extension ChatCore {
-    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: ObjectIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
+    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: EntityIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
 
         // store to keychain for purpose message wont send
         let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: currentUser.id, state: state)

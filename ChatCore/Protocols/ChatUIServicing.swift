@@ -1,5 +1,5 @@
 //
-//  ChatInteracting.swift
+//  ChatUIServicing.swift
 //  ChatCore
 //
 //  Created by Jan Schwarz on 05/01/2020.
@@ -11,7 +11,9 @@ import Foundation
 /// This protocol can be used to make sure any main class is initialized with ChatCore that implements `ChatCoreServicing`.
 public protocol ChatUIServicing {
     associatedtype Core: ChatCoreServicing
+    associatedtype Models: ChatUIModels
     associatedtype Config
+    associatedtype Delegate
     
     init(core: Core, config: Config)
 }

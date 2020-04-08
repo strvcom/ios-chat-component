@@ -28,7 +28,7 @@ public protocol ChatNetworkServicing {
     ///
     /// - Parameters:
     ///   - id: User identifier
-    func setCurrentUser(user id: ObjectIdentifier)
+    func setCurrentUser(user id: EntityIdentifier)
 
     /// Initial loading of network service.
     ///
@@ -42,7 +42,7 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data. Different from the model used for receiving messages.
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func send(message: MS, to conversation: ObjectIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: EntityIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
 
     /// Delete a message from the specified conversation
     ///
@@ -50,7 +50,7 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data
     ///   - conversation: Conversation ID
     ///   - completion: Called upon deleting message (or encountering an error)
-    func delete(message: M, from conversation: ObjectIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
+    func delete(message: M, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
     
     /// Send a request to set `message` as the last seen message by current user
     ///
@@ -75,12 +75,12 @@ public protocol ChatNetworkServicing {
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: ObjectIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void)
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///
     /// - Parameter id: conversation ID
-    func loadMoreMessages(conversation id: ObjectIdentifier)
+    func loadMoreMessages(conversation id: EntityIdentifier)
 
     /// Used to remove listeners when you no longer need to receive data.
     ///

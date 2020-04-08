@@ -8,4 +8,4 @@
 
 import Foundation
 
-public typealias ObjectIdentifier = String
+public typealias EntityIdentifier = String

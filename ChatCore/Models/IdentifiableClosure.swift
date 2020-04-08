@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Helper structure, which allows identify closure by generated id
 
 struct IdentifiableClosure<T, U>: Equatable, Hashable, ObjectIdentifiable {
-    let id: ObjectIdentifier
+    let id: EntityIdentifier
     private(set) var closure: Closure<T, U>
 
     init(_ closure: @escaping Closure<T, U>) {

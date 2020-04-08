@@ -10,5 +10,5 @@ import Foundation
 
 /// Used to identify any object
 public protocol ObjectIdentifiable: Identifiable {
-    var id: ObjectIdentifier { get }
+    var id: EntityIdentifier { get }
 }
