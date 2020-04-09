@@ -13,7 +13,7 @@ import Foundation
 /// It's used by the core for all networking operations.
 public protocol ChatNetworkServicing {
     associatedtype Config
-    associatedtype UserManager: UserManaging
+    associatedtype UserManager: UserManaging where UserManager.User == C.User
 
     // Specific conversation type
     associatedtype C: ConversationRepresenting
