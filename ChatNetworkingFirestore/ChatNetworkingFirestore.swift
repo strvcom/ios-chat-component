@@ -20,9 +20,9 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    private let userManager: UserManagingFirestore
+    private let userManager: UserManager
 
-    public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagingFirestore) {
+    public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagerFirestore) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -203,7 +203,12 @@ public extension ChatNetworkingFirestore {
             paginator: conversationsPagination,
             query: conversationsQuery(),
             listenerCompletion: { [weak self] result in
-                guard let self = self, let completion = self.conversationsPagination.updateBlock else {
+                guard let self = self else {
+                    return
+                }
+
+                guard let completion = self.conversationsPagination.updateBlock else {
+                    print("Unexpected error, conversation pagination \(self.conversationsPagination) update block is nil")
                     return
                 }
 
@@ -324,8 +329,7 @@ private extension ChatNetworkingFirestore {
     }
 
     func loadUsersForConversations(conversations: [ConversationFirestore], completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
-        let userIds = Array(Set(conversations.flatMap { $0.memberIds }))
-        self.userManager.users(userIds: userIds) { [weak self] result in
+        self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { [weak self] result in
             guard let self = self else {
                 return
             }

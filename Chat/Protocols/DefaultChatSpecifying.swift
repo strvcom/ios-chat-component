@@ -40,5 +40,5 @@ public protocol DefaultChatSpecifying: ChatSpecifying where
     /// - Parameters:
     ///   - networkConfig: Configuration required by underlying `ChatNetworkServicing` implementation
     ///   - uiConfig: Configuration required by underlying `ChatUIServicing` implementation
-    init(networkConfig: Networking.Config, uiConfig: Interface.UIService.Config)
+    init(networkConfig: Networking.Config, uiConfig: Interface.UIService.Config, userManager: Networking.UserManager?)
 }

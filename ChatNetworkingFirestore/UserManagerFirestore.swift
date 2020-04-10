@@ -12,11 +12,17 @@ import FirebaseFirestore
 import ChatCore
 
 // MARK: - Default firestore implementation of user managing
-public class UserManagingFirestore: UserManaging {
+public class UserManagerFirestore: UserManaging {
 
     private let database: Firestore
-    private var users: [Listener: [UserFirestore]] = [:]
-    private var listeners: [Listener: ListenerRegistration] = [:]
+    private var users: [UserFirestore] = []
+    private var currentUserIds: Set<EntityIdentifier> = []
+    private var listener: ListenerRegistration?
+
+    deinit {
+        print("\(self) released")
+        listener?.remove()
+    }
 
     public init(config: ChatNetworkingFirestoreConfig) {
         // setup from config
@@ -35,11 +41,19 @@ public class UserManagingFirestore: UserManaging {
 
     public func users(userIds: [EntityIdentifier], completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
-        let listener = Listener.users(userIds: userIds)
+        // get unique ids
+        let userIdsSet = Set(userIds)
 
-        if listeners[listener] == nil {
+        // compare to current set
+        if currentUserIds == userIdsSet {
+            completion(.success(users))
+        } else {
+            // reset
+            currentUserIds = userIdsSet
+            listener?.remove()
+
             let query = database.collection(Constants.usersPath).whereField(FieldPath.documentID(), in: userIds)
-            let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
+            listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
                 if let snapshot = snapshot {
                     let list: [UserFirestore] = snapshot.documents.compactMap {
                         do {
@@ -49,7 +63,7 @@ public class UserManagingFirestore: UserManaging {
                             return nil
                         }
                     }
-                    self.users[listener] = list
+                    self.users = list
                     completion(.success(list))
                 } else if let error = error {
                     completion(.failure(.networking(error: error)))
@@ -57,9 +71,6 @@ public class UserManagingFirestore: UserManaging {
                     completion(.failure(.internal(message: "Unknown")))
                 }
             }
-            listeners[listener] = networkListener
-        } else if let users = users[listener] {
-            completion(.success(users))
         }
     }
 }
