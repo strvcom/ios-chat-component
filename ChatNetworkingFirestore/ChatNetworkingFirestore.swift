@@ -101,7 +101,7 @@ public extension ChatNetworkingFirestore {
             .collection(Constants.conversationsPath)
             .document(conversation)
 
-        reference.setData([Constants.Conversation.lastMessageAttributeName: message], merge: true) { error in
+        reference.updateData([Constants.Conversation.lastMessageAttributeName: message]) { error in
             if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
