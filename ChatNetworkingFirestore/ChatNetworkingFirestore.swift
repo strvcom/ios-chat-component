@@ -118,7 +118,7 @@ public extension ChatNetworkingFirestore {
         prepareMessageData(message: message) { [weak self] result in
             guard let self = self, case let .success(data) = result else {
                 if case let .failure(error) = result {
-                    print("Message 1successfully sent")
+                    print("Error while preparing message data \(error)")
                     completion(.failure(error))
                 }
 
@@ -128,7 +128,7 @@ public extension ChatNetworkingFirestore {
             self.storeMessage(in: conversation, messageData: data) { result in
                 guard case let .success(messageReference) = result else {
                     if case let .failure(error) = result {
-                        print("Message2 successfully sent")
+                        print("Error while storing message \(error)")
                         completion(.failure(error))
                     }
 
@@ -138,7 +138,7 @@ public extension ChatNetworkingFirestore {
                 self.updateLastMessage(message: data, in: conversation) { result in
                     guard case .success = result else {
                         if case let .failure(error) = result {
-                            print("Message3 successfully sent")
+                            print("Error while setting conversation last message \(error)")
                             completion(.failure(error))
                         }
 
