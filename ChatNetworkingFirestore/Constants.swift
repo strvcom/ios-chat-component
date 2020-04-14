@@ -30,5 +30,6 @@ enum Constants {
     
     enum Conversation {
         static let seenAttributeName = "seen"
+        static let lastMessageAttributeName = "lastMessage"
     }
 }
