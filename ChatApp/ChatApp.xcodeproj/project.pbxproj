@@ -76,6 +76,8 @@
 		84BE30D0242B46B900DA8664 /* MessageStateReflecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */; };
 		84BE30D2242BC21F00DA8664 /* FirebaseAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BE30D1242BC21F00DA8664 /* FirebaseAuthentication.swift */; };
 		84D032D9240F17650017EF88 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D032D8240F17650017EF88 /* KeychainManager.swift */; };
+		84D7388E243D143300DFC62F /* UserManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7388D243D143300DFC62F /* UserManaging.swift */; };
+		84D7388F243D175E00DFC62F /* UserManagerFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7388A243C98B700DFC62F /* UserManagerFirestore.swift */; };
 		84D7F41C24444BE800F919AA /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7F41A24444BE000F919AA /* Closure.swift */; };
 		96870B2A804B334846C2178C /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97ADF142E103163825E71EAF /* Pods_Chat.framework */; };
 		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
@@ -301,6 +303,8 @@
 		84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStateReflecting.swift; sourceTree = "<group>"; };
 		84BE30D1242BC21F00DA8664 /* FirebaseAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthentication.swift; sourceTree = "<group>"; };
 		84D032D8240F17650017EF88 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		84D7388A243C98B700DFC62F /* UserManagerFirestore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerFirestore.swift; sourceTree = "<group>"; };
+		84D7388D243D143300DFC62F /* UserManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManaging.swift; sourceTree = "<group>"; };
 		84D7F41A24444BE000F919AA /* Closure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
 		97ADF142E103163825E71EAF /* Pods_Chat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FEB64910140FCD9F09A1F13 /* Pods-ChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.debug.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -676,6 +680,7 @@
 				C11E9DF623EDCCDA005E10A1 /* Constants.swift */,
 				846905412433328200807AFF /* ChatNetworkingFirestoreConfig.swift */,
 				C11E9DF723EDCCDA005E10A1 /* ChatNetworkingFirestore.swift */,
+				84D7388A243C98B700DFC62F /* UserManagerFirestore.swift */,
 				C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */,
 				C11E9DF923EDCCDA005E10A1 /* ImageUploader.swift */,
 				C11E9DFA23EDCCDA005E10A1 /* Models */,
@@ -791,6 +796,7 @@
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
 				843A583B24114FE4007E6F45 /* Cachable.swift */,
 				84149959241AB70600D3EEC6 /* ChatCoreState.swift */,
+				84D7388D243D143300DFC62F /* UserManaging.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1343,6 +1349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84D7388E243D143300DFC62F /* UserManaging.swift in Sources */,
 				C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */,
 				842C71C42426B94F0079145A /* MessageConvertible.swift in Sources */,
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
@@ -1387,6 +1394,7 @@
 			files = (
 				C11E9E0923EDCCDA005E10A1 /* MessageSpecificationFirestore.swift in Sources */,
 				C11E9E0823EDCCDA005E10A1 /* Conversation.swift in Sources */,
+				84D7388F243D175E00DFC62F /* UserManagerFirestore.swift in Sources */,
 				C11E9E0523EDCCDA005E10A1 /* ChatNetworkingFirestore.swift in Sources */,
 				C11E9E0C23EDCCDA005E10A1 /* SeenItem.swift in Sources */,
 				C11E9E0E23EDCCDA005E10A1 /* UIImage+Resizing.swift in Sources */,

@@ -11,10 +11,12 @@ import ChatCore
 
 extension DefaultChatSpecifying {
     /// Get instance of default `ChatCore` that uses a given implementation of `ChatNetworkServicing`
-    /// - Parameter networkConfig: Configuration required by underlying `ChatNetworkServicing` implementation
+    /// - Parameters:
+    ///     - networkConfig: Configuration required by underlying `ChatNetworkServicing` implementation
+    ///     - userManager: Service providing data about users
     /// - Returns: Instance of default `ChatCore`
-    static func core(networkConfig: Networking.Config) -> ChatCore<Networking, UIModels> {
-        let networking = Networking(config: networkConfig)
+    static func core(networkConfig: Networking.Config, userManager: Networking.UserManager) -> ChatCore<Networking, UIModels> {
+        let networking = Networking(config: networkConfig, userManager: userManager)
         let core = ChatCore<Networking, UIModels>(networking: networking)
         return core
     }
