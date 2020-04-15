@@ -15,16 +15,11 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     private let dataSource = DataSource()
 
-    private var listener: ListenerIdentifier?
     private let viewModel: MessagesListViewModeling
 
-    private var loadMoreButtonVisible = true {
-        didSet {
-            loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
-        }
-    }
+    private let photoPickerIconSize = CGSize(width: 44, height: 40)
     
-    let photoPickerIconSize: CGFloat = 36
+    private var loading = true
 
     init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
@@ -45,17 +40,13 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         view.backgroundColor = .white
 
         setupInputBar()
+        setupMessagesLayout()
 
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
 
         viewModel.load()
-    }
-
-    @objc
-    func loadMore() {
-        viewModel.loadMore()
     }
 
     func markSeenMessage() {
@@ -75,6 +66,18 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         picker.dismiss(animated: true)
         
         viewModel.send(message: .image(image: image)) { _ in }
+    }
+    
+    override public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        super.collectionView(collectionView, willDisplay: cell, forItemAt: indexPath)
+        
+        guard !loading, indexPath.section == 0 else {
+            return
+        }
+
+        loading = true
+
+        viewModel.loadMore()
     }
 }
 
@@ -107,13 +110,38 @@ extension MessagesListViewController: MessagesDataSource {
 
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
+    
+    public func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        NSAttributedString(string: viewModel.timeLabel(for: message.sentDate), attributes: [
+            .font: UIFont.messageTopLabel,
+            .foregroundColor: UIColor.messageTopLabel
+        ])
+    }
+    
+    public func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        40
+    }
+    
 }
 
-extension MessagesListViewController: MessagesLayoutDelegate { }
+extension MessagesListViewController: MessagesLayoutDelegate {}
 
 // MARK: - MessagesDisplayDelegate
 extension MessagesListViewController: MessagesDisplayDelegate {
-    
+
+    public func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        switch message.kind {
+        case .emoji, .photo:
+            return .clear
+        default:
+            return isFromCurrentSender(message: message) ? .outgoingMessageBackground : .incomingMessageBackground
+        }
+    }
+
+    public func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        avatarView.isHidden = true
+    }
+
     public func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         
         guard case let .photo(media) = message.kind, let imageUrl = media.url else {
@@ -139,24 +167,52 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
 // MARK: - Setup
 private extension MessagesListViewController {
+    func setupMessagesLayout() {
+        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
+            return
+        }
+        
+        layout.headerReferenceSize = CGSize(width: messagesCollectionView.frame.size.width, height: 50)
+        
+        layout.setMessageIncomingAvatarSize(.zero)
+        layout.setMessageOutgoingAvatarSize(.zero)
+        layout.textMessageSizeCalculator.messageLabelFont = .messageContent
+        layout.textMessageSizeCalculator.incomingMessageLabelInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
+        layout.textMessageSizeCalculator.outgoingMessageLabelInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    }
+    
     func setupInputBar() {
         messageInputBar.delegate = self
-        
+
         let item = InputBarButtonItem()
             .onTouchUpInside { [weak self] _ in
                 self?.displayImagePicker()
             }
+
+        item.setSize(photoPickerIconSize, animated: false)
         
-        item.setSize(CGSize(
-            width: photoPickerIconSize,
-            height: photoPickerIconSize
-        ), animated: false)
-        if #available(iOS 13.0, *) {
-            item.setImage(UIImage(systemName: "photo"), for: .normal)
-        }
+        item.setImage(.inputBarPhotoPickerIcon, for: .normal)
+
         item.imageView?.contentMode = .scaleAspectFit
-        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize.width, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
+
+        messageInputBar.separatorLine.isHidden = true
+        
+        messageInputBar.contentView.backgroundColor = .inputBackround
+        messageInputBar.contentView.layer.cornerRadius = 10
+        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
+        messageInputBar.padding = UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24)
+
+        messageInputBar.inputTextView.placeholderLabel.text = .messageInputPlaceholder
+        messageInputBar.inputTextView.placeholderLabel.font = .input
+        messageInputBar.inputTextView.placeholderLabel.textColor = .inputPlaceholder
+        messageInputBar.inputTextView.textColor = .inputText
+        
+        messageInputBar.sendButton.setTitleColor(.inputSendButton, for: .normal)
+        messageInputBar.sendButton.setTitleColor(.clear, for: .disabled)
+        messageInputBar.sendButton.titleLabel?.font = .inputSendButton
     }
     
     func displayImagePicker() {
@@ -168,16 +224,7 @@ private extension MessagesListViewController {
 }
 
 // MARK: - Private methods
-private extension MessagesListViewController {
-    func showLoadMoreButton() {
-        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
-        navigationItem.setRightBarButton(item, animated: false)
-    }
-    
-    func hideLoadMoreButton() {
-        navigationItem.rightBarButtonItems = []
-    }
-}
+private extension MessagesListViewController {}
 
 // MARK: MessagesListViewModelDelegate
 extension MessagesListViewController: MessagesListViewModelDelegate {
@@ -187,13 +234,23 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .initial:
             break
         case .ready(let data):
-            loadMoreButtonVisible = !data.reachedEnd
+            
+            if dataSource.messages.isEmpty {
+                messagesCollectionView.scrollToBottom()
+            }
             
             dataSource.messages = data.items
-            markSeenMessage()
+            
+            let oldOffset = messagesCollectionView.contentSize.height - messagesCollectionView.contentOffset.y
             messagesCollectionView.reloadData()
+            messagesCollectionView.layoutIfNeeded()
+            messagesCollectionView.contentOffset = CGPoint(x: 0, y: messagesCollectionView.contentSize.height - oldOffset)
+
+            markSeenMessage()
+            loading = false
         case .failed(let error):
             print(error)
+            loading = false
         case .loading:
             dataSource.messages = []
             messagesCollectionView.reloadData()

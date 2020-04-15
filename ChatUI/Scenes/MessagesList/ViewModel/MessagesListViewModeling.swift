@@ -23,4 +23,5 @@ protocol MessagesListViewModeling: AnyObject {
     func send(message: MessageSpecification, completion: @escaping (Result<MessageKitType, ChatError>) -> Void)
     func seen(message: EntityIdentifier) -> Bool
     func seenLabel(for: EntityIdentifier) -> String
+    func timeLabel(for date: Date) -> String
 }

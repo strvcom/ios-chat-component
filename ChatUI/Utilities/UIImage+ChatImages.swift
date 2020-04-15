@@ -12,4 +12,8 @@ extension UIImage {
     static var conversationsListEmptyIcon: UIImage {
         UIConfig.current.images.conversationsListEmptyIcon
     }
+    
+    static var inputBarPhotoPickerIcon: UIImage {
+        UIConfig.current.images.inputBarPhotoPickerIcon
+    }
 }

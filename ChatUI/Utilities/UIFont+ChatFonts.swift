@@ -32,4 +32,20 @@ extension UIFont {
     static var conversationsListEmptySubtitle: UIFont {
         UIConfig.current.fonts.conversationsList.emptySubtitle
     }
+    
+    static var messageContent: UIFont {
+        UIConfig.current.fonts.messageContent
+    }
+    
+    static var messageTopLabel: UIFont {
+        UIConfig.current.fonts.messageTopLabel
+    }
+    
+    static var input: UIFont {
+        UIConfig.current.fonts.input
+    }
+    
+    static var inputSendButton: UIFont {
+        UIConfig.current.fonts.inputSendButton
+    }
 }

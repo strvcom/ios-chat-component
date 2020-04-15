@@ -61,4 +61,32 @@ extension UIColor {
     static var buttonForeground: UIColor {
         UIConfig.current.colors.buttonForeground
     }
+    
+    static var incomingMessageBackground: UIColor {
+        UIConfig.current.colors.incomingMessageBackground
+    }
+    
+    static var outgoingMessageBackground: UIColor {
+        UIConfig.current.colors.outgoingMessageBackground
+    }
+    
+    static var messageTopLabel: UIColor {
+        UIConfig.current.colors.messageTopLabel
+    }
+    
+    static var inputBackround: UIColor {
+        UIConfig.current.colors.inputBackground
+    }
+    
+    static var inputPlaceholder: UIColor {
+        UIConfig.current.colors.inputPlaceholder
+    }
+    
+    static var inputSendButton: UIColor {
+        UIConfig.current.colors.primary
+    }
+    
+    static var inputText: UIColor {
+        UIConfig.current.colors.inputText
+    }
 }

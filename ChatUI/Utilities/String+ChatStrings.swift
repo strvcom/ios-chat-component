@@ -28,4 +28,8 @@ extension String {
     static var conversationsListEmptyActionTitle: String {
         UIConfig.current.strings.conversationsListEmptyActionTitle
     }
+    
+    static var messageInputPlaceholder: String {
+        UIConfig.current.strings.messageInputPlaceholder
+    }
 }

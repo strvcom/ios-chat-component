@@ -20,7 +20,7 @@ public class UIConfig {
             let subtitleSecondary: UIFont
             let emptyTitle: UIFont
             let emptySubtitle: UIFont
-            
+
             public init(
                 title: UIFont,
                 subtitle: UIFont,
@@ -38,10 +38,25 @@ public class UIConfig {
         
         let conversationsList: ConversationsList
         let buttonTitle: UIFont
+        let messageContent: UIFont
+        let messageTopLabel: UIFont
+        let input: UIFont
+        let inputSendButton: UIFont
         
-        public init(buttonTitle: UIFont, conversationsList: ConversationsList) {
+        public init(
+            buttonTitle: UIFont,
+            conversationsList: ConversationsList,
+            messageContent: UIFont,
+            messageTopLabel: UIFont,
+            input: UIFont,
+            inputSendButton: UIFont
+        ) {
             self.buttonTitle = buttonTitle
             self.conversationsList = conversationsList
+            self.messageContent = messageContent
+            self.messageTopLabel = messageTopLabel
+            self.input = input
+            self.inputSendButton = inputSendButton
         }
     }
     
@@ -53,6 +68,14 @@ public class UIConfig {
         let lightText: UIColor
         let primary: UIColor
         let buttonForeground: UIColor
+        let outgoingMessageBackground: UIColor
+        let incomingMessageBackground: UIColor
+        let outgoingMessageForeground: UIColor
+        let incomingMessageForeground: UIColor
+        let messageTopLabel: UIColor
+        let inputBackground: UIColor
+        let inputPlaceholder: UIColor
+        let inputText: UIColor
         
         public struct ConversationsList {
             let separator: UIColor
@@ -84,7 +107,15 @@ public class UIConfig {
             primary: UIColor,
             conversationsList: ConversationsList,
             loadingIndicator: UIColor,
-            buttonForeground: UIColor
+            buttonForeground: UIColor,
+            outgoingMessageBackground: UIColor,
+            incomingMessageBackground: UIColor,
+            outgoingMessageForeground: UIColor,
+            incomingMessageForeground: UIColor,
+            messageTopLabel: UIColor,
+            inputBackground: UIColor,
+            inputPlaceholder: UIColor,
+            inputText: UIColor
         ) {
             self.background = background
             self.text = text
@@ -93,6 +124,14 @@ public class UIConfig {
             self.conversationsList = conversationsList
             self.loadingIndicator = loadingIndicator
             self.buttonForeground = buttonForeground
+            self.outgoingMessageBackground = outgoingMessageBackground
+            self.incomingMessageBackground = incomingMessageBackground
+            self.outgoingMessageForeground = outgoingMessageForeground
+            self.incomingMessageForeground = incomingMessageForeground
+            self.messageTopLabel = messageTopLabel
+            self.inputBackground = inputBackground
+            self.inputPlaceholder = inputPlaceholder
+            self.inputText = inputText
         }
     }
     
@@ -103,30 +142,36 @@ public class UIConfig {
         let conversationsListEmptyTitle: String
         let conversationsListEmptySubtitle: String
         let conversationsListEmptyActionTitle: String
+        let messageInputPlaceholder: String
         
         public init(
             newConversation: String,
             conversation: String,
             conversationsListEmptyTitle: String,
             conversationsListEmptySubtitle: String,
-            conversationsListEmptyActionTitle: String
+            conversationsListEmptyActionTitle: String,
+            messageInputPlaceholder: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
             self.conversationsListEmptyTitle = conversationsListEmptyTitle
             self.conversationsListEmptySubtitle = conversationsListEmptySubtitle
             self.conversationsListEmptyActionTitle = conversationsListEmptyActionTitle
+            self.messageInputPlaceholder = messageInputPlaceholder
         }
     }
     
     // MARK: Images
     public struct Images {
         let conversationsListEmptyIcon: UIImage
+        let inputBarPhotoPickerIcon: UIImage
         
         public init(
-            conversationsListEmptyIcon: UIImage
+            conversationsListEmptyIcon: UIImage,
+            inputBarPhotoPickerIcon: UIImage
         ) {
             self.conversationsListEmptyIcon = conversationsListEmptyIcon
+            self.inputBarPhotoPickerIcon = inputBarPhotoPickerIcon
         }
     }
     
@@ -141,7 +186,11 @@ public class UIConfig {
                 subtitleSecondary: .systemFont(ofSize: 12),
                 emptyTitle: .systemFont(ofSize: 14),
                 emptySubtitle: .systemFont(ofSize: 12)
-            )
+            ),
+            messageContent: .systemFont(ofSize: 12),
+            messageTopLabel: .systemFont(ofSize: 12),
+            input: .systemFont(ofSize: 12),
+            inputSendButton: .systemFont(ofSize: 12)
         ),
         colors: Colors(
             background: .white,
@@ -155,17 +204,27 @@ public class UIConfig {
                 avatarInnerBorder: .black
             ),
             loadingIndicator: .gray,
-            buttonForeground: .white
+            buttonForeground: .white,
+            outgoingMessageBackground: .green,
+            incomingMessageBackground: .gray,
+            outgoingMessageForeground: .white,
+            incomingMessageForeground: .black,
+            messageTopLabel: .black,
+            inputBackground: .clear,
+            inputPlaceholder: .gray,
+            inputText: .black
         ),
         strings: Strings(
             newConversation: missingString,
             conversation: missingString,
             conversationsListEmptyTitle: missingString,
             conversationsListEmptySubtitle: missingString,
-            conversationsListEmptyActionTitle: missingString
+            conversationsListEmptyActionTitle: missingString,
+            messageInputPlaceholder: missingString
         ),
         images: Images(
-            conversationsListEmptyIcon: UIImage()
+            conversationsListEmptyIcon: UIImage(),
+            inputBarPhotoPickerIcon: UIImage()
         )
     )
     

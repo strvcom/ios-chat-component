@@ -94,6 +94,19 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
                 data.messageId == message && senderId != core.currentUser.senderId
             }.contains { $0.key != core.currentUser.senderId } ? "Seen" : ""
     }
+    
+    func timeLabel(for date: Date) -> String {
+        /// TODO:
+        // if day == today: return time
+        // if time == now: return Now
+        // else: return full date
+        ///
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM d, h:mm a"
+        
+        return formatter.string(from: date)
+    }
 }
 
 private extension MessagesListViewModel {
