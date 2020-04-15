@@ -60,6 +60,14 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
+        
+        let backButtonImage: UIImage = .backButton
+        navigationController?.navigationBar.barTintColor = .navigationBarTintColor
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.backIndicatorImage = UIImage()
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
+        navigationItem.backBarButtonItem = UIBarButtonItem(image: backButtonImage.withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+
         view.backgroundColor = .chatBackground
         view.addSubview(tableView)
         tableView.pinToSuperview()

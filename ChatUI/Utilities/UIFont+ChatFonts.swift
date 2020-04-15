@@ -48,4 +48,8 @@ extension UIFont {
     static var inputSendButton: UIFont {
         UIConfig.current.fonts.inputSendButton
     }
+    
+    static var navigationTitle: UIFont {
+        UIConfig.current.fonts.navigationTitle
+    }
 }

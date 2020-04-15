@@ -16,4 +16,12 @@ extension UIImage {
     static var inputBarPhotoPickerIcon: UIImage {
         UIConfig.current.images.inputBarPhotoPickerIcon
     }
+    
+    static var backButton: UIImage {
+        UIConfig.current.images.backButton
+    }
+    
+    static var moreButton: UIImage {
+        UIConfig.current.images.moreButton
+    }
 }

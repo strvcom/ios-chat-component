@@ -89,4 +89,12 @@ extension UIColor {
     static var inputText: UIColor {
         UIConfig.current.colors.inputText
     }
+    
+    static var navigationBarTintColor: UIColor {
+        UIConfig.current.colors.navigationBarTint
+    }
+    
+    static var navigationTitle: UIColor {
+        UIConfig.current.colors.navigationTitle
+    }
 }

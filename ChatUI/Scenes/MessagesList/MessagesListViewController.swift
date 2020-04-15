@@ -37,7 +37,16 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     }
 
     private func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = .chatBackground
+        
+        title = viewModel.partner?.displayName
+        
+        if let partner = viewModel.partner {
+            navigationItem.titleView = NavigationTitle(user: partner)
+        }
+
+        let moreButtonImage: UIImage = .moreButton
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: moreButtonImage.withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
 
         setupInputBar()
         setupMessagesLayout()

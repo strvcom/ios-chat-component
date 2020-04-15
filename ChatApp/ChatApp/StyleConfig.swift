@@ -24,7 +24,8 @@ enum AppStyleConfig {
         messageContent: regular(ofSize: 16),
         messageTopLabel: medium(ofSize: 12),
         input: regular(ofSize: 16),
-        inputSendButton: bold(ofSize: 16)
+        inputSendButton: bold(ofSize: 16),
+        navigationTitle: extraBold(ofSize: 16)
     )
     
     static let colors = UIConfig.Colors(
@@ -47,12 +48,16 @@ enum AppStyleConfig {
         messageTopLabel: UIColor(red: 154, green: 139, blue: 136),
         inputBackground: UIColor(red: 246, green: 245, blue: 244),
         inputPlaceholder: UIColor(red: 179, green: 167, blue: 157),
-        inputText: UIColor(red: 87, green: 61, blue: 57)
+        inputText: UIColor(red: 87, green: 61, blue: 57),
+        navigationBarTint: .white,
+        navigationTitle: UIColor(red: 87, green: 61, blue: 57)
     )
     
     static let images = UIConfig.Images(
         conversationsListEmptyIcon: UIImage(named: "connectionsEmpty")!,
-        inputBarPhotoPickerIcon: UIImage(named: "photoPicker")!
+        inputBarPhotoPickerIcon: UIImage(named: "photoPicker")!,
+        backButton: UIImage(named: "backArrow")!,
+        moreButton: UIImage(named: "more")!
     )
 }
 

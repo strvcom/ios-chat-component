@@ -23,6 +23,12 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     var currentUser: User {
         core.currentUser
     }
+    
+    var partner: User? {
+        conversation
+            .members
+            .first { $0.id != currentUser.id }
+    }
 
     init(conversation: Conversation, core: Core) {
         self.conversation = conversation

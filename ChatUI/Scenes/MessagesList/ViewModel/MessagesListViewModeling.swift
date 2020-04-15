@@ -16,6 +16,7 @@ protocol MessagesListViewModeling: AnyObject {
     var delegate: MessagesListViewModelDelegate? { get set }
     var state: ViewModelingState<MessagesListState> { get }
     var currentUser: User { get }
+    var partner: User? { get }
 
     func load()
     func loadMore()

@@ -42,6 +42,7 @@ public class UIConfig {
         let messageTopLabel: UIFont
         let input: UIFont
         let inputSendButton: UIFont
+        let navigationTitle: UIFont
         
         public init(
             buttonTitle: UIFont,
@@ -49,7 +50,8 @@ public class UIConfig {
             messageContent: UIFont,
             messageTopLabel: UIFont,
             input: UIFont,
-            inputSendButton: UIFont
+            inputSendButton: UIFont,
+            navigationTitle: UIFont
         ) {
             self.buttonTitle = buttonTitle
             self.conversationsList = conversationsList
@@ -57,6 +59,7 @@ public class UIConfig {
             self.messageTopLabel = messageTopLabel
             self.input = input
             self.inputSendButton = inputSendButton
+            self.navigationTitle = navigationTitle
         }
     }
     
@@ -76,6 +79,8 @@ public class UIConfig {
         let inputBackground: UIColor
         let inputPlaceholder: UIColor
         let inputText: UIColor
+        let navigationBarTint: UIColor
+        let navigationTitle: UIColor
         
         public struct ConversationsList {
             let separator: UIColor
@@ -115,7 +120,9 @@ public class UIConfig {
             messageTopLabel: UIColor,
             inputBackground: UIColor,
             inputPlaceholder: UIColor,
-            inputText: UIColor
+            inputText: UIColor,
+            navigationBarTint: UIColor,
+            navigationTitle: UIColor
         ) {
             self.background = background
             self.text = text
@@ -132,6 +139,8 @@ public class UIConfig {
             self.inputBackground = inputBackground
             self.inputPlaceholder = inputPlaceholder
             self.inputText = inputText
+            self.navigationBarTint = navigationBarTint
+            self.navigationTitle = navigationTitle
         }
     }
     
@@ -165,13 +174,19 @@ public class UIConfig {
     public struct Images {
         let conversationsListEmptyIcon: UIImage
         let inputBarPhotoPickerIcon: UIImage
+        let backButton: UIImage
+        let moreButton: UIImage
         
         public init(
             conversationsListEmptyIcon: UIImage,
-            inputBarPhotoPickerIcon: UIImage
+            inputBarPhotoPickerIcon: UIImage,
+            backButton: UIImage,
+            moreButton: UIImage
         ) {
             self.conversationsListEmptyIcon = conversationsListEmptyIcon
             self.inputBarPhotoPickerIcon = inputBarPhotoPickerIcon
+            self.backButton = backButton
+            self.moreButton = moreButton
         }
     }
     
@@ -190,7 +205,8 @@ public class UIConfig {
             messageContent: .systemFont(ofSize: 12),
             messageTopLabel: .systemFont(ofSize: 12),
             input: .systemFont(ofSize: 12),
-            inputSendButton: .systemFont(ofSize: 12)
+            inputSendButton: .systemFont(ofSize: 12),
+            navigationTitle: .systemFont(ofSize: 16, weight: .black)
         ),
         colors: Colors(
             background: .white,
@@ -212,7 +228,9 @@ public class UIConfig {
             messageTopLabel: .black,
             inputBackground: .clear,
             inputPlaceholder: .gray,
-            inputText: .black
+            inputText: .black,
+            navigationBarTint: .white,
+            navigationTitle: .black
         ),
         strings: Strings(
             newConversation: missingString,
@@ -224,7 +242,9 @@ public class UIConfig {
         ),
         images: Images(
             conversationsListEmptyIcon: UIImage(),
-            inputBarPhotoPickerIcon: UIImage()
+            inputBarPhotoPickerIcon: UIImage(),
+            backButton: UIImage(),
+            moreButton: UIImage()
         )
     )
     
