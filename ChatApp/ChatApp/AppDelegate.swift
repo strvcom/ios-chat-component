@@ -7,53 +7,27 @@
 //
 
 import UIKit
-import Chat
-import Firebase
-import FirebaseUI
-
-// swiftlint:disable implicitly_unwrapped_optional
-/// Global chat component for simplicity
-var chat: PumpkinPieChat!
-var firebaseAuthentication: FirebaseAuthentication!
-// swiftlint:enable implicitly_unwrapped_optional
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    var window: UIWindow?
+    
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var coordinator: AppCoordinator!
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        guard let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") else {
-            fatalError("Missing firebase configuration file")
-        }
-        guard let options = FirebaseOptions(contentsOfFile: configUrl) else {
-            fatalError("Can't configure Firebase")
-        }
-
-        FirebaseApp.configure(options: options)
-        let database = Firestore.firestore()
-        firebaseAuthentication = FirebaseAuthentication(database: database)
-        
-        let uiConfig = PumpkinPieChat.UIConfiguration(
-            fonts: AppStyleConfig.fonts,
-            colors: AppStyleConfig.colors,
-            strings: PumpkinPieChat.UIConfiguration.Strings(
-                newConversation: "Wants to chat!",
-                conversation: "Conversation",
-                conversationsListEmptyTitle: "No matches yet",
-                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
-                conversationsListEmptyActionTitle: "Take a Quiz"
-            ),
-            images: AppStyleConfig.images
-        )
-        let networkConfig = PumpkinPieChat.NetworkConfiguration(configUrl: configUrl)
-        chat = PumpkinPieChat(networkConfig: networkConfig, uiConfig: uiConfig)
+        coordinator = AppCoordinator()
         
         setupBackgroundFetch()
         return true
     }
-
-    // MARK: UISceneSession Lifecycle
-
+}
+    
+// MARK: UISceneSession Lifecycle
+@available(iOS 13.0, *)
+extension AppDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
@@ -80,7 +54,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            chat.runBackgroundTasks { result in
+            coordinator.chat.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return
@@ -92,14 +66,6 @@ extension AppDelegate {
 // MARK: Firebase auth UI callback
 extension AppDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
-
-        guard let sourceApplication = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String else {
-            return false
-        }
-        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
-            return true
-        }
-        // other URL handling goes here.
-        return false
+        coordinator.handleOpen(url: url, options: options)
     }
 }
