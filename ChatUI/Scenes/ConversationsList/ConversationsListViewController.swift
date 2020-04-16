@@ -60,6 +60,7 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
+        title = "Conversations"
         
         let backButtonImage: UIImage = .backButton
         navigationController?.navigationBar.barTintColor = .navigationBarTintColor
