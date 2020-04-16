@@ -25,13 +25,17 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Models.MUI: MessageConvertible,
     Models.MUI: MessageStateReflecting,
     Models.MUI.MessageSpecification == Models.MSUI,
-    Networking: ChatNetworkingWithTypingUsers,
 
     // Specify that all UI and networking models are inter-convertible
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
-    Networking.MS.ChatUIModel == Models.MSUI {
+    Networking.MS.ChatUIModel == Models.MSUI,
+
+    // Typing users feature requirements
+    Networking: ChatNetworkingWithTypingUsers,
+    Networking.TypingUser: ChatUIConvertible,
+    Networking.TypingUser.ChatUIModel == Models.USRUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -163,7 +167,7 @@ extension ChatCore {
 extension ChatCore {
     open func delete(message: MessageUI, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
-        // TODO: CJ BUG - do not remove cache & temp
+
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
             let deleteMessage = Networking.M(uiModel: message)
             self?.networking.delete(message: deleteMessage, from: conversation) { result in
@@ -344,6 +348,49 @@ extension ChatCore {
     }
 }
 
+// MARK: - ChatCoreServicingWithTypingUsers
+extension ChatCore: ChatCoreServicingWithTypingUsers {
+    open func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+            self?.networking.setTypingUser(userId: userId, in: conversation)
+        }
+    }
+
+    open func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+            self?.networking.removeTypingUser(userId: userId, in: conversation)
+        }
+    }
+
+    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        let listener = Listener.typingUsers(conversationId: conversation)
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
+
+            self.networking.listenToTypingUsers(in: conversation) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
+                switch result {
+                case .success(let users):
+                    let converted = users.compactMap({ $0.uiModel })
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
+        return listener
+    }
+}
+
 // MARK: - Temporary messages
 private extension ChatCore {
     // Actions over temporary messages
@@ -518,20 +565,5 @@ extension ChatCore {
         currentUser = user
         networking.setCurrentUser(user: user.id)
         loadNetworkService()
-    }
-}
-
-// MARK: - ChatCoreServicingWithTypingUsers
-extension ChatCore: ChatCoreServicingWithTypingUsers {
-    public func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
-
-    }
-
-    public func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
-
-    }
-
-    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
-        return .empty
     }
 }

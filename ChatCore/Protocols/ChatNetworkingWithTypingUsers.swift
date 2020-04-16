@@ -11,7 +11,7 @@ import Foundation
 /// Defines networking with ability to listen and manage users who are typing
 public protocol ChatNetworkingWithTypingUsers {
     // User type
-    associatedtype User: UserRepresenting
+    associatedtype TypingUser: UserRepresenting
 
     /// Sets typing user
     ///
@@ -32,10 +32,10 @@ public protocol ChatNetworkingWithTypingUsers {
     /// - Parameters:
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[User], ChatError>) -> Void)
+    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TypingUser], ChatError>) -> Void)
 }
 
 /// Default extension to insist on proper user type when extending `ChatNetworkServicing`
-extension ChatNetworkServicing where Self: ChatNetworkingWithTypingUsers {
-    typealias User = UserManager.User
+public extension ChatNetworkServicing where Self: ChatNetworkingWithTypingUsers {
+    typealias TypingUser = U
 }
