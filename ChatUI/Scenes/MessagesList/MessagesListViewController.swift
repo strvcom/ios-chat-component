@@ -147,6 +147,31 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
 // MARK: - Setup
 private extension MessagesListViewController {
+    func setup() {
+        view.backgroundColor = .chatBackground
+        
+        if let partner = viewModel.partner {
+            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
+        }
+        
+        let moreButtonImage: UIImage = .moreButton
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(didTapMoreButton)
+        )
+        
+        setupInputBar()
+        setupMessagesLayout()
+        
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        
+        viewModel.load()
+    }
+    
     func setupMessagesLayout() {
         guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
             return
@@ -205,31 +230,6 @@ private extension MessagesListViewController {
 
 // MARK: - Private methods
 private extension MessagesListViewController {
-    func setup() {
-        view.backgroundColor = .chatBackground
-        
-        if let partner = viewModel.partner {
-            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
-        }
-
-        let moreButtonImage: UIImage = .moreButton
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(didTapMoreButton)
-        )
-
-        setupInputBar()
-        setupMessagesLayout()
-
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-
-        viewModel.load()
-    }
-
     func markSeenMessage() {
         guard let lastMessage = self.dataSource.messages.last else {
             return
