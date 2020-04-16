@@ -34,8 +34,8 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers,
-    Networking.TypingUser: ChatUIConvertible,
-    Networking.TypingUser.ChatUIModel == Models.USRUI {
+    Networking.TU: ChatUIConvertible,
+    Networking.TU.ChatUIModel == Models.USRUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
