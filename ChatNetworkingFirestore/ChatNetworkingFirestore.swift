@@ -405,3 +405,51 @@ private extension ChatNetworkingFirestore {
         }
     }
 }
+
+extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
+
+    public func setTypingUser(user id: EntityIdentifier, in conversation: EntityIdentifier) {
+        let document = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
+            .document(id)
+
+        document.setData([:]) { error in
+            if let err = error {
+                print("Error updating document: \(err)")
+            } else {
+                print("Typing user successfully set")
+            }
+        }
+    }
+
+    public func removeTypingUser(user id: EntityIdentifier, in conversation: EntityIdentifier) {
+
+        let document = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
+            .document(id)
+
+        document.delete { error in
+            if let err = error {
+                print("Error deleting document: \(err)")
+            } else {
+                print("Typing user successfully removed")
+            }
+        }
+    }
+
+    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
+
+        let query = self.database
+        .collection(Constants.conversationsPath)
+        .document(conversation)
+        .collection(Constants.typingUsersPath)
+
+        let listener = Listener.typingUsers(conversationId: conversation)
+
+        listenTo(query: query, listener: listener, completion: completion)
+    }
+}

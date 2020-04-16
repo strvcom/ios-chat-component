@@ -13,6 +13,7 @@ enum Constants {
     static let conversationsPath = "conversations"
     static let messagesPath = "messages"
     static let usersPath = "users"
+    static let typingUsersPath = "typingUsers"
     
     enum Message {
         static let senderIdAttributeName = "userId"

@@ -12,5 +12,6 @@ import Foundation
 public enum Listener: Hashable {
     case conversations(pageSize: Int)
     case messages(pageSize: Int, conversationId: EntityIdentifier)
+    case typingUsers(conversationId: EntityIdentifier)
     case empty
 }

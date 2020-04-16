@@ -18,6 +18,7 @@ public protocol DefaultChatSpecifying: ChatSpecifying where
     Networking.M: ChatUIConvertible,
     Networking.U: ChatUIConvertible,
     Networking.MS: ChatUIConvertible,
+    Networking: ChatNetworkingWithTypingUsers,
     
     // Specify that all UI and networking models are inter-convertible
     UIModels.CUI == Networking.C.ChatUIModel,
