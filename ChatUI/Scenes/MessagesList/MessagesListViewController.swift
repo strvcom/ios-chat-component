@@ -19,8 +19,6 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
 
     private let photoPickerIconSize = CGSize(width: 44, height: 40)
     
-    private var loading = true
-
     init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
 
@@ -80,11 +78,9 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     override public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         super.collectionView(collectionView, willDisplay: cell, forItemAt: indexPath)
         
-        guard !loading, indexPath.section == 0 else {
+        guard indexPath.section == 0 else {
             return
         }
-
-        loading = true
 
         viewModel.loadMore()
     }
@@ -256,10 +252,8 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
             messagesCollectionView.contentOffset = CGPoint(x: 0, y: messagesCollectionView.contentSize.height - oldOffset)
 
             markSeenMessage()
-            loading = false
         case .failed(let error):
             print(error)
-            loading = false
         case .loading:
             dataSource.messages = []
             messagesCollectionView.reloadData()
