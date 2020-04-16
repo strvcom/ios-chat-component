@@ -247,6 +247,7 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
             break
         case .ready(let data):
             
+            // Scroll to the bottom on first load
             if dataSource.messages.isEmpty {
                 messagesCollectionView.scrollToBottom()
             }
