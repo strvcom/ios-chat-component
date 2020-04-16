@@ -406,14 +406,15 @@ private extension ChatNetworkingFirestore {
     }
 }
 
+// MARK: - ChatNetworkingWithTypingUsers
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
 
-    public func setTypingUser(user id: EntityIdentifier, in conversation: EntityIdentifier) {
+    public func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
         let document = self.database
             .collection(Constants.conversationsPath)
             .document(conversation)
             .collection(Constants.typingUsersPath)
-            .document(id)
+            .document(userId)
 
         document.setData([:]) { error in
             if let err = error {
@@ -424,13 +425,13 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
         }
     }
 
-    public func removeTypingUser(user id: EntityIdentifier, in conversation: EntityIdentifier) {
+    public func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
 
         let document = self.database
             .collection(Constants.conversationsPath)
             .document(conversation)
             .collection(Constants.typingUsersPath)
-            .document(id)
+            .document(userId)
 
         document.delete { error in
             if let err = error {
