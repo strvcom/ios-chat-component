@@ -89,14 +89,7 @@ extension MessagesListViewController: MessagesDataSource {
 
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
-    
-    public func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        NSAttributedString(string: viewModel.timeLabel(for: message.sentDate), attributes: [
-            .font: UIFont.messageTopLabel,
-            .foregroundColor: UIColor.messageTopLabel
-        ])
-    }
-    
+
     public func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         40
     }
