@@ -36,38 +36,6 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setup() {
-        view.backgroundColor = .chatBackground
-        
-        if let partner = viewModel.partner {
-            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
-        }
-
-        let moreButtonImage: UIImage = .moreButton
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(didTapMoreButton)
-        )
-
-        setupInputBar()
-        setupMessagesLayout()
-
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-
-        viewModel.load()
-    }
-
-    func markSeenMessage() {
-        guard let lastMessage = self.dataSource.messages.last else {
-            return
-        }
-        viewModel.updateSeenMessage(lastMessage)
-    }
-
     // MARK: - UIImagePickerControllerDelegate
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
@@ -234,7 +202,39 @@ private extension MessagesListViewController {
 }
 
 // MARK: - Private methods
-private extension MessagesListViewController {}
+private extension MessagesListViewController {
+    func setup() {
+        view.backgroundColor = .chatBackground
+        
+        if let partner = viewModel.partner {
+            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
+        }
+
+        let moreButtonImage: UIImage = .moreButton
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(didTapMoreButton)
+        )
+
+        setupInputBar()
+        setupMessagesLayout()
+
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+
+        viewModel.load()
+    }
+
+    func markSeenMessage() {
+        guard let lastMessage = self.dataSource.messages.last else {
+            return
+        }
+        viewModel.updateSeenMessage(lastMessage)
+    }
+}
 
 // MARK: MessagesListViewModelDelegate
 extension MessagesListViewController: MessagesListViewModelDelegate {
