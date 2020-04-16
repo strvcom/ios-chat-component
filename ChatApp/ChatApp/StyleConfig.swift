@@ -11,6 +11,17 @@ import ChatUI
 
 // swiftlint:disable force_unwrapping
 enum AppStyleConfig {
+    
+    private enum ColorsPalette {
+        static let darkBrown = UIColor(hex: 0x573D39)
+        static let brown = UIColor(hex: 0x9A8B88)
+        static let lightBrown = UIColor(hex: 0xAB9F94)
+        static let lightBrown2 = UIColor(hex: 0xB3A79D)
+        static let superLight = UIColor(hex: 0xF6F5F4)
+        static let orange = UIColor(hex: 0xFE812E)
+        static let red = UIColor(hex: 0xFE2E2E)
+        static let green = UIColor(hex: 0x00C03B)
+    }
 
     static let fonts = UIConfig.Fonts(
         buttonTitle: extraBold(ofSize: 16),
@@ -30,9 +41,9 @@ enum AppStyleConfig {
     
     static let colors = UIConfig.Colors(
         background: .white,
-        text: UIColor(red: 87, green: 61, blue: 57),
-        lightText: UIColor(red: 154, green: 139, blue: 136),
-        primary: UIColor(red: 254, green: 129, blue: 46),
+        text: ColorsPalette.darkBrown,
+        lightText: ColorsPalette.brown,
+        primary: ColorsPalette.orange,
         conversationsList: .init(
             separator: UIColor(red: 87, green: 64, blue: 57, alpha: 0.1),
             circle: UIColor(red: 0, green: 195, blue: 67),
@@ -41,16 +52,16 @@ enum AppStyleConfig {
         ),
         loadingIndicator: .gray,
         buttonForeground: .white,
-        outgoingMessageBackground: UIColor(red: 0, green: 192, blue: 59),
-        incomingMessageBackground: UIColor(red: 246, green: 245, blue: 244),
+        outgoingMessageBackground: ColorsPalette.green,
+        incomingMessageBackground: ColorsPalette.superLight,
         outgoingMessageForeground: .white,
-        incomingMessageForeground: UIColor(red: 87, green: 61, blue: 57),
-        messageTopLabel: UIColor(red: 154, green: 139, blue: 136),
-        inputBackground: UIColor(red: 246, green: 245, blue: 244),
-        inputPlaceholder: UIColor(red: 179, green: 167, blue: 157),
-        inputText: UIColor(red: 87, green: 61, blue: 57),
+        incomingMessageForeground: ColorsPalette.darkBrown,
+        messageTopLabel: ColorsPalette.brown,
+        inputBackground: ColorsPalette.superLight,
+        inputPlaceholder: ColorsPalette.lightBrown2,
+        inputText: ColorsPalette.darkBrown,
         navigationBarTint: .white,
-        navigationTitle: UIColor(red: 87, green: 61, blue: 57)
+        navigationTitle: ColorsPalette.darkBrown
     )
     
     static let images = UIConfig.Images(
