@@ -15,6 +15,8 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     private let dataSource = DataSource()
 
+    var coordinator: RootCoordinating?
+    
     private let viewModel: MessagesListViewModeling
 
     private let photoPickerIconSize = CGSize(width: 44, height: 40)
@@ -37,14 +39,17 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     private func setup() {
         view.backgroundColor = .chatBackground
         
-        title = viewModel.partner?.displayName
-        
         if let partner = viewModel.partner {
             navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
         }
 
         let moreButtonImage: UIImage = .moreButton
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: moreButtonImage.withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(didTapMoreButton)
+        )
 
         setupInputBar()
         setupMessagesLayout()
@@ -260,5 +265,9 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .loadingMore:
             break
         }
+    }
+    
+    @objc func didTapMoreButton() {
+        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
     }
 }

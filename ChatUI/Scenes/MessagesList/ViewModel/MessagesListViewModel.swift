@@ -16,7 +16,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     
     private let core: Core
     private(set) var state: ViewModelingState<MessagesListState> = .initial
-    private let conversation: Conversation
+    let conversation: Conversation
     
     private var listener: ListenerIdentifier?
     
