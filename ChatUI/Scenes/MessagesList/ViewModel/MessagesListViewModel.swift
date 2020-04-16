@@ -20,6 +20,8 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     
     private var listener: ListenerIdentifier?
     
+    private lazy var formatter = DateFormatter()
+    
     var currentUser: User {
         core.currentUser
     }
@@ -108,7 +110,6 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         // else: return full date
         ///
         
-        let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d, h:mm a"
         
         return formatter.string(from: date)
