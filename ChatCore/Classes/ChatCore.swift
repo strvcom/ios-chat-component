@@ -163,7 +163,7 @@ extension ChatCore {
 extension ChatCore {
     open func delete(message: MessageUI, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
-
+        // TODO: CJ BUG - do not remove cache & temp
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
             let deleteMessage = Networking.M(uiModel: message)
             self?.networking.delete(message: deleteMessage, from: conversation) { result in
@@ -518,5 +518,20 @@ extension ChatCore {
         currentUser = user
         networking.setCurrentUser(user: user.id)
         loadNetworkService()
+    }
+}
+
+// MARK: - ChatCoreServicingWithTypingUsers
+extension ChatCore: ChatCoreServicingWithTypingUsers {
+    public func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+
+    }
+
+    public func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+
+    }
+
+    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
+        return .empty
     }
 }

@@ -450,7 +450,23 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
         .collection(Constants.typingUsersPath)
 
         let listener = Listener.typingUsers(conversationId: conversation)
+        // to infer type from generic
+        let listenToCompletion: (Result<[EntityIdentifier], ChatError>) -> Void = { [weak self] result in
 
-        listenTo(query: query, listener: listener, completion: completion)
+            guard let self = self else {
+                return
+            }
+
+            switch result {
+            case .success(let userIds):
+                // Set members from previously downloaded users
+                self.userManager.users(userIds: userIds, completion: completion)
+            case .failure(let error):
+                print(error)
+                completion(.failure(error))
+            }
+        }
+
+        listenTo(query: query, listener: listener, completion: listenToCompletion)
     }
 }
