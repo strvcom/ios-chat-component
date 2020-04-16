@@ -164,6 +164,14 @@ extension ChatCore {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+            // delete cache
+            let cachedMessages: [CachedMessage<MessageSpecifyingUI>]? = self?.keychainManager.unsentMessages()
+            if let cachedMessage = cachedMessages?.first(where: { $0.id == message.id }) {
+                self?.keychainManager.removeMessage(message: cachedMessage)
+            }
+            // delete temp message
+            self?.handleTemporaryMessage(id: message.id, to: conversation, with: .remove)
+            // delete message from server
             let deleteMessage = Networking.M(uiModel: message)
             self?.networking.delete(message: deleteMessage, from: conversation) { result in
                 self?.taskHandler(result: result, completion: taskCompletion)
