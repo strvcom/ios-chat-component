@@ -42,7 +42,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         title = viewModel.partner?.displayName
         
         if let partner = viewModel.partner {
-            navigationItem.titleView = NavigationTitle(user: partner)
+            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
         }
 
         let moreButtonImage: UIImage = .moreButton

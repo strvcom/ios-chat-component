@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NavigationTitle: UIView {
+class ConversationDetailNavigationTitle: UIView {
     
     // MARK: Views
     private lazy var avatar: ProgressAvatar = {
@@ -47,7 +47,7 @@ class NavigationTitle: UIView {
 }
 
 // MARK: Setup
-private extension NavigationTitle {
+private extension ConversationDetailNavigationTitle {
     func setup() {
         addSubview(avatar)
         avatar.pinToSuperview(edges: [.left, .top, .bottom], padding: .zero)
