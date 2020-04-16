@@ -59,6 +59,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     }
 }
 
+// MARK: DataSource
 extension MessagesListViewController {
     class DataSource: NSObject {
         var messages: [MessageKitType] = []
@@ -102,6 +103,7 @@ extension MessagesListViewController: MessagesDataSource {
     
 }
 
+// MARK: MessagesLayoutDelegate
 extension MessagesListViewController: MessagesLayoutDelegate {}
 
 // MARK: - MessagesDisplayDelegate
