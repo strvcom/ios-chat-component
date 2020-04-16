@@ -50,4 +50,11 @@ extension UIView {
         }
     }
     
+    func setWidth(_ width: CGFloat) {
+        addConstraint(widthAnchor.constraint(equalToConstant: width))
+    }
+    
+    func setHeight(_ height: CGFloat) {
+        addConstraint(heightAnchor.constraint(equalToConstant: height))
+    }
 }

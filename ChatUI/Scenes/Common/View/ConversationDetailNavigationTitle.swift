@@ -50,12 +50,11 @@ class ConversationDetailNavigationTitle: UIView {
 private extension ConversationDetailNavigationTitle {
     func setup() {
         addSubview(avatar)
-        avatar.pinToSuperview(edges: [.left, .top, .bottom], padding: .zero)
-        avatar.addConstraints([
-            avatar.heightAnchor.constraint(equalToConstant: avatarSize.height),
-            avatar.widthAnchor.constraint(equalToConstant: avatarSize.width)
-        ])
         
+        avatar.pinToSuperview(edges: [.left, .top, .bottom], padding: .zero)
+        avatar.setWidth(avatarSize.width)
+        avatar.setHeight(avatarSize.height)
+
         avatar.update(
             percentage: CGFloat(user.compatibility ?? 0),
             imageUrl: user.imageUrl,
