@@ -200,6 +200,11 @@ extension ChatCore {
             return
         }
 
+        // avoid updating same last seen message
+        guard existingConversation.lastMessage.id != message.id else {
+            return
+        }
+
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
             let seenMessage = Networking.M(uiModel: message)
             let conversation = Networking.C(uiModel: existingConversation)
