@@ -151,6 +151,8 @@
 		C196FBCF242227310077FC49 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C196FBD2242227360077FC49 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
 		C196FBD3242227360077FC49 /* ChatUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1A62337244843FB00301C82 /* AppDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A62336244843FB00301C82 /* AppDependency.swift */; };
+		C1A6233924498D8900301C82 /* ChatSpecifying+iOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */; };
 		DFF6C5D4A543195C74725B24 /* Pods_ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E421DE27EFBFA52EC3F99694 /* Pods_ChatUI.framework */; };
 		EF221BE2869E7C22EA2BFC52 /* Pods_ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFAD73ACE090B69320214048 /* Pods_ChatNetworkingFirestore.framework */; };
 /* End PBXBuildFile section */
@@ -380,6 +382,8 @@
 		C185740A24333BA300F08E78 /* ChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatApp.entitlements; sourceTree = "<group>"; };
 		C18574122433678500F08E78 /* PumpkinPieChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PumpkinPieChat.swift; sourceTree = "<group>"; };
 		C18574182434D59B00F08E78 /* ChatInterfacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInterfacing.swift; sourceTree = "<group>"; };
+		C1A62336244843FB00301C82 /* AppDependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependency.swift; sourceTree = "<group>"; };
+		C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+iOS12.swift"; sourceTree = "<group>"; };
 		C95D0BFE7F8EC8D86ECA6D1D /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		D4959AC9B159D3FF9E8E6E52 /* Pods-ChatUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatUI.debug.xcconfig"; path = "Target Support Files/Pods-ChatUI/Pods-ChatUI.debug.xcconfig"; sourceTree = "<group>"; };
 		E421DE27EFBFA52EC3F99694 /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -858,6 +862,7 @@
 			isa = PBXGroup;
 			children = (
 				C1253A82243C984400733A95 /* ChatSpecifying+UIScene.swift */,
+				C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */,
 				C1253A86243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift */,
 			);
 			path = Extensions;
@@ -926,6 +931,7 @@
 		C1275FA724472D0900AAE90E /* DependencyInjection */ = {
 			isa = PBXGroup;
 			children = (
+				C1A62336244843FB00301C82 /* AppDependency.swift */,
 			);
 			path = DependencyInjection;
 			sourceTree = "<group>";
@@ -1488,6 +1494,7 @@
 				C1275FA6244724EF00AAE90E /* SceneCoordinator.swift in Sources */,
 				045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */,
 				04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */,
+				C1A62337244843FB00301C82 /* AppDependency.swift in Sources */,
 				84BE30D2242BC21F00DA8664 /* FirebaseAuthentication.swift in Sources */,
 				C1275FA42447227200AAE90E /* AppCoordinator.swift in Sources */,
 			);
@@ -1504,6 +1511,7 @@
 				C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */,
 				C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */,
 				C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */,
+				C1A6233924498D8900301C82 /* ChatSpecifying+iOS12.swift in Sources */,
 				C1253A85243C98AA00733A95 /* DefaultChatSpecifying.swift in Sources */,
 				C1253A83243C984400733A95 /* ChatSpecifying+UIScene.swift in Sources */,
 				C1253A80243C961900733A95 /* ChatSpecifying.swift in Sources */,
@@ -1870,7 +1878,7 @@
 			baseConfigurationReference = 9FEB64910140FCD9F09A1F13 /* Pods-ChatApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ChatApp/ChatApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ChatApp/SupportingFiles/ChatApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = D6532TRNCE;
@@ -1895,7 +1903,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
 				);
-				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_FILE = ChatApp/SupportingFiles/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1915,7 +1923,7 @@
 			baseConfigurationReference = C95D0BFE7F8EC8D86ECA6D1D /* Pods-ChatApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ChatApp/ChatApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ChatApp/SupportingFiles/ChatApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = D6532TRNCE;
@@ -1940,7 +1948,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
 				);
-				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_FILE = ChatApp/SupportingFiles/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -11,13 +11,15 @@ import Chat
 
 class SceneCoordinator {
     weak var parent: AppCoordinator?
+    let dependency: AppDependency
     let window: UIWindow
     
     var interface: PumpkinPieChat.Interface?
     
-    init(parent: AppCoordinator, window: UIWindow) {
+    init(parent: AppCoordinator, dependency: AppDependency, window: UIWindow) {
         self.parent = parent
         self.window = window
+        self.dependency = dependency
     }
     
     func sceneDidDisconnect() {
@@ -25,39 +27,67 @@ class SceneCoordinator {
     }
     
     func setRootViewController() {
-        if let user = firebaseAuthentication.user {
-            showChat(user: user)
+        let rootViewController: UIViewController
+        
+        if let user = dependency.firebaseAuthentication.user {
+            rootViewController = makeChat(user: user)
         } else {
-            let authenticationViewController = firebaseAuthentication.authenticationViewController(loginCompletion: { [weak self] result in
-                switch result {
-                case .success(let user):
-                    self?.showChat(user: user)
-                case .failure(let error):
-                    print("Firebase authentication failed \(error)")
-                }
-            })
-            self.window?.rootViewController = authenticationViewController
+            rootViewController = makeAuthentication()
         }
+        
+        self.window.rootViewController = rootViewController
     }
+}
 
-    func showChat(user: User) {
+// MARK: Private methods
+private extension SceneCoordinator {
+    func makeAuthentication() -> UIViewController {
+        let authenticationViewController = dependency.firebaseAuthentication.authenticationViewController(loginCompletion: { [weak self] result in
+            switch result {
+            case .success:
+                self?.setRootViewController()
+            case .failure(let error):
+                print("Firebase authentication failed \(error)")
+            }
+        })
+        
+        return authenticationViewController
+    }
+    
+    func makeChat(user: User) -> UIViewController {
         var imageUrl: URL?
         if let userImageUrl = user.imageUrl {
             imageUrl = URL(string: userImageUrl)
         }
-        chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
+        dependency.chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
         
-        guard let window = self.window, let scene = window.windowScene else {
+        let interface: PumpkinPieChat.Interface
+        if #available(iOS 13.0, *) {
+            interface = makeSceneInterface()
+        } else {
+            interface = makeInterface()
+        }
+        
+        interface.delegate = self
+        self.interface = interface
+        
+        return interface.rootViewController
+    }
+    
+    func makeInterface() -> PumpkinPieChat.Interface {
+        return dependency.chat.interface()
+    }
+    
+    @available(iOS 13.0, *)
+    func makeSceneInterface() -> PumpkinPieChat.Interface {
+        guard let scene = window.windowScene else {
             fatalError("Scene delegate doesn't have main window")
         }
         
-        interface = chat.interface(for: scene)
-        interface?.delegate = self
-        window.rootViewController = interface?.rootViewController
+        return dependency.chat.interface(for: scene)
     }
 }
 
-@available(iOS 13.0, *)
 extension SceneCoordinator: PumpkinPieChat.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")

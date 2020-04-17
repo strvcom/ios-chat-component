@@ -7,21 +7,45 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseUI
+import Chat
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+    // iOS 12 properties
     var window: UIWindow?
-    
+    var sceneCoordinator: SceneCoordinator?
+
     // swiftlint:disable:next implicitly_unwrapped_optional
     var coordinator: AppCoordinator!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        coordinator = AppCoordinator()
+        let dependency = makeDependencies()
+        coordinator = AppCoordinator(dependency: dependency)
         
         setupBackgroundFetch()
+        
+        if #available(iOS 13.0, *) {} else {
+            setupInitialScene()
+        }
+        
         return true
+    }
+}
+
+// MARK: iOS 12 setup
+private extension AppDelegate {
+    func setupInitialScene() {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        
+        self.window = window
+        self.sceneCoordinator = coordinator.startScene(with: window)
+        
+        self.sceneCoordinator?.setRootViewController()
+        
+        self.window?.makeKeyAndVisible()
     }
 }
     
@@ -29,15 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 @available(iOS 13.0, *)
 extension AppDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 }
 
@@ -54,7 +70,8 @@ extension AppDelegate {
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Needs to pass completion handler to allow finish background fetch
         guard #available(iOS 13, *) else {
-            coordinator.chat.runBackgroundTasks { result in
+            let chat = coordinator.dependency.chat
+            chat.runBackgroundTasks { result in
                 completionHandler(result)
             }
             return
@@ -66,6 +83,46 @@ extension AppDelegate {
 // MARK: Firebase auth UI callback
 extension AppDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
-        coordinator.handleOpen(url: url, options: options)
+        guard let sourceApplication = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String else {
+            return false
+        }
+        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
+            return true
+        }
+        // other URL handling goes here.
+        return false
+    }
+}
+
+// MARK: Dependencies
+private extension AppDelegate {
+    func makeDependencies() -> AppDependency {
+        guard let configUrl = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") else {
+            fatalError("Missing firebase configuration file")
+        }
+        guard let options = FirebaseOptions(contentsOfFile: configUrl) else {
+            fatalError("Can't configure Firebase")
+        }
+
+        FirebaseApp.configure(options: options)
+        let database = Firestore.firestore()
+        let firebaseAuthentication = FirebaseAuthentication(database: database)
+        
+        let uiConfig = PumpkinPieChat.UIConfiguration(
+            fonts: AppStyleConfig.fonts,
+            colors: AppStyleConfig.colors,
+            strings: PumpkinPieChat.UIConfiguration.Strings(
+                newConversation: "Wants to chat!",
+                conversation: "Conversation",
+                conversationsListEmptyTitle: "No matches yet",
+                conversationsListEmptySubtitle: "Finish quizzes and get more matches",
+                conversationsListEmptyActionTitle: "Take a Quiz"
+            ),
+            images: AppStyleConfig.images
+        )
+        let networkConfig = PumpkinPieChat.NetworkConfiguration(configUrl: configUrl)
+        let chat = PumpkinPieChat(networkConfig: networkConfig, uiConfig: uiConfig)
+        
+        return AppDependency(chat: chat, firebaseAuthentication: firebaseAuthentication)
     }
 }
