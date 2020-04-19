@@ -30,12 +30,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
-    Networking.MS.ChatUIModel == Models.MSUI,
-
-    // Typing users feature requirements
-    Networking: ChatNetworkingWithTypingUsers,
-    Networking.TU: ChatUIConvertible,
-    Networking.TU.ChatUIModel == Models.USRUI {
+    Networking.MS.ChatUIModel == Models.MSUI {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -349,20 +344,20 @@ extension ChatCore {
 }
 
 // MARK: - ChatCoreServicingWithTypingUsers
-extension ChatCore: ChatCoreServicingWithTypingUsers {
-    open func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+extension ChatCore: ChatCoreServicingWithTypingUsers where
+    // Typing users feature requirements
+    Networking: ChatNetworkingWithTypingUsers,
+    Networking.TU: ChatUIConvertible,
+    Networking.TU.ChatUIModel == Models.USRUI {
+
+    open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
-            self?.networking.setTypingUser(userId: userId, in: conversation)
-        }
-    }
-
-    open func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
-            self?.networking.removeTypingUser(userId: userId, in: conversation)
+            guard let self = self else {
+                return
+            }
+            isTyping ? self.networking.setTypingUser(userId: self.currentUser.id, in: conversation) : self.networking.removeTypingUser(userId: self.currentUser.id, in: conversation)
         }
     }
 

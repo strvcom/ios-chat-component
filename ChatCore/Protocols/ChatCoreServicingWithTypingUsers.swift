@@ -14,19 +14,12 @@ public protocol ChatCoreServicingWithTypingUsers {
     // User type
     associatedtype TU: UserRepresenting
 
-    /// Sets typing user
+    /// Sets current user as typing user
     ///
     /// - Parameters:
-    ///   - userId: Typing user userId
+    ///   - isTyping: flag if current user is / isn't typing
     ///   - conversation: Conversation id
-    func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier)
-
-    /// Removes typing user from conversation
-    ///
-    /// - Parameters:
-    ///   - userId: Typing user userId
-    ///   - conversation: Conversation id
-    func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier)
+    func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier)
 
     /// Creates a listener to typing users. First set of data is received immediately by the completion callback.
     ///
