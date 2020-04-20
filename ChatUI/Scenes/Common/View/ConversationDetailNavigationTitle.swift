@@ -52,8 +52,7 @@ private extension ConversationDetailNavigationTitle {
         addSubview(avatar)
         
         avatar.pinToSuperview(edges: [.left, .top, .bottom], padding: .zero)
-        avatar.setWidth(avatarSize.width)
-        avatar.setHeight(avatarSize.height)
+        avatar.setSize(width: avatarSize.width, height: avatarSize.height)
 
         avatar.update(
             percentage: CGFloat(user.compatibility ?? 0),
@@ -63,6 +62,6 @@ private extension ConversationDetailNavigationTitle {
 
         addSubview(title)
         title.pinToSuperview(edges: [.top, .right, .bottom], padding: .zero)
-        addConstraint(title.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: avatarTitleSpacing))
+        title.next(to: avatar, spacing: avatarTitleSpacing)
     }
 }
