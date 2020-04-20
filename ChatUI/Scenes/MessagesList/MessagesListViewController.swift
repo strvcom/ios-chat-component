@@ -19,7 +19,13 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     private let viewModel: MessagesListViewModeling
 
+    // MARK: Constants
     private let photoPickerIconSize = CGSize(width: 44, height: 40)
+    private let messageInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
+    private let sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    private let inputBarPadding = UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24)
+    private let inputBarContentPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
+    private let inputBarCornerRadius: CGFloat = 10
     
     init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
@@ -90,10 +96,6 @@ extension MessagesListViewController: MessagesDataSource {
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
 
-    public func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        40
-    }
-    
 }
 
 // MARK: MessagesLayoutDelegate
@@ -175,9 +177,9 @@ private extension MessagesListViewController {
         layout.setMessageIncomingAvatarSize(.zero)
         layout.setMessageOutgoingAvatarSize(.zero)
         layout.textMessageSizeCalculator.messageLabelFont = .messageContent
-        layout.textMessageSizeCalculator.incomingMessageLabelInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
-        layout.textMessageSizeCalculator.outgoingMessageLabelInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        layout.textMessageSizeCalculator.incomingMessageLabelInsets = messageInsets
+        layout.textMessageSizeCalculator.outgoingMessageLabelInsets = messageInsets
+        layout.sectionInset = sectionInset
     }
     
     func setupInputBar() {
@@ -199,9 +201,9 @@ private extension MessagesListViewController {
         messageInputBar.separatorLine.isHidden = true
         
         messageInputBar.contentView.backgroundColor = .inputBackround
-        messageInputBar.contentView.layer.cornerRadius = 10
-        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
-        messageInputBar.padding = UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24)
+        messageInputBar.contentView.layer.cornerRadius = inputBarCornerRadius
+        messageInputBar.middleContentViewPadding = inputBarContentPadding
+        messageInputBar.padding = inputBarPadding
 
         messageInputBar.inputTextView.placeholderLabel.text = .messageInputPlaceholder
         messageInputBar.inputTextView.placeholderLabel.font = .input
