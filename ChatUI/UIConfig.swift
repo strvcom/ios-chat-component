@@ -14,52 +14,45 @@ public class UIConfig {
     // MARK: Fonts
     public struct Fonts {
         
-        public struct ConversationsList {
-            let title: UIFont
-            let subtitle: UIFont
-            let subtitleSecondary: UIFont
-            let emptyTitle: UIFont
-            let emptySubtitle: UIFont
-
-            public init(
-                title: UIFont,
-                subtitle: UIFont,
-                subtitleSecondary: UIFont,
-                emptyTitle: UIFont,
-                emptySubtitle: UIFont
-            ) {
-                self.title = title
-                self.subtitle = subtitle
-                self.subtitleSecondary = subtitleSecondary
-                self.emptyTitle = emptyTitle
-                self.emptySubtitle = emptySubtitle
-            }
-        }
-        
-        let conversationsList: ConversationsList
-        let buttonTitle: UIFont
-        let messageContent: UIFont
-        let messageTopLabel: UIFont
-        let input: UIFont
-        let inputSendButton: UIFont
-        let navigationTitle: UIFont
+        let headline1: UIFont
+        let headline2: UIFont
+        let headline3: UIFont
+        let headline4: UIFont
+        let headline5: UIFont
+        let headline6: UIFont
+        let body: UIFont
+        let textButtonLarge: UIFont
+        let textButtonSmall: UIFont
+        let label: UIFont
+        let smallLabel: UIFont
+        let textField: UIFont
         
         public init(
-            buttonTitle: UIFont,
-            conversationsList: ConversationsList,
-            messageContent: UIFont,
-            messageTopLabel: UIFont,
-            input: UIFont,
-            inputSendButton: UIFont,
-            navigationTitle: UIFont
+            headline1: UIFont,
+            headline2: UIFont,
+            headline3: UIFont,
+            headline4: UIFont,
+            headline5: UIFont,
+            headline6: UIFont,
+            body: UIFont,
+            textButtonLarge: UIFont,
+            textButtonSmall: UIFont,
+            label: UIFont,
+            smallLabel: UIFont,
+            textField: UIFont
         ) {
-            self.buttonTitle = buttonTitle
-            self.conversationsList = conversationsList
-            self.messageContent = messageContent
-            self.messageTopLabel = messageTopLabel
-            self.input = input
-            self.inputSendButton = inputSendButton
-            self.navigationTitle = navigationTitle
+            self.headline1 = headline1
+            self.headline2 = headline2
+            self.headline3 = headline3
+            self.headline4 = headline4
+            self.headline5 = headline5
+            self.headline6 = headline6
+            self.body = body
+            self.textButtonLarge = textButtonLarge
+            self.textButtonSmall = textButtonSmall
+            self.label = label
+            self.smallLabel = smallLabel
+            self.textField = textField
         }
     }
     
@@ -197,19 +190,18 @@ public class UIConfig {
     
     private static var `default` = UIConfig(
         fonts: Fonts(
-            buttonTitle: .systemFont(ofSize: 12),
-            conversationsList: .init(
-                title: .systemFont(ofSize: 14),
-                subtitle: .systemFont(ofSize: 12),
-                subtitleSecondary: .systemFont(ofSize: 12),
-                emptyTitle: .systemFont(ofSize: 14),
-                emptySubtitle: .systemFont(ofSize: 12)
-            ),
-            messageContent: .systemFont(ofSize: 12),
-            messageTopLabel: .systemFont(ofSize: 12),
-            input: .systemFont(ofSize: 12),
-            inputSendButton: .systemFont(ofSize: 12),
-            navigationTitle: .systemFont(ofSize: 16, weight: .black)
+            headline1: .systemFont(ofSize: 32),
+            headline2: .systemFont(ofSize: 24),
+            headline3: .systemFont(ofSize: 20),
+            headline4: .systemFont(ofSize: 18),
+            headline5: .systemFont(ofSize: 16),
+            headline6: .systemFont(ofSize: 14),
+            body: .systemFont(ofSize: 12),
+            textButtonLarge: .systemFont(ofSize: 16),
+            textButtonSmall: .systemFont(ofSize: 14),
+            label: .systemFont(ofSize: 14),
+            smallLabel: .systemFont(ofSize: 12),
+            textField: .systemFont(ofSize: 14)
         ),
         colors: Colors(
             background: .white,

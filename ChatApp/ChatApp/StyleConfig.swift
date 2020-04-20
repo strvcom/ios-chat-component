@@ -24,19 +24,18 @@ enum AppStyleConfig {
     }
 
     static let fonts = UIConfig.Fonts(
-        buttonTitle: extraBold(ofSize: 16),
-        conversationsList: .init(
-            title: medium(ofSize: 16),
-            subtitle: regular(ofSize: 14),
-            subtitleSecondary: bold(ofSize: 14),
-            emptyTitle: extraBold(ofSize: 20),
-            emptySubtitle: regular(ofSize: 16)
-        ),
-        messageContent: regular(ofSize: 16),
-        messageTopLabel: medium(ofSize: 12),
-        input: regular(ofSize: 16),
-        inputSendButton: bold(ofSize: 16),
-        navigationTitle: extraBold(ofSize: 16)
+        headline1: extraBold(ofSize: 32),
+        headline2: extraBold(ofSize: 24),
+        headline3: extraBold(ofSize: 20),
+        headline4: extraBold(ofSize: 16),
+        headline5: medium(ofSize: 16),
+        headline6: regular(ofSize: 14),
+        body: regular(ofSize: 16),
+        textButtonLarge: extraBold(ofSize: 16),
+        textButtonSmall: bold(ofSize: 16),
+        label: bold(ofSize: 14),
+        smallLabel: medium(ofSize: 12),
+        textField: bold(ofSize: 14)
     )
     
     static let colors = UIConfig.Colors(
