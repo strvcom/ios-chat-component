@@ -96,6 +96,9 @@ extension MessagesListViewController: MessagesDataSource {
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
 
+    public func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        20
+    }
 }
 
 // MARK: MessagesLayoutDelegate
