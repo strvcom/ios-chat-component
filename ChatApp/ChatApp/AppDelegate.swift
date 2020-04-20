@@ -42,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 conversationsListEmptyTitle: "No matches yet",
                 conversationsListEmptySubtitle: "Finish quizzes and get more matches",
                 conversationsListEmptyActionTitle: "Take a Quiz",
+                conversationsListNavigationTitle: "Conversations",
                 messageInputPlaceholder: "Message"
             ),
             images: AppStyleConfig.images

@@ -60,7 +60,7 @@ public class ConversationsListViewController: UIViewController {
 // MARK: Private methods
 private extension ConversationsListViewController {
     func setup() {
-        title = "Conversations"
+        title = .conversationsListNavigationTitle
         
         let backButtonImage: UIImage = .backButton
         navigationItem.backBarButtonItem = UIBarButtonItem(image: backButtonImage.withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)

@@ -29,6 +29,10 @@ extension String {
         UIConfig.current.strings.conversationsListEmptyActionTitle
     }
     
+    static var conversationsListNavigationTitle: String {
+        UIConfig.current.strings.conversationsListNavigationTitle
+    }
+
     static var messageInputPlaceholder: String {
         UIConfig.current.strings.messageInputPlaceholder
     }
