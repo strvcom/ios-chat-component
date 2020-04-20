@@ -209,7 +209,7 @@ extension ChatCore {
         }
 
         // avoid updating same last seen message
-        guard existingConversation.lastMessage.id != message.id else {
+        guard existingConversation.lastMessage?.id != message.id else {
             return
         }
 
@@ -370,7 +370,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
             guard let self = self else {
                 return
             }
-            isTyping ? self.networking.setTypingUser(userId: self.currentUser.id, in: conversation) : self.networking.removeTypingUser(userId: self.currentUser.id, in: conversation)
+            self.networking.setUserTyping(userId: self.currentUser.id, in: conversation, isTyping: isTyping)
         }
     }
 

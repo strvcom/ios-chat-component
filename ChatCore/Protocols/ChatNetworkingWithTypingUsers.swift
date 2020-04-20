@@ -14,19 +14,13 @@ public protocol ChatNetworkingWithTypingUsers {
     // User type
     associatedtype TU: UserRepresenting
 
-    /// Sets typing user
+    /// Manages user who is typing in conversation
     ///
     /// - Parameters:
-    ///   - userId: Typing user userId
+    ///   - userId: User id
     ///   - conversation: Conversation id
-    func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier)
-
-    /// Removes typing user from conversation
-    ///
-    /// - Parameters:
-    ///   - userId: Typing user userId
-    ///   - conversation: Conversation id
-    func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier)
+    ///   - isTyping: flag if current user is / isn't typing
+    func setUserTyping(userId: EntityIdentifier, in conversation: EntityIdentifier, isTyping: Bool)
 
     /// Creates a listener to typing users. First set of data is received immediately by the completion callback.
     ///

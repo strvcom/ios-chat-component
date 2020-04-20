@@ -408,36 +408,28 @@ private extension ChatNetworkingFirestore {
 
 // MARK: - ChatNetworkingWithTypingUsers
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
-
-    public func setTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
+    public func setUserTyping(userId: EntityIdentifier, in conversation: EntityIdentifier, isTyping: Bool) {
         let document = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.typingUsersPath)
-            .document(userId)
+        .collection(Constants.conversationsPath)
+        .document(conversation)
+        .collection(Constants.typingUsersPath)
+        .document(userId)
 
-        document.setData([:]) { error in
-            if let err = error {
-                print("Error updating document: \(err)")
-            } else {
-                print("Typing user successfully set")
+        if isTyping {
+            document.setData([:]) { error in
+                if let err = error {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Typing user successfully set")
+                }
             }
-        }
-    }
-
-    public func removeTypingUser(userId: EntityIdentifier, in conversation: EntityIdentifier) {
-
-        let document = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.typingUsersPath)
-            .document(userId)
-
-        document.delete { error in
-            if let err = error {
-                print("Error deleting document: \(err)")
-            } else {
-                print("Typing user successfully removed")
+        } else {
+            document.delete { error in
+                if let err = error {
+                    print("Error deleting document: \(err)")
+                } else {
+                    print("Typing user successfully removed")
+                }
             }
         }
     }
