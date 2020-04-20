@@ -229,6 +229,10 @@ private extension MessagesListViewController {
         }
         viewModel.updateSeenMessage(lastMessage)
     }
+
+    @objc func didTapMoreButton() {
+        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
+    }
 }
 
 // MARK: MessagesListViewModelDelegate
@@ -261,9 +265,5 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .loadingMore:
             break
         }
-    }
-    
-    @objc func didTapMoreButton() {
-        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
     }
 }
