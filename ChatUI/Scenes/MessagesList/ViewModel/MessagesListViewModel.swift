@@ -20,8 +20,6 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     
     private var listener: ListenerIdentifier?
     
-    private lazy var formatter = DateFormatter()
-    
     var currentUser: User {
         core.currentUser
     }
@@ -101,18 +99,6 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             .filter { (senderId, data) in
                 data.messageId == message && senderId != core.currentUser.senderId
             }.contains { $0.key != core.currentUser.senderId } ? "Seen" : ""
-    }
-    
-    func timeLabel(for date: Date) -> String {
-        /// TODO:
-        // if day == today: return time
-        // if time == now: return Now
-        // else: return full date
-        ///
-        
-        formatter.dateFormat = "MMMM d, h:mm a"
-        
-        return formatter.string(from: date)
     }
 }
 
