@@ -20,8 +20,8 @@ public protocol ChatNetworkServicing {
     // Message description used for sending a message
     associatedtype MS: MessageSpecifying
     
-    typealias M = C.Message
-    typealias U = C.User
+    associatedtype M where M == C.Message
+    associatedtype U where U == C.User
 
     init(config: Config, userManager: UserManager)
 
