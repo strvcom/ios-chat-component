@@ -63,10 +63,6 @@ private extension ConversationsListViewController {
         title = "Conversations"
         
         let backButtonImage: UIImage = .backButton
-        navigationController?.navigationBar.barTintColor = .navigationBarTintColor
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.backIndicatorImage = UIImage()
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
         navigationItem.backBarButtonItem = UIBarButtonItem(image: backButtonImage.withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
 
         view.backgroundColor = .chatBackground

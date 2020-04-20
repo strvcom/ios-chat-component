@@ -11,7 +11,7 @@ import UIKit
 class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
     private lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: makeConversationsListController())
+        return CustomNavigationController(rootViewController: makeConversationsListController())
     }()
     
     private let core: Core
