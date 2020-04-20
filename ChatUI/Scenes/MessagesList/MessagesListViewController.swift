@@ -15,7 +15,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     private let dataSource = DataSource()
 
-    var coordinator: RootCoordinating?
+    weak var coordinator: RootCoordinating?
     
     private let viewModel: MessagesListViewModeling
 
