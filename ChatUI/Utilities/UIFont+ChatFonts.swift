@@ -10,26 +10,46 @@ import UIKit
 
 extension UIFont {
     static var buttonTitle: UIFont {
-        UIConfig.current.fonts.buttonTitle
+        UIConfig.current.fonts.textButtonLarge
     }
     
     static var conversationsListTitle: UIFont {
-        UIConfig.current.fonts.conversationsList.title
+        UIConfig.current.fonts.headline5
     }
     
     static var conversationsListSubtitle: UIFont {
-        UIConfig.current.fonts.conversationsList.subtitle
+        UIConfig.current.fonts.headline6
     }
     
     static var conversationsListSubtitleSecondary: UIFont {
-        UIConfig.current.fonts.conversationsList.subtitleSecondary
+        UIConfig.current.fonts.textButtonSmall
     }
     
     static var conversationsListEmptyTitle: UIFont {
-        UIConfig.current.fonts.conversationsList.emptyTitle
+        UIConfig.current.fonts.headline2
     }
     
     static var conversationsListEmptySubtitle: UIFont {
-        UIConfig.current.fonts.conversationsList.emptySubtitle
+        UIConfig.current.fonts.body
+    }
+    
+    static var messageContent: UIFont {
+        UIConfig.current.fonts.body
+    }
+    
+    static var messageTopLabel: UIFont {
+        UIConfig.current.fonts.smallLabel
+    }
+    
+    static var input: UIFont {
+        UIConfig.current.fonts.body
+    }
+    
+    static var inputSendButton: UIFont {
+        UIConfig.current.fonts.textButtonSmall
+    }
+    
+    static var navigationTitle: UIFont {
+        UIConfig.current.fonts.headline4
     }
 }

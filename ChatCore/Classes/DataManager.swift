@@ -18,7 +18,7 @@ struct DataManager {
     }
     
     mutating func update<T>(data: [T]) {
-        reachedEnd = reachedEnd || itemCount == data.count || data.count % pageSize != 0
+        reachedEnd = itemCount == data.count || data.count % pageSize != 0
         itemCount = data.count
     }
 }
