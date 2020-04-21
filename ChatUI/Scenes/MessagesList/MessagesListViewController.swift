@@ -38,11 +38,12 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     private lazy var emptyStateView: EmptyMessagesList = {
         let view = EmptyMessagesList.nibInstance
         
-        if let partnerName = viewModel.partner?.displayName {
-            view.title = .conversationDetailEmptyTitle(name: partnerName)
-        }
-        
-        view.subtitle = .conversationDetailEmptySubtitle
+        view.configure(
+            with: EmptyMessagesListViewModel(
+                title: .conversationDetailEmptyTitle(name: viewModel.partner?.displayName ?? ""),
+                subtitle: .conversationDetailEmptySubtitle
+            )
+        )
         
         return view
     }()
@@ -248,7 +249,7 @@ private extension MessagesListViewController {
 
 // MARK: StatefulViewController
 extension MessagesListViewController: StatefulViewController {
-    func viewForState(_ state: ViewControllerState) -> UIView {
+    var contentView: UIView? {
         switch state {
         case .empty:
             return emptyStateView
@@ -256,10 +257,10 @@ extension MessagesListViewController: StatefulViewController {
             return loadingIndicator
         case .loaded:
             return messagesCollectionView
-        case .error(_, let error):
-            let errorLabel = UILabel()
-            errorLabel.text = error?.localizedDescription ?? "Unknown error"
-            return errorLabel
+        case let .error(error):
+            return ErrorView(message: error?.localizedDescription ?? "Unknown error")
+        case .none:
+            return nil
         }
     }
 }
@@ -301,13 +302,13 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
 
             markSeenMessage()
             
-            let newState: ViewControllerState = dataSource.messages.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
+            let newState: ViewControllerState = dataSource.messages.isEmpty ? .empty : .loaded
             setState(newState)
         case .failed(let error):
-            print(error)
+            setState(.error(error: error))
         case .loading:
             dataSource.messages = []
-            setState(.loading(previous: self.state))
+            setState(.loading)
             messagesCollectionView.reloadData()
         case .loadingMore:
             break

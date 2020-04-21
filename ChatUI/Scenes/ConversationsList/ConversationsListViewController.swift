@@ -68,7 +68,7 @@ public class ConversationsListViewController: UIViewController {
 
 // MARK: StatefulViewController
 extension ConversationsListViewController: StatefulViewController {
-    func viewForState(_ state: ViewControllerState) -> UIView {
+    var contentView: UIView? {
         switch state {
         case .empty:
             return emptyStateView
@@ -76,13 +76,10 @@ extension ConversationsListViewController: StatefulViewController {
             return loadingIndicator
         case .loaded:
             return tableView
-        case let .error(_, error):
-            // TODO: display user friendly error
-            let errorLabel = UILabel()
-            errorLabel.numberOfLines = 0
-            errorLabel.textAlignment = .center
-            errorLabel.text = error?.localizedDescription ?? "Unknown error"
-            return errorLabel
+        case let .error(error):
+            return ErrorView(message: error?.localizedDescription ?? "Unknown error")
+        case .none:
+            return nil
         }
     }
 }
@@ -138,12 +135,12 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
             tableView.reloadData()
             toggleTableViewLoader(visible: false)
             
-            let newState: ViewControllerState = state.items.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
+            let newState: ViewControllerState = state.items.isEmpty ? .empty : .loaded
             setState(newState)
         case let .failed(error):
-            setState(.error(previous: self.state, error: error))
+            setState(.error(error: error))
         case .loading:
-            setState(.loading(previous: self.state))
+            setState(.loading)
             dataSource.items = []
             tableView.reloadData()
         case .loadingMore:

@@ -8,31 +8,43 @@
 
 import UIKit
 
+struct EmptyMessagesListViewModel {
+    let title: String
+    let subtitle: String
+}
+
 class EmptyMessagesList: UIView {
     
-    var title: String = "" {
-        didSet {
-            titleLabel.text = title
-        }
-    }
+    private let titleLineHeight: CGFloat = 32
     
-    var subtitle: String = "" {
-        didSet {
-            subtitleLabel.text = subtitle
-        }
-    }
+    private lazy var titleParagraphStyle: NSMutableParagraphStyle = {
+        let paragraphStyle = NSMutableParagraphStyle()
+        
+        paragraphStyle.maximumLineHeight = titleLineHeight
+        paragraphStyle.alignment = .center
+        
+        return paragraphStyle
+    }()
     
-    @IBOutlet private var titleLabel: UILabel! {
-        didSet {
-            titleLabel.font = .conversationDetailEmptyTitle
-            titleLabel.textColor = .conversationDetailEmptyTitle
-        }
-    }
+    @IBOutlet private var titleLabel: UILabel!
     
     @IBOutlet private var subtitleLabel: UILabel! {
         didSet {
             subtitleLabel.font = .conversationDetailEmptySubtitle
             subtitleLabel.textColor = .conversationDetailEmptySubtitle
         }
+    }
+    
+    func configure(with viewModel: EmptyMessagesListViewModel) {
+        titleLabel?.attributedText = NSAttributedString(
+            string: viewModel.title,
+            attributes: [
+                .paragraphStyle: titleParagraphStyle,
+                .font: UIFont.conversationDetailEmptyTitle,
+                .foregroundColor: UIColor.conversationDetailEmptyTitle
+            ]
+        )
+        
+        subtitleLabel?.text = viewModel.subtitle
     }
 }
