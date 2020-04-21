@@ -27,7 +27,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     private let inputBarContentPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
     private let inputBarCornerRadius: CGFloat = 10
     
-    var state: ControllerState?
+    var state: ViewControllerState?
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: self.traitCollection.userInterfaceStyle == .dark ? .white : .gray)
@@ -248,7 +248,7 @@ private extension MessagesListViewController {
 
 // MARK: StatefulViewController
 extension MessagesListViewController: StatefulViewController {
-    func viewForState(_ state: ControllerState) -> UIView {
+    func viewForState(_ state: ViewControllerState) -> UIView {
         switch state {
         case .empty:
             return emptyStateView
@@ -301,7 +301,7 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
 
             markSeenMessage()
             
-            let newState: ControllerState = dataSource.messages.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
+            let newState: ViewControllerState = dataSource.messages.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
             setState(newState)
         case .failed(let error):
             print(error)

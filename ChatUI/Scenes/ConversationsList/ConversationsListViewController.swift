@@ -31,7 +31,7 @@ public class ConversationsListViewController: UIViewController {
         return view
     }()
     
-    var state: ControllerState?
+    var state: ViewControllerState?
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: self.traitCollection.userInterfaceStyle == .dark ? .white : .gray)
@@ -68,7 +68,7 @@ public class ConversationsListViewController: UIViewController {
 
 // MARK: StatefulViewController
 extension ConversationsListViewController: StatefulViewController {
-    func viewForState(_ state: ControllerState) -> UIView {
+    func viewForState(_ state: ViewControllerState) -> UIView {
         switch state {
         case .empty:
             return emptyStateView
@@ -138,7 +138,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
             tableView.reloadData()
             toggleTableViewLoader(visible: false)
             
-            let newState: ControllerState = state.items.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
+            let newState: ViewControllerState = state.items.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
             setState(newState)
         case let .failed(error):
             setState(.error(previous: self.state, error: error))

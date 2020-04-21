@@ -8,22 +8,22 @@
 
 import UIKit
 
-indirect enum ControllerState {
-    case loading(previous: ControllerState?)
-    case empty(previous: ControllerState?)
-    case loaded(previous: ControllerState?)
-    case error(previous: ControllerState?, error: Error?)
+indirect enum ViewControllerState {
+    case loading(previous: ViewControllerState?)
+    case empty(previous: ViewControllerState?)
+    case loaded(previous: ViewControllerState?)
+    case error(previous: ViewControllerState?, error: Error?)
 }
 
 protocol StatefulViewController where Self: UIViewController {
-    var state: ControllerState? { get set }
+    var state: ViewControllerState? { get set }
 
-    func viewForState(_ state: ControllerState) -> UIView
-    func setState(_ state: ControllerState)
+    func viewForState(_ state: ViewControllerState) -> UIView
+    func setState(_ state: ViewControllerState)
 }
 
 extension StatefulViewController {
-    func setState(_ state: ControllerState) {
+    func setState(_ state: ViewControllerState) {
         let stateView = viewForState(state)
         
         view.addSubview(stateView)
