@@ -45,8 +45,9 @@ public class UserManagerFirestore: UserManaging {
         let userIdsSet = Set(userIds)
 
         // compare to current set
-        if currentUserIds == userIdsSet {
-            completion(.success(users))
+        if userIdsSet.isSubset(of: currentUserIds) {
+            let subsetUsers = users.filter { userIdsSet.contains($0.id) }
+            completion(.success(subsetUsers))
         } else {
             // reset
             currentUserIds = userIdsSet

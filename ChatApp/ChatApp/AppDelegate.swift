@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ChatApp
 //
-//  Created by Jan Schwarz on 05/01/2020.
+//  Created by Jan on 21/04/2020.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let dependency = makeDependencies()
         coordinator = AppCoordinator(dependency: dependency)
-        
+
         setupBackgroundFetch()
         
         if #available(iOS 13.0, *) {} else {
@@ -86,9 +86,9 @@ extension AppDelegate {
         guard let sourceApplication = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String else {
             return false
         }
-        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
-            return true
-        }
+//        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
+//            return true
+//        }
         // other URL handling goes here.
         return false
     }
@@ -116,7 +116,9 @@ private extension AppDelegate {
                 conversation: "Conversation",
                 conversationsListEmptyTitle: "No matches yet",
                 conversationsListEmptySubtitle: "Finish quizzes and get more matches",
-                conversationsListEmptyActionTitle: "Take a Quiz"
+                conversationsListEmptyActionTitle: "Take a Quiz",
+                conversationsListNavigationTitle: "Conversations",
+                messageInputPlaceholder: "Message"
             ),
             images: AppStyleConfig.images
         )

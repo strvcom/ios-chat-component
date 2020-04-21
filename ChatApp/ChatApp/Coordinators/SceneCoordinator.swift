@@ -8,6 +8,7 @@
 
 import UIKit
 import Chat
+import ChatUI
 
 class SceneCoordinator {
     weak var parent: AppCoordinator?
@@ -91,5 +92,9 @@ private extension SceneCoordinator {
 extension SceneCoordinator: PumpkinPieChat.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
+    }
+    
+    func conversationDetailMoreButtonTapped(conversation: Conversation) {
+        print("Conversation detail more button tapped ID \(conversation.id)")
     }
 }

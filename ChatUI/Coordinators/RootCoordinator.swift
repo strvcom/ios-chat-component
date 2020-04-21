@@ -11,7 +11,7 @@ import UIKit
 class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
     private lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: makeConversationsListController())
+        return CustomNavigationController(rootViewController: makeConversationsListController())
     }()
     
     private let core: Core
@@ -39,6 +39,10 @@ extension RootCoordinator: RootCoordinating {
     func emptyStateAction() {
         delegate?.conversationsListEmptyListAction()
     }
+    
+    func conversationDetailMoreButtonAction(conversation: Conversation) {
+        delegate?.conversationDetailMoreButtonTapped(conversation: conversation)
+    }
 }
 
 // MARK: Controllers
@@ -54,11 +58,15 @@ private extension RootCoordinator {
     }
     
     func makeMessagesListController(conversation: Conversation) -> UIViewController {
-        MessagesListViewController(
+        let controller = MessagesListViewController(
             viewModel: MessagesListViewModel(
                 conversation: conversation,
                 core: core
             )
         )
+        
+        controller.coordinator = self
+        
+        return controller
     }
 }

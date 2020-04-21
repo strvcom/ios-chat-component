@@ -405,3 +405,64 @@ private extension ChatNetworkingFirestore {
         }
     }
 }
+
+// MARK: - ChatNetworkingWithTypingUsers
+extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
+    public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
+        let document = self.database
+        .collection(Constants.conversationsPath)
+        .document(conversation)
+        .collection(Constants.typingUsersPath)
+        .document(userId)
+
+        isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
+    }
+
+    private func setTypingUser(typingUserReference: DocumentReference) {
+        typingUserReference.setData([:]) { error in
+            if let err = error {
+                print("Error updating document: \(err)")
+            } else {
+                print("Typing user successfully set")
+            }
+        }
+    }
+
+    private func removeTypingUser(typingUserReference: DocumentReference) {
+        typingUserReference.delete { error in
+            if let err = error {
+                print("Error deleting document: \(err)")
+            } else {
+                print("Typing user successfully removed")
+            }
+        }
+    }
+
+    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
+
+        let query = self.database
+        .collection(Constants.conversationsPath)
+        .document(conversation)
+        .collection(Constants.typingUsersPath)
+
+        let listener = Listener.typingUsers(conversationId: conversation)
+        // to infer type from generic
+        let listenToCompletion: (Result<[EntityIdentifier], ChatError>) -> Void = { [weak self] result in
+
+            guard let self = self else {
+                return
+            }
+
+            switch result {
+            case .success(let userIds):
+                // Set members from previously downloaded users
+                self.userManager.users(userIds: userIds, completion: completion)
+            case .failure(let error):
+                print(error)
+                completion(.failure(error))
+            }
+        }
+
+        listenTo(query: query, listener: listener, completion: listenToCompletion)
+    }
+}
