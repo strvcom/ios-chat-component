@@ -10,13 +10,11 @@ import UIKit
 
 class ProgressAvatar: UIView {
     
-    private let imagePadding: CGFloat = 3
-    
-    var borderWidth: CGFloat = 2 {
-        didSet {
-            avatarImageView.layer.borderWidth = borderWidth
-        }
+    private var imagePadding: CGFloat {
+        borderWidth + 1
     }
+    
+    private var borderWidth: CGFloat = 2
     
     private var lineSublayer: CAShapeLayer?
     
@@ -34,11 +32,12 @@ class ProgressAvatar: UIView {
     
     func update(percentage: CGFloat, imageUrl: URL?, circleColor: UIColor) {
         lineSublayer?.removeFromSuperlayer()
-        
+
         lineSublayer = circle(
             fillPercentage: percentage,
             inside: frame,
-            color: circleColor
+            color: circleColor,
+            width: borderWidth
         )
         
         if let lineSublayer = lineSublayer {
@@ -50,6 +49,14 @@ class ProgressAvatar: UIView {
         } else {
             avatarImageView.image = nil
         }
+    }
+    
+    init(borderWidth: CGFloat = 3) {
+        self.borderWidth = borderWidth
+        
+        super.init(frame: .zero)
+        
+        setupUI()
     }
     
     required init?(coder: NSCoder) {

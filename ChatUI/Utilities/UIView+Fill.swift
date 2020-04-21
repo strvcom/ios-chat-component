@@ -50,4 +50,17 @@ extension UIView {
         }
     }
     
+    func setSize(width: CGFloat? = nil, height: CGFloat? = nil) {
+        if let width = width {
+            addConstraint(widthAnchor.constraint(equalToConstant: width))
+        }
+        
+        if let height = height {
+            addConstraint(heightAnchor.constraint(equalToConstant: height))
+        }
+    }
+    
+    func next(to view: UIView, spacing: CGFloat = 0) {
+        superview?.addConstraint(leadingAnchor.constraint(equalTo: view.trailingAnchor, constant: spacing))
+    }
 }

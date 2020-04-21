@@ -8,6 +8,7 @@
 
 import UIKit
 import Chat
+import ChatUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -64,5 +65,9 @@ private extension SceneDelegate {
 extension SceneDelegate: PumpkinPieChat.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
+    }
+    
+    func conversationDetailMoreButtonTapped(conversation: Conversation) {
+        print("Conversation detail more button tapped ID \(conversation.id)")
     }
 }

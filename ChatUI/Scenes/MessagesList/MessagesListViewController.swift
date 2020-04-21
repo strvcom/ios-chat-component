@@ -15,17 +15,18 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     
     private let dataSource = DataSource()
 
-    private var listener: ListenerIdentifier?
+    weak var coordinator: RootCoordinating?
+    
     private let viewModel: MessagesListViewModeling
 
-    private var loadMoreButtonVisible = true {
-        didSet {
-            loadMoreButtonVisible ? showLoadMoreButton() : hideLoadMoreButton()
-        }
-    }
+    // MARK: Constants
+    private let photoPickerIconSize = CGSize(width: 44, height: 40)
+    private let messageInsets = UIEdgeInsets(top: 10, left: 12, bottom: 6, right: 12)
+    private let sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    private let inputBarPadding = UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24)
+    private let inputBarContentPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
+    private let inputBarCornerRadius: CGFloat = 10
     
-    let photoPickerIconSize: CGFloat = 36
-
     init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
 
@@ -41,30 +42,6 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setup() {
-        view.backgroundColor = .white
-
-        setupInputBar()
-
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-
-        viewModel.load()
-    }
-
-    @objc
-    func loadMore() {
-        viewModel.loadMore()
-    }
-
-    func markSeenMessage() {
-        guard let lastMessage = self.dataSource.messages.last else {
-            return
-        }
-        viewModel.updateSeenMessage(lastMessage)
-    }
-
     // MARK: - UIImagePickerControllerDelegate
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
@@ -76,8 +53,19 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         
         viewModel.send(message: .image(image: image)) { _ in }
     }
+    
+    override public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        super.collectionView(collectionView, willDisplay: cell, forItemAt: indexPath)
+        
+        guard indexPath.section == 0 else {
+            return
+        }
+
+        viewModel.loadMore()
+    }
 }
 
+// MARK: DataSource
 extension MessagesListViewController {
     class DataSource: NSObject {
         var messages: [MessageKitType] = []
@@ -107,13 +95,31 @@ extension MessagesListViewController: MessagesDataSource {
 
         return NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
     }
+
+    public func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        20
+    }
 }
 
-extension MessagesListViewController: MessagesLayoutDelegate { }
+// MARK: MessagesLayoutDelegate
+extension MessagesListViewController: MessagesLayoutDelegate {}
 
 // MARK: - MessagesDisplayDelegate
 extension MessagesListViewController: MessagesDisplayDelegate {
-    
+
+    public func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        switch message.kind {
+        case .emoji, .photo:
+            return .clear
+        default:
+            return isFromCurrentSender(message: message) ? .outgoingMessageBackground : .incomingMessageBackground
+        }
+    }
+
+    public func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        avatarView.isHidden = true
+    }
+
     public func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         
         guard case let .photo(media) = message.kind, let imageUrl = media.url else {
@@ -139,24 +145,77 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
 // MARK: - Setup
 private extension MessagesListViewController {
+    func setup() {
+        view.backgroundColor = .chatBackground
+        
+        if let partner = viewModel.partner {
+            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
+        }
+        
+        let moreButtonImage: UIImage = .moreButton
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: moreButtonImage.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(didTapMoreButton)
+        )
+        
+        setupInputBar()
+        setupMessagesLayout()
+        
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        
+        viewModel.load()
+    }
+    
+    func setupMessagesLayout() {
+        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
+            return
+        }
+        
+        layout.headerReferenceSize = CGSize(width: messagesCollectionView.frame.size.width, height: 50)
+        
+        layout.setMessageIncomingAvatarSize(.zero)
+        layout.setMessageOutgoingAvatarSize(.zero)
+        layout.textMessageSizeCalculator.messageLabelFont = .messageContent
+        layout.textMessageSizeCalculator.incomingMessageLabelInsets = messageInsets
+        layout.textMessageSizeCalculator.outgoingMessageLabelInsets = messageInsets
+        layout.sectionInset = sectionInset
+    }
+    
     func setupInputBar() {
         messageInputBar.delegate = self
-        
+
         let item = InputBarButtonItem()
             .onTouchUpInside { [weak self] _ in
                 self?.displayImagePicker()
             }
+
+        item.setSize(photoPickerIconSize, animated: false)
         
-        item.setSize(CGSize(
-            width: photoPickerIconSize,
-            height: photoPickerIconSize
-        ), animated: false)
-        if #available(iOS 13.0, *) {
-            item.setImage(UIImage(systemName: "photo"), for: .normal)
-        }
+        item.setImage(.inputBarPhotoPickerIcon, for: .normal)
+
         item.imageView?.contentMode = .scaleAspectFit
-        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: photoPickerIconSize.width, animated: false)
         messageInputBar.setStackViewItems([item], forStack: .left, animated: false)
+
+        messageInputBar.separatorLine.isHidden = true
+        
+        messageInputBar.contentView.backgroundColor = .inputBackround
+        messageInputBar.contentView.layer.cornerRadius = inputBarCornerRadius
+        messageInputBar.middleContentViewPadding = inputBarContentPadding
+        messageInputBar.padding = inputBarPadding
+
+        messageInputBar.inputTextView.placeholderLabel.text = .messageInputPlaceholder
+        messageInputBar.inputTextView.placeholderLabel.font = .input
+        messageInputBar.inputTextView.placeholderLabel.textColor = .inputPlaceholder
+        messageInputBar.inputTextView.textColor = .inputText
+        
+        messageInputBar.sendButton.setTitleColor(.inputSendButton, for: .normal)
+        messageInputBar.sendButton.setTitleColor(.clear, for: .disabled)
+        messageInputBar.sendButton.titleLabel?.font = .inputSendButton
     }
     
     func displayImagePicker() {
@@ -169,13 +228,15 @@ private extension MessagesListViewController {
 
 // MARK: - Private methods
 private extension MessagesListViewController {
-    func showLoadMoreButton() {
-        let item = UIBarButtonItem(title: "Load more", style: .plain, target: self, action: #selector(loadMore))
-        navigationItem.setRightBarButton(item, animated: false)
+    func markSeenMessage() {
+        guard let lastMessage = self.dataSource.messages.last else {
+            return
+        }
+        viewModel.updateSeenMessage(lastMessage)
     }
-    
-    func hideLoadMoreButton() {
-        navigationItem.rightBarButtonItems = []
+
+    @objc func didTapMoreButton() {
+        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
     }
 }
 
@@ -187,11 +248,20 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .initial:
             break
         case .ready(let data):
-            loadMoreButtonVisible = !data.reachedEnd
+            
+            // Scroll to the bottom on first load
+            if dataSource.messages.isEmpty {
+                messagesCollectionView.scrollToBottom()
+            }
             
             dataSource.messages = data.items
-            markSeenMessage()
+            
+            let oldOffset = messagesCollectionView.contentSize.height - messagesCollectionView.contentOffset.y
             messagesCollectionView.reloadData()
+            messagesCollectionView.layoutIfNeeded()
+            messagesCollectionView.contentOffset = CGPoint(x: 0, y: messagesCollectionView.contentSize.height - oldOffset)
+
+            markSeenMessage()
         case .failed(let error):
             print(error)
         case .loading:
