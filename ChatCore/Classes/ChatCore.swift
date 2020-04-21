@@ -209,7 +209,7 @@ extension ChatCore {
         }
 
         // avoid updating same last seen message
-        guard existingConversation.lastMessage.id != message.id else {
+        guard existingConversation.lastMessage?.id != message.id else {
             return
         }
 
@@ -353,6 +353,49 @@ extension ChatCore {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         networking.loadMoreConversations()
+    }
+}
+
+// MARK: - ChatCoreServicingWithTypingUsers
+extension ChatCore: ChatCoreServicingWithTypingUsers where
+    // Typing users feature requirements
+    Networking: ChatNetworkingWithTypingUsers,
+    Networking.TU: ChatUIConvertible,
+    Networking.TU.ChatUIModel == Models.USRUI {
+
+    open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.networking.setUserTyping(userId: self.currentUser.id, isTyping: isTyping, in: conversation)
+        }
+    }
+
+    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        let listener = Listener.typingUsers(conversationId: conversation)
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
+
+            self.networking.listenToTypingUsers(in: conversation) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
+                switch result {
+                case .success(let users):
+                    let converted = users.compactMap({ $0.uiModel })
+                    completion(.success(converted))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
+        return listener
     }
 }
 
