@@ -9,7 +9,7 @@
 import Foundation
 
 /// Minimal representation of a message used by the core.
-public protocol MessageRepresenting: ObjectIdentifiable {
+public protocol MessageRepresenting: EntityIdentifiable {
     
     /// ID of the sender of this message
     var userId: EntityIdentifier { get }

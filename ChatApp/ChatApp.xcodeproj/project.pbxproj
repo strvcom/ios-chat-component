@@ -117,7 +117,7 @@
 		C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */; };
 		C11E9E3D23EDCD1E005E10A1 /* MessageRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */; };
 		C11E9E3E23EDCD1E005E10A1 /* ChatUIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */; };
-		C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */; };
+		C11E9E3F23EDCD1E005E10A1 /* EntityIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2E23EDCD1E005E10A1 /* EntityIdentifiable.swift */; };
 		C11E9E4023EDCD1E005E10A1 /* ChatUIServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */; };
 		C11E9E4123EDCD1E005E10A1 /* ChatNetworkServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */; };
 		C11E9E4223EDCD1E005E10A1 /* ChatCoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */; };
@@ -352,7 +352,7 @@
 		C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecifying.swift; sourceTree = "<group>"; };
 		C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageRepresenting.swift; sourceTree = "<group>"; };
 		C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIModels.swift; sourceTree = "<group>"; };
-		C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectIdentifiable.swift; sourceTree = "<group>"; };
+		C11E9E2E23EDCD1E005E10A1 /* EntityIdentifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityIdentifiable.swift; sourceTree = "<group>"; };
 		C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUIServicing.swift; sourceTree = "<group>"; };
 		C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatNetworkServicing.swift; sourceTree = "<group>"; };
 		C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCoreServicing.swift; sourceTree = "<group>"; };
@@ -795,7 +795,7 @@
 				84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */,
 				842C71C32426B94F0079145A /* MessageConvertible.swift */,
 				C11E9E2D23EDCD1E005E10A1 /* ChatUIModels.swift */,
-				C11E9E2E23EDCD1E005E10A1 /* ObjectIdentifiable.swift */,
+				C11E9E2E23EDCD1E005E10A1 /* EntityIdentifiable.swift */,
 				C11E9E2F23EDCD1E005E10A1 /* ChatUIServicing.swift */,
 				C11E9E3023EDCD1E005E10A1 /* ChatNetworkServicing.swift */,
 				C11E9E3123EDCD1E005E10A1 /* ChatCoreServicing.swift */,
@@ -1430,7 +1430,7 @@
 				842C71C42426B94F0079145A /* MessageConvertible.swift in Sources */,
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
 				C11E9E3823EDCD1E005E10A1 /* EntityIdentifier.swift in Sources */,
-				C11E9E3F23EDCD1E005E10A1 /* ObjectIdentifiable.swift in Sources */,
+				C11E9E3F23EDCD1E005E10A1 /* EntityIdentifiable.swift in Sources */,
 				842C71C62426C7230079145A /* MessageState.swift in Sources */,
 				84BE30CE2429326D00DA8664 /* ClosureThrottler.swift in Sources */,
 				8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */,
