@@ -21,7 +21,7 @@ public class ConversationsListViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var emptyStateView: UIView = {
+    private lazy var emptyStateView: EmptyConversationsList = {
         let view = EmptyConversationsList.nibInstance
         
         view.buttonAction = { [weak self] in
