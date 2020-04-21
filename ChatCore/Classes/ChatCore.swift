@@ -370,7 +370,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
             guard let self = self else {
                 return
             }
-            self.networking.setUserTyping(userId: self.currentUser.id, in: conversation, isTyping: isTyping)
+            self.networking.setUserTyping(userId: self.currentUser.id, isTyping: isTyping, in: conversation)
         }
     }
 

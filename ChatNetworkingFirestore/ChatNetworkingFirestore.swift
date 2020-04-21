@@ -408,28 +408,32 @@ private extension ChatNetworkingFirestore {
 
 // MARK: - ChatNetworkingWithTypingUsers
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
-    public func setUserTyping(userId: EntityIdentifier, in conversation: EntityIdentifier, isTyping: Bool) {
+    public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
         .collection(Constants.conversationsPath)
         .document(conversation)
         .collection(Constants.typingUsersPath)
         .document(userId)
 
-        if isTyping {
-            document.setData([:]) { error in
-                if let err = error {
-                    print("Error updating document: \(err)")
-                } else {
-                    print("Typing user successfully set")
-                }
+        isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
+    }
+
+    private func setTypingUser(typingUserReference: DocumentReference) {
+        typingUserReference.setData([:]) { error in
+            if let err = error {
+                print("Error updating document: \(err)")
+            } else {
+                print("Typing user successfully set")
             }
-        } else {
-            document.delete { error in
-                if let err = error {
-                    print("Error deleting document: \(err)")
-                } else {
-                    print("Typing user successfully removed")
-                }
+        }
+    }
+
+    private func removeTypingUser(typingUserReference: DocumentReference) {
+        typingUserReference.delete { error in
+            if let err = error {
+                print("Error deleting document: \(err)")
+            } else {
+                print("Typing user successfully removed")
             }
         }
     }

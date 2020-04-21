@@ -20,7 +20,7 @@ public protocol ChatNetworkingWithTypingUsers {
     ///   - userId: User id
     ///   - conversation: Conversation id
     ///   - isTyping: flag if current user is / isn't typing
-    func setUserTyping(userId: EntityIdentifier, in conversation: EntityIdentifier, isTyping: Bool)
+    func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier)
 
     /// Creates a listener to typing users. First set of data is received immediately by the completion callback.
     ///
