@@ -11,4 +11,5 @@ import Foundation
 protocol RootCoordinating: AnyObject {
     func navigate(to conversation: Conversation)
     func emptyStateAction()
+    func conversationDetailMoreButtonAction(conversation: Conversation)
 }
