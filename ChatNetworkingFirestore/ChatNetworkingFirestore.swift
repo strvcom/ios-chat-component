@@ -12,8 +12,6 @@ import FirebaseFirestore
 import FirebaseCore
 
 public class ChatNetworkingFirestore: ChatNetworkServicing {
-    public typealias U = UserFirestore
-
     let database: Firestore
 
     // user management

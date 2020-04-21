@@ -16,13 +16,11 @@ public protocol DefaultChatSpecifying: ChatSpecifying where
     // of ChatNetworkServicing have to conform to `ChatUIConvertible`
     Networking.C: ChatUIConvertible,
     Networking.M: ChatUIConvertible,
-    Networking.U: ChatUIConvertible,
     Networking.MS: ChatUIConvertible,
     
     // Specify that all UI and networking models are inter-convertible
     UIModels.CUI == Networking.C.ChatUIModel,
     UIModels.MUI == Networking.M.ChatUIModel,
-    UIModels.USRUI == Networking.U.ChatUIModel,
     UIModels.MSUI == Networking.MS.ChatUIModel,
     
     // Extra requirements on models for this core implementation
