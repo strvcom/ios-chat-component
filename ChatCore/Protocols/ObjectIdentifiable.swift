@@ -9,6 +9,8 @@
 import Foundation
 
 /// Used to identify any object
-public protocol ObjectIdentifiable: Identifiable {
+///
+/// Discussion: This protocol originally inheritted from `Identifiable` but it caused runtime `BAD_ACCESS` errors on iOS 12
+public protocol ObjectIdentifiable {
     var id: EntityIdentifier { get }
 }
