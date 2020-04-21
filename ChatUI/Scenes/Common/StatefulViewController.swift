@@ -28,7 +28,7 @@ extension StatefulViewController {
         
         view.addSubview(stateView)
         
-        stateView.centerInSuperview()
+        stateView.pinToSuperview()
 
         switch state {
         case let .loaded(previous), let .loading(previous), let .empty(previous), let .error(previous, _):
