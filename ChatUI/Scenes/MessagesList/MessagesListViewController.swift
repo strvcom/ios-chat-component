@@ -27,6 +27,26 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
     private let inputBarContentPadding = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 8)
     private let inputBarCornerRadius: CGFloat = 10
     
+    var state: ControllerState?
+    
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: self.traitCollection.userInterfaceStyle == .dark ? .white : .gray)
+        indicator.startAnimating()
+        return indicator
+    }()
+
+    private lazy var emptyStateView: EmptyMessagesList = {
+        let view = EmptyMessagesList.nibInstance
+        
+        if let partnerName = viewModel.partner?.displayName {
+            view.title = .conversationDetailEmptyTitle(name: partnerName)
+        }
+        
+        view.subtitle = .conversationDetailEmptySubtitle
+        
+        return view
+    }()
+
     init(viewModel: MessagesListViewModeling) {
         self.viewModel = viewModel
 
@@ -226,6 +246,24 @@ private extension MessagesListViewController {
     }
 }
 
+// MARK: StatefulViewController
+extension MessagesListViewController: StatefulViewController {
+    func viewForState(_ state: ControllerState) -> UIView {
+        switch state {
+        case .empty:
+            return emptyStateView
+        case .loading:
+            return loadingIndicator
+        case .loaded:
+            return messagesCollectionView
+        case .error(_, let error):
+            let errorLabel = UILabel()
+            errorLabel.text = error?.localizedDescription ?? "Unknown error"
+            return errorLabel
+        }
+    }
+}
+
 // MARK: - Private methods
 private extension MessagesListViewController {
     func markSeenMessage() {
@@ -262,10 +300,14 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
             messagesCollectionView.contentOffset = CGPoint(x: 0, y: messagesCollectionView.contentSize.height - oldOffset)
 
             markSeenMessage()
+            
+            let newState: ControllerState = dataSource.messages.isEmpty ? .empty(previous: self.state) : .loaded(previous: self.state)
+            setState(newState)
         case .failed(let error):
             print(error)
         case .loading:
             dataSource.messages = []
+            setState(.loading(previous: self.state))
             messagesCollectionView.reloadData()
         case .loadingMore:
             break
