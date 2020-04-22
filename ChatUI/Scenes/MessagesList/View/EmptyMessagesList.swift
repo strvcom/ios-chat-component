@@ -36,7 +36,7 @@ class EmptyMessagesList: UIView {
     }
     
     func configure(with viewModel: EmptyMessagesListViewModel) {
-        titleLabel?.attributedText = NSAttributedString(
+        titleLabel.attributedText = NSAttributedString(
             string: viewModel.title,
             attributes: [
                 .paragraphStyle: titleParagraphStyle,
@@ -45,6 +45,6 @@ class EmptyMessagesList: UIView {
             ]
         )
         
-        subtitleLabel?.text = viewModel.subtitle
+        subtitleLabel.text = viewModel.subtitle
     }
 }
