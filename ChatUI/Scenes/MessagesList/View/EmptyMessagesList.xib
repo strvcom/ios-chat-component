@@ -11,20 +11,23 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EmptyMessagesList" customModule="ChatUI" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="456" height="196"/>
+            <rect key="frame" x="0.0" y="0.0" width="469" height="400"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ECL-RD-sgL">
-                    <rect key="frame" x="0.0" y="79" width="456" height="48.5"/>
+                    <rect key="frame" x="0.0" y="180.5" width="469" height="49.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Empty title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zrN-p5-8Uh">
-                            <rect key="frame" x="50" y="0.0" width="356" height="29"/>
+                            <rect key="frame" x="50" y="0.0" width="369" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="rch-gC-liw"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="24"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Empty subtitle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjG-BB-Cvw">
-                            <rect key="frame" x="50" y="29" width="356" height="19.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Empty subtitle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjG-BB-Cvw">
+                            <rect key="frame" x="50" y="30" width="369" height="19.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -37,7 +40,7 @@
                         <constraint firstAttribute="trailing" secondItem="zrN-p5-8Uh" secondAttribute="trailing" constant="50" id="V6k-8m-tTe"/>
                         <constraint firstItem="zrN-p5-8Uh" firstAttribute="leading" secondItem="ECL-RD-sgL" secondAttribute="leading" constant="50" id="YxO-D5-vwH"/>
                         <constraint firstAttribute="trailing" secondItem="qjG-BB-Cvw" secondAttribute="trailing" constant="50" id="iSC-va-D35"/>
-                        <constraint firstItem="zrN-p5-8Uh" firstAttribute="top" secondItem="ECL-RD-sgL" secondAttribute="top" id="qia-Dn-Myc"/>
+                        <constraint firstItem="zrN-p5-8Uh" firstAttribute="top" secondItem="ECL-RD-sgL" secondAttribute="top" id="ifx-qG-DeE"/>
                         <constraint firstItem="qjG-BB-Cvw" firstAttribute="leading" secondItem="ECL-RD-sgL" secondAttribute="leading" constant="50" id="vgm-7t-RvB"/>
                     </constraints>
                 </view>
@@ -45,6 +48,8 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="ECL-RD-sgL" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="MJd-Pi-7YC"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ECL-RD-sgL" secondAttribute="bottom" constant="50" id="NXq-3g-Gqj"/>
+                <constraint firstItem="ECL-RD-sgL" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="top" constant="50" id="QJ6-hr-aaB"/>
                 <constraint firstItem="ECL-RD-sgL" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Uw6-PZ-uQQ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ECL-RD-sgL" secondAttribute="trailing" id="bl1-qv-Axe"/>
                 <constraint firstItem="ECL-RD-sgL" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="rfS-mr-rSy"/>
@@ -57,7 +62,7 @@
                 <outlet property="subtitleLabel" destination="qjG-BB-Cvw" id="vV0-YA-z1k"/>
                 <outlet property="titleLabel" destination="zrN-p5-8Uh" id="Yt3-wB-ANZ"/>
             </connections>
-            <point key="canvasLocation" x="168.11594202898553" y="-81.026785714285708"/>
+            <point key="canvasLocation" x="177.536231884058" y="-12.723214285714285"/>
         </view>
     </objects>
 </document>

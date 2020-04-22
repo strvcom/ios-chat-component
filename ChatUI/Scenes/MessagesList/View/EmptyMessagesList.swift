@@ -22,6 +22,7 @@ class EmptyMessagesList: UIView {
         
         paragraphStyle.maximumLineHeight = titleLineHeight
         paragraphStyle.alignment = .center
+        paragraphStyle.lineBreakMode = .byTruncatingTail
         
         return paragraphStyle
     }()
