@@ -15,7 +15,7 @@ final class SceneCoordinator {
     let dependency: AppDependency
     let window: UIWindow
     
-    var interface: PumpkinPieChat.Interface?
+    private(set) var interface: PumpkinPieChat.Interface?
     
     init(parent: AppCoordinator, dependency: AppDependency, window: UIWindow) {
         self.parent = parent
@@ -89,6 +89,7 @@ private extension SceneCoordinator {
     }
 }
 
+// MARK: Chat UI Delegate
 extension SceneCoordinator: PumpkinPieChat.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
