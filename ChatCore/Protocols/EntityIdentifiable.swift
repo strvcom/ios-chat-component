@@ -1,5 +1,5 @@
 //
-//  ChatIdentifiable.swift
+//  EntityIdentifiable.swift
 //  ChatCore
 //
 //  Created by Jan Schwarz on 05/01/2020.
@@ -9,6 +9,8 @@
 import Foundation
 
 /// Used to identify any object
-public protocol ObjectIdentifiable: Identifiable {
+///
+/// Discussion: This protocol originally inheritted from `Identifiable` but it caused runtime `BAD_ACCESS` errors on iOS 12
+public protocol EntityIdentifiable {
     var id: EntityIdentifier { get }
 }

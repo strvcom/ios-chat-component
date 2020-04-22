@@ -9,7 +9,7 @@
 import Foundation
 
 /// Minimal representation of a user used by the core.
-public protocol UserRepresenting: ObjectIdentifiable {
+public protocol UserRepresenting: EntityIdentifiable {
     /// Username
     var name: String { get }
     

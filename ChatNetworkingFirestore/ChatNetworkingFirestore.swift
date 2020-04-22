@@ -20,7 +20,7 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    private let userManager: UserManager
+    private let userManager: UserManagerFirestore
 
     public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagerFirestore) {
 

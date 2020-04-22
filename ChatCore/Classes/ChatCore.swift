@@ -17,7 +17,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Networking.C: ChatUIConvertible,
     Networking.M: ChatUIConvertible,
     Networking.MS: ChatUIConvertible,
-    Networking.U: ChatUIConvertible,
 
     // Extra requirements on models for this core implementation
     // supports message caching, message states, temp messages when sending
@@ -27,7 +26,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     Models.MUI.MessageSpecification == Models.MSUI,
 
     // Specify that all UI and networking models are inter-convertible
-    Networking.U.ChatUIModel == Models.USRUI,
     Networking.C.ChatUIModel == Models.CUI,
     Networking.M.ChatUIModel == Models.MUI,
     Networking.MS.ChatUIModel == Models.MSUI {

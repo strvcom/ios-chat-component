@@ -29,8 +29,3 @@ public protocol ChatNetworkingWithTypingUsers {
     ///   - completion: Called upon receiving data (or encountering an error)
     func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TU], ChatError>) -> Void)
 }
-
-/// Default extension to insist on proper user type when extending `ChatNetworkServicing`
-public extension ChatNetworkServicing where Self: ChatNetworkingWithTypingUsers {
-    typealias TU = U
-}
