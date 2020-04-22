@@ -10,7 +10,7 @@ import UIKit
 import Chat
 import ChatUI
 
-class SceneCoordinator {
+final class SceneCoordinator {
     weak var parent: AppCoordinator?
     let dependency: AppDependency
     let window: UIWindow

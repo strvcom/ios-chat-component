@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppCoordinator {
+final class AppCoordinator {
     let dependency: AppDependency
     
     private var childCoordinators: [SceneCoordinator] = []
