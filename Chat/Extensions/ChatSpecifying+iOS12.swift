@@ -10,8 +10,7 @@ import Foundation
 
 @available(iOS, deprecated: 13.0)
 public extension ChatSpecifying where Self: AnyObject {
-    /// Get UI instance identified by a given scene
-    /// - Parameter scene: Instance of `UIScene` that requests chat UI interface
+    /// Get default unidentified UI instance
     /// - Returns: Chat UI interface
     func interface() -> Interface {
         return interface(with: ObjectIdentifier(self))
