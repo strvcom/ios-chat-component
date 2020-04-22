@@ -36,4 +36,12 @@ extension String {
     static var messageInputPlaceholder: String {
         UIConfig.current.strings.messageInputPlaceholder
     }
+    
+    static var conversationDetailEmptySubtitle: String {
+        UIConfig.current.strings.conversationDetailEmptySubtitle
+    }
+
+    static func conversationDetailEmptyTitle(name: String) -> String {
+        UIConfig.current.strings.conversationDetailEmptyTitle.replacingOccurrences(of: "%s", with: name)
+    }
 }

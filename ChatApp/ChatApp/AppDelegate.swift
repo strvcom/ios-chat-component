@@ -43,7 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 conversationsListEmptySubtitle: "Finish quizzes and get more matches",
                 conversationsListEmptyActionTitle: "Take a Quiz",
                 conversationsListNavigationTitle: "Conversations",
-                messageInputPlaceholder: "Message"
+                messageInputPlaceholder: "Message",
+                conversationDetailEmptyTitle: "Say hello\nto %s",
+                conversationDetailEmptySubtitle: "Say \"Hello\" and break the ice"
             ),
             images: AppStyleConfig.images
         )

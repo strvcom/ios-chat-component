@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		040A2D70244DCCE700BA9D9F /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */; };
+		04124A5024483969006475ED /* EmptyMessagesList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04124A4F24483969006475ED /* EmptyMessagesList.xib */; };
+		04124A5224483975006475ED /* EmptyMessagesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04124A5124483975006475ED /* EmptyMessagesList.swift */; };
+		04124A5424484BEC006475ED /* StatefulViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04124A5324484BEC006475ED /* StatefulViewController.swift */; };
 		04383896242F841900491FC9 /* ChatUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04383895242F841900491FC9 /* ChatUIDelegate.swift */; };
 		045A6B162424E4E00055B5E1 /* Catamaran-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */; };
 		045A6B172424E4E00055B5E1 /* Catamaran-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04C0ECCF24201B82008A5ADB /* Catamaran-Black.ttf */; };
@@ -39,6 +42,7 @@
 		04957CC923F3760000AD595B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957CC723F375C500AD595B /* Constants.swift */; };
 		049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049862C523FEEBA200F7EFD6 /* DataManager.swift */; };
 		049862C823FEEBEF00F7EFD6 /* DataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CC14123FE9AE30027DD11 /* DataPayload.swift */; };
+		04BD15AD244F65A400EDC62E /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BD15AC244F65A300EDC62E /* ErrorView.swift */; };
 		04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */; };
 		04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */; };
 		04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */; };
@@ -238,6 +242,9 @@
 
 /* Begin PBXFileReference section */
 		040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
+		04124A4F24483969006475ED /* EmptyMessagesList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyMessagesList.xib; sourceTree = "<group>"; };
+		04124A5124483975006475ED /* EmptyMessagesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMessagesList.swift; sourceTree = "<group>"; };
+		04124A5324484BEC006475ED /* StatefulViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulViewController.swift; sourceTree = "<group>"; };
 		04383895242F841900491FC9 /* ChatUIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIDelegate.swift; sourceTree = "<group>"; };
 		043CC14123FE9AE30027DD11 /* DataPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPayload.swift; sourceTree = "<group>"; };
 		045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+ChatFonts.swift"; sourceTree = "<group>"; };
@@ -260,6 +267,7 @@
 		04957CC723F375C500AD595B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		049862C523FEEBA200F7EFD6 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		04B28B8E24212A5E006B1B06 /* UIColor+RGB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGB.swift"; sourceTree = "<group>"; };
+		04BD15AC244F65A300EDC62E /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyConversationsList.xib; sourceTree = "<group>"; };
 		04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyConversationsList.swift; sourceTree = "<group>"; };
 		04C0ECCE24201B82008A5ADB /* Catamaran-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -439,6 +447,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04124A4C2448390E006475ED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				04124A4F24483969006475ED /* EmptyMessagesList.xib */,
+				04124A5124483975006475ED /* EmptyMessagesList.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		045A6B032424DD200055B5E1 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
@@ -455,6 +472,7 @@
 				0471CBCB24474981006B8212 /* ConversationDetailNavigationTitle.swift */,
 				045A6B3F242A1B860055B5E1 /* ProgressAvatar.swift */,
 				040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */,
+				04BD15AC244F65A300EDC62E /* ErrorView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -492,6 +510,7 @@
 		0490E76F241EB730008C4412 /* MessagesList */ = {
 			isa = PBXGroup;
 			children = (
+				04124A4C2448390E006475ED /* View */,
 				048ED59324339BD500F9C7BA /* MessagesListViewController.swift */,
 				048ED59224339B0300F9C7BA /* ViewModel */,
 			);
@@ -545,6 +564,7 @@
 			children = (
 				04E5CEB724365FC800C9532F /* Data */,
 				045A6B3E242A1B650055B5E1 /* View */,
+				04124A5324484BEC006475ED /* StatefulViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1098,6 +1118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */,
+				04124A5024483969006475ED /* EmptyMessagesList.xib in Resources */,
 				0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1315,6 +1336,7 @@
 				04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */,
 				C11E9E5B23EDCD34005E10A1 /* Conversation.swift in Sources */,
 				04E5CEB024365F3E00C9532F /* MessagesListViewModeling.swift in Sources */,
+				04124A5224483975006475ED /* EmptyMessagesList.swift in Sources */,
 				C11E9E5E23EDCD34005E10A1 /* User.swift in Sources */,
 				04383896242F841900491FC9 /* ChatUIDelegate.swift in Sources */,
 				04E5CEAC2435E62600C9532F /* MessagesListViewModel.swift in Sources */,
@@ -1336,8 +1358,10 @@
 				C11E9E6423EDCD34005E10A1 /* ChatModelsUI.swift in Sources */,
 				C11E9E5F23EDCD34005E10A1 /* ImageItem.swift in Sources */,
 				045A6B34242905680055B5E1 /* RootCoordinating.swift in Sources */,
+				04124A5424484BEC006475ED /* StatefulViewController.swift in Sources */,
 				04E5CEB624365FA300C9532F /* ListState.swift in Sources */,
 				C11E9E5C23EDCD34005E10A1 /* MessageSpecification.swift in Sources */,
+				04BD15AD244F65A400EDC62E /* ErrorView.swift in Sources */,
 				0490E771241EB778008C4412 /* ConversationsListViewModel.swift in Sources */,
 				045A6B2724250A180055B5E1 /* Coordinating.swift in Sources */,
 				C11E9E6123EDCD34005E10A1 /* UIImageView+Network.swift in Sources */,

@@ -97,4 +97,12 @@ extension UIColor {
     static var navigationTitle: UIColor {
         UIConfig.current.colors.navigationTitle
     }
+    
+    static var conversationDetailEmptyTitle: UIColor {
+        UIConfig.current.colors.text
+    }
+    
+    static var conversationDetailEmptySubtitle: UIColor {
+        UIConfig.current.colors.lightText
+    }
 }
