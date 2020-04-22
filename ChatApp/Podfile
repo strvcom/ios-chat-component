@@ -21,6 +21,7 @@ def ui_pods
 end
 
 target 'ChatApp' do
+  networking_pods
   pod 'SwiftLint'
 end
 
