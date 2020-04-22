@@ -15,7 +15,6 @@ import Chat
 class AppDelegate: UIResponder, UIApplicationDelegate {
     // iOS 12 properties
     var window: UIWindow?
-    var sceneCoordinator: SceneCoordinator?
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var coordinator: AppCoordinator!
@@ -41,9 +40,9 @@ private extension AppDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         
         self.window = window
-        self.sceneCoordinator = coordinator.startScene(with: window)
         
-        self.sceneCoordinator?.setRootViewController()
+        let sceneCoordinator = coordinator.startScene(with: window)
+        sceneCoordinator.setRootViewController()
         
         self.window?.makeKeyAndVisible()
     }
