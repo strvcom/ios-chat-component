@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Chat
-import Firebase
 
 class AppCoordinator {
     let dependency: AppDependency
