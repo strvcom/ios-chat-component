@@ -15,16 +15,16 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ECL-RD-sgL">
-                    <rect key="frame" x="123" y="79" width="210" height="48.5"/>
+                    <rect key="frame" x="0.0" y="79" width="456" height="48.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Empty title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zrN-p5-8Uh">
-                            <rect key="frame" x="50" y="0.0" width="110" height="29"/>
+                            <rect key="frame" x="50" y="0.0" width="356" height="29"/>
                             <fontDescription key="fontDescription" type="system" pointSize="24"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Empty subtitle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjG-BB-Cvw">
-                            <rect key="frame" x="50" y="29" width="110" height="19.5"/>
+                            <rect key="frame" x="50" y="29" width="356" height="19.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -44,7 +44,9 @@
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
+                <constraint firstItem="ECL-RD-sgL" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="MJd-Pi-7YC"/>
                 <constraint firstItem="ECL-RD-sgL" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Uw6-PZ-uQQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ECL-RD-sgL" secondAttribute="trailing" id="bl1-qv-Axe"/>
                 <constraint firstItem="ECL-RD-sgL" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="rfS-mr-rSy"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
