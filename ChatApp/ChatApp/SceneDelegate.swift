@@ -15,7 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var coordinator: SceneCoordinator?
     
     var appCoordinator: AppCoordinator {
-        (UIApplication.shared.delegate as? AppDelegate)!.coordinator
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Can't get reference to application delegate")
+        }
+        
+        return appDelegate.coordinator
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
