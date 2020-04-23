@@ -146,7 +146,9 @@ public class UIConfig {
         let conversationsListEmptyActionTitle: String
         let conversationsListNavigationTitle: String
         let messageInputPlaceholder: String
-
+        let conversationDetailEmptyTitle: String
+        let conversationDetailEmptySubtitle: String
+        
         public init(
             newConversation: String,
             conversation: String,
@@ -154,7 +156,9 @@ public class UIConfig {
             conversationsListEmptySubtitle: String,
             conversationsListEmptyActionTitle: String,
             conversationsListNavigationTitle: String,
-            messageInputPlaceholder: String
+            messageInputPlaceholder: String,
+            conversationDetailEmptyTitle: String,
+            conversationDetailEmptySubtitle: String
         ) {
             self.newConversation = newConversation
             self.conversation = conversation
@@ -163,6 +167,8 @@ public class UIConfig {
             self.conversationsListEmptyActionTitle = conversationsListEmptyActionTitle
             self.conversationsListNavigationTitle = conversationsListNavigationTitle
             self.messageInputPlaceholder = messageInputPlaceholder
+            self.conversationDetailEmptyTitle = conversationDetailEmptyTitle
+            self.conversationDetailEmptySubtitle = conversationDetailEmptySubtitle
         }
     }
     
@@ -234,7 +240,9 @@ public class UIConfig {
             conversationsListEmptySubtitle: missingString,
             conversationsListEmptyActionTitle: missingString,
             conversationsListNavigationTitle: missingString,
-            messageInputPlaceholder: missingString
+            messageInputPlaceholder: missingString,
+            conversationDetailEmptyTitle: missingString,
+            conversationDetailEmptySubtitle: missingString
         ),
         images: Images(
             conversationsListEmptyIcon: UIImage(),

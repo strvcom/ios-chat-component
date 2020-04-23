@@ -52,4 +52,12 @@ extension UIFont {
     static var navigationTitle: UIFont {
         UIConfig.current.fonts.headline4
     }
+    
+    static var conversationDetailEmptyTitle: UIFont {
+        UIConfig.current.fonts.headline2
+    }
+    
+    static var conversationDetailEmptySubtitle: UIFont {
+        UIConfig.current.fonts.body
+    }
 }

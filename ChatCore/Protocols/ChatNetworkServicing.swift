@@ -17,11 +17,10 @@ public protocol ChatNetworkServicing {
 
     // Specific conversation type
     associatedtype C: ConversationRepresenting
+    // Specific message type
+    associatedtype M where M == C.Message
     // Message description used for sending a message
     associatedtype MS: MessageSpecifying
-    
-    typealias M = C.Message
-    typealias U = C.User
 
     init(config: Config, userManager: UserManager)
 

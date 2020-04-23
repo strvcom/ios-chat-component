@@ -9,7 +9,7 @@
 import Foundation
 
 /// Minimal representation of a conversation used by the core.
-public protocol ConversationRepresenting: ObjectIdentifiable {
+public protocol ConversationRepresenting: EntityIdentifiable {
     associatedtype Message: MessageRepresenting
     associatedtype User: UserRepresenting
     
