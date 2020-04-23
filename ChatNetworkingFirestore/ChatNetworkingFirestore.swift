@@ -94,7 +94,7 @@ public extension ChatNetworkingFirestore {
             .collection(Constants.conversationsPath)
             .document(conversation)
 
-        reference.updateData([Constants.Conversation.lastMessageAttributeName: message ?? [:]]) { error in
+        reference.updateData([Constants.Conversation.lastMessageAttributeName: message ?? FieldValue.delete]) { error in
             if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
