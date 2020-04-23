@@ -223,7 +223,9 @@ public extension ChatNetworkingFirestore {
     }
 
     private func lastMessage(from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
-       let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 1)
+        
+        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 1)
+        
         lastMessageQuery.getDocuments { (snapshot, error) in
             if let error = error {
                 return completion(.failure(.networking(error: error)))
