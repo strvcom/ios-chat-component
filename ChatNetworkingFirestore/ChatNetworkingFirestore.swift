@@ -22,6 +22,9 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
     private let userManager: UserManagerFirestore
 
+    // dedicated thread queue
+    private let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .background)
+
     public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagerFirestore) {
 
         // setup from config
@@ -65,26 +68,32 @@ public extension ChatNetworkingFirestore {
 public extension ChatNetworkingFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
 
-        var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+        networkingQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
 
-        var newJson: [String: Any] = [:]
+            var conversation = conversation
+            conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: self.currentUserId)
 
-        for item in conversation.seen {
-            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
-            newJson[item.key] = informationJson
-        }
+            var newJson: [String: Any] = [:]
 
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation.id)
+            for item in conversation.seen {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
 
-        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-            if let err = err {
-                print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
+            let reference = self.database
+                .collection(Constants.conversationsPath)
+                .document(conversation.id)
+
+            reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                }
             }
         }
     }
@@ -108,37 +117,42 @@ public extension ChatNetworkingFirestore {
 public extension ChatNetworkingFirestore {
     func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
 
-        prepareMessageData(message: message) { [weak self] result in
-            guard let self = self, case let .success(data) = result else {
-                if case let .failure(error) = result {
-                    print("Error while preparing message data \(error)")
-                    completion(.failure(error))
-                }
-
+        networkingQueue.async { [weak self] in
+            guard let self = self else {
                 return
             }
-
-            self.storeMessage(in: conversation, messageData: data) { result in
-                guard case let .success(messageReference) = result else {
+            self.prepareMessageData(message: message) { result in
+                guard case let .success(data) = result else {
                     if case let .failure(error) = result {
-                        print("Error while storing message \(error)")
+                        print("Error while preparing message data \(error)")
                         completion(.failure(error))
                     }
 
                     return
                 }
 
-                self.updateLastMessage(message: data, in: conversation) { result in
-                    guard case .success = result else {
+                self.storeMessage(in: conversation, messageData: data) { result in
+                    guard case let .success(messageReference) = result else {
                         if case let .failure(error) = result {
-                            print("Error while setting conversation last message \(error)")
+                            print("Error while storing message \(error)")
                             completion(.failure(error))
                         }
 
                         return
                     }
 
-                    self.message(messageReference: messageReference, completion: completion)
+                    self.updateLastMessage(message: data, in: conversation) { result in
+                        guard case .success = result else {
+                            if case let .failure(error) = result {
+                                print("Error while setting conversation last message \(error)")
+                                completion(.failure(error))
+                            }
+
+                            return
+                        }
+
+                        self.message(messageReference: messageReference, completion: completion)
+                    }
                 }
             }
         }
@@ -333,21 +347,23 @@ private extension ChatNetworkingFirestore {
 // MARK: Private methods
 private extension ChatNetworkingFirestore {
     func listenTo<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
-        let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
-            if let snapshot = snapshot {
-                let list: [T] = snapshot.documents.compactMap {
-                    do {
-                        return try $0.data(as: T.self)
-                    } catch {
-                        print("Couldn't decode document:", error)
-                        return nil
+        let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self] (snapshot, error) in
+            self?.networkingQueue.async {
+                if let snapshot = snapshot {
+                    let list: [T] = snapshot.documents.compactMap {
+                        do {
+                            return try $0.data(as: T.self)
+                        } catch {
+                            print("Couldn't decode document:", error)
+                            return nil
+                        }
                     }
+                    completion(.success(list))
+                } else if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.failure(.internal(message: "Unknown")))
                 }
-                completion(.success(list))
-            } else if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.failure(.internal(message: "Unknown")))
             }
         }
         
