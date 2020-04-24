@@ -47,6 +47,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var closureThrottler: ListenerThrottler<MessageUI, MessagesResult>?
     private var reachabilityObserver: ReachabilityObserver?
     private var dataManagers = [Listener: DataManager]()
+
+    // dedicated thread queue
+    private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
     
     private var conversationListeners = [
         Listener: [IdentifiableClosure<ConversationResult, Void>]
@@ -102,23 +105,29 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 
     // Needs to be in main class scope bc Extensions of generic classes cannot contain '@objc' members
     @objc open func resendUnsentMessages() {
-        // at this place check user without crashying
-        guard $currentUser else {
-            return
-        }
-
-        let messages: [CachedMessage<MessageSpecifyingUI>] = keychainManager.unsentMessages()
-        // take only messages which are not sending already
-        // for unsent try to resend for failed add as temporary messages with failed state
-        for message in messages where message.state != .sending {
-            if message.userId != currentUser.id || message.state == .unsent || message.state == .failed {
-                keychainManager.removeMessage(message: message)
+        coreQueue.async { [weak self] in
+            guard let self = self else {
+                return
             }
 
-            if message.state == .unsent {
-                send(message: message.content, to: message.conversationId, completion: { _ in })
-            } else if message.state == .failed {
-                handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
+            // at this place check user without crashying
+            guard self.$currentUser else {
+                return
+            }
+
+            let messages: [CachedMessage<MessageSpecifyingUI>] = self.keychainManager.unsentMessages()
+            // take only messages which are not sending already
+            // for unsent try to resend for failed add as temporary messages with failed state
+            for message in messages where message.state != .sending {
+                if message.userId != self.currentUser.id || message.state == .unsent || message.state == .failed {
+                    self.keychainManager.removeMessage(message: message)
+                }
+
+                if message.state == .unsent {
+                    self.send(message: message.content, to: message.conversationId, completion: { _ in })
+                } else if message.state == .failed {
+                    self.handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
+                }
             }
         }
     }
@@ -130,24 +139,28 @@ extension ChatCore {
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        // by default is cached message in sending state, similar as temporary message
-        let cachedMessage = cacheMessage(message: message, from: conversation)
-        handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
+
+            // by default is cached message in sending state, similar as temporary message
+            let cachedMessage = self.cacheMessage(message: message, from: conversation)
+            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
             let mess = Networking.MS(uiModel: message)
-            self?.networking.send(message: mess, to: conversation) { result in
+            self.networking.send(message: mess, to: conversation) { result in
                 switch result {
                 case .success(let message):
                     _ = taskCompletion(.success)
-                    self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
+                    self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
 
                     completion(.success(message.uiModel))
 
                 case .failure(let error):
                     if taskCompletion(.failure(error)) == .finished {
-                        self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                        self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
+                        self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
                         completion(.failure(error))
                     }
                 }
@@ -226,17 +239,18 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (MessagesResult) -> Void
     ) -> ListenerIdentifier {
+
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<MessagesResult, Void>(completion)
         let listener = Listener.messages(pageSize: pageSize, conversationId: id)
-        
+
         if messagesListeners[listener] == nil {
             messagesListeners[listener] = []
         }
-        
+
         messagesListeners[listener]?.append(closure)
-        
+
         if let existingListeners = messagesListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
             defer {
@@ -246,20 +260,21 @@ extension ChatCore {
             }
             return closure.id
         }
-        
+
         dataManagers[listener] = DataManager(pageSize: pageSize)
+
         taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
-            
+
             guard let self = self else {
                 return
             }
-            
+
             self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
                 self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let messages):
                     // network returns at main thread
-                    DispatchQueue.global(qos: .background).async {
+                    self.coreQueue.async {
                         self.dataManagers[listener]?.update(data: messages)
                         var converted = messages.compactMap({ $0.uiModel })
                         // add all temporary messages at original positions
@@ -269,9 +284,9 @@ extension ChatCore {
 
                         let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                         self.messages[id] = data
-                        DispatchQueue.main.async {
-                            self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
-                        }
+                        // throttler returns on main thread
+                        self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
+
                     }
 
                 case .failure(let error):
@@ -326,15 +341,19 @@ extension ChatCore {
                 self.taskHandler(result: result, completion: taskCompletion)
                 switch result {
                 case .success(let conversations):
+                    // network returns on main thread
+                    self.coreQueue.async {
+                        self.dataManagers[listener]?.update(data: conversations)
+                        let converted = conversations.compactMap({ $0.uiModel })
+                        let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                        self.conversations = data
 
-                    self.dataManagers[listener]?.update(data: conversations)
-                    let converted = conversations.compactMap({ $0.uiModel })
-                    let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    self.conversations = data
-
-                    // Call each closure registered for this listener
-                    self.conversationListeners[listener]?.forEach {
-                        $0.closure(.success(data))
+                        // Call each closure registered for this listener
+                        DispatchQueue.main.async {
+                            self.conversationListeners[listener]?.forEach {
+                                $0.closure(.success(data))
+                            }
+                        }
                     }
                 case .failure(let error):
                     self.conversationListeners[listener]?.forEach {
@@ -409,45 +428,54 @@ private extension ChatCore {
     func handleTemporaryMessage(id: EntityIdentifier, to conversation: EntityIdentifier, with action: TemporaryMessageAction) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        // find all listeners for messages and same conversationId
-        let listeners = messagesListeners.filter({ (key, _) -> Bool in
-            if case let .messages(_, conversationId) = key {
-                return conversation == conversationId
+        // network returns at main thread
+        coreQueue.async { [weak self] in
+
+            guard let self = self else {
+                return
             }
-            return false
-        })
 
-        // check if listeners and data payload are set
-        guard !listeners.isEmpty else {
-            return
-        }
-        guard let messagesPayload = messages[conversation] else {
-            return
-        }
+            // find all listeners for messages and same conversationId
+            let listeners = self.messagesListeners.filter({ (key, _) -> Bool in
+                if case let .messages(_, conversationId) = key {
+                    return conversation == conversationId
+                }
+                return false
+            })
 
-        var newData: [MessageUI]
-        switch action {
-        case .remove:
-            newData = messagesPayload.data.filter { $0.id != id }
-        case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: currentUser.id, messageSpecification: message, state: state)
-            newData = messagesPayload.data
-            newData.append(temporaryMessage)
-        case .changeState(let state):
-            newData = messagesPayload.data
-            if let index = newData.firstIndex(where: { $0.id == id }) {
-                var message = newData[index]
-                message.state = state
-                newData[index] = message
+            // check if listeners and data payload are set
+            guard !listeners.isEmpty else {
+                return
             }
-        }
 
-        let newPayload = DataPayload(data: newData, reachedEnd: messagesPayload.reachedEnd)
-        self.messages[conversation] = newPayload
+            guard let messagesPayload = self.messages[conversation] else {
+                return
+            }
 
-        // Call each closure registered for this listener
-        listeners.forEach { (listener, closures) in
-            closureThrottler?.handleClosures(payload: newPayload, listener: listener, closures: closures)
+            var newData: [MessageUI]
+            switch action {
+            case .remove:
+                newData = messagesPayload.data.filter { $0.id != id }
+            case .add(let message, let state):
+                let temporaryMessage = MessageUI(id: id, userId: self.currentUser.id, messageSpecification: message, state: state)
+                newData = messagesPayload.data
+                newData.append(temporaryMessage)
+            case .changeState(let state):
+                newData = messagesPayload.data
+                if let index = newData.firstIndex(where: { $0.id == id }) {
+                    var message = newData[index]
+                    message.state = state
+                    newData[index] = message
+                }
+            }
+
+            let newPayload = DataPayload(data: newData, reachedEnd: messagesPayload.reachedEnd)
+            self.messages[conversation] = newPayload
+
+            // Call each closure registered for this listener
+            listeners.forEach { (listener, closures) in
+                self.closureThrottler?.handleClosures(payload: newPayload, listener: listener, closures: closures)
+            }
         }
     }
 
