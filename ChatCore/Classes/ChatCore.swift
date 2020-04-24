@@ -134,20 +134,25 @@ extension ChatCore {
         let cachedMessage = cacheMessage(message: message, from: conversation)
         handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
             let mess = Networking.MS(uiModel: message)
-            self?.networking.send(message: mess, to: conversation) { result in
+            self.networking.send(message: mess, to: conversation) { result in
                 switch result {
-                case .success(let message):
+                case .success(let messageId):
                     _ = taskCompletion(.success)
-                    self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
 
-                    completion(.success(message.uiModel))
+                    self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
+
+                    let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
+                    completion(.success(messageUI))
 
                 case .failure(let error):
                     if taskCompletion(.failure(error)) == .finished {
-                        self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                        self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
+                        self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
                         completion(.failure(error))
                     }
                 }
@@ -259,7 +264,8 @@ extension ChatCore {
                 switch result {
                 case .success(let messages):
                     // network returns at main thread
-                    DispatchQueue.global(qos: .background).async {
+                    // TODO: CJ
+                    //DispatchQueue.global(qos: .background).async {
                         self.dataManagers[listener]?.update(data: messages)
                         var converted = messages.compactMap({ $0.uiModel })
                         // add all temporary messages at original positions
@@ -272,7 +278,7 @@ extension ChatCore {
                         DispatchQueue.main.async {
                             self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
                         }
-                    }
+                    //}
 
                 case .failure(let error):
                     self.messagesListeners[listener]?.forEach {
@@ -469,7 +475,7 @@ private extension ChatCore {
         return cachedMessage
     }
 
-    func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
+    func handleResultInCache<T: MessageSpecifying & Cachable>(cachedMessage: CachedMessage<T>, result: Result<EntityIdentifier, ChatError>) {
         // when sucessfully sent remove from cache
         // in case of network error restore the message with stored state
         // other than network error set status as failed

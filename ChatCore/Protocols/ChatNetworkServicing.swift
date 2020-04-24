@@ -42,7 +42,7 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data. Different from the model used for receiving messages.
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func send(message: MS, to conversation: EntityIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: MS, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void)
 
     /// Delete a message from the specified conversation
     ///

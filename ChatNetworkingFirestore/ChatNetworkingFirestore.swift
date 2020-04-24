@@ -106,7 +106,7 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Create message
 public extension ChatNetworkingFirestore {
-    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void) {
 
         prepareMessageData(message: message) { [weak self] result in
             guard let self = self, case let .success(data) = result else {
@@ -118,29 +118,32 @@ public extension ChatNetworkingFirestore {
                 return
             }
 
-            self.storeMessage(in: conversation, messageData: data) { result in
-                guard case let .success(messageReference) = result else {
-                    if case let .failure(error) = result {
-                        print("Error while storing message \(error)")
-                        completion(.failure(error))
-                    }
+            let referenceMessage = self.database
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.messagesPath)
+            let messageRef = referenceMessage.document()
 
-                    return
+            self.database.runTransaction({ (transaction, _) -> Any? in
+
+                transaction.setData(data, forDocument: messageRef)
+
+                let referenceConversation = self.database
+                    .collection(Constants.conversationsPath)
+                    .document(conversation)
+
+                transaction.updateData([Constants.Conversation.lastMessageAttributeName: data], forDocument: referenceConversation)
+
+                return nil
+            }, completion: { (_, error) in
+                if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.success(messageRef.documentID))
+                    // TODO: CJ
+                    //self.message(messageReference: messageRef, completion: completion)
                 }
-
-                self.updateLastMessage(message: data, in: conversation) { result in
-                    guard case .success = result else {
-                        if case let .failure(error) = result {
-                            print("Error while setting conversation last message \(error)")
-                            completion(.failure(error))
-                        }
-
-                        return
-                    }
-
-                    self.message(messageReference: messageReference, completion: completion)
-                }
-            }
+            })
         }
     }
 
@@ -160,35 +163,35 @@ public extension ChatNetworkingFirestore {
             completion(.success(newJSON))
         }
     }
+// TODO: CJ
+//    private func storeMessage(in conversation: EntityIdentifier, messageData: [String: Any], transaction: Transaction, completion: @escaping (Result<DocumentReference, ChatError>) -> Void) {
+//        let reference = self.database
+//            .collection(Constants.conversationsPath)
+//            .document(conversation)
+//            .collection(Constants.messagesPath)
+//
+//        let documentRef = reference.document()
+//        documentRef.setData(messageData) { error in
+//            if let error = error {
+//                completion(.failure(.networking(error: error)))
+//            } else {
+//                completion(.success(documentRef))
+//            }
+//        }
+//    }
 
-    private func storeMessage(in conversation: EntityIdentifier, messageData: [String: Any], completion: @escaping (Result<DocumentReference, ChatError>) -> Void) {
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.messagesPath)
-
-        let documentRef = reference.document()
-        documentRef.setData(messageData) { error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.success(documentRef))
-            }
-        }
-    }
-
-    private func message(messageReference: DocumentReference, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-        messageReference.getDocument { (documentSnapshot, error) in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
-                print("Message successfully sent")
-                completion(.success(message))
-            } else {
-                completion(.failure(.unexpectedState))
-            }
-        }
-    }
+//    private func message(messageReference: DocumentReference, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+//        messageReference.getDocument { (documentSnapshot, error) in
+//            if let error = error {
+//                completion(.failure(.networking(error: error)))
+//            } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
+//                print("Message successfully sent")
+//                completion(.success(message))
+//            } else {
+//                completion(.failure(.unexpectedState))
+//            }
+//        }
+//    }
 }
 
 // MARK: - Delete message
