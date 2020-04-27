@@ -18,8 +18,6 @@ struct DataManager {
     }
     
     mutating func update<T>(data: [T]) {
-        // TODO: CJ
-        sleep(1)
         reachedEnd = itemCount == data.count || data.count % pageSize != 0
         itemCount = data.count
     }

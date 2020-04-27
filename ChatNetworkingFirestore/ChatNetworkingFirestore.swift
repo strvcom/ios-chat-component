@@ -140,8 +140,6 @@ public extension ChatNetworkingFirestore {
                     completion(.failure(.networking(error: error)))
                 } else {
                     completion(.success(messageRef.documentID))
-                    // TODO: CJ
-                    //self.message(messageReference: messageRef, completion: completion)
                 }
             })
         }
@@ -163,41 +161,13 @@ public extension ChatNetworkingFirestore {
             completion(.success(newJSON))
         }
     }
-// TODO: CJ
-//    private func storeMessage(in conversation: EntityIdentifier, messageData: [String: Any], transaction: Transaction, completion: @escaping (Result<DocumentReference, ChatError>) -> Void) {
-//        let reference = self.database
-//            .collection(Constants.conversationsPath)
-//            .document(conversation)
-//            .collection(Constants.messagesPath)
-//
-//        let documentRef = reference.document()
-//        documentRef.setData(messageData) { error in
-//            if let error = error {
-//                completion(.failure(.networking(error: error)))
-//            } else {
-//                completion(.success(documentRef))
-//            }
-//        }
-//    }
-
-//    private func message(messageReference: DocumentReference, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-//        messageReference.getDocument { (documentSnapshot, error) in
-//            if let error = error {
-//                completion(.failure(.networking(error: error)))
-//            } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
-//                print("Message successfully sent")
-//                completion(.success(message))
-//            } else {
-//                completion(.failure(.unexpectedState))
-//            }
-//        }
-//    }
 }
 
 // MARK: - Delete message
 public extension ChatNetworkingFirestore {
     func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        let document = self.database
+
+        let document = database
             .collection(Constants.conversationsPath)
             .document(conversation)
             .collection(Constants.messagesPath)

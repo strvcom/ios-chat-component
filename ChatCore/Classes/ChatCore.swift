@@ -264,8 +264,7 @@ extension ChatCore {
                 switch result {
                 case .success(let messages):
                     // network returns at main thread
-                    // TODO: CJ
-                    //DispatchQueue.global(qos: .background).async {
+                    DispatchQueue.global(qos: .background).async {
                         self.dataManagers[listener]?.update(data: messages)
                         var converted = messages.compactMap({ $0.uiModel })
                         // add all temporary messages at original positions
@@ -278,7 +277,7 @@ extension ChatCore {
                         DispatchQueue.main.async {
                             self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
                         }
-                    //}
+                    }
 
                 case .failure(let error):
                     self.messagesListeners[listener]?.forEach {
