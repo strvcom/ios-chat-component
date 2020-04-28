@@ -119,19 +119,18 @@ public extension ChatNetworkingFirestore {
             }
 
             let referenceMessage = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.messagesPath)
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+                .collection(Constants.messagesPath)
             let messageRef = referenceMessage.document()
+
+            let referenceConversation = self.database
+                .collection(Constants.conversationsPath)
+                .document(conversation)
 
             self.database.runTransaction({ (transaction, _) -> Any? in
 
                 transaction.setData(data, forDocument: messageRef)
-
-                let referenceConversation = self.database
-                    .collection(Constants.conversationsPath)
-                    .document(conversation)
-
                 transaction.updateData([Constants.Conversation.lastMessageAttributeName: data], forDocument: referenceConversation)
 
                 return nil
