@@ -380,7 +380,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers,
     Networking.TU: ChatUIConvertible,
-    Networking.TU.ChatUIModel == Models.USRUI {
+Networking.TU.ChatUIModel == Models.USRUI {
 
     open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")

@@ -458,10 +458,10 @@ private extension ChatNetworkingFirestore {
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
-        .document(userId)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
+            .document(userId)
 
         isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
     }
@@ -489,9 +489,9 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
         let query = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
 
         let listener = Listener.typingUsers(conversationId: conversation)
         // to infer type from generic
