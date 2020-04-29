@@ -109,12 +109,12 @@ public extension ChatNetworkingFirestore {
         }
     }
 
-    private func updateLastMessage(message: [String: Any], in conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
+    private func updateLastMessage(message: [String: Any]?, in conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let reference = self.database
             .collection(constants.conversations.path)
             .document(conversation)
 
-        reference.updateData([constants.conversations.lastMessageAttributeName: message]) { error in
+        reference.updateData([constants.conversations.lastMessageAttributeName: message ?? FieldValue.delete]) { error in
             if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
@@ -272,11 +272,43 @@ public extension ChatNetworkingFirestore {
             .document(conversation)
             .collection(constants.messages.path)
             .document(message.id)
-        document.delete { error in
+
+        document.delete { [weak self] error in
             if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
-                completion(.success(()))
+
+                self?.lastMessage(from: conversation, completion: { result in
+
+                    guard case let .success(message) = result else {
+                        if case let .failure(error) = result {
+                            print("Error while loading last message \(error)")
+                            completion(.failure(error))
+                        }
+
+                        return
+                    }
+
+                    self?.updateLastMessage(message: message, in: conversation, completion: completion)
+                })
+            }
+        }
+    }
+
+    private func lastMessage(from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
+        
+        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 1)
+        
+        lastMessageQuery.getDocuments { (snapshot, error) in
+            if let error = error {
+                return completion(.failure(.networking(error: error)))
+            } else {
+                // conversation can be empty
+                if let messageData = snapshot?.documents.first {
+                    completion(.success(messageData.data()))
+                } else {
+                    completion(.success(nil))
+                }
             }
         }
     }

@@ -206,8 +206,8 @@ extension ChatCore {
             return
         }
 
-        // avoid updating same last seen message
-        guard existingConversation.lastMessage?.id != message.id else {
+        // avoid updating same seen message
+        guard existingConversation.seen[currentUser.id]?.messageId != message.id else {
             return
         }
 
