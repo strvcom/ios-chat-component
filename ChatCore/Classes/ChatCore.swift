@@ -144,7 +144,8 @@ extension ChatCore {
                     _ = taskCompletion(.success)
 
                     self.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
+                    // update id & state
+                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .updateSent(message, messageId))
 
                     let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
                     completion(.success(messageUI))
@@ -407,8 +408,9 @@ private extension ChatCore {
     // Actions over temporary messages
     enum TemporaryMessageAction {
         case add(MessageSpecifyingUI, MessageState = .sending)
-        case remove
+        case updateSent(MessageSpecifyingUI, EntityIdentifier)
         case changeState(MessageState)
+        case remove
     }
 
     func handleTemporaryMessage(id: EntityIdentifier, to conversation: EntityIdentifier, with action: TemporaryMessageAction) {
@@ -434,10 +436,19 @@ private extension ChatCore {
         switch action {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
+
         case .add(let message, let state):
             let temporaryMessage = MessageUI(id: id, userId: currentUser.id, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
+
+        case .updateSent(let message, let identifier):
+            newData = messagesPayload.data
+            if let index = newData.firstIndex(where: { $0.id == id }) {
+                let temporaryMessage = MessageUI(id: identifier, userId: currentUser.id, messageSpecification: message, state: .sent)
+                newData[index] = temporaryMessage
+            }
+
         case .changeState(let state):
             newData = messagesPayload.data
             if let index = newData.firstIndex(where: { $0.id == id }) {
