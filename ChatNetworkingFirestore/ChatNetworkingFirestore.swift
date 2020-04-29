@@ -164,48 +164,54 @@ public extension ChatNetworkingFirestore {
 public extension ChatNetworkingFirestore {
     func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
 
-        let document = database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.messagesPath)
-            .document(message.id)
-
-        document.delete { [weak self] error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-
-                self?.lastMessage(from: conversation, completion: { result in
-
-                    guard case let .success(message) = result else {
-                        if case let .failure(error) = result {
-                            print("Error while loading last message \(error)")
-                            completion(.failure(error))
-                        }
-
-                        return
-                    }
-
-                    self?.updateLastMessage(message: message, in: conversation, completion: completion)
-                })
+        lastMessage(after: message.id, from: conversation) { [weak self] result  in
+            guard let self = self else {
+                return
             }
+
+            guard case let .success(newLastMessage) = result else {
+                if case let .failure(error) = result {
+                    print("Error while loading last message \(error)")
+                    completion(.failure(error))
+                }
+
+                return
+            }
+
+            let referenceConversation = self.database
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+
+            let referenceMessage = referenceConversation
+                .collection(Constants.messagesPath)
+                .document(message.id)
+
+            self.database.runTransaction({ (transaction, _) -> Any? in
+
+                transaction.deleteDocument(referenceMessage)
+                transaction.updateData([Constants.Conversation.lastMessageAttributeName: newLastMessage ?? FieldValue.delete], forDocument: referenceConversation)
+
+                return nil
+            }, completion: { (_, error) in
+                if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            })
         }
     }
 
-    private func lastMessage(from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
+    private func lastMessage(after messageId: EntityIdentifier, from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
         
-        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 1)
-        
+        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 2)
         lastMessageQuery.getDocuments { (snapshot, error) in
             if let error = error {
                 return completion(.failure(.networking(error: error)))
             } else {
                 // conversation can be empty
-                if let messageData = snapshot?.documents.first {
-                    completion(.success(messageData.data()))
-                } else {
-                    completion(.success(nil))
-                }
+                let newLastMessage = snapshot?.documents.last(where: { $0.documentID != messageId })
+                completion(.success(newLastMessage?.data()))
             }
         }
     }
