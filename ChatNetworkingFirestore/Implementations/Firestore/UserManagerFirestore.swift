@@ -9,22 +9,36 @@
 import Foundation
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 import ChatCore
 
-// MARK: - Default firestore implementation of user managing
-public class UserManagerFirestore: UserManaging {
+open class ChatFirestoreUserManager<User: UserRepresenting>: UserManaging where User: Decodable {
+    // swiftlint:disable:next unavailable_function
+    open func users(userIds: [EntityIdentifier], completion: @escaping (Result<[User], ChatError>) -> Void) {
+        fatalError("\(#function) has not been implemented")
+    }
+}
 
+// MARK: - Default firestore implementation of user managing
+public class ChatFirestoreUserManagerDefault<User: UserRepresenting>: ChatFirestoreUserManager<User> where User: Decodable {
+
+    private let config: ChatFirestoreConfig
     private let database: Firestore
-    private var users: [UserFirestore] = []
+    private var users: [User] = []
     private var currentUserIds: Set<EntityIdentifier> = []
     private var listener: ListenerRegistration?
+    
+    private var usersPath: String {
+        config.constants.users.path
+    }
 
     deinit {
         print("\(self) released")
         listener?.remove()
     }
 
-    public init(config: ChatNetworkingFirestoreConfig) {
+    public init(config: ChatFirestoreConfig) {
+        self.config = config
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
@@ -39,8 +53,7 @@ public class UserManagerFirestore: UserManaging {
         database = Firestore.firestore(app: firebaseApp)
     }
 
-    public func users(userIds: [EntityIdentifier], completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
-
+    override public func users(userIds: [EntityIdentifier], completion: @escaping (Result<[User], ChatError>) -> Void) {
         // get unique ids
         let userIdsSet = Set(userIds)
 
@@ -53,12 +66,12 @@ public class UserManagerFirestore: UserManaging {
             currentUserIds = userIdsSet
             listener?.remove()
 
-            let query = database.collection(Constants.usersPath).whereField(FieldPath.documentID(), in: userIds)
+            let query = database.collection(usersPath).whereField(FieldPath.documentID(), in: userIds)
             listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
                 if let snapshot = snapshot {
-                    let list: [UserFirestore] = snapshot.documents.compactMap {
+                    let list: [User] = snapshot.documents.compactMap {
                         do {
-                            return try $0.data(as: UserFirestore.self)
+                            return try $0.data(as: User.self)
                         } catch {
                             print("Couldn't decode document:", error)
                             return nil

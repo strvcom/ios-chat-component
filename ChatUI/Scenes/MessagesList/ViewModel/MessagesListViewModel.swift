@@ -81,11 +81,11 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         core.loadMoreMessages(conversation: conversation.id)
     }
     
-    func updateSeenMessage(_ message: MessageKitType) {
+    func updateSeenMessage(_ message: Message) {
         core.updateSeenMessage(message, in: conversation.id)
     }
     
-    func send(message: MessageSpecification, completion: @escaping (Result<MessageKitType, ChatError>) -> Void) {
+    func send(message: MessageSpecification, completion: @escaping (Result<Message, ChatError>) -> Void) {
         core.send(message: message, to: conversation.id, completion: completion)
     }
     

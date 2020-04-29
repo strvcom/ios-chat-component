@@ -8,11 +8,10 @@
 
 import Foundation
 
-// swiftlint:disable type_name
 /// Defines networking with ability to listen and manage users who are typing
 public protocol ChatCoreServicingWithTypingUsers {
     // User type
-    associatedtype TU: UserRepresenting
+    associatedtype TypingUser: UserRepresenting
 
     /// Sets current user as typing user
     ///
@@ -28,10 +27,10 @@ public protocol ChatCoreServicingWithTypingUsers {
     /// - Parameters:
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TU], ChatError>) -> Void) -> Listener
+    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TypingUser], ChatError>) -> Void) -> Listener
 }
 
 /// Default type requirement for user at `ChatCoreServicing`
 public extension ChatCoreServicing where Self: ChatCoreServicingWithTypingUsers {
-    typealias TU = U
+    typealias TypingUser = CoreUser
 }

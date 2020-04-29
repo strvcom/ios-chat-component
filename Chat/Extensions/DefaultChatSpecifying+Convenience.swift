@@ -15,8 +15,8 @@ extension DefaultChatSpecifying {
     ///     - networkConfig: Configuration required by underlying `ChatNetworkServicing` implementation
     ///     - userManager: Service providing data about users
     /// - Returns: Instance of default `ChatCore`
-    static func core(networkConfig: Networking.Config, userManager: Networking.UserManager) -> ChatCore<Networking, UIModels> {
-        let networking = Networking(config: networkConfig, userManager: userManager)
+    static func core(networkConfig: Networking.Config, userManager: Networking.UserManager, mediaUploader: MediaUploading) -> ChatCore<Networking, UIModels> {
+        let networking = Networking(config: networkConfig, userManager: userManager, mediaUploader: mediaUploader)
         let core = ChatCore<Networking, UIModels>(networking: networking)
         return core
     }

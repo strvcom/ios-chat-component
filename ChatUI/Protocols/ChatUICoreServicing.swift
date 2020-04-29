@@ -9,6 +9,6 @@
 import Foundation
 import ChatCore
 
-public protocol ChatUICoreServicing: ChatCoreServicing where C == Conversation, M == MessageKitType, MS == MessageSpecification, U == User { }
+public protocol ChatUICoreServicing: ChatCoreServicing where CoreConversation == Conversation, CoreMessage == Message, CoreMessageSpecification == MessageSpecification, CoreUser == User { }
 
-extension ChatCore: ChatUICoreServicing where Models.CUI == Conversation, Models.MUI == MessageKitType, Models.USRUI == User { }
+extension ChatCore: ChatUICoreServicing where Models.UIConversation == Conversation, Models.UIMessage == Message, Models.UIUser == User { }

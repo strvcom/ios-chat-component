@@ -9,34 +9,34 @@
 import Foundation
 import UIKit
 
-open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing where
+open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: ChatCoreServicing where
     
     // Specify that associated types
     // Conversation, Message (receive), MessageSpecifying (send) and User
     // of ChatNetworkServicing have to conform to `ChatUIConvertible`
-    Networking.C: ChatUIConvertible,
-    Networking.M: ChatUIConvertible,
-    Networking.MS: ChatUIConvertible,
+    Networking.NetworkConversation: ChatUIConvertible,
+    Networking.NetworkMessage: ChatUIConvertible,
+    Networking.NetworkMessageSpecification: ChatUIConvertible,
 
     // Extra requirements on models for this core implementation
     // supports message caching, message states, temp messages when sending
-    Models.MSUI: Cachable,
-    Models.MUI: MessageConvertible,
-    Models.MUI: MessageStateReflecting,
-    Models.MUI.MessageSpecification == Models.MSUI,
+    Models.UIMessageSpecification: Cachable,
+    Models.UIMessage: MessageConvertible,
+    Models.UIMessage: MessageStateReflecting,
+    Models.UIMessage.MessageSpecification == Models.UIMessageSpecification,
 
     // Specify that all UI and networking models are inter-convertible
-    Networking.C.ChatUIModel == Models.CUI,
-    Networking.M.ChatUIModel == Models.MUI,
-    Networking.MS.ChatUIModel == Models.MSUI {
+    Networking.NetworkConversation.ChatUIModel == Models.UIConversation,
+    Networking.NetworkMessage.ChatUIModel == Models.UIMessage,
+    Networking.NetworkMessageSpecification.ChatUIModel == Models.UIMessageSpecification {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
     
-    public typealias ConversationUI = Models.CUI
-    public typealias MessageSpecifyingUI = Models.MSUI
-    public typealias MessageUI = Models.MUI
-    public typealias UserUI = Models.USRUI
+    public typealias ConversationUI = Models.UIConversation
+    public typealias MessageSpecifyingUI = Models.UIMessageSpecification
+    public typealias MessageUI = Models.UIMessage
+    public typealias UserUI = Models.UIUser
     
     public typealias ConversationResult = Result<DataPayload<[ConversationUI]>, ChatError>
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
@@ -134,7 +134,7 @@ extension ChatCore {
         let cachedMessage = cacheMessage(message: message, from: conversation)
         handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
-            let mess = Networking.MS(uiModel: message)
+            let mess = Networking.NetworkMessageSpecification(uiModel: message)
             self?.networking.send(message: mess, to: conversation) { result in
                 switch result {
                 case .success(let message):
@@ -170,7 +170,7 @@ extension ChatCore {
             // delete temp message
             self?.handleTemporaryMessage(id: message.id, to: conversation, with: .remove)
             // delete message from server
-            let deleteMessage = Networking.M(uiModel: message)
+            let deleteMessage = Networking.NetworkMessage(uiModel: message)
             self?.networking.delete(message: deleteMessage, from: conversation) { result in
                 self?.taskHandler(result: result, completion: taskCompletion)
                 completion(result)
@@ -212,8 +212,8 @@ extension ChatCore {
         }
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
-            let seenMessage = Networking.M(uiModel: message)
-            let conversation = Networking.C(uiModel: existingConversation)
+            let seenMessage = Networking.NetworkMessage(uiModel: message)
+            let conversation = Networking.NetworkConversation(uiModel: existingConversation)
             self?.networking.updateSeenMessage(seenMessage, in: conversation)
         }
     }
@@ -359,7 +359,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers,
     Networking.TU: ChatUIConvertible,
-    Networking.TU.ChatUIModel == Models.USRUI {
+    Networking.TU.ChatUIModel == Models.UIUser {
 
     open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")

@@ -1,5 +1,5 @@
 //
-//  ChatNetworkingFirestoreConfiguration.swift
+//  ChatFirestoreConfig.swift
 //  ChatNetworkingFirestore
 //
 //  Created by Tomas Cejka on 3/31/20.
@@ -10,10 +10,12 @@ import Foundation
 import FirebaseFirestore
 
 // MARK: - Configuration of firestore network
-public struct ChatNetworkingFirestoreConfig {
+public struct ChatFirestoreConfig {
     let configUrl: String
+    let constants: ChatFirestoreConstants
 
-    public init(configUrl: String) {
+    public init(configUrl: String, constants: ChatFirestoreConstants = ChatFirestoreConstants()) {
         self.configUrl = configUrl
+        self.constants = constants
     }
 }

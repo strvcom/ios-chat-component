@@ -9,20 +9,19 @@
 import Foundation
 import UIKit
 
-// swiftlint:disable type_name
 public protocol ChatCoreServicing {
     // Networking manager
     associatedtype Networking: ChatNetworkServicing
-    associatedtype UIModels: ChatUIModels
+    associatedtype UIModels: ChatUIModeling
 
     // Shortcuts
-    typealias C = UIModels.CUI
-    typealias M = UIModels.MUI
-    typealias MS = UIModels.MSUI
-    typealias U = UIModels.USRUI
+    typealias CoreConversation = UIModels.UIConversation
+    typealias CoreMessage = UIModels.UIMessage
+    typealias CoreMessageSpecification = UIModels.UIMessageSpecification
+    typealias CoreUser = UIModels.UIUser
     
     /// Current user logged in to the app
-    var currentUser: U { get }
+    var currentUser: CoreUser { get }
 
     /// Current state of chat core and its observing
     var currentState: ChatCoreState { get }
@@ -34,7 +33,7 @@ public protocol ChatCoreServicing {
     ///
     /// - Parameters:
     ///   - user: Current user
-    func setCurrentUser(user: U)
+    func setCurrentUser(user: CoreUser)
 
     /// Continue running unfinished tasks. Core handles tasks to be finished when app gets into inactive state.
     ///
@@ -52,7 +51,7 @@ public protocol ChatCoreServicing {
     ///   - message: Message data. Different from the model used for receiving messages.
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func send(message: MS, to conversation: EntityIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: CoreMessageSpecification, to conversation: EntityIdentifier, completion: @escaping (Result<CoreMessage, ChatError>) -> Void)
 
     /// Delete a message
     ///
@@ -60,7 +59,7 @@ public protocol ChatCoreServicing {
     ///   - message: Message data
     ///   - conversation: Conversation ID
     ///   - completion: Called upon deleting message (or encountering an error)
-    func delete(message: M, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
+    func delete(message: CoreMessage, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
     
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
@@ -69,7 +68,7 @@ public protocol ChatCoreServicing {
     /// - Parameters:
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<DataPayload<[CoreConversation]>, ChatError>) -> Void) -> ListenerIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToConversations`
     func loadMoreConversations()
@@ -82,7 +81,7 @@ public protocol ChatCoreServicing {
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier
+    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<DataPayload<[CoreMessage]>, ChatError>) -> Void) -> ListenerIdentifier
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///
@@ -99,16 +98,16 @@ public protocol ChatCoreServicing {
     /// - Parameters:
     ///   - message: Message to be set as last seen
     ///   - conversation: Target conversation
-    func updateSeenMessage(_ message: M, in conversation: EntityIdentifier)
+    func updateSeenMessage(_ message: CoreMessage, in conversation: EntityIdentifier)
 }
 
 // MARK: Default page size
 public extension ChatCoreServicing {
-    func listenToMessages(conversation id: EntityIdentifier, completion: @escaping (Result<DataPayload<[M]>, ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToMessages(conversation id: EntityIdentifier, completion: @escaping (Result<DataPayload<[CoreMessage]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
     }
     
-    func listenToConversations(completion: @escaping (Result<DataPayload<[C]>, ChatError>) -> Void) -> ListenerIdentifier {
+    func listenToConversations(completion: @escaping (Result<DataPayload<[CoreConversation]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
     }
 }

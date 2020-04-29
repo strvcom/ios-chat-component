@@ -12,13 +12,21 @@ import ChatCore
 /// Essential chat functionality
 public protocol ChatSpecifying {
     /// Chat models used in UI layer
-    associatedtype UIModels
+    associatedtype UIModels: ChatUIModeling
     /// Networking layer
     associatedtype Networking
     /// Core layer
-    associatedtype Core where Core.Networking == Networking, Core.UIModels == UIModels
+    associatedtype Core where Core.Networking == Networking,
+        Core.UIModels.UIConversation == UIModels.UIConversation,
+        Core.UIModels.UIMessage == UIModels.UIMessage,
+        Core.UIModels.UIMessageSpecification == UIModels.UIMessageSpecification,
+        Core.UIModels.UIUser == UIModels.UIUser
     /// UI layer
-    associatedtype Interface: ChatInterfacing where Interface.UIService.Core == Core, Interface.UIService.Models == UIModels
+    associatedtype Interface: ChatInterfacing where Interface.UIService.Core == Core,
+        Interface.UIService.Models.UIConversation == UIModels.UIConversation,
+        Interface.UIService.Models.UIMessage == UIModels.UIMessage,
+        Interface.UIService.Models.UIMessageSpecification == UIModels.UIMessageSpecification,
+        Interface.UIService.Models.UIUser == UIModels.UIUser
     
     typealias UIConfiguration = Interface.UIService.Config
     typealias NetworkConfiguration = Networking.Config

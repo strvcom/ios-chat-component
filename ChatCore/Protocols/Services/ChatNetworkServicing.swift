@@ -8,21 +8,19 @@
 
 import Foundation
 
-// swiftlint:disable type_name
 /// This is the main and only protocol needed to be implemented when creating the network layer.
 /// It's used by the core for all networking operations.
 public protocol ChatNetworkServicing {
     associatedtype Config
-    associatedtype UserManager: UserManaging where UserManager.User == C.User
+    associatedtype NetworkModels: ChatNetworkModeling
+    associatedtype UserManager: UserManaging where UserManager.User == NetworkModels.NetworkUser
 
-    // Specific conversation type
-    associatedtype C: ConversationRepresenting
-    // Specific message type
-    associatedtype M where M == C.Message
-    // Message description used for sending a message
-    associatedtype MS: MessageSpecifying
+    // Shortcuts
+    typealias NetworkConversation = NetworkModels.NetworkConversation
+    typealias NetworkMessage = NetworkModels.NetworkMessage
+    typealias NetworkMessageSpecification = NetworkModels.NetworkMessageSpecification
 
-    init(config: Config, userManager: UserManager)
+    init(config: Config, userManager: UserManager, mediaUploader: MediaUploading)
 
     /// Set current user
     ///
@@ -42,7 +40,7 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data. Different from the model used for receiving messages.
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func send(message: MS, to conversation: EntityIdentifier, completion: @escaping (Result<M, ChatError>) -> Void)
+    func send(message: NetworkMessageSpecification, to conversation: EntityIdentifier, completion: @escaping (Result<NetworkMessage, ChatError>) -> Void)
 
     /// Delete a message from the specified conversation
     ///
@@ -50,21 +48,21 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data
     ///   - conversation: Conversation ID
     ///   - completion: Called upon deleting message (or encountering an error)
-    func delete(message: M, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
+    func delete(message: NetworkMessage, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
     
     /// Send a request to set `message` as the last seen message by current user
     ///
     /// - Parameters:
     ///   - message: Message to be set as last seen
     ///   - conversation: Target conversation
-    func updateSeenMessage(_ message: M, in conversation: C)
+    func updateSeenMessage(_ message: NetworkMessage, in conversation: NetworkConversation)
 
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
     /// - Parameters:
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToConversations(pageSize: Int, completion: @escaping (Result<[C], ChatError>) -> Void)
+    func listenToConversations(pageSize: Int, completion: @escaping (Result<[NetworkConversation], ChatError>) -> Void)
     
     //// This method asks for more data and calls the completion callback specified in `listenToConversations`
     func loadMoreConversations()
@@ -75,7 +73,7 @@ public protocol ChatNetworkServicing {
     ///   - id: Conversation ID
     ///   - pageSize: How many items to get at once
     ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<[M], ChatError>) -> Void)
+    func listenToMessages(conversation id: EntityIdentifier, pageSize: Int, completion: @escaping (Result<[NetworkMessage], ChatError>) -> Void)
     
     /// This method asks for more data and calls the completion callback specified in `listenToMessages`
     ///

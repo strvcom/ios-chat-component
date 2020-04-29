@@ -10,16 +10,23 @@ import UIKit
 import ChatCore
 import FirebaseStorage
 
-struct ImageUploader {
-    func upload(image: UIImage, completion: @escaping (Result<String, ChatError>) -> Void) {
-        let storage = Storage.storage()
-        let ref = storage.reference().child(UUID().uuidString)
-        let optimized = image.optimized()
-        
-        guard let data = optimized.pngData() ?? optimized.jpegData(compressionQuality: 1.0) else {
-            completion(.failure(.internal(message: "No image data")))
-            return
+public class FirestoreMediaUploader: MediaUploading {
+    private lazy var storage = Storage.storage()
+    
+    public init() {}
+    
+    public func upload(content: MediaContent, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void) {
+        content.normalizedData { [weak self] data in
+            self?.upload(data: data, completion: { result in
+                queue.async {
+                    completion(result)
+                }
+            })
         }
+    }
+    
+    private func upload(data: Data, completion: @escaping (Result<URL, ChatError>) -> Void) {
+        let ref = storage.reference().child(UUID().uuidString)
         
         ref.putData(data, metadata: nil) { (_, error) in
             if let error = error {
@@ -32,12 +39,12 @@ struct ImageUploader {
                     completion(.failure(.networking(error: error)))
                 }
                 
-                guard let imageUrl = url?.absoluteString else {
+                guard let url = url else {
                     completion(.failure(.unexpectedState))
                     return
                 }
                 
-                completion(.success(imageUrl))
+                completion(.success(url))
             }
         }
     }

@@ -19,9 +19,6 @@ public protocol ConversationRepresenting: EntityIdentifiable {
     /// Array of members participating in this conversation
     var members: [User] { get }
     
-    /// Array of messages that have been sent to this conversation
-    var messages: [Message] { get }
-    
     /// Dictionary of seen timestamps with userId as the key
     var seen: [String: (messageId: EntityIdentifier, seenAt: Date)] { get }
 }

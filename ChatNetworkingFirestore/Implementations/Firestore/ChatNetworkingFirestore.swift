@@ -8,21 +8,35 @@
 
 import Foundation
 import ChatCore
-import FirebaseFirestore
 import FirebaseCore
+import FirebaseFirestore
 
-public class ChatNetworkingFirestore: ChatNetworkServicing {
-    let database: Firestore
+open class ChatNetworkingFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
+    public typealias NetworkModels = Models
+    public typealias UserManager = ChatFirestoreUserManager<UserFirestore>
+    
+    public typealias ConversationFirestore = Models.NetworkConversation
+    public typealias MessageFirestore = Models.NetworkMessage
+    public typealias UserFirestore = Models.NetworkUser
+    public typealias MessageSpecificationFirestore = Models.NetworkMessageSpecification
+    
+    private let config: ChatFirestoreConfig
+    private var constants: ChatFirestoreConstants {
+        config.constants
+    }
 
     // user management
     @Required private var currentUserId: String
 
+    private let database: Firestore
+    private let userManager: ChatFirestoreUserManager<UserFirestore>
+    private let mediaUploader: MediaUploading
+
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
-    private let userManager: UserManagerFirestore
 
-    public required init(config: ChatNetworkingFirestoreConfig, userManager: UserManagerFirestore) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = FirestoreMediaUploader()) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -35,8 +49,16 @@ public class ChatNetworkingFirestore: ChatNetworkServicing {
             fatalError("Can't configure Firebase app \(appName)")
         }
 
-        database = Firestore.firestore(app: firebaseApp)
+        self.config = config
+        self.database = Firestore.firestore(app: firebaseApp)
         self.userManager = userManager
+        self.mediaUploader = mediaUploader
+    }
+    
+    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = FirestoreMediaUploader()) {
+        let userManager = ChatFirestoreUserManagerDefault<UserFirestore>(config: config)
+        
+        self.init(config: config, userManager: userManager, mediaUploader: mediaUploader)
     }
     
     deinit {
@@ -64,23 +86,21 @@ public extension ChatNetworkingFirestore {
 // MARK: Update conversation
 public extension ChatNetworkingFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
-
-        var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
-
-        var newJson: [String: Any] = [:]
-
-        for item in conversation.seen {
-            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
-            newJson[item.key] = informationJson
-        }
-
+        var json: [String: Any] = conversation.seen.mapValues({
+            [constants.conversations.seenAttribute.messageIdAttributeName: $0.messageId,
+            constants.conversations.seenAttribute.timestampAttributeName: $0.seenAt]
+        })
+        
+        json[currentUserId] = [
+            constants.conversations.seenAttribute.messageIdAttributeName: message.id,
+            constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
+        ]
+        
         let reference = self.database
-            .collection(Constants.conversationsPath)
+            .collection(constants.conversations.path)
             .document(conversation.id)
 
-        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
+        reference.updateData([constants.conversations.seenAttribute.name: json]) { err in
             if let err = err {
                 print("Error updating document: \(err)")
             } else {
@@ -91,10 +111,10 @@ public extension ChatNetworkingFirestore {
 
     private func updateLastMessage(message: [String: Any], in conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let reference = self.database
-            .collection(Constants.conversationsPath)
+            .collection(constants.conversations.path)
             .document(conversation)
 
-        reference.updateData([Constants.Conversation.lastMessageAttributeName: message]) { error in
+        reference.updateData([constants.conversations.lastMessageAttributeName: message]) { error in
             if let error = error {
                 completion(.failure(.networking(error: error)))
             } else {
@@ -145,7 +165,9 @@ public extension ChatNetworkingFirestore {
     }
 
     private func prepareMessageData(message: MessageSpecificationFirestore, completion: @escaping (Result<[String: Any], ChatError>) -> Void) {
-        message.toJSON { [weak self] result in
+        let json = message.json
+        
+        uploadMedia(for: json) { [weak self] result in
             guard let self = self, case let .success(json) = result else {
                 if case let .failure(error) = result {
                     completion(.failure(error))
@@ -155,17 +177,17 @@ public extension ChatNetworkingFirestore {
             }
 
             var newJSON: [String: Any] = json
-            newJSON[Constants.Message.senderIdAttributeName] = self.currentUserId
-            newJSON[Constants.Message.sentAtAttributeName] = Timestamp()
+            newJSON[self.constants.messages.userIdAttributeName] = self.currentUserId
+            newJSON[self.constants.messages.sentAtAttributeName] = Timestamp()
             completion(.success(newJSON))
         }
     }
 
     private func storeMessage(in conversation: EntityIdentifier, messageData: [String: Any], completion: @escaping (Result<DocumentReference, ChatError>) -> Void) {
         let reference = self.database
-            .collection(Constants.conversationsPath)
+            .collection(constants.conversations.path)
             .document(conversation)
-            .collection(Constants.messagesPath)
+            .collection(constants.messages.path)
 
         let documentRef = reference.document()
         documentRef.setData(messageData) { error in
@@ -189,15 +211,66 @@ public extension ChatNetworkingFirestore {
             }
         }
     }
+    
+    private func uploadMedia(for json: ChatJSON, completion: @escaping (Result<ChatJSON, ChatError>) -> Void) {
+        var normalizedJSON: ChatJSON = [:]
+        var resultError: ChatError?
+        
+        let dispatchGroup = DispatchGroup()
+        
+        for (key, value) in json {
+            switch value {
+            case let value as MediaContent:
+                dispatchGroup.enter()
+                
+                // TODO: Switch to dedicated queue
+                mediaUploader.upload(content: value, on: .main) { result in
+                    switch result {
+                    case .success(let url):
+                        normalizedJSON[key] = url
+                    case .failure(let error):
+                        resultError = error
+                    }
+                    
+                    dispatchGroup.leave()
+                }
+            case let value as ChatJSON:
+                dispatchGroup.enter()
+                
+                uploadMedia(for: value) { result in
+                    switch result {
+                    case .success(let json):
+                        normalizedJSON[key] = json
+                    case .failure(let error):
+                        resultError = error
+                    }
+                    
+                    dispatchGroup.leave()
+                }
+            default:
+                normalizedJSON[key] = value
+            }
+        }
+        
+        // TODO: Switch to dedicated queue
+        dispatchGroup.notify(queue: .main) {
+            if let error = resultError {
+                completion(.failure(error))
+            } else {
+                completion(.success(normalizedJSON))
+            }
+        }
+    }
+
 }
 
 // MARK: - Delete message
 public extension ChatNetworkingFirestore {
     func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let document = self.database
-            .collection(Constants.conversationsPath)
+            .collection(constants.conversations.path)
             .document(conversation)
-            .collection(Constants.messagesPath)
+            .collection(constants.messages.path)
             .document(message.id)
         document.delete { error in
             if let error = error {
@@ -305,8 +378,8 @@ public extension ChatNetworkingFirestore {
 private extension ChatNetworkingFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         let query = database
-            .collection(Constants.conversationsPath)
-            .whereField(Constants.Message.membersAttributeName, arrayContains: currentUserId)
+            .collection(constants.conversations.path)
+            .whereField(constants.conversations.membersAttributeName, arrayContains: currentUserId)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)
@@ -317,10 +390,10 @@ private extension ChatNetworkingFirestore {
     
     func messagesQuery(conversation id: String, numberOfMessages: Int?) -> Query {
         let query = database
-            .collection(Constants.conversationsPath)
+            .collection(constants.conversations.path)
             .document(id)
-            .collection(Constants.messagesPath)
-            .order(by: Constants.Message.sentAtAttributeName, descending: true)
+            .collection(constants.messages.path)
+            .order(by: constants.messages.sentAtAttributeName, descending: true)
         
         if let limit = numberOfMessages {
             return query.limit(to: limit)
@@ -410,10 +483,10 @@ private extension ChatNetworkingFirestore {
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
-        .document(userId)
+            .collection(constants.conversations.path)
+            .document(conversation)
+            .collection(constants.typingUsers.path)
+            .document(userId)
 
         isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
     }
@@ -441,9 +514,9 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
         let query = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
+            .collection(constants.conversations.path)
+            .document(conversation)
+            .collection(constants.typingUsers.path)
 
         let listener = Listener.typingUsers(conversationId: conversation)
         // to infer type from generic

@@ -10,7 +10,7 @@ import UIKit
 import ChatCore
 import MessageKit
 
-public typealias MessagesListState = ListState<MessageKitType>
+public typealias MessagesListState = ListState<Message>
 
 protocol MessagesListViewModeling: AnyObject {
     var delegate: MessagesListViewModelDelegate? { get set }
@@ -21,8 +21,8 @@ protocol MessagesListViewModeling: AnyObject {
 
     func load()
     func loadMore()
-    func updateSeenMessage(_ message: MessageKitType)
-    func send(message: MessageSpecification, completion: @escaping (Result<MessageKitType, ChatError>) -> Void)
+    func updateSeenMessage(_ message: Message)
+    func send(message: MessageSpecification, completion: @escaping (Result<Message, ChatError>) -> Void)
     func seen(message: EntityIdentifier) -> Bool
     func seenLabel(for: EntityIdentifier) -> String
 }
