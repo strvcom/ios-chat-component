@@ -149,19 +149,21 @@ extension ChatCore {
             self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
             let mess = Networking.MS(uiModel: message)
             self.networking.send(message: mess, to: conversation) { result in
-                switch result {
-                case .success(let message):
-                    _ = taskCompletion(.success)
-                    self.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
-
-                    completion(.success(message.uiModel))
-
-                case .failure(let error):
-                    if taskCompletion(.failure(error)) == .finished {
+                self.coreQueue.async {
+                    switch result {
+                    case .success(let message):
+                        _ = taskCompletion(.success)
                         self.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
-                        completion(.failure(error))
+                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
+
+                        completion(.success(message.uiModel))
+
+                    case .failure(let error):
+                        if taskCompletion(.failure(error)) == .finished {
+                            self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
+                            completion(.failure(error))
+                        }
                     }
                 }
             }
