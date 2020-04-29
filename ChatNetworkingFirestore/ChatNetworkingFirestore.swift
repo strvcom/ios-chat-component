@@ -118,19 +118,17 @@ public extension ChatNetworkingFirestore {
                 return
             }
 
-            let referenceMessage = self.database
-                .collection(Constants.conversationsPath)
-                .document(conversation)
-                .collection(Constants.messagesPath)
-            let messageRef = referenceMessage.document()
-
             let referenceConversation = self.database
                 .collection(Constants.conversationsPath)
                 .document(conversation)
 
+            let referenceMessage = referenceConversation
+                .collection(Constants.messagesPath)
+                .document()
+
             self.database.runTransaction({ (transaction, _) -> Any? in
 
-                transaction.setData(data, forDocument: messageRef)
+                transaction.setData(data, forDocument: referenceMessage)
                 transaction.updateData([Constants.Conversation.lastMessageAttributeName: data], forDocument: referenceConversation)
 
                 return nil
@@ -138,7 +136,7 @@ public extension ChatNetworkingFirestore {
                 if let error = error {
                     completion(.failure(.networking(error: error)))
                 } else {
-                    completion(.success(messageRef.documentID))
+                    completion(.success(referenceMessage.documentID))
                 }
             })
         }
@@ -414,10 +412,10 @@ private extension ChatNetworkingFirestore {
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
-        .document(userId)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
+            .document(userId)
 
         isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
     }
@@ -445,9 +443,9 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
         let query = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
 
         let listener = Listener.typingUsers(conversationId: conversation)
         // to infer type from generic
