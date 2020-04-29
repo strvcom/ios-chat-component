@@ -24,13 +24,3 @@ public extension ChatNetworkingConvertible where NetworkingModel: ChatUIConverti
     }
 
 }
-
-public extension ChatNetworkingConvertible where Self: ChatUIConvertible, NetworkingModel == ChatUIModel {
-    var uiModel: Self {
-        self
-    }
-    
-    init(uiModel: Self) {
-        self = uiModel
-    }
-}
