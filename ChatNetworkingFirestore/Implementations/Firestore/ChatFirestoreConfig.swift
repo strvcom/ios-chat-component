@@ -1,6 +1,6 @@
 //
 //  ChatFirestoreConfig.swift
-//  ChatNetworkingFirestore
+//  ChatFirestore
 //
 //  Created by Tomas Cejka on 3/31/20.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.

@@ -11,7 +11,7 @@ import ChatCore
 import FirebaseCore
 import FirebaseFirestore
 
-open class ChatNetworkingFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
+open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     public typealias NetworkModels = Models
     public typealias UserManager = ChatFirestoreUserManager<UserFirestore>
     
@@ -36,7 +36,7 @@ open class ChatNetworkingFirestore<Models: ChatFirestoreModeling>: ChatNetworkSe
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
-    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = FirestoreMediaUploader()) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = ChatFirestoreMediaUploader()) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -55,8 +55,8 @@ open class ChatNetworkingFirestore<Models: ChatFirestoreModeling>: ChatNetworkSe
         self.mediaUploader = mediaUploader
     }
     
-    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = FirestoreMediaUploader()) {
-        let userManager = ChatFirestoreUserManagerDefault<UserFirestore>(config: config)
+    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader()) {
+        let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config)
         
         self.init(config: config, userManager: userManager, mediaUploader: mediaUploader)
     }
@@ -70,21 +70,21 @@ open class ChatNetworkingFirestore<Models: ChatFirestoreModeling>: ChatNetworkSe
 }
 
 // MARK: - User management
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func setCurrentUser(user id: EntityIdentifier) {
         currentUserId = id
     }
 }
 
 // MARK: - Load
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func load(completion: @escaping (Result<Void, ChatError>) -> Void) {
         completion(.success(()))
     }
 }
 
 // MARK: Update conversation
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
         var json: [String: Any] = conversation.seen.mapValues({
             [constants.conversations.seenAttribute.messageIdAttributeName: $0.messageId,
@@ -125,7 +125,7 @@ public extension ChatNetworkingFirestore {
 }
 
 // MARK: Create message
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
 
         prepareMessageData(message: message) { [weak self] result in
@@ -265,7 +265,7 @@ public extension ChatNetworkingFirestore {
 }
 
 // MARK: - Delete message
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
         let document = self.database
             .collection(constants.conversations.path)
@@ -315,7 +315,7 @@ public extension ChatNetworkingFirestore {
 }
 
 // MARK: Listen to collections
-public extension ChatNetworkingFirestore {
+public extension ChatFirestore {
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
         
         let listener = Listener.conversations(pageSize: pageSize)
@@ -407,7 +407,7 @@ public extension ChatNetworkingFirestore {
 }
 
 // MARK: Queries
-private extension ChatNetworkingFirestore {
+private extension ChatFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         let query = database
             .collection(constants.conversations.path)
@@ -436,7 +436,7 @@ private extension ChatNetworkingFirestore {
 }
 
 // MARK: Private methods
-private extension ChatNetworkingFirestore {
+private extension ChatFirestore {
     func listenTo<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
         let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
             if let snapshot = snapshot {
@@ -512,7 +512,7 @@ private extension ChatNetworkingFirestore {
 }
 
 // MARK: - ChatNetworkingWithTypingUsers
-extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
+extension ChatFirestore: ChatNetworkingWithTypingUsers {
     public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
             .collection(constants.conversations.path)

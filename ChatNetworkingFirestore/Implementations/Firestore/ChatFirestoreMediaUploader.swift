@@ -1,5 +1,5 @@
 //
-//  ImageUploader.swift
+//  ChatFirestoreMediaUploader.swift
 //  ChatNetworkFirebase
 //
 //  Created by Daniel Pecher on 29/01/2020.
@@ -10,7 +10,7 @@ import UIKit
 import ChatCore
 import FirebaseStorage
 
-public class FirestoreMediaUploader: MediaUploading {
+public class ChatFirestoreMediaUploader: MediaUploading {
     private lazy var storage = Storage.storage()
     
     public init() {}

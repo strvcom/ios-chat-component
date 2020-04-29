@@ -14,7 +14,7 @@ import ChatUI
 /// Chat implementation for Pumpkin Pie project
 public class PumpkinPieChat: DefaultChatSpecifying {
     public typealias UIModels = PumpkinPieModels
-    public typealias Networking = ChatNetworkingFirestore<PumpkinPieModels>
+    public typealias Networking = ChatFirestore<PumpkinPieModels>
     public typealias Core = ChatCore<Networking, UIModels>
     public typealias Interface = PumpkinPieInterface
     public typealias UIDelegate = Interface.Delegate

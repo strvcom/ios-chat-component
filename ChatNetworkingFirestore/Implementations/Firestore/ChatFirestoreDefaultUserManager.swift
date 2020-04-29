@@ -1,6 +1,6 @@
 //
-//  UserManaging.swift
-//  ChatNetworkingFirestore
+//  ChatFirestoreDefaultUserManager.swift
+//  ChatFirestore
 //
 //  Created by Tomas Cejka on 4/7/20.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
@@ -12,15 +12,8 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import ChatCore
 
-open class ChatFirestoreUserManager<User: UserRepresenting>: UserManaging where User: Decodable {
-    // swiftlint:disable:next unavailable_function
-    open func users(userIds: [EntityIdentifier], completion: @escaping (Result<[User], ChatError>) -> Void) {
-        fatalError("\(#function) has not been implemented")
-    }
-}
-
 // MARK: - Default firestore implementation of user managing
-public class ChatFirestoreUserManagerDefault<User: UserRepresenting>: ChatFirestoreUserManager<User> where User: Decodable {
+public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirestoreUserManager<User> where User: Decodable {
 
     private let config: ChatFirestoreConfig
     private let database: Firestore
