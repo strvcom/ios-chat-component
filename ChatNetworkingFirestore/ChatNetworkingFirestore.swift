@@ -88,20 +88,6 @@ public extension ChatNetworkingFirestore {
             }
         }
     }
-
-    private func updateLastMessage(message: [String: Any]?, in conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-
-        reference.updateData([Constants.Conversation.lastMessageAttributeName: message ?? FieldValue.delete]) { error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.success(()))
-            }
-        }
-    }
 }
 
 // MARK: Create message
