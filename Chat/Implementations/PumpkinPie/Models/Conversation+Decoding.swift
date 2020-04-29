@@ -12,7 +12,7 @@ import ChatUI
 import Foundation
 import FirebaseFirestoreSwift
 
-extension Conversation: ChatUniversalModel {}
+extension Conversation: ChatModel {}
 
 extension Conversation: Decodable {
     private enum CodingKeys: CodingKey {

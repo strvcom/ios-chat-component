@@ -11,7 +11,7 @@ import ChatNetworkingFirestore
 import ChatUI
 import Foundation
 
-extension MessageSpecification: ChatUniversalModel {}
+extension MessageSpecification: ChatModel {}
 
 extension MessageSpecification: JSONConvertible {
     public var json: [String: Any] {

@@ -103,10 +103,10 @@
 		C11E9E0523EDCCDA005E10A1 /* ChatNetworkingFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DF723EDCCDA005E10A1 /* ChatNetworkingFirestore.swift */; };
 		C11E9E0723EDCCDA005E10A1 /* FirestoreMediaUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DF923EDCCDA005E10A1 /* FirestoreMediaUploader.swift */; };
 		C11E9E1923EDCD07005E10A1 /* Chat.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E1123EDCD06005E10A1 /* Chat.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C11E9E1B23EDCD07005E10A1 /* UserConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1423EDCD06005E10A1 /* UserConvertible.swift */; };
-		C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1523EDCD06005E10A1 /* ConversationConvertible.swift */; };
-		C11E9E1D23EDCD07005E10A1 /* MessageConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1623EDCD06005E10A1 /* MessageConvertible.swift */; };
-		C11E9E1E23EDCD07005E10A1 /* MessageSpecificationConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1723EDCD06005E10A1 /* MessageSpecificationConvertible.swift */; };
+		C11E9E1B23EDCD07005E10A1 /* User+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1423EDCD06005E10A1 /* User+Decoding.swift */; };
+		C11E9E1C23EDCD07005E10A1 /* Conversation+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1523EDCD06005E10A1 /* Conversation+Decoding.swift */; };
+		C11E9E1D23EDCD07005E10A1 /* Message+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1623EDCD06005E10A1 /* Message+Decoding.swift */; };
+		C11E9E1E23EDCD07005E10A1 /* MessageSpecification+Encoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E1723EDCD06005E10A1 /* MessageSpecification+Encoding.swift */; };
 		C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2223EDCD1E005E10A1 /* ChatCore.swift */; };
 		C11E9E3623EDCD1E005E10A1 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E2323EDCD1E005E10A1 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2523EDCD1E005E10A1 /* Error.swift */; };
@@ -152,6 +152,8 @@
 		C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574122433678500F08E78 /* PumpkinPieChat.swift */; };
 		C18574192434D59B00F08E78 /* ChatInterfacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18574182434D59B00F08E78 /* ChatInterfacing.swift */; };
 		C1888D8224598AA500E0136A /* PumpkinPieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1888D8124598AA500E0136A /* PumpkinPieModels.swift */; };
+		C1888D842459A78D00E0136A /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1888D832459A78D00E0136A /* ChatModel.swift */; };
+		C1888D862459A8D000E0136A /* MessageContent+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1888D852459A8D000E0136A /* MessageContent+Decoding.swift */; };
 		C196FBC92422272C0077FC49 /* ChatNetworkingFirestore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; };
 		C196FBCA2422272C0077FC49 /* ChatNetworkingFirestore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C196FBCE242227310077FC49 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; };
@@ -353,10 +355,10 @@
 		C11E9E0223EDCCDA005E10A1 /* UIImage+Resizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resizing.swift"; sourceTree = "<group>"; };
 		C11E9E0323EDCCDA005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11E9E1123EDCD06005E10A1 /* Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
-		C11E9E1423EDCD06005E10A1 /* UserConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserConvertible.swift; sourceTree = "<group>"; };
-		C11E9E1523EDCD06005E10A1 /* ConversationConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationConvertible.swift; sourceTree = "<group>"; };
-		C11E9E1623EDCD06005E10A1 /* MessageConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageConvertible.swift; sourceTree = "<group>"; };
-		C11E9E1723EDCD06005E10A1 /* MessageSpecificationConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSpecificationConvertible.swift; sourceTree = "<group>"; };
+		C11E9E1423EDCD06005E10A1 /* User+Decoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+Decoding.swift"; sourceTree = "<group>"; };
+		C11E9E1523EDCD06005E10A1 /* Conversation+Decoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+Decoding.swift"; sourceTree = "<group>"; };
+		C11E9E1623EDCD06005E10A1 /* Message+Decoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+Decoding.swift"; sourceTree = "<group>"; };
+		C11E9E1723EDCD06005E10A1 /* MessageSpecification+Encoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MessageSpecification+Encoding.swift"; sourceTree = "<group>"; };
 		C11E9E1823EDCD06005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11E9E2223EDCD1E005E10A1 /* ChatCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCore.swift; sourceTree = "<group>"; };
 		C11E9E2323EDCD1E005E10A1 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
@@ -404,6 +406,8 @@
 		C18574122433678500F08E78 /* PumpkinPieChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PumpkinPieChat.swift; sourceTree = "<group>"; };
 		C18574182434D59B00F08E78 /* ChatInterfacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInterfacing.swift; sourceTree = "<group>"; };
 		C1888D8124598AA500E0136A /* PumpkinPieModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpkinPieModels.swift; sourceTree = "<group>"; };
+		C1888D832459A78D00E0136A /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
+		C1888D852459A8D000E0136A /* MessageContent+Decoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageContent+Decoding.swift"; sourceTree = "<group>"; };
 		C1A62336244843FB00301C82 /* AppDependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependency.swift; sourceTree = "<group>"; };
 		C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+iOS12.swift"; sourceTree = "<group>"; };
 		C1BD63332458577F0093769C /* ChatNetworkModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkModeling.swift; sourceTree = "<group>"; };
@@ -754,12 +758,13 @@
 		C11E9E1323EDCD06005E10A1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C11E9E1423EDCD06005E10A1 /* UserConvertible.swift */,
-				C11E9E1523EDCD06005E10A1 /* ConversationConvertible.swift */,
-				C11E9E1623EDCD06005E10A1 /* MessageConvertible.swift */,
-				C11E9E1723EDCD06005E10A1 /* MessageSpecificationConvertible.swift */,
-				C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */,
 				C1888D8124598AA500E0136A /* PumpkinPieModels.swift */,
+				C11E9E1423EDCD06005E10A1 /* User+Decoding.swift */,
+				C11E9E1523EDCD06005E10A1 /* Conversation+Decoding.swift */,
+				C11E9E1623EDCD06005E10A1 /* Message+Decoding.swift */,
+				C1888D852459A8D000E0136A /* MessageContent+Decoding.swift */,
+				C11E9E1723EDCD06005E10A1 /* MessageSpecification+Encoding.swift */,
+				C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1019,6 +1024,7 @@
 			children = (
 				C11E9E3223EDCD1E005E10A1 /* ChatNetworkingConvertible.swift */,
 				C11E9E2923EDCD1E005E10A1 /* ChatUIConvertible.swift */,
+				C1888D832459A78D00E0136A /* ChatModel.swift */,
 			);
 			path = ModelsConverting;
 			sourceTree = "<group>";
@@ -1514,6 +1520,7 @@
 				84D7388E243D143300DFC62F /* UserManaging.swift in Sources */,
 				C1BD63342458577F0093769C /* ChatNetworkModeling.swift in Sources */,
 				C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */,
+				C1888D842459A78D00E0136A /* ChatModel.swift in Sources */,
 				842C71C42426B94F0079145A /* MessageConvertible.swift in Sources */,
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
 				C11E9E3823EDCD1E005E10A1 /* EntityIdentifier.swift in Sources */,
@@ -1594,11 +1601,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C11E9E1E23EDCD07005E10A1 /* MessageSpecificationConvertible.swift in Sources */,
+				C11E9E1E23EDCD07005E10A1 /* MessageSpecification+Encoding.swift in Sources */,
 				C1253A87243C995D00733A95 /* DefaultChatSpecifying+Convenience.swift in Sources */,
-				C11E9E1B23EDCD07005E10A1 /* UserConvertible.swift in Sources */,
-				C11E9E1D23EDCD07005E10A1 /* MessageConvertible.swift in Sources */,
-				C11E9E1C23EDCD07005E10A1 /* ConversationConvertible.swift in Sources */,
+				C11E9E1B23EDCD07005E10A1 /* User+Decoding.swift in Sources */,
+				C1888D862459A8D000E0136A /* MessageContent+Decoding.swift in Sources */,
+				C11E9E1D23EDCD07005E10A1 /* Message+Decoding.swift in Sources */,
+				C11E9E1C23EDCD07005E10A1 /* Conversation+Decoding.swift in Sources */,
 				C1253A7C243C755C00733A95 /* PumpkinPieInterface.swift in Sources */,
 				C18574132433678500F08E78 /* PumpkinPieChat.swift in Sources */,
 				C1A6233924498D8900301C82 /* ChatSpecifying+iOS12.swift in Sources */,
