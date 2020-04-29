@@ -68,25 +68,43 @@ public extension ChatNetworkingFirestore {
         var conversation = conversation
         conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
 
-        var newJson: [String: Any] = [:]
+        let reference = database
+        .collection(Constants.conversationsPath)
+        .document(conversation.id)
 
-        for item in conversation.seen {
-            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
-            newJson[item.key] = informationJson
-        }
+        database.runTransaction({ (transaction, errorPointer) -> Any? in
+            var currentConversation: ConversationFirestore?
+            do {
+                let conversationSnapshot = try transaction.getDocument(reference)
+                currentConversation = try conversationSnapshot.data(as: ConversationFirestore.self)
+            } catch let fetchError as NSError {
+                errorPointer?.pointee = fetchError
+                return nil
+            }
 
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation.id)
+            currentConversation?.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: self.currentUserId)
 
-        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-            if let err = err {
+            guard let seenItems = currentConversation?.seen else {
+                return nil
+            }
+            var newJson: [String: Any] = [:]
+
+            for item in seenItems {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
+
+            transaction.updateData([Constants.Conversation.seenAttributeName: newJson], forDocument: reference)
+
+            return nil
+        }, completion: { (_, error) in
+            if let err = error {
                 print("Error updating document: \(err)")
             } else {
                 print("Document successfully updated")
             }
-        }
+        })
     }
 }
 
