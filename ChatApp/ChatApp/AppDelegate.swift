@@ -10,7 +10,6 @@ import UIKit
 import Firebase
 import FirebaseUI
 import Chat
-import ChatNetworkingFirestore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
