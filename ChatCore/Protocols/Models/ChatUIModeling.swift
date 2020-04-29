@@ -11,7 +11,7 @@ import Foundation
 /// This protocol is used to specify concrete implementations of UI models
 public protocol ChatUIModeling {
     associatedtype UIConversation: ConversationRepresenting
-    associatedtype UIMessage: MessageRepresenting
+    associatedtype UIMessage where UIMessage == UIConversation.Message
     associatedtype UIMessageSpecification: MessageSpecifying
-    associatedtype UIUser: UserRepresenting
+    associatedtype UIUser where UIUser == UIConversation.User
 }
