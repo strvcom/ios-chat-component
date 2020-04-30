@@ -63,14 +63,11 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Update conversation
 public extension ChatNetworkingFirestore {
-    func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
-
-        var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: EntityIdentifier) {
 
         let reference = database
-        .collection(Constants.conversationsPath)
-        .document(conversation.id)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
 
         database.runTransaction({ (transaction, errorPointer) -> Any? in
             var currentConversation: ConversationFirestore?
@@ -100,9 +97,9 @@ public extension ChatNetworkingFirestore {
             return nil
         }, completion: { (_, error) in
             if let err = error {
-                print("Error updating document: \(err)")
+                print("Error updating conversation last seen message: \(err)")
             } else {
-                print("Document successfully updated")
+                print("Conversation last seen message successfully updated")
             }
         })
     }
@@ -433,7 +430,7 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     private func setTypingUser(typingUserReference: DocumentReference) {
         typingUserReference.setData([:]) { error in
             if let err = error {
-                print("Error updating document: \(err)")
+                print("Error updating user typing: \(err)")
             } else {
                 print("Typing user successfully set")
             }
@@ -443,7 +440,7 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     private func removeTypingUser(typingUserReference: DocumentReference) {
         typingUserReference.delete { error in
             if let err = error {
-                print("Error deleting document: \(err)")
+                print("Error deleting user typing: \(err)")
             } else {
                 print("Typing user successfully removed")
             }

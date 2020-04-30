@@ -220,7 +220,7 @@ extension ChatCore {
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
             let seenMessage = Networking.M(uiModel: message)
             let conversation = Networking.C(uiModel: existingConversation)
-            self?.networking.updateSeenMessage(seenMessage, in: conversation)
+            self?.networking.updateSeenMessage(seenMessage, in: conversation.id)
         }
     }
 }

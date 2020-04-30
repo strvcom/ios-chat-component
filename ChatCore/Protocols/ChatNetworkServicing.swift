@@ -56,8 +56,8 @@ public protocol ChatNetworkServicing {
     ///
     /// - Parameters:
     ///   - message: Message to be set as last seen
-    ///   - conversation: Target conversation
-    func updateSeenMessage(_ message: M, in conversation: C)
+    ///   - conversation: Target conversation id
+    func updateSeenMessage(_ message: M, in conversation: EntityIdentifier)
 
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
