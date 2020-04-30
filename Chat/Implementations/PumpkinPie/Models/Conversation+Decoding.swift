@@ -7,13 +7,13 @@
 //
 
 import ChatCore
-import ChatNetworkingFirestore
 import ChatUI
 import Foundation
 import FirebaseFirestoreSwift
 
 extension Conversation: ChatModel {}
 
+// TODO: Try to figure out how to infer this
 extension Conversation: Decodable {
     private enum CodingKeys: CodingKey {
         case id, lastMessage, messages, members, seen

@@ -15,9 +15,13 @@ public protocol ChatNetworkingConvertible {
     
     /// This var constructs the networking model from the UI model
     var networkingModel: NetworkingModel { get }
+    
+    /// Initialize from networking model
+    /// - Parameter uiModel: Networking model to initialize from
+    init(networkingModel: NetworkingModel)
 }
 
-public extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.ChatUIModel == Self {
+public extension ChatNetworkingConvertible where NetworkingModel: ChatUIConvertible, NetworkingModel.UIModel == Self {
 
     var networkingModel: NetworkingModel {
         return NetworkingModel(uiModel: self)

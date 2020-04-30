@@ -10,6 +10,7 @@ import Foundation
 import ChatUI
 import ChatCore
 
+// TODO: Try to figure out how to infer this
 extension MessageContent: Decodable {
     private enum CodingKeys: String, CodingKey {
         case text

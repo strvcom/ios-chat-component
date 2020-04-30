@@ -7,12 +7,12 @@
 //
 
 import ChatCore
-import ChatNetworkingFirestore
 import ChatUI
 import Foundation
 
 extension MessageSpecification: ChatModel {}
 
+// TODO: Try to figure out how to infer this
 extension MessageSpecification: JSONConvertible {
     public var json: [String: Any] {
         switch self {

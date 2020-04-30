@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol JSONConvertible {
-    var json: [String: Any] { get }
+    var json: ChatJSON { get }
 }

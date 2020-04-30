@@ -19,9 +19,9 @@ public protocol DefaultChatSpecifying: ChatSpecifying where
     Networking.NetworkMessageSpecification: ChatUIConvertible,
     
     // Specify that all UI and networking models are inter-convertible
-    UIModels.UIConversation == Networking.NetworkConversation.ChatUIModel,
-    UIModels.UIMessage == Networking.NetworkMessage.ChatUIModel,
-    UIModels.UIMessageSpecification == Networking.NetworkMessageSpecification.ChatUIModel,
+    UIModels.UIConversation == Networking.NetworkConversation.UIModel,
+    UIModels.UIMessage == Networking.NetworkMessage.UIModel,
+    UIModels.UIMessageSpecification == Networking.NetworkMessageSpecification.UIModel,
     
     // Extra requirements on models for this core implementation
     // supports message caching, message states, temp messages when sending

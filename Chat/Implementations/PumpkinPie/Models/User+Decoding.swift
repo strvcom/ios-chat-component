@@ -1,19 +1,20 @@
 //
-//  UserConvertible.swift
+//  User+Decoding.swift
 //  ChatApp
 //
-//  Created by Mireya Orta on 2/5/20.
+//  Created by Jan on 30/04/2020.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
+import Foundation
+import ChatUI
 import ChatCore
 import ChatNetworkingFirestore
-import ChatUI
-import Foundation
 import FirebaseFirestoreSwift
 
 extension User: ChatModel {}
 
+// TODO: Try to figure out how to infer this
 extension User: Decodable {
     private enum CodingKeys: CodingKey {
         case id, name, imageUrl, compatibility

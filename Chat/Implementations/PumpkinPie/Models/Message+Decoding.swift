@@ -1,13 +1,12 @@
 //
-//  MessageConvertible.swift
+//  Message+Decoding.swift
 //  ChatApp
 //
-//  Created by Mireya Orta on 2/5/20.
+//  Created by Jan on 30/04/2020.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
 import ChatCore
-import ChatNetworkingFirestore
 import ChatUI
 import Foundation
 import FirebaseFirestore
@@ -15,6 +14,7 @@ import FirebaseFirestoreSwift
 
 extension Message: ChatModel {}
 
+// TODO: Try to figure out how to infer this
 extension Message: Decodable {
     private enum CodingKeys: String, CodingKey {
         case id

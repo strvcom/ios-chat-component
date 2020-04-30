@@ -10,6 +10,7 @@ import Foundation
 import ChatCore
 import FirebaseFirestore
 
+// TODO: Try to figure out how to infer this
 public struct SeenItem: Decodable {
     public let messageId: EntityIdentifier
     public let timestamp: Date

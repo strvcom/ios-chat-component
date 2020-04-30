@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol ChatModel: ChatNetworkingConvertible, ChatUIConvertible where ChatUIModel == Self, NetworkingModel == Self {}
+public protocol ChatModel: ChatNetworkingConvertible, ChatUIConvertible where UIModel == Self, NetworkingModel == Self {}
 
 public extension ChatModel {
     var uiModel: Self {
@@ -21,5 +21,9 @@ public extension ChatModel {
     
     init(uiModel: Self) {
         self = uiModel
+    }
+    
+    init(networkingModel: Self) {
+        self = networkingModel
     }
 }

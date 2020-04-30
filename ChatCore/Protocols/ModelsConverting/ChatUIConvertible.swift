@@ -11,12 +11,20 @@ import Foundation
 /// Make networking models conform to this protocol to be able to convert them to the UI models
 public protocol ChatUIConvertible {
 
-    associatedtype ChatUIModel
+    associatedtype UIModel
 
     /// This var constructs the UI model from the networking model
-    var uiModel: ChatUIModel { get }
+    var uiModel: UIModel { get }
 
-    /// Initialize from uiModel
+    /// Initialize from UI model
     /// - Parameter uiModel: UI Model to initialize from
-    init(uiModel: ChatUIModel)
+    init(uiModel: UIModel)
+}
+
+public extension ChatUIConvertible where UIModel: ChatNetworkingConvertible, UIModel.NetworkingModel == Self {
+
+    var uiModel: UIModel {
+        return UIModel(networkingModel: self)
+    }
+
 }

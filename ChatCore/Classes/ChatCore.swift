@@ -26,9 +26,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
     Models.UIMessage.MessageSpecification == Models.UIMessageSpecification,
 
     // Specify that all UI and networking models are inter-convertible
-    Networking.NetworkConversation.ChatUIModel == Models.UIConversation,
-    Networking.NetworkMessage.ChatUIModel == Models.UIMessage,
-    Networking.NetworkMessageSpecification.ChatUIModel == Models.UIMessageSpecification {
+    Networking.NetworkConversation.UIModel == Models.UIConversation,
+    Networking.NetworkMessage.UIModel == Models.UIMessage,
+    Networking.NetworkMessageSpecification.UIModel == Models.UIMessageSpecification {
 
     public typealias Networking = Networking
     public typealias UIModels = Models
@@ -359,7 +359,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers,
     Networking.TU: ChatUIConvertible,
-    Networking.TU.ChatUIModel == Models.UIUser {
+    Networking.TU.UIModel == Models.UIUser {
 
     open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
