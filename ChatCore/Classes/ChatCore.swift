@@ -294,7 +294,9 @@ extension ChatCore {
                 // A firebase listener for these arguments has already been registered, no need to register again
                 defer {
                     if let data = self.messages[id] {
-                        closure.closure(.success(data))
+                        DispatchQueue.main.async {
+                            closure.closure(.success(data))
+                        }
                     }
                 }
                 return
@@ -369,7 +371,11 @@ extension ChatCore {
 
             if let existingListeners = self.conversationListeners[listener], existingListeners.count > 1 {
                 // A firebase listener for these arguments has already been registered, no need to register again
-                defer { closure.closure(.success(self.conversations)) }
+                defer {
+                    DispatchQueue.main.async {
+                        closure.closure(.success(self.conversations))
+                    }
+                }
                 return
             }
 
@@ -377,11 +383,12 @@ extension ChatCore {
             self.taskManager.run(attributes: [.afterInit, .backgroundThread], { taskCompletion in
 
                 self.networking.listenToConversations(pageSize: pageSize) { result in
-                    self.taskHandler(result: result, completion: taskCompletion)
-                    switch result {
-                    case .success(let conversations):
-                        // network returns on main thread
-                        self.coreQueue.async {
+                    // network returns on main thread
+                    self.coreQueue.async {
+                        self.taskHandler(result: result, completion: taskCompletion)
+                        switch result {
+                        case .success(let conversations):
+
                             self.dataManagers[listener]?.update(data: conversations)
                             let converted = conversations.compactMap({ $0.uiModel })
                             let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
@@ -393,11 +400,12 @@ extension ChatCore {
                                     $0.closure(.success(data))
                                 }
                             }
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            self.conversationListeners[listener]?.forEach {
-                                $0.closure(.failure(error))
+
+                        case .failure(let error):
+                            DispatchQueue.main.async {
+                                self.conversationListeners[listener]?.forEach {
+                                    $0.closure(.failure(error))
+                                }
                             }
                         }
                     }
