@@ -70,7 +70,6 @@ public extension ChatNetworkingFirestore {
 public extension ChatNetworkingFirestore {
     func updateSeenMessage(_ message: MessageFirestore, in conversation: EntityIdentifier) {
 
-
         networkingQueue.async { [weak self] in
             guard let self = self else {
                 return

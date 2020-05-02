@@ -137,42 +137,41 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: EntityIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread(coreQueue), .retry(.finite())]) { [weak self] taskCompletion in
             guard let self = self else {
                 return
             }
 
-            self.coreQueue.async {
-                // by default is cached message in sending state, similar as temporary message
-                let cachedMessage = self.cacheMessage(message: message, from: conversation)
-                self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
-                let mess = Networking.MS(uiModel: message)
-                self.networking.send(message: mess, to: conversation) { result in
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
-                    self.coreQueue.async {
-                        switch result {
-                        case .success(let messageId):
-                            _ = taskCompletion(.success)
+            // by default is cached message in sending state, similar as temporary message
+            let cachedMessage = self.cacheMessage(message: message, from: conversation)
+            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
+            let mess = Networking.MS(uiModel: message)
+            self.networking.send(message: mess, to: conversation) { result in
+
+                self.coreQueue.async {
+                    switch result {
+                    case .success(let messageId):
+                        _ = taskCompletion(.success)
+                        self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
+
+                        let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
+
+                        DispatchQueue.main.async {
+                            completion(.success(messageUI))
+                        }
+
+
+                    case .failure(let error):
+                        if taskCompletion(.failure(error)) == .finished {
                             self.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
-
-                            let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
+                            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
 
                             DispatchQueue.main.async {
-                                completion(.success(messageUI))
-                            }
-
-
-                        case .failure(let error):
-                            if taskCompletion(.failure(error)) == .finished {
-                                self.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                                self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
-
-                                DispatchQueue.main.async {
-                                    completion(.failure(error))
-                                }
+                                completion(.failure(error))
                             }
                         }
                     }
@@ -185,32 +184,31 @@ extension ChatCore {
 // MARK: - Deleting messages
 extension ChatCore {
     open func delete(message: MessageUI, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
             guard let self = self else {
                 return
             }
 
-            self.coreQueue.async {
-                // delete cache
-                let cachedMessages: [CachedMessage<MessageSpecifyingUI>]? = self.keychainManager.unsentMessages()
-                if let cachedMessage = cachedMessages?.first(where: { $0.id == message.id }) {
-                    self.keychainManager.removeMessage(message: cachedMessage)
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+
+            // delete cache
+            let cachedMessages: [CachedMessage<MessageSpecifyingUI>]? = self.keychainManager.unsentMessages()
+            if let cachedMessage = cachedMessages?.first(where: { $0.id == message.id }) {
+                self.keychainManager.removeMessage(message: cachedMessage)
+            }
+            // delete temp message
+            self.handleTemporaryMessage(id: message.id, to: conversation, with: .remove)
+            // delete message from server
+            let deleteMessage = Networking.M(uiModel: message)
+            self.networking.delete(message: deleteMessage, from: conversation) { result in
+
+                self.coreQueue.async {
+                    self.taskHandler(result: result, completion: taskCompletion)
                 }
-                // delete temp message
-                self.handleTemporaryMessage(id: message.id, to: conversation, with: .remove)
-                // delete message from server
-                let deleteMessage = Networking.M(uiModel: message)
-                self.networking.delete(message: deleteMessage, from: conversation) { result in
 
-                    self.coreQueue.async {
-                        self.taskHandler(result: result, completion: taskCompletion)
-                    }
-
-                    DispatchQueue.main.async {
-                        completion(result)
-                    }
+                DispatchQueue.main.async {
+                    completion(result)
                 }
             }
         }
@@ -244,26 +242,26 @@ extension ChatCore {
 // MARK: - Seen flag
 extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: EntityIdentifier) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        coreQueue.async { [weak self] in
-            guard let existingConversation = self?.conversations.data.first(where: { conversation == $0.id }) else {
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+            guard let existingConversation = self.conversations.data.first(where: { conversation == $0.id }) else {
                 print("Conversation with id \(conversation) not found")
                 return
             }
 
             // avoid updating same seen message
-            guard let currentUserId = self?.currentUser.id, existingConversation.seen[currentUserId]?.messageId != message.id else {
+            guard existingConversation.seen[self.currentUser.id]?.messageId != message.id else {
                 return
             }
 
-            self?.taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
-                self?.coreQueue.async {
-                    let seenMessage = Networking.M(uiModel: message)
-                    let conversation = Networking.C(uiModel: existingConversation)
-                    self?.networking.updateSeenMessage(seenMessage, in: conversation.id)
-                }
-            }
+            let seenMessage = Networking.M(uiModel: message)
+            let conversation = Networking.C(uiModel: existingConversation)
+            self.networking.updateSeenMessage(seenMessage, in: conversation.id)
         }
     }
 }
@@ -279,7 +277,8 @@ extension ChatCore {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<MessagesResult, Void>(completion)
-        coreQueue.async { [weak self] in
+        taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
+
             guard let self = self else {
                 return
             }
@@ -305,46 +304,47 @@ extension ChatCore {
             }
 
             self.dataManagers[listener] = DataManager(pageSize: pageSize)
-            self.taskManager.run(attributes: [.afterInit, .backgroundThread], {  taskCompletion in
+            self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
+                // network returns at main thread
+                self.coreQueue.async {
+                    self.taskHandler(result: result, completion: taskCompletion)
+                    switch result {
+                    case .success(let messages):
 
-                self.networking.listenToMessages(conversation: id, pageSize: pageSize) { result in
-                    // network returns at main thread
-                    self.coreQueue.async {
-                        self.taskHandler(result: result, completion: taskCompletion)
-                        switch result {
-                        case .success(let messages):
+                        self.dataManagers[listener]?.update(data: messages)
+                        var converted = messages.compactMap({ $0.uiModel })
+                        // add all temporary messages at original positions
+                        let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
+                        converted += temporaryMessages
+                        converted.sort { $0.sentAt < $1.sentAt }
 
-                            self.dataManagers[listener]?.update(data: messages)
-                            var converted = messages.compactMap({ $0.uiModel })
-                            // add all temporary messages at original positions
-                            let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
-                            converted += temporaryMessages
-                            converted.sort { $0.sentAt < $1.sentAt }
+                        let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                        self.messages[id] = data
+                        // throttler returns on main thread
+                        self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
 
-                            let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                            self.messages[id] = data
-                            // throttler returns on main thread
-                            self.closureThrottler?.handleClosures(interval: temporaryMessages.isEmpty ? 0 : 0.5, payload: data, listener: listener, closures: self.messagesListeners[listener] ?? [])
-
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                self.messagesListeners[listener]?.forEach {
-                                    $0.closure(.failure(error))
-                                }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            self.messagesListeners[listener]?.forEach {
+                                $0.closure(.failure(error))
                             }
                         }
                     }
-                }})
-        }
+                }
+            }
+        })
 
         return closure.id
     }
 
     open func loadMoreMessages(conversation id: EntityIdentifier) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
         coreQueue.async { [weak self] in
-            self?.networking.loadMoreMessages(conversation: id)
+            guard let self = self else {
+                return
+            }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+            self.networking.loadMoreMessages(conversation: id)
         }
     }
 }
@@ -355,10 +355,11 @@ extension ChatCore {
         pageSize: Int,
         completion: @escaping (ConversationResult) -> Void
     ) -> ListenerIdentifier {
+
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
-        coreQueue.async { [weak self] in
+        taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
             guard let self = self else {
                 return
             }
@@ -382,38 +383,35 @@ extension ChatCore {
             }
 
             self.dataManagers[listener] = DataManager(pageSize: pageSize)
-            self.taskManager.run(attributes: [.afterInit, .backgroundThread], { taskCompletion in
+            self.networking.listenToConversations(pageSize: pageSize) { result in
+                // network returns on main thread
+                self.coreQueue.async {
+                    self.taskHandler(result: result, completion: taskCompletion)
+                    switch result {
+                    case .success(let conversations):
 
-                self.networking.listenToConversations(pageSize: pageSize) { result in
-                    // network returns on main thread
-                    self.coreQueue.async {
-                        self.taskHandler(result: result, completion: taskCompletion)
-                        switch result {
-                        case .success(let conversations):
+                        self.dataManagers[listener]?.update(data: conversations)
+                        let converted = conversations.compactMap({ $0.uiModel })
+                        let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
+                        self.conversations = data
 
-                            self.dataManagers[listener]?.update(data: conversations)
-                            let converted = conversations.compactMap({ $0.uiModel })
-                            let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                            self.conversations = data
-
-                            // Call each closure registered for this listener
-                            DispatchQueue.main.async {
-                                self.conversationListeners[listener]?.forEach {
-                                    $0.closure(.success(data))
-                                }
+                        // Call each closure registered for this listener
+                        DispatchQueue.main.async {
+                            self.conversationListeners[listener]?.forEach {
+                                $0.closure(.success(data))
                             }
+                        }
 
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                self.conversationListeners[listener]?.forEach {
-                                    $0.closure(.failure(error))
-                                }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            self.conversationListeners[listener]?.forEach {
+                                $0.closure(.failure(error))
                             }
                         }
                     }
                 }
-            })
-        }
+            }
+        })
 
         return closure.id
     }
@@ -435,22 +433,22 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     Networking.TU.ChatUIModel == Models.USRUI {
 
     open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
-        
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
             guard let self = self else {
                 return
             }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
             self.networking.setUserTyping(userId: self.currentUser.id, isTyping: isTyping, in: conversation)
         }
     }
 
     open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
+
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let listener = Listener.typingUsers(conversationId: conversation)
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] taskCompletion in
+        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
             guard let self = self else {
                 return
             }
@@ -597,13 +595,16 @@ private extension ChatCore {
 // MARK: - ChatNetworkServicing load state observing, helper methods
 private extension ChatCore {
     func loadNetworkService() {
-        currentState = .loading
-        taskManager.run(attributes: [.retry(.infinite), .backgroundThread], { [weak self] taskCompletion in
-            self?.networking.load(completion: { result in
-                self?.taskHandler(result: result, completion: taskCompletion)
+        taskManager.run(attributes: [.retry(.infinite), .backgroundThread(coreQueue)], { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
+            self.currentState = .loading
+            self.networking.load(completion: { result in
+                self.taskHandler(result: result, completion: taskCompletion)
                 if case .success = result {
-                    self?.currentState = .connected
-                    self?.taskManager.initialized = true
+                    self.currentState = .connected
+                    self.taskManager.initialized = true
                 }
             })
         })
