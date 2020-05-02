@@ -63,50 +63,51 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Update conversation
 public extension ChatNetworkingFirestore {
-    func updateSeenMessage(_ message: MessageFirestore, in conversation: ConversationFirestore) {
+    func updateSeenMessage(_ message: MessageFirestore, in conversation: EntityIdentifier) {
 
-        var conversation = conversation
-        conversation.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: currentUserId)
-
-        var newJson: [String: Any] = [:]
-
-        for item in conversation.seen {
-            let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
-                                                  Constants.Message.timestampAttributeName: item.value.seenAt]
-            newJson[item.key] = informationJson
-        }
-
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation.id)
-
-        reference.updateData([Constants.Conversation.seenAttributeName: newJson]) { err in
-            if let err = err {
-                print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
-            }
-        }
-    }
-
-    private func updateLastMessage(message: [String: Any]?, in conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        let reference = self.database
+        let reference = database
             .collection(Constants.conversationsPath)
             .document(conversation)
 
-        reference.updateData([Constants.Conversation.lastMessageAttributeName: message ?? FieldValue.delete]) { error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.success(()))
+        database.runTransaction({ (transaction, errorPointer) -> Any? in
+            var currentConversation: ConversationFirestore?
+            do {
+                let conversationSnapshot = try transaction.getDocument(reference)
+                currentConversation = try conversationSnapshot.data(as: ConversationFirestore.self)
+            } catch let fetchError as NSError {
+                errorPointer?.pointee = fetchError
+                return nil
             }
-        }
+
+            currentConversation?.setSeenMessages((messageId: message.id, seenAt: Date()), currentUserId: self.currentUserId)
+
+            guard let seenItems = currentConversation?.seen else {
+                return nil
+            }
+            var newJson: [String: Any] = [:]
+
+            for item in seenItems {
+                let informationJson: [String: Any] = [Constants.Message.messageIdAttributeName: item.value.messageId,
+                                                      Constants.Message.timestampAttributeName: item.value.seenAt]
+                newJson[item.key] = informationJson
+            }
+
+            transaction.updateData([Constants.Conversation.seenAttributeName: newJson], forDocument: reference)
+
+            return nil
+        }, completion: { (_, error) in
+            if let err = error {
+                print("Error updating conversation last seen message: \(err)")
+            } else {
+                print("Conversation last seen message successfully updated")
+            }
+        })
     }
 }
 
 // MARK: Create message
 public extension ChatNetworkingFirestore {
-    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
+    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void) {
 
         prepareMessageData(message: message) { [weak self] result in
             guard let self = self, case let .success(data) = result else {
@@ -118,29 +119,27 @@ public extension ChatNetworkingFirestore {
                 return
             }
 
-            self.storeMessage(in: conversation, messageData: data) { result in
-                guard case let .success(messageReference) = result else {
-                    if case let .failure(error) = result {
-                        print("Error while storing message \(error)")
-                        completion(.failure(error))
-                    }
+            let referenceConversation = self.database
+                .collection(Constants.conversationsPath)
+                .document(conversation)
 
-                    return
+            let referenceMessage = referenceConversation
+                .collection(Constants.messagesPath)
+                .document()
+
+            self.database.runTransaction({ (transaction, _) -> Any? in
+
+                transaction.setData(data, forDocument: referenceMessage)
+                transaction.updateData([Constants.Conversation.lastMessageAttributeName: data], forDocument: referenceConversation)
+
+                return nil
+            }, completion: { (_, error) in
+                if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.success(referenceMessage.documentID))
                 }
-
-                self.updateLastMessage(message: data, in: conversation) { result in
-                    guard case .success = result else {
-                        if case let .failure(error) = result {
-                            print("Error while setting conversation last message \(error)")
-                            completion(.failure(error))
-                        }
-
-                        return
-                    }
-
-                    self.message(messageReference: messageReference, completion: completion)
-                }
-            }
+            })
         }
     }
 
@@ -160,82 +159,60 @@ public extension ChatNetworkingFirestore {
             completion(.success(newJSON))
         }
     }
-
-    private func storeMessage(in conversation: EntityIdentifier, messageData: [String: Any], completion: @escaping (Result<DocumentReference, ChatError>) -> Void) {
-        let reference = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.messagesPath)
-
-        let documentRef = reference.document()
-        documentRef.setData(messageData) { error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-                completion(.success(documentRef))
-            }
-        }
-    }
-
-    private func message(messageReference: DocumentReference, completion: @escaping (Result<MessageFirestore, ChatError>) -> Void) {
-        messageReference.getDocument { (documentSnapshot, error) in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else if let message = try? documentSnapshot?.data(as: MessageFirestore.self) {
-                print("Message successfully sent")
-                completion(.success(message))
-            } else {
-                completion(.failure(.unexpectedState))
-            }
-        }
-    }
 }
 
 // MARK: - Delete message
 public extension ChatNetworkingFirestore {
     func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-        let document = self.database
-            .collection(Constants.conversationsPath)
-            .document(conversation)
-            .collection(Constants.messagesPath)
-            .document(message.id)
 
-        document.delete { [weak self] error in
-            if let error = error {
-                completion(.failure(.networking(error: error)))
-            } else {
-
-                self?.lastMessage(from: conversation, completion: { result in
-
-                    guard case let .success(message) = result else {
-                        if case let .failure(error) = result {
-                            print("Error while loading last message \(error)")
-                            completion(.failure(error))
-                        }
-
-                        return
-                    }
-
-                    self?.updateLastMessage(message: message, in: conversation, completion: completion)
-                })
+        lastMessage(after: message.id, from: conversation) { [weak self] result  in
+            guard let self = self else {
+                return
             }
+
+            guard case let .success(newLastMessage) = result else {
+                if case let .failure(error) = result {
+                    print("Error while loading last message \(error)")
+                    completion(.failure(error))
+                }
+
+                return
+            }
+
+            let referenceConversation = self.database
+                .collection(Constants.conversationsPath)
+                .document(conversation)
+
+            let referenceMessage = referenceConversation
+                .collection(Constants.messagesPath)
+                .document(message.id)
+
+            self.database.runTransaction({ (transaction, _) -> Any? in
+
+                transaction.deleteDocument(referenceMessage)
+                transaction.updateData([Constants.Conversation.lastMessageAttributeName: newLastMessage ?? FieldValue.delete], forDocument: referenceConversation)
+
+                return nil
+            }, completion: { (_, error) in
+                if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            })
         }
     }
 
-    private func lastMessage(from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
+    private func lastMessage(after messageId: EntityIdentifier, from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
         
-        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 1)
-        
+        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 2)
         lastMessageQuery.getDocuments { (snapshot, error) in
             if let error = error {
                 return completion(.failure(.networking(error: error)))
             } else {
                 // conversation can be empty
-                if let messageData = snapshot?.documents.first {
-                    completion(.success(messageData.data()))
-                } else {
-                    completion(.success(nil))
-                }
+                let newLastMessage = snapshot?.documents.last(where: { $0.documentID != messageId })
+                completion(.success(newLastMessage?.data()))
             }
         }
     }
@@ -442,10 +419,10 @@ private extension ChatNetworkingFirestore {
 extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
         let document = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
-        .document(userId)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
+            .document(userId)
 
         isTyping ? setTypingUser(typingUserReference: document) : removeTypingUser(typingUserReference: document)
     }
@@ -453,7 +430,7 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     private func setTypingUser(typingUserReference: DocumentReference) {
         typingUserReference.setData([:]) { error in
             if let err = error {
-                print("Error updating document: \(err)")
+                print("Error updating user typing: \(err)")
             } else {
                 print("Typing user successfully set")
             }
@@ -463,7 +440,7 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     private func removeTypingUser(typingUserReference: DocumentReference) {
         typingUserReference.delete { error in
             if let err = error {
-                print("Error deleting document: \(err)")
+                print("Error deleting user typing: \(err)")
             } else {
                 print("Typing user successfully removed")
             }
@@ -473,9 +450,9 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
     public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
 
         let query = self.database
-        .collection(Constants.conversationsPath)
-        .document(conversation)
-        .collection(Constants.typingUsersPath)
+            .collection(Constants.conversationsPath)
+            .document(conversation)
+            .collection(Constants.typingUsersPath)
 
         let listener = Listener.typingUsers(conversationId: conversation)
         // to infer type from generic

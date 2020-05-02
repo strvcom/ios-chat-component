@@ -134,20 +134,26 @@ extension ChatCore {
         let cachedMessage = cacheMessage(message: message, from: conversation)
         handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread, .retry(.finite())]) { [weak self] taskCompletion in
+            guard let self = self else {
+                return
+            }
             let mess = Networking.MS(uiModel: message)
-            self?.networking.send(message: mess, to: conversation) { result in
+            self.networking.send(message: mess, to: conversation) { result in
                 switch result {
-                case .success(let message):
+                case .success(let messageId):
                     _ = taskCompletion(.success)
-                    self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                    self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
 
-                    completion(.success(message.uiModel))
+                    self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                    // update id & state
+                    self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .updateSent(message, messageId))
+
+                    let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
+                    completion(.success(messageUI))
 
                 case .failure(let error):
                     if taskCompletion(.failure(error)) == .finished {
-                        self?.handleResultInCache(cachedMessage: cachedMessage, result: result)
-                        self?.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
+                        self.handleResultInCache(cachedMessage: cachedMessage, result: result)
+                        self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .changeState(.failedToBeSend))
                         completion(.failure(error))
                     }
                 }
@@ -214,7 +220,7 @@ extension ChatCore {
         taskManager.run(attributes: [.backgroundTask, .backgroundThread, .afterInit]) { [weak self] _ in
             let seenMessage = Networking.M(uiModel: message)
             let conversation = Networking.C(uiModel: existingConversation)
-            self?.networking.updateSeenMessage(seenMessage, in: conversation)
+            self?.networking.updateSeenMessage(seenMessage, in: conversation.id)
         }
     }
 }
@@ -402,8 +408,9 @@ private extension ChatCore {
     // Actions over temporary messages
     enum TemporaryMessageAction {
         case add(MessageSpecifyingUI, MessageState = .sending)
-        case remove
+        case updateSent(MessageSpecifyingUI, EntityIdentifier)
         case changeState(MessageState)
+        case remove
     }
 
     func handleTemporaryMessage(id: EntityIdentifier, to conversation: EntityIdentifier, with action: TemporaryMessageAction) {
@@ -429,10 +436,19 @@ private extension ChatCore {
         switch action {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
+
         case .add(let message, let state):
             let temporaryMessage = MessageUI(id: id, userId: currentUser.id, messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
+
+        case .updateSent(let message, let identifier):
+            newData = messagesPayload.data
+            if let index = newData.firstIndex(where: { $0.id == id }) {
+                let temporaryMessage = MessageUI(id: identifier, userId: currentUser.id, messageSpecification: message, state: .sent)
+                newData[index] = temporaryMessage
+            }
+
         case .changeState(let state):
             newData = messagesPayload.data
             if let index = newData.firstIndex(where: { $0.id == id }) {
@@ -469,7 +485,7 @@ private extension ChatCore {
         return cachedMessage
     }
 
-    func handleResultInCache<T: MessageSpecifying & Cachable, U: MessageRepresenting>(cachedMessage: CachedMessage<T>, result: Result<U, ChatError>) {
+    func handleResultInCache<T: MessageSpecifying & Cachable>(cachedMessage: CachedMessage<T>, result: Result<EntityIdentifier, ChatError>) {
         // when sucessfully sent remove from cache
         // in case of network error restore the message with stored state
         // other than network error set status as failed
