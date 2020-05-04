@@ -205,10 +205,10 @@ extension ChatCore {
 
                 self.coreQueue.async {
                     self.taskHandler(result: result, completion: taskCompletion)
-                }
 
-                DispatchQueue.main.async {
-                    completion(result)
+                    DispatchQueue.main.async {
+                        completion(result)
+                    }
                 }
             }
         }
@@ -218,10 +218,13 @@ extension ChatCore {
 // MARK: - Continue stored background tasks
 public extension ChatCore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
 
         coreQueue.async { [weak self] in
-            self?.taskManager.runBackgroundCalls(completion: completion)
+            guard let self = self else {
+                return
+            }
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+            self.taskManager.runBackgroundCalls(completion: completion)
         }
     }
 }
@@ -417,10 +420,12 @@ extension ChatCore {
     }
 
     open func loadMoreConversations() {
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
         coreQueue.async { [weak self] in
-            self?.networking.loadMoreConversations()
+            guard let self = self else {
+                return
+            }
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+            self.networking.loadMoreConversations()
         }
     }
 }
@@ -601,10 +606,12 @@ private extension ChatCore {
             }
             self.currentState = .loading
             self.networking.load(completion: { result in
-                self.taskHandler(result: result, completion: taskCompletion)
-                if case .success = result {
-                    self.currentState = .connected
-                    self.taskManager.initialized = true
+                self.coreQueue.async {
+                    self.taskHandler(result: result, completion: taskCompletion)
+                    if case .success = result {
+                        self.currentState = .connected
+                        self.taskManager.initialized = true
+                    }
                 }
             })
         })
@@ -643,18 +650,23 @@ private extension ChatCore {
 // MARK: - Setup reachability observer
 private extension ChatCore {
     func setReachabilityObserver() {
-        // observe network changes
-        reachabilityObserver = ReachabilityObserver(reachabilityChanged: { [weak self] state in
-            guard self?.currentState != .loading else {
+        coreQueue.async { [weak self] in
+            guard let self = self else {
                 return
             }
-            switch state {
-            case .reachable:
-                self?.currentState = .connected
-            case .unreachable:
-                self?.currentState = .connecting
-            }
-        })
+            // observe network changes
+            self.reachabilityObserver = ReachabilityObserver(reachabilityChanged: { state in
+                guard self.currentState != .loading else {
+                    return
+                }
+                switch state {
+                case .reachable:
+                    self.currentState = .connected
+                case .unreachable:
+                    self.currentState = .connecting
+                }
+            })
+        }
     }
 }
 

@@ -441,18 +441,21 @@ private extension ChatNetworkingFirestore {
     }
 
     func loadUsersForConversations(conversations: [ConversationFirestore], completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
-        self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { [weak self] result in
+        networkingQueue.async { [weak self] in
             guard let self = self else {
                 return
             }
+            
+            self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { result in
 
-            switch result {
-            case .success(let users):
-                // Set members from previously downloaded users
-                completion(.success(self.conversationsWithMembers(conversations: conversations, users: users)))
-            case .failure(let error):
-                print(error)
-                completion(.failure(error))
+                switch result {
+                case .success(let users):
+                    // Set members from previously downloaded users
+                    completion(.success(self.conversationsWithMembers(conversations: conversations, users: users)))
+                case .failure(let error):
+                    print(error)
+                    completion(.failure(error))
+                }
             }
         }
     }
