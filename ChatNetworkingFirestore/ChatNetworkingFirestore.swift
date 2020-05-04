@@ -220,6 +220,35 @@ public extension ChatNetworkingFirestore {
 
 // MARK: Listen to collections
 public extension ChatNetworkingFirestore {
+
+    func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (Result<ConversationFirestore, ChatError>) -> Void) {
+        let listener = Listener.conversation(conversationId: id)
+        let reference = database
+            .collection(Constants.conversationsPath)
+            .document(id)
+
+        let networkListener = reference.addSnapshotListener { (snapshot, error) in
+            if let snapshot = snapshot {
+                do {
+                    if let conversation = try snapshot.data(as: ConversationFirestore.self) {
+                        completion(.success(conversation))
+                    } else {
+                        completion(.failure(.internal(message: "Couldn't decode document:")))
+                    }
+                } catch {
+                    print("Couldn't decode document:", error)
+                    return
+                }
+            } else if let error = error {
+                completion(.failure(.networking(error: error)))
+            } else {
+                completion(.failure(.internal(message: "Unknown")))
+            }
+        }
+
+        listeners[listener] = networkListener
+    }
+
     func listenToConversations(pageSize: Int, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
         
         let listener = Listener.conversations(pageSize: pageSize)

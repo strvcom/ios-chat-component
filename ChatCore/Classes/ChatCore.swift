@@ -37,8 +37,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
-    
-    public typealias ConversationResult = Result<DataPayload<[ConversationUI]>, ChatError>
+
+    public typealias ConversationResult = Result<ConversationUI, ChatError>
+    public typealias ConversationListsResult = Result<DataPayload<[ConversationUI]>, ChatError>
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
     // needs to be instantiated immediatelly to register scheduled tasks
@@ -48,18 +49,23 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var reachabilityObserver: ReachabilityObserver?
     private var dataManagers = [Listener: DataManager]()
     
-    private var conversationListeners = [
-        Listener: [IdentifiableClosure<ConversationResult, Void>]
+    private var conversationListsListeners = [
+        Listener: [IdentifiableClosure<ConversationListsResult, Void>]
         ]()
     
     private var messagesListeners = [
         Listener: [IdentifiableClosure<MessagesResult, Void>]
         ]()
-    
+
+    private var conversationListeners = [
+        Listener: [IdentifiableClosure<ConversationResult, Void>]
+        ]()
+
     private var networking: Networking
     
     private var messages = [EntityIdentifier: DataPayload<[MessageUI]>]()
-    private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
+    private var conversationLists = DataPayload(data: [ConversationUI](), reachedEnd: false)
+    private var conversations = [EntityIdentifier: ConversationUI]()
 
     @Required public private(set) var currentUser: UserUI
 
@@ -207,7 +213,7 @@ extension ChatCore {
     open func updateSeenMessage(_ message: MessageUI, in conversation: EntityIdentifier) {
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
-        guard let existingConversation = conversations.data.first(where: { conversation == $0.id }) else {
+        guard let existingConversation = conversationLists.data.first(where: { conversation == $0.id }) else {
             print("Conversation with id \(conversation) not found")
             return
         }
@@ -299,14 +305,12 @@ extension ChatCore {
 
 // MARK: - Listening to conversations
 extension ChatCore {
-    open func listenToConversations(
-        pageSize: Int,
-        completion: @escaping (ConversationResult) -> Void
-    ) -> ListenerIdentifier {
+    open func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (ConversationResult) -> Void) -> ListenerIdentifier {
+
         precondition($currentUser, "Current user is nil when calling \(#function)")
 
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
-        let listener = Listener.conversations(pageSize: pageSize)
+        let listener = Listener.conversation(conversationId: id)
 
         // Add completion block
         if conversationListeners[listener] == nil {
@@ -314,9 +318,57 @@ extension ChatCore {
         }
         conversationListeners[listener]?.append(closure)
 
+        if let existingListeners = conversationListeners[listener], existingListeners.count > 1, let conversation = conversations[id] {
+            // A firebase listener for these arguments has already been registered, no need to register again
+            defer { closure.closure(.success(conversation)) }
+            return closure.id
+        }
+
+        taskManager.run(attributes: [.afterInit, .backgroundThread], { [weak self] taskCompletion in
+
+            guard let self = self else {
+                return
+            }
+
+            self.networking.listenToConversation(conversation: id) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
+                switch result {
+                case .success(let conversation):
+                    let converted = conversation.uiModel
+                    self.conversations[id] = converted
+                    // Call each closure registered for this listener
+                    self.conversationListeners[listener]?.forEach {
+                        $0.closure(.success(converted))
+                    }
+                case .failure(let error):
+                    self.conversationListeners[listener]?.forEach {
+                        $0.closure(.failure(error))
+                    }
+                }
+            }
+        })
+
+        return closure.id
+    }
+
+    open func listenToConversations(
+        pageSize: Int,
+        completion: @escaping (ConversationListsResult) -> Void
+    ) -> ListenerIdentifier {
+        precondition($currentUser, "Current user is nil when calling \(#function)")
+
+        let closure = IdentifiableClosure<ConversationListsResult, Void>(completion)
+        let listener = Listener.conversations(pageSize: pageSize)
+
+        // Add completion block
+        if conversationListsListeners[listener] == nil {
+            conversationListsListeners[listener] = []
+        }
+        conversationListsListeners[listener]?.append(closure)
+
         if let existingListeners = conversationListeners[listener], existingListeners.count > 1 {
             // A firebase listener for these arguments has already been registered, no need to register again
-            defer { closure.closure(.success(conversations)) }
+            defer { closure.closure(.success(conversationLists)) }
             return closure.id
         }
 
@@ -336,10 +388,10 @@ extension ChatCore {
                     self.dataManagers[listener]?.update(data: conversations)
                     let converted = conversations.compactMap({ $0.uiModel })
                     let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                    self.conversations = data
+                    self.conversationLists = data
 
                     // Call each closure registered for this listener
-                    self.conversationListeners[listener]?.forEach {
+                    self.conversationListsListeners[listener]?.forEach {
                         $0.closure(.success(data))
                     }
                 case .failure(let error):

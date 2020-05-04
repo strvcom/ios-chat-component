@@ -59,6 +59,13 @@ public protocol ChatNetworkServicing {
     ///   - conversation: Target conversation id
     func updateSeenMessage(_ message: M, in conversation: EntityIdentifier)
 
+    /// Creates a listener to single conversation.
+    ///
+    /// - Parameters:
+    ///   - conversation: Conversation id
+    ///   - completion: Called upon receiving data (or encountering an error)
+    func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (Result<C, ChatError>) -> Void)
+
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
     /// - Parameters:
