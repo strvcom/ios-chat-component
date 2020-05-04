@@ -266,7 +266,6 @@ extension ChatCore {
                 case .success(let messages):
                     // network returns at main thread
                     DispatchQueue.global(qos: .background).async {
-                        // TODO: edit message -> use change date
                         let hashData = messages.flatMap { [$0.id, "\($0.sentAt)"] }
                         self.dataManagers[listener]?.update(count: messages.count, hashData: hashData)
                         var converted = messages.compactMap({ $0.uiModel })
