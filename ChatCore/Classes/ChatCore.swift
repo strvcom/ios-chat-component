@@ -682,11 +682,12 @@ private extension ChatCore {
 // MARK: - User management
 extension ChatCore {
     open func setCurrentUser(user: UserUI) {
+        self.currentUser = user
+
         coreQueue.async { [weak self] in
             guard let self = self else {
                 return
             }
-            self.currentUser = user
             self.networking.setCurrentUser(user: user.id)
             self.loadNetworkService()
         }
