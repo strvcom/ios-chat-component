@@ -40,7 +40,7 @@ public protocol ChatNetworkServicing {
     ///   - message: Message data. Different from the model used for receiving messages.
     ///   - conversation: Conversation ID
     ///   - completion: Called upon receiving data (or encountering an error)
-    func send(message: NetworkMessageSpecification, to conversation: EntityIdentifier, completion: @escaping (Result<NetworkMessage, ChatError>) -> Void)
+    func send(message: NetworkMessageSpecification, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void)
 
     /// Delete a message from the specified conversation
     ///
@@ -54,8 +54,8 @@ public protocol ChatNetworkServicing {
     ///
     /// - Parameters:
     ///   - message: Message to be set as last seen
-    ///   - conversation: Target conversation
-    func updateSeenMessage(_ message: NetworkMessage, in conversation: NetworkConversation)
+    ///   - conversation: Target conversation id
+    func updateSeenMessage(_ message: NetworkMessage, in conversation: EntityIdentifier)
 
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///

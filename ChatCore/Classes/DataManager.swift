@@ -9,16 +9,20 @@
 import Foundation
 
 struct DataManager {
-    private var itemCount = 0
     private var pageSize: Int
     var reachedEnd = false
-    
+
+    private var lastHash: Int?
+
     init(pageSize: Int) {
         self.pageSize = pageSize
     }
     
-    mutating func update<T>(data: [T]) {
-        reachedEnd = itemCount == data.count || data.count % pageSize != 0
-        itemCount = data.count
+    mutating func update<T: Hashable>(count: Int, hashData: [T]) {
+        let hashValue = hashData.hashValue
+
+        // if data havent changed or page size is not dividable by page count
+        reachedEnd = hashValue == lastHash || count % pageSize != 0
+        lastHash = hashValue
     }
 }
