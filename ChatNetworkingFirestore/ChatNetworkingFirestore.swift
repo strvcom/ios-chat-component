@@ -252,28 +252,7 @@ public extension ChatNetworkingFirestore {
                 .collection(Constants.conversationsPath)
                 .document(id)
 
-            let networkListener = reference.addSnapshotListener { (snapshot, error) in
-                self.networkingQueue.async {
-                    if let snapshot = snapshot {
-                        do {
-                            if let conversation = try snapshot.data(as: ConversationFirestore.self) {
-                                completion(.success(conversation))
-                            } else {
-                                completion(.failure(.internal(message: "Conversation data haven't been found")))
-                            }
-                        } catch {
-                            print("Couldn't decode document:", error)
-                            return
-                        }
-                    } else if let error = error {
-                        completion(.failure(.networking(error: error)))
-                    } else {
-                        completion(.failure(.internal(message: "Unknown")))
-                    }
-                }
-            }
-
-            self.listeners[listener] = networkListener
+            self.listenTo(reference: reference, listener: listener, completion: completion)
         }
     }
 
@@ -293,7 +272,7 @@ public extension ChatNetworkingFirestore {
 
             let query = self.conversationsQuery(numberOfConversations: self.conversationsPagination.itemsLoaded)
 
-            self.listenTo(query: query, listener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
+            self.listenToCollection(query: query, listener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
 
                 guard case let .success(conversations) = result else {
                     print(result)
@@ -316,7 +295,7 @@ public extension ChatNetworkingFirestore {
             let listener = Listener.messages(pageSize: pageSize, conversationId: id)
             let query = self.messagesQuery(conversation: id, numberOfMessages: pageSize)
 
-            self.listenTo(query: query, listener: listener, completion: completion)
+            self.listenToCollection(query: query, listener: listener, completion: completion)
 
             self.messagesPaginators[id] = Pagination(
                 updateBlock: completion,
@@ -419,7 +398,7 @@ private extension ChatNetworkingFirestore {
 
 // MARK: Private methods
 private extension ChatNetworkingFirestore {
-    func listenTo<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
+    func listenToCollection<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
         let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self] (snapshot, error) in
             self?.networkingQueue.async {
                 if let snapshot = snapshot {
@@ -443,6 +422,31 @@ private extension ChatNetworkingFirestore {
         listeners[listener] = networkListener
     }
 
+    func listenTo<T: Decodable>(reference: DocumentReference, listener: Listener, completion: @escaping (Result<T, ChatError>) -> Void) {
+        let networkListener = reference.addSnapshotListener { (snapshot, error) in
+            self.networkingQueue.async {
+                if let snapshot = snapshot {
+                    do {
+                        if let object = try snapshot.data(as: T.self) {
+                            completion(.success(object))
+                        } else {
+                            completion(.failure(.internal(message: "Document data haven't been found")))
+                        }
+                    } catch {
+                        print("Couldn't decode document:", error)
+                        return
+                    }
+                } else if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.failure(.internal(message: "Unknown")))
+                }
+            }
+        }
+
+        listeners[listener] = networkListener
+    }
+
     func conversationsWithMembers(conversations: [ConversationFirestore], users: [UserFirestore]) -> [ConversationFirestore] {
         conversations.map { conversation in
             var result = conversation
@@ -461,7 +465,7 @@ private extension ChatNetworkingFirestore {
         
         let query = query.limit(to: paginator.itemsLoaded)
         
-        listenTo(query: query, listener: paginator.listener, completion: listenerCompletion)
+        listenToCollection(query: query, listener: paginator.listener, completion: listenerCompletion)
         
         return paginator
     }
@@ -558,7 +562,7 @@ extension ChatNetworkingFirestore: ChatNetworkingWithTypingUsers {
                 }
             }
 
-            self.listenTo(query: query, listener: listener, completion: listenToCompletion)
+            self.listenToCollection(query: query, listener: listener, completion: listenToCompletion)
         }
     }
 }
