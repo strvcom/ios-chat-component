@@ -319,7 +319,8 @@ extension ChatCore {
                     switch result {
                     case .success(let messages):
 
-                        self.dataManagers[listener]?.update(data: messages)
+                        let hashData = messages.flatMap { [$0.id, "\($0.sentAt)"] }
+                        self.dataManagers[listener]?.update(count: messages.count, hashData: hashData)
                         var converted = messages.compactMap({ $0.uiModel })
                         // add all temporary messages at original positions
                         let temporaryMessages = self.messages[id]?.data.filter { $0.state != .sent } ?? []
@@ -399,7 +400,8 @@ extension ChatCore {
                     switch result {
                     case .success(let conversations):
 
-                        self.dataManagers[listener]?.update(data: conversations)
+                        let hashData = conversations.flatMap { [$0.id, "\(String(describing: $0.lastMessage))"] }
+                        self.dataManagers[listener]?.update(count: conversations.count, hashData: hashData)
                         let converted = conversations.compactMap({ $0.uiModel })
                         let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
                         self.conversations = data
