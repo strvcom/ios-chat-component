@@ -61,7 +61,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
         Listener: [IdentifiableClosure<MessagesResult, Void>]
         ]()
 
-    private var conversationListeners = [
+    private var conversationsListeners = [
         Listener: [IdentifiableClosure<ConversationResult, Void>]
         ]()
 
@@ -248,7 +248,7 @@ extension ChatCore {
             guard let self = self else {
                 return
             }
-            self.removeListener(listener, from: &self.conversationListeners)
+            self.removeListener(listener, from: &self.conversationsListeners)
             self.removeListener(listener, from: &self.messagesListeners)
         }
     }
@@ -381,12 +381,12 @@ extension ChatCore {
             let listener = Listener.conversation(conversationId: id)
 
             // Add completion block
-            if self.conversationListeners[listener] == nil {
-                self.conversationListeners[listener] = []
+            if self.conversationsListeners[listener] == nil {
+                self.conversationsListeners[listener] = []
             }
-            self.conversationListeners[listener]?.append(closure)
+            self.conversationsListeners[listener]?.append(closure)
 
-            if let existingListeners = self.conversationListeners[listener], existingListeners.count > 1, let conversation = self.conversations[id] {
+            if let existingListeners = self.conversationsListeners[listener], existingListeners.count > 1, let conversation = self.conversations[id] {
                 // A firebase listener for these arguments has already been registered, no need to register again
                 defer {
                     DispatchQueue.main.async {
@@ -404,11 +404,11 @@ extension ChatCore {
                     let converted = conversation.uiModel
                     self.conversations[id] = converted
                     // Call each closure registered for this listener
-                    self.conversationListeners[listener]?.forEach {
+                    self.conversationsListeners[listener]?.forEach {
                         $0.closure(.success(converted))
                     }
                 case .failure(let error):
-                    self.conversationListeners[listener]?.forEach {
+                    self.conversationsListeners[listener]?.forEach {
                         $0.closure(.failure(error))
                     }
                 }
@@ -441,7 +441,7 @@ extension ChatCore {
             }
             self.conversationListsListeners[listener]?.append(closure)
 
-            if let existingListeners = self.conversationListeners[listener], existingListeners.count > 1 {
+            if let existingListeners = self.conversationsListeners[listener], existingListeners.count > 1 {
                 // A firebase listener for these arguments has already been registered, no need to register again
                 defer {
                     DispatchQueue.main.async {
@@ -474,7 +474,7 @@ extension ChatCore {
 
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            self.conversationListeners[listener]?.forEach {
+                            self.conversationsListeners[listener]?.forEach {
                                 $0.closure(.failure(error))
                             }
                         }
