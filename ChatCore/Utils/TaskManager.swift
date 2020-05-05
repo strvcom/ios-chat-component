@@ -29,7 +29,7 @@ final class TaskManager {
     enum TaskAttribute: Hashable {
         case afterInit
         case backgroundTask
-        case backgroundThread
+        case backgroundThread(DispatchQueue?)
         case retry(RetryType)
 
         static func == (lhs: TaskManager.TaskAttribute, rhs: TaskManager.TaskAttribute) -> Bool {
@@ -99,8 +99,15 @@ private extension TaskManager {
             return
         }
 
-        // solve background
-        if attributes.contains(.backgroundThread) {
+        // solve threading
+        if case .backgroundThread(let queue) = attributes.first(where: { attribute -> Bool in
+            if case .backgroundThread = attribute {
+                return true
+            }
+            return false
+        }) {
+
+            let dispatchQueue = queue ?? self.dispatchQueue
             dispatchQueue.async { [weak self] in
                 print("Run in background thread task id \(identifiableClosure.id)")
                 self?.runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
@@ -110,6 +117,7 @@ private extension TaskManager {
                     return self.handleTaskCompletionResult(attributes: attributes, result: result, identifiableClosure)
                 })
             }
+
         } else {
             print("Run in main thread task id \(identifiableClosure.id)")
             runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
