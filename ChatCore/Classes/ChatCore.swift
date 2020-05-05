@@ -40,7 +40,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias UserUI = Models.USRUI
 
     public typealias ConversationResult = Result<ConversationUI, ChatError>
-    public typealias ConversationListsResult = Result<DataPayload<[ConversationUI]>, ChatError>
+    public typealias ConversationListResult = Result<DataPayload<[ConversationUI]>, ChatError>
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
     // needs to be instantiated immediatelly to register scheduled tasks
@@ -54,7 +54,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
     
     private var conversationListsListeners = [
-        Listener: [IdentifiableClosure<ConversationListsResult, Void>]
+        Listener: [IdentifiableClosure<ConversationListResult, Void>]
         ]()
     
     private var messagesListeners = [
@@ -250,6 +250,7 @@ extension ChatCore {
             }
             self.removeListener(listener, from: &self.conversationsListeners)
             self.removeListener(listener, from: &self.messagesListeners)
+            self.removeListener(listener, from: &self.conversationListsListeners)
         }
     }
 }
@@ -420,10 +421,10 @@ extension ChatCore {
 
     open func listenToConversations(
         pageSize: Int,
-        completion: @escaping (ConversationListsResult) -> Void
+        completion: @escaping (ConversationListResult) -> Void
     ) -> ListenerIdentifier {
 
-        let closure = IdentifiableClosure<ConversationListsResult, Void>(completion)
+        let closure = IdentifiableClosure<ConversationListResult, Void>(completion)
 
         taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
 
@@ -433,7 +434,7 @@ extension ChatCore {
 
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
-            let listener = Listener.conversations(pageSize: pageSize)
+            let listener = Listener.conversationList(pageSize: pageSize)
 
             // Add completion block
             if self.conversationListsListeners[listener] == nil {

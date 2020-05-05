@@ -10,7 +10,7 @@ import Foundation
 
 /// This enum is needed to identify identical listeners so that multiple requests with the same parameters are stored together and don't require extra network listeners.
 public enum Listener: Hashable {
-    case conversations(pageSize: Int)
+    case conversationList(pageSize: Int)
     case conversation(conversationId: EntityIdentifier)
     case messages(pageSize: Int, conversationId: EntityIdentifier)
     case typingUsers(conversationId: EntityIdentifier)

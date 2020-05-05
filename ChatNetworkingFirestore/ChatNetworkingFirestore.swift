@@ -283,7 +283,7 @@ public extension ChatNetworkingFirestore {
             guard let self = self else {
                 return
             }
-            let listener = Listener.conversations(pageSize: pageSize)
+            let listener = Listener.conversationList(pageSize: pageSize)
 
             self.conversationsPagination = Pagination(
                 updateBlock: completion,
