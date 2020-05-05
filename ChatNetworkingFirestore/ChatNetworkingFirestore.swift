@@ -252,7 +252,7 @@ public extension ChatNetworkingFirestore {
                 .collection(Constants.conversationsPath)
                 .document(id)
 
-            self.listenTo(reference: reference, listener: listener, completion: completion)
+            self.listenToDocument(reference: reference, listener: listener, completion: completion)
         }
     }
 
@@ -422,7 +422,7 @@ private extension ChatNetworkingFirestore {
         listeners[listener] = networkListener
     }
 
-    func listenTo<T: Decodable>(reference: DocumentReference, listener: Listener, completion: @escaping (Result<T, ChatError>) -> Void) {
+    func listenToDocument<T: Decodable>(reference: DocumentReference, listener: Listener, completion: @escaping (Result<T, ChatError>) -> Void) {
         let networkListener = reference.addSnapshotListener { (snapshot, error) in
             self.networkingQueue.async {
                 if let snapshot = snapshot {
@@ -433,7 +433,7 @@ private extension ChatNetworkingFirestore {
                             completion(.failure(.internal(message: "Document data haven't been found")))
                         }
                     } catch {
-                        print("Couldn't decode document:", error)
+                        completion(.failure(.internal(message: "Couldn't decode document: \(error)")))
                         return
                     }
                 } else if let error = error {

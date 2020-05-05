@@ -53,7 +53,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // dedicated thread queue
     private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
     
-    private var conversationListsListeners = [
+    private var conversationListListeners = [
         Listener: [IdentifiableClosure<ConversationListResult, Void>]
         ]()
     
@@ -68,7 +68,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     private var networking: Networking
     
     private var messages = [EntityIdentifier: DataPayload<[MessageUI]>]()
-    private var conversationLists = DataPayload(data: [ConversationUI](), reachedEnd: false)
+    private var conversationList = DataPayload(data: [ConversationUI](), reachedEnd: false)
     private var conversations = [EntityIdentifier: ConversationUI]()
 
     @Required public private(set) var currentUser: UserUI
@@ -250,7 +250,7 @@ extension ChatCore {
             }
             self.removeListener(listener, from: &self.conversationsListeners)
             self.removeListener(listener, from: &self.messagesListeners)
-            self.removeListener(listener, from: &self.conversationListsListeners)
+            self.removeListener(listener, from: &self.conversationListListeners)
         }
     }
 }
@@ -265,7 +265,7 @@ extension ChatCore {
             }
 
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
-            guard let existingConversation = self.conversationLists.data.first(where: { conversation == $0.id }) else {
+            guard let existingConversation = self.conversationList.data.first(where: { conversation == $0.id }) else {
                 print("Conversation with id \(conversation) not found")
                 return
             }
@@ -437,16 +437,16 @@ extension ChatCore {
             let listener = Listener.conversationList(pageSize: pageSize)
 
             // Add completion block
-            if self.conversationListsListeners[listener] == nil {
-                self.conversationListsListeners[listener] = []
+            if self.conversationListListeners[listener] == nil {
+                self.conversationListListeners[listener] = []
             }
-            self.conversationListsListeners[listener]?.append(closure)
+            self.conversationListListeners[listener]?.append(closure)
 
             if let existingListeners = self.conversationsListeners[listener], existingListeners.count > 1 {
                 // A firebase listener for these arguments has already been registered, no need to register again
                 defer {
                     DispatchQueue.main.async {
-                        closure.closure(.success(self.conversationLists))
+                        closure.closure(.success(self.conversationList))
                     }
                 }
                 return
@@ -464,11 +464,11 @@ extension ChatCore {
                         self.dataManagers[listener]?.update(count: conversations.count, hashData: hashData)
                         let converted = conversations.compactMap({ $0.uiModel })
                         let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                        self.conversationLists = data
+                        self.conversationList = data
 
                         // Call each closure registered for this listener
                         DispatchQueue.main.async {
-                            self.conversationListsListeners[listener]?.forEach {
+                            self.conversationListListeners[listener]?.forEach {
                                 $0.closure(.success(data))
                             }
                         }
