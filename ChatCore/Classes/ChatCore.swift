@@ -69,7 +69,12 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // current state observing
     public private(set) var currentState: ChatCoreState {
         didSet {
-            stateChanged?(currentState)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.stateChanged?(self.currentState)
+            }
         }
     }
     public var stateChanged: ((ChatCoreState) -> Void)?
@@ -277,14 +282,14 @@ extension ChatCore {
         completion: @escaping (MessagesResult) -> Void
     ) -> ListenerIdentifier {
 
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
         let closure = IdentifiableClosure<MessagesResult, Void>(completion)
         taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
 
             guard let self = self else {
                 return
             }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
             let listener = Listener.messages(pageSize: pageSize, conversationId: id)
 
@@ -359,13 +364,14 @@ extension ChatCore {
         completion: @escaping (ConversationResult) -> Void
     ) -> ListenerIdentifier {
 
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
         taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
+
             guard let self = self else {
                 return
             }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
             let listener = Listener.conversations(pageSize: pageSize)
 
@@ -450,13 +456,12 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
 
     open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
 
-        precondition($currentUser, "Current user is nil when calling \(#function)")
-
         let listener = Listener.typingUsers(conversationId: conversation)
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
             guard let self = self else {
                 return
             }
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
             self.networking.listenToTypingUsers(in: conversation) { result in
                 self.coreQueue.async {
@@ -650,12 +655,14 @@ private extension ChatCore {
 // MARK: - Setup reachability observer
 private extension ChatCore {
     func setReachabilityObserver() {
-        coreQueue.async { [weak self] in
+
+        // observe network changes
+        reachabilityObserver = ReachabilityObserver(reachabilityChanged: { [weak self] state in
             guard let self = self else {
                 return
             }
-            // observe network changes
-            self.reachabilityObserver = ReachabilityObserver(reachabilityChanged: { state in
+
+            self.coreQueue.async {
                 guard self.currentState != .loading else {
                     return
                 }
@@ -665,8 +672,8 @@ private extension ChatCore {
                 case .unreachable:
                     self.currentState = .connecting
                 }
-            })
-        }
+            }
+        })
     }
 }
 

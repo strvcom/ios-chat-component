@@ -441,13 +441,11 @@ private extension ChatNetworkingFirestore {
     }
 
     func loadUsersForConversations(conversations: [ConversationFirestore], completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
-        networkingQueue.async { [weak self] in
+        self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { [weak self] result in
             guard let self = self else {
                 return
             }
-            
-            self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { result in
-
+            self.networkingQueue.async {
                 switch result {
                 case .success(let users):
                     // Set members from previously downloaded users
