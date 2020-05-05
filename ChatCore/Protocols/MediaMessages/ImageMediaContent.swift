@@ -8,8 +8,11 @@
 
 import UIKit
 
+/// Default implementation of `MediaContent` that represents an image
 public struct ImageMediaContent {
+    /// Image object
     public let image: UIImage
+    /// Closure for converting the image to data
     public let convertor: (UIImage) -> Data
     
     public init(image: UIImage, convertor: ((UIImage) -> Data)? = nil) {

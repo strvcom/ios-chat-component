@@ -8,10 +8,14 @@
 
 import Foundation
 
+/// Objects e.g. conversations that keep reference of their members indirectly through member ids
 public protocol MembersStoring {
     associatedtype Member
-
+    
+    /// Identifiers of members relevant to the object
     var memberIds: [EntityIdentifier] { get }
-
+    
+    /// Set member objects specified by `memberIds`
+    /// - Parameter members: Member objects
     mutating func setMembers(_ members: [Member])
 }

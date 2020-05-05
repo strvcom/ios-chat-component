@@ -8,4 +8,5 @@
 
 import Foundation
 
+/// Convenience typealias for `[String: Any]`
 public typealias ChatJSON = [String: Any]

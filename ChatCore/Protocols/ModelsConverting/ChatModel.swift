@@ -8,6 +8,9 @@
 
 import Foundation
 
+/// Chat model that is used for both, UI and networking services
+///
+/// Such model by definition conforms to `ChatNetworkingConvertible` and `ChatUIConvertible` and the conversion is implicit because networking representation of such UI model is the same model and vice-versa.
 public protocol ChatModel: ChatNetworkingConvertible, ChatUIConvertible where UIModel == Self, NetworkingModel == Self {}
 
 public extension ChatModel {

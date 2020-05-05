@@ -11,6 +11,7 @@ import ChatCore
 import FirebaseCore
 import FirebaseFirestore
 
+/// Implementation of `ChatNetworkServicing` for Firestore backends
 open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     public typealias NetworkModels = Models
     public typealias UserManager = ChatFirestoreUserManager<UserFirestore>
