@@ -68,7 +68,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     deinit {
         print("\(self) released")
         listeners.forEach {
-            remove(listener: $0.key)
+            stop(listener: $0.key)
         }
     }
 }
@@ -366,7 +366,7 @@ public extension ChatFirestore {
 
     func remove(listener: Listener) {
         networkingQueue.async { [weak self] in
-            self?.listeners[listener]?.remove()
+            self?.stop(listener: listener)
         }
     }
     
@@ -480,6 +480,11 @@ private extension ChatFirestore {
         
         listeners[listener] = networkListener
     }
+    
+    func stop(listener: Listener) {
+        listeners[listener]?.remove()
+        listeners[listener] = nil
+    }
 
     func conversationsWithMembers(conversations: [ConversationFirestore], users: [UserFirestore]) -> [ConversationFirestore] {
         conversations.map { conversation in
@@ -493,7 +498,7 @@ private extension ChatFirestore {
         
         var paginator = paginator
         
-        remove(listener: paginator.listener)
+        stop(listener: paginator.listener)
         
         paginator.nextPage()
         
