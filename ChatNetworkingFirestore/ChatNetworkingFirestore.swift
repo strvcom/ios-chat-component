@@ -259,7 +259,7 @@ public extension ChatNetworkingFirestore {
                             if let conversation = try snapshot.data(as: ConversationFirestore.self) {
                                 completion(.success(conversation))
                             } else {
-                                completion(.failure(.internal(message: "Couldn't decode document:")))
+                                completion(.failure(.internal(message: "Conversation data haven't been found")))
                             }
                         } catch {
                             print("Couldn't decode document:", error)
