@@ -60,7 +60,16 @@ public protocol ChatCoreServicing {
     ///   - conversation: Conversation ID
     ///   - completion: Called upon deleting message (or encountering an error)
     func delete(message: CoreMessage, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void)
-    
+
+    /// Creates a listener to conversation. First set of data is received immediately by the completion callback.
+    ///
+    /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
+    ///
+    /// - Parameters:
+    ///   - conversation: Conversation id
+    ///   - completion: Called upon receiving data (or encountering an error)
+    func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (Result<CoreConversation, ChatError>) -> Void) -> ListenerIdentifier
+
     /// Creates a listener to conversations. First set of data is received immediately by the completion callback. The same callback is called when requesting more data.
     ///
     /// Returns a ListenerIdentifier instance which is later used to cancel the created listener.
