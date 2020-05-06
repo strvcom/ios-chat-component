@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// swiftlint:disable file_length
 open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: ChatCoreServicing where
     
     // Specify that associated types
@@ -37,8 +38,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     public typealias MessageSpecifyingUI = Models.MSUI
     public typealias MessageUI = Models.MUI
     public typealias UserUI = Models.USRUI
-    
-    public typealias ConversationResult = Result<DataPayload<[ConversationUI]>, ChatError>
+
+    public typealias ConversationResult = Result<ConversationUI, ChatError>
+    public typealias ConversationListResult = Result<DataPayload<[ConversationUI]>, ChatError>
     public typealias MessagesResult = Result<DataPayload<[MessageUI]>, ChatError>
 
     // needs to be instantiated immediatelly to register scheduled tasks
@@ -51,18 +53,23 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModels>: Cha
     // dedicated thread queue
     private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
     
-    private var conversationListeners = [
-        Listener: [IdentifiableClosure<ConversationResult, Void>]
+    private var conversationListListeners = [
+        Listener: [IdentifiableClosure<ConversationListResult, Void>]
         ]()
     
     private var messagesListeners = [
         Listener: [IdentifiableClosure<MessagesResult, Void>]
         ]()
-    
+
+    private var conversationsListeners = [
+        Listener: [IdentifiableClosure<ConversationResult, Void>]
+        ]()
+
     private var networking: Networking
     
     private var messages = [EntityIdentifier: DataPayload<[MessageUI]>]()
-    private var conversations = DataPayload(data: [ConversationUI](), reachedEnd: false)
+    private var conversationList = DataPayload(data: [ConversationUI](), reachedEnd: false)
+    private var conversations = [EntityIdentifier: ConversationUI]()
 
     @Required public private(set) var currentUser: UserUI
 
@@ -241,8 +248,9 @@ extension ChatCore {
             guard let self = self else {
                 return
             }
-            self.removeListener(listener, from: &self.conversationListeners)
+            self.removeListener(listener, from: &self.conversationsListeners)
             self.removeListener(listener, from: &self.messagesListeners)
+            self.removeListener(listener, from: &self.conversationListListeners)
         }
     }
 }
@@ -257,7 +265,7 @@ extension ChatCore {
             }
 
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
-            guard let existingConversation = self.conversations.data.first(where: { conversation == $0.id }) else {
+            guard let existingConversation = self.conversationList.data.first(where: { conversation == $0.id }) else {
                 print("Conversation with id \(conversation) not found")
                 return
             }
@@ -360,10 +368,7 @@ extension ChatCore {
 
 // MARK: - Listening to conversations
 extension ChatCore {
-    open func listenToConversations(
-        pageSize: Int,
-        completion: @escaping (ConversationResult) -> Void
-    ) -> ListenerIdentifier {
+    open func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (ConversationResult) -> Void) -> ListenerIdentifier {
 
         let closure = IdentifiableClosure<ConversationResult, Void>(completion)
         taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
@@ -374,19 +379,74 @@ extension ChatCore {
 
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
-            let listener = Listener.conversations(pageSize: pageSize)
+            let listener = Listener.conversation(conversationId: id)
 
             // Add completion block
-            if self.conversationListeners[listener] == nil {
-                self.conversationListeners[listener] = []
+            if self.conversationsListeners[listener] == nil {
+                self.conversationsListeners[listener] = []
             }
-            self.conversationListeners[listener]?.append(closure)
+            self.conversationsListeners[listener]?.append(closure)
 
-            if let existingListeners = self.conversationListeners[listener], existingListeners.count > 1 {
+            if let existingListeners = self.conversationsListeners[listener], existingListeners.count > 1, let conversation = self.conversations[id] {
                 // A firebase listener for these arguments has already been registered, no need to register again
                 defer {
                     DispatchQueue.main.async {
-                        closure.closure(.success(self.conversations))
+                        closure.closure(.success(conversation))
+                    }
+                }
+
+                return
+            }
+
+            self.networking.listenToConversation(conversation: id) { result in
+                self.taskHandler(result: result, completion: taskCompletion)
+                switch result {
+                case .success(let conversation):
+                    let converted = conversation.uiModel
+                    self.conversations[id] = converted
+                    // Call each closure registered for this listener
+                    self.conversationsListeners[listener]?.forEach {
+                        $0.closure(.success(converted))
+                    }
+                case .failure(let error):
+                    self.conversationsListeners[listener]?.forEach {
+                        $0.closure(.failure(error))
+                    }
+                }
+            }
+        })
+
+        return closure.id
+    }
+
+    open func listenToConversations(
+        pageSize: Int,
+        completion: @escaping (ConversationListResult) -> Void
+    ) -> ListenerIdentifier {
+
+        let closure = IdentifiableClosure<ConversationListResult, Void>(completion)
+
+        taskManager.run(attributes: [.afterInit, .backgroundThread(coreQueue)], { [weak self] taskCompletion in
+
+            guard let self = self else {
+                return
+            }
+
+            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
+
+            let listener = Listener.conversationList(pageSize: pageSize)
+
+            // Add completion block
+            if self.conversationListListeners[listener] == nil {
+                self.conversationListListeners[listener] = []
+            }
+            self.conversationListListeners[listener]?.append(closure)
+
+            if let existingListeners = self.conversationsListeners[listener], existingListeners.count > 1 {
+                // A firebase listener for these arguments has already been registered, no need to register again
+                defer {
+                    DispatchQueue.main.async {
+                        closure.closure(.success(self.conversationList))
                     }
                 }
                 return
@@ -404,18 +464,18 @@ extension ChatCore {
                         self.dataManagers[listener]?.update(count: conversations.count, hashData: hashData)
                         let converted = conversations.compactMap({ $0.uiModel })
                         let data = DataPayload(data: converted, reachedEnd: self.dataManagers[listener]?.reachedEnd ?? true)
-                        self.conversations = data
+                        self.conversationList = data
 
                         // Call each closure registered for this listener
                         DispatchQueue.main.async {
-                            self.conversationListeners[listener]?.forEach {
+                            self.conversationListListeners[listener]?.forEach {
                                 $0.closure(.success(data))
                             }
                         }
 
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            self.conversationListeners[listener]?.forEach {
+                            self.conversationsListeners[listener]?.forEach {
                                 $0.closure(.failure(error))
                             }
                         }
