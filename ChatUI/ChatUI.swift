@@ -11,7 +11,7 @@ import ChatCore
 
 public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
     public typealias Delegate = ChatUIDelegate
-    public typealias Models = ChatModelsUI
+    public typealias Models = ChatUIModels
     
     let core: Core
     

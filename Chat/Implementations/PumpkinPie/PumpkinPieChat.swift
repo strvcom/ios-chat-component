@@ -13,9 +13,9 @@ import ChatUI
 
 /// Chat implementation for Pumpkin Pie project
 public class PumpkinPieChat: DefaultChatSpecifying {
-    public typealias UIModels = ChatModelsUI
-    public typealias Networking = ChatNetworkingFirestore
-    public typealias Core = ChatCore<ChatNetworkingFirestore, UIModels>
+    public typealias UIModels = PumpkinPieModels
+    public typealias Networking = ChatFirestore<PumpkinPieModels>
+    public typealias Core = ChatCore<Networking, UIModels>
     public typealias Interface = PumpkinPieInterface
     public typealias UIDelegate = Interface.Delegate
 
@@ -24,13 +24,17 @@ public class PumpkinPieChat: DefaultChatSpecifying {
     private(set) var interfaces: [ObjectIdentifier: Interface] = [:]
       
     public required init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration, userManager: Networking.UserManager? = nil) {
+        self.uiConfig = uiConfig
+
+        let networking: Networking
         // if not provided by app use default firestore
         if let userManager = userManager {
-            self.core = Self.core(networkConfig: networkConfig, userManager: userManager)
+            networking = Networking(config: networkConfig, userManager: userManager)
         } else {
-            self.core = Self.core(networkConfig: networkConfig, userManager: UserManagerFirestore(config: networkConfig))
+            networking = Networking(config: networkConfig)
         }
-        self.uiConfig = uiConfig
+        
+        self.core = ChatCore<Networking, UIModels>(networking: networking)
     }
 }
 

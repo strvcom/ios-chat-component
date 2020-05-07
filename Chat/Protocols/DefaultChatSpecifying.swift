@@ -14,21 +14,21 @@ public protocol DefaultChatSpecifying: ChatSpecifying where
     // Specify that associated types
     // Conversation, Message (receive), MessageSpecifying (send) and User
     // of ChatNetworkServicing have to conform to `ChatUIConvertible`
-    Networking.C: ChatUIConvertible,
-    Networking.M: ChatUIConvertible,
-    Networking.MS: ChatUIConvertible,
+    Networking.NetworkConversation: ChatUIConvertible,
+    Networking.NetworkMessage: ChatUIConvertible,
+    Networking.NetworkMessageSpecification: ChatUIConvertible,
     
     // Specify that all UI and networking models are inter-convertible
-    UIModels.CUI == Networking.C.ChatUIModel,
-    UIModels.MUI == Networking.M.ChatUIModel,
-    UIModels.MSUI == Networking.MS.ChatUIModel,
+    UIModels.UIConversation == Networking.NetworkConversation.UIModel,
+    UIModels.UIMessage == Networking.NetworkMessage.UIModel,
+    UIModels.UIMessageSpecification == Networking.NetworkMessageSpecification.UIModel,
     
     // Extra requirements on models for this core implementation
     // supports message caching, message states, temp messages when sending
-    UIModels.MSUI: Cachable,
-    UIModels.MUI: MessageConvertible,
-    UIModels.MUI: MessageStateReflecting,
-    UIModels.MSUI == UIModels.MUI.MessageSpecification,
+    UIModels.UIMessageSpecification: Cachable,
+    UIModels.UIMessage: MessageConvertible,
+    UIModels.UIMessage: MessageStateReflecting,
+    UIModels.UIMessageSpecification == UIModels.UIMessage.MessageSpecification,
     
     // Use the default implementation of `ChatCore`
     // All the preceeding conditions are just because of this
