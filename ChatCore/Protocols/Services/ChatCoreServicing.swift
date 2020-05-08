@@ -105,9 +105,9 @@ public protocol ChatCoreServicing {
     /// Send a request to set `message` as the last seen message by current user
     ///
     /// - Parameters:
-    ///   - message: Message to be set as last seen
-    ///   - conversation: Target conversation
-    func updateSeenMessage(_ message: CoreMessage, in conversation: EntityIdentifier)
+    ///   - message: Identifier of a message to be set as last seen
+    ///   - conversation: Identifier of a target conversation
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier)
 }
 
 // MARK: Default page size

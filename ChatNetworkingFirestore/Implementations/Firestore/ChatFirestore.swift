@@ -91,7 +91,7 @@ public extension ChatFirestore {
 
 // MARK: Update conversation
 public extension ChatFirestore {
-    func updateSeenMessage(_ message: MessageFirestore, in conversation: EntityIdentifier) {
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
 
         networkingQueue.async { [weak self] in
             guard let self = self else {
@@ -122,7 +122,7 @@ public extension ChatFirestore {
                 })
                 
                 json[self.currentUserId] = [
-                    self.constants.conversations.seenAttribute.messageIdAttributeName: message.id,
+                    self.constants.conversations.seenAttribute.messageIdAttributeName: message,
                     self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
                 ]
 
