@@ -82,7 +82,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     }
     
     func updateSeenMessage(_ message: Message) {
-        core.updateSeenMessage(message, in: conversation.id)
+        core.updateSeenMessage(message.id, in: conversation.id)
     }
     
     func send(message: MessageSpecification, completion: @escaping (Result<Message, ChatError>) -> Void) {

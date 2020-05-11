@@ -257,7 +257,7 @@ extension ChatCore {
 
 // MARK: - Seen flag
 extension ChatCore {
-    open func updateSeenMessage(_ message: MessageUI, in conversation: EntityIdentifier) {
+    open func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
 
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
             guard let self = self else {
@@ -271,13 +271,11 @@ extension ChatCore {
             }
 
             // avoid updating same seen message
-            guard existingConversation.seen[self.currentUser.id]?.messageId != message.id else {
+            guard existingConversation.seen[self.currentUser.id]?.messageId != message else {
                 return
             }
 
-            let seenMessage = Networking.NetworkMessage(uiModel: message)
-            let conversation = Networking.NetworkConversation(uiModel: existingConversation)
-            self.networking.updateSeenMessage(seenMessage, in: conversation.id)
+            self.networking.updateSeenMessage(message, in: conversation)
         }
     }
 }
