@@ -10,14 +10,18 @@ import Foundation
 import ChatCore
 
 class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListViewModeling {
-
     private let core: Core
-    private(set) var state: ViewModelingState<ConversationsListState> = .initial
     weak var delegate: ConversationsListViewModelDelegate?
-    
+
+    private(set) var state: ViewModelingState<ConversationsListState> = .initial {
+        didSet {
+            delegate?.stateDidChange()
+        }
+    }
+
     private var listener: ListenerIdentifier?
     
-    var currentUser: User {
+    var currentUser: Core.UIModels.UIUser {
         core.currentUser
     }
     
@@ -34,7 +38,7 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
     }
     
     func load() {
-        updateState(.loading)
+        state = .loading
         
         if let existingListener = listener {
             core.remove(listener: existingListener)
@@ -47,16 +51,14 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             
             switch result {
             case .success(let payload):
-                self.updateState(
-                    .ready(
+                self.state = .ready(
                         value: ConversationsListState(
                             items: payload.data,
                             reachedEnd: payload.reachedEnd
                         )
-                    )
                 )
             case .failure(let error):
-                self.updateState(.failed(error: error))
+                self.state = .failed(error: error)
             }
         }
     }
@@ -66,15 +68,8 @@ class ConversationsListViewModel<Core: ChatUICoreServicing>: ConversationsListVi
             return
         }
         
-        updateState(.loadingMore)
+        state = .loadingMore
         
         core.loadMoreConversations()
-    }
-}
-
-private extension ConversationsListViewModel {
-    func updateState(_ state: ViewModelingState<ConversationsListState>) {
-        self.state = state
-        delegate?.didTransitionToState(state)
     }
 }

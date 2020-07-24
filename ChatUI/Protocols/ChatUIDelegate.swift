@@ -10,5 +10,5 @@ import Foundation
 
 public protocol ChatUIDelegate: AnyObject {
     func conversationsListEmptyListAction()
-    func conversationDetailMoreButtonTapped(conversation: Conversation)
+    func conversationDetailMoreButtonTapped()
 }

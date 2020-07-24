@@ -11,7 +11,7 @@ import ChatUI
 
 public class PumpkinPieInterface: ChatInterfacing {
     public let identifier: ObjectIdentifier
-    public let uiService: ChatUI<PumpkinPieChat.Core>
+    public let uiService: ChatUI<PumpkinPieChat.Core, PumpkinPieChat.UIModels>
     
     public var delegate: ChatUIDelegate? {
         get {

@@ -9,11 +9,12 @@
 import UIKit
 import ChatCore
 
-public class ConversationsListViewController: UIViewController {
+public class ConversationsListViewController<ViewModel: ConversationsListViewModeling>: UIViewController, UITableViewDataSource {
+    typealias Cell = ConversationsListCell<ViewModel.Conversation>
     
-    weak var coordinator: RootCoordinating?
+    weak var coordinator: RootCoordinator<ViewModel.Core>?
     
-    private let viewModel: ConversationsListViewModeling
+    private let viewModel: ViewModel
     private lazy var tableView = UITableView()
     private lazy var footerLoader: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -41,9 +42,9 @@ public class ConversationsListViewController: UIViewController {
 
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
-    private lazy var dataSource = DataSource(currentUser: viewModel.currentUser)
+    private var conversations: [ViewModel.Core.UIModels.UIConversation] = []
 
-    init(viewModel: ConversationsListViewModeling) {
+    init(viewModel: ViewModel) {
 
         self.viewModel = viewModel
         
@@ -64,6 +65,20 @@ public class ConversationsListViewController: UIViewController {
         viewModel.load()
     }
     
+    // MARK: - UITableViewDataSource
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        conversations.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(of: Cell.self, at: indexPath)
+        
+        cell.model = ConversationsListCellViewModel(conversation: conversations[indexPath.row], currentUser: viewModel.currentUser)
+        
+        return cell
+    }
+
 }
 
 // MARK: StatefulViewController
@@ -98,7 +113,7 @@ private extension ConversationsListViewController {
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
-                guard let conversation = self?.dataSource.items[safe: row] else {
+                guard let conversation = self?.conversations[safe: row] else {
                     return
                 }
                 
@@ -110,11 +125,11 @@ private extension ConversationsListViewController {
             footerView: footerLoader
         )
         
-        tableView.dataSource = dataSource
+        tableView.dataSource = self
         tableView.delegate = delegate
         tableView.separatorStyle = .none
         
-        tableView.register(ConversationsListCell.nib, forCellReuseIdentifier: ConversationsListCell.reuseIdentifer)
+        tableView.register(Cell.nib, forCellReuseIdentifier: Cell.reuseIdentifer)
     }
     
     func toggleTableViewLoader(visible: Bool) {
@@ -125,13 +140,13 @@ private extension ConversationsListViewController {
 
 // MARK: ConversationsListViewModelDelegate
 extension ConversationsListViewController: ConversationsListViewModelDelegate {
-    public func didTransitionToState(_ state: ViewModelingState<ConversationsListState>) {
+    public func stateDidChange() {
         
-        switch state {
+        switch viewModel.state {
         case .initial:
             break
         case let .ready(state):
-            dataSource.items = state.items
+            conversations = state.items
             tableView.reloadData()
             toggleTableViewLoader(visible: false)
             
@@ -141,7 +156,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
             setState(.error(error: error))
         case .loading:
             setState(.loading)
-            dataSource.items = []
+            conversations = []
             tableView.reloadData()
         case .loadingMore:
             toggleTableViewLoader(visible: true)
@@ -150,29 +165,6 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
 }
 
 extension ConversationsListViewController {
-    
-    // MARK: DataSource
-    class DataSource: NSObject, UITableViewDataSource {
-        
-        var currentUser: User
-        var items: [Conversation] = []
-        
-        init(currentUser: User) {
-            self.currentUser = currentUser
-        }
-        
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            items.count
-        }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
-            
-            cell.model = ConversationsListCellViewModel(conversation: items[indexPath.row], currentUser: currentUser)
-            
-            return cell
-        }
-    }
     
     // MARK: Delegate
     class Delegate: NSObject, UITableViewDelegate {

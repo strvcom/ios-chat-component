@@ -7,9 +7,12 @@
 //
 
 import Foundation
+import ChatCore
 
 protocol RootCoordinating: AnyObject {
-    func navigate(to conversation: Conversation)
+    associatedtype Core: ChatCoreServicing
+    
+    func navigate(to conversation: Core.UIModels.UIConversation)
     func emptyStateAction()
-    func conversationDetailMoreButtonAction(conversation: Conversation)
+    func conversationDetailMoreButtonAction(conversation: Core.UIModels.UIConversation)
 }

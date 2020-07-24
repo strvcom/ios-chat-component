@@ -10,7 +10,7 @@ import Foundation
 import ChatCore
 import MessageKit
 
-public struct User: UserRepresenting {
+public struct User: UserRepresenting, Encodable {
     public let id: EntityIdentifier
     public let name: String
     public let imageUrl: URL?
@@ -21,6 +21,10 @@ public struct User: UserRepresenting {
         self.name = name
         self.imageUrl = imageUrl
         self.compatibility = compatibility
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        // FIXME: Implement encoding
     }
 }
 

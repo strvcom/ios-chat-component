@@ -9,7 +9,7 @@
 import Foundation
 
 // MARK: - App user model
-struct User: Encodable {
+struct MockUser: Encodable {
     let id: String
     let name: String
     let imageUrl: String?

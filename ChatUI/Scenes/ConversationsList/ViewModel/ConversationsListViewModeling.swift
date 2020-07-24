@@ -7,13 +7,16 @@
 //
 
 import Foundation
-
-public typealias ConversationsListState = ListState<Conversation>
+import ChatCore
 
 public protocol ConversationsListViewModeling: AnyObject {
+    associatedtype Core: ChatUICoreServicing
+    typealias ConversationsListState = ListState<Core.UIModels.UIConversation>
+    typealias Conversation = Core.UIModels.UIConversation
+
     var delegate: ConversationsListViewModelDelegate? { get set }
     var state: ViewModelingState<ConversationsListState> { get }
-    var currentUser: User { get }
+    var currentUser: Core.UIModels.UIUser { get }
 
     func load()
     func loadMore()

@@ -22,10 +22,12 @@ end
 
 target 'ChatApp' do
   networking_pods
+  ui_pods
   pod 'SwiftLint'
 end
 
 target 'Chat' do
+  ui_pods
 end
 
 target 'ChatNetworkingFirestore' do

@@ -56,11 +56,7 @@ private extension SceneCoordinator {
     }
     
     func makeChat(user: User) -> UIViewController {
-        var imageUrl: URL?
-        if let userImageUrl = user.imageUrl {
-            imageUrl = URL(string: userImageUrl)
-        }
-        dependency.chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
+        dependency.chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: user.imageUrl)
         
         let interface: PumpkinPieChat.Interface
         if #available(iOS 13.0, *) {
@@ -95,7 +91,7 @@ extension SceneCoordinator: PumpkinPieChat.UIDelegate {
         print("Take a Quiz button tapped!")
     }
     
-    func conversationDetailMoreButtonTapped(conversation: Conversation) {
-        print("Conversation detail more button tapped ID \(conversation.id)")
+    func conversationDetailMoreButtonTapped() {
+        print("Conversation detail more button tapped")
     }
 }

@@ -11,13 +11,13 @@ import ChatCore
 import MessageKit
 import InputBarAccessoryView
 
-public class MessagesListViewController: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class MessagesListViewController<ViewModel: MessagesListViewModeling>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private let dataSource = DataSource()
+    private var messages: [ViewModel.Message] = []
 
-    weak var coordinator: RootCoordinating?
+    weak var coordinator: RootCoordinator<ViewModel.Core>?
     
-    private let viewModel: MessagesListViewModeling
+    private let viewModel: ViewModel
 
     // MARK: Constants
     private let photoPickerIconSize = CGSize(width: 44, height: 40)
@@ -40,7 +40,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         
         view.configure(
             with: EmptyMessagesListViewModel(
-                title: .conversationDetailEmptyTitle(name: viewModel.partner?.displayName ?? ""),
+                title: .conversationDetailEmptyTitle(name: viewModel.partner?.name ?? ""),
                 subtitle: .conversationDetailEmptySubtitle
             )
         )
@@ -48,7 +48,7 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         return view
     }()
 
-    init(viewModel: MessagesListViewModeling) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
@@ -72,7 +72,10 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
         
         picker.dismiss(animated: true)
         
-        viewModel.send(message: .image(image: image)) { _ in }
+        let kind: MessageKind = .photo(Media(url: nil, image: image))
+        if let message = ViewModel.MessageSpecification.specification(for: kind) {
+            viewModel.send(message: message) { _ in }
+        }
     }
     
     override public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -84,27 +87,25 @@ public class MessagesListViewController: MessagesViewController, UIImagePickerCo
 
         viewModel.loadMore()
     }
-}
-
-// MARK: DataSource
-extension MessagesListViewController {
-    class DataSource: NSObject {
-        var messages: [Message] = []
+    
+    // MARK: - Actions
+    @objc func didTapMoreButton() {
+        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
     }
 }
 
 // MARK: - MessagesDataSource
 extension MessagesListViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
-        return viewModel.currentUser
+        return viewModel.currentUser.sender
     }
 
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return self.dataSource.messages[indexPath.section]
+        return messages[indexPath.section].messageType
     }
 
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return self.dataSource.messages.count
+        return messages.count
     }
 
     public func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -155,7 +156,9 @@ extension MessagesListViewController: MessagesDisplayDelegate {
 extension MessagesListViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        let specs = MessageSpecification.text(message: text)
+        guard let specs = ViewModel.MessageSpecification.specification(for: .text(text)) else {
+            return
+        }
         
         messageInputBar.inputTextView.text = nil
         messagesCollectionView.scrollToBottom(animated: true)
@@ -268,32 +271,27 @@ extension MessagesListViewController: StatefulViewController {
 // MARK: - Private methods
 private extension MessagesListViewController {
     func markSeenMessage() {
-        guard let lastMessage = self.dataSource.messages.last else {
+        guard let lastMessage = messages.last else {
             return
         }
         viewModel.updateSeenMessage(lastMessage)
-    }
-
-    @objc func didTapMoreButton() {
-        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
     }
 }
 
 // MARK: MessagesListViewModelDelegate
 extension MessagesListViewController: MessagesListViewModelDelegate {
-    func didTransitionToState(_ state: ViewModelingState<MessagesListState>) {
-        
-        switch state {
+    public func stateDidChange() {
+        switch viewModel.state {
         case .initial:
             break
         case .ready(let data):
             
             // Scroll to the bottom on first load
-            if dataSource.messages.isEmpty {
+            if messages.isEmpty {
                 messagesCollectionView.scrollToBottom()
             }
             
-            dataSource.messages = data.items
+            messages = data.items
             
             let oldOffset = messagesCollectionView.contentSize.height - messagesCollectionView.contentOffset.y
             messagesCollectionView.reloadData()
@@ -302,12 +300,12 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
 
             markSeenMessage()
             
-            let newState: ViewControllerState = dataSource.messages.isEmpty ? .empty : .loaded
+            let newState: ViewControllerState = messages.isEmpty ? .empty : .loaded
             setState(newState)
         case .failed(let error):
             setState(.error(error: error))
         case .loading:
-            dataSource.messages = []
+            messages = []
             setState(.loading)
             messagesCollectionView.reloadData()
         case .loadingMore:

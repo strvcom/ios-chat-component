@@ -9,9 +9,8 @@
 import UIKit
 import ChatCore
 
-public class ChatUI<Core: ChatUICoreServicing>: ChatUIServicing {
+public class ChatUI<Core: ChatUICoreServicing, Models: ChatUIModeling>: ChatUIServicing {
     public typealias Delegate = ChatUIDelegate
-    public typealias Models = ChatUIModels
     
     let core: Core
     

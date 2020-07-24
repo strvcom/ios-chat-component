@@ -10,22 +10,23 @@ import Foundation
 import FirebaseAuth
 import FirebaseUI
 import FirebaseFirestore
+import Chat
 
 // MARK: - Simple solution for firebase authentication
 final class FirebaseAuthentication: NSObject {
     private let usersPath = "users"
 
     private lazy var auth: Auth = Auth.auth()
-    var user: User? {
+    var user: Chat.User? {
         guard let firUser = auth.currentUser else {
             return nil
         }
-        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL?.absoluteString)
+        let user = Chat.User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL)
         return user
     }
 
     let database: Firestore
-    private var loginCompletion: ((Result<User, Error>) -> Void)?
+    private var loginCompletion: ((Result<Chat.User, Error>) -> Void)?
 
     deinit {
         print("\(self) deinit")
@@ -38,7 +39,7 @@ final class FirebaseAuthentication: NSObject {
 
 // MARK: - Login view controller
 extension FirebaseAuthentication {
-    func authenticationViewController(loginCompletion: @escaping (Result<User, Error>) -> Void) -> UIViewController {
+    func authenticationViewController(loginCompletion: @escaping (Result<Chat.User, Error>) -> Void) -> UIViewController {
         self.loginCompletion = loginCompletion
         guard let authUI = FUIAuth.defaultAuthUI() else {
             fatalError("Unable to create login UI")
@@ -51,7 +52,7 @@ extension FirebaseAuthentication {
 
 // MARK: - Store user
 private extension FirebaseAuthentication {
-    func storeUser(user: User, completion: @escaping (Result<Void, Error>) -> Void) {
+    func storeUser(user: Chat.User, completion: @escaping (Result<Void, Error>) -> Void) {
         let reference = database.collection(usersPath).document(user.id)
         do {
             try reference.setData(from: user) { error in

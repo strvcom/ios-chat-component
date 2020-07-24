@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ChatCore
 
 class ConversationDetailNavigationTitle: UIView {
     
@@ -18,7 +19,7 @@ class ConversationDetailNavigationTitle: UIView {
     private lazy var title: UILabel = {
         let title = UILabel()
         
-        title.text = user.displayName
+        title.text = user.name
         title.font = .navigationTitle
         title.textColor = .navigationTitle
         
@@ -30,9 +31,9 @@ class ConversationDetailNavigationTitle: UIView {
     private let avatarTitleSpacing: CGFloat = 8
     
     // MARK: Properties
-    private var user: User
+    private var user: UserRepresenting
     
-    init(user: User) {
+    init(user: UserRepresenting) {
         self.user = user
         
         super.init(frame: .zero)
@@ -53,12 +54,6 @@ private extension ConversationDetailNavigationTitle {
         
         avatar.pinToSuperview(edges: [.left, .top, .bottom], padding: .zero)
         avatar.setSize(width: avatarSize.width, height: avatarSize.height)
-
-        avatar.update(
-            percentage: CGFloat(user.compatibility ?? 0),
-            imageUrl: user.imageUrl,
-            circleColor: .conversationsCircleDefault
-        )
 
         addSubview(title)
         title.pinToSuperview(edges: [.top, .right, .bottom], padding: .zero)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ChatCore
 
 class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
     
@@ -29,7 +30,7 @@ class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
 
 
 extension RootCoordinator: RootCoordinating {
-    func navigate(to conversation: Conversation) {
+    func navigate(to conversation: Core.UIModels.UIConversation) {
         navigationController.pushViewController(
             makeMessagesListController(conversation: conversation),
             animated: true
@@ -40,14 +41,15 @@ extension RootCoordinator: RootCoordinating {
         delegate?.conversationsListEmptyListAction()
     }
     
-    func conversationDetailMoreButtonAction(conversation: Conversation) {
-        delegate?.conversationDetailMoreButtonTapped(conversation: conversation)
+    func conversationDetailMoreButtonAction(conversation: Core.UIModels.UIConversation) {
+        // TODO: Inform delegate
+        // delegate?.conversationDetailMoreButtonTapped(conversation: conversation)
     }
 }
 
 // MARK: Controllers
 private extension RootCoordinator {
-    func makeConversationsListController() -> ConversationsListViewController {
+    func makeConversationsListController() -> ConversationsListViewController<ConversationsListViewModel<Core>> {
         let controller = ConversationsListViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
@@ -57,7 +59,7 @@ private extension RootCoordinator {
         return controller
     }
     
-    func makeMessagesListController(conversation: Conversation) -> UIViewController {
+    func makeMessagesListController(conversation: Core.UIModels.UIConversation) -> UIViewController {
         let controller = MessagesListViewController(
             viewModel: MessagesListViewModel(
                 conversation: conversation,

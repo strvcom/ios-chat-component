@@ -8,10 +8,22 @@
 
 import UIKit
 import ChatCore
+import ChatUI
 
-public enum MessageSpecification: MessageSpecifying {
+public enum MessageSpecification: MessageSpecificationForContent {
     case text(message: String)
     case image(image: UIImage)
+    
+    public static func specification(for messageType: ChatMessageType) -> MessageSpecification? {
+        switch messageType {
+        case .text(let text):
+            return .text(message: text)
+        case .photo(let item):
+            return .image(image: item.image ?? item.placeholderImage)
+        default:
+            return nil
+        }
+    }
 }
 
 // MARK: - Cachable & Codable

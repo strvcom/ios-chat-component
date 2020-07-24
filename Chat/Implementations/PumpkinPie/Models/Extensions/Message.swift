@@ -7,6 +7,7 @@
 //
 
 import ChatCore
+import ChatUI
 import Foundation
 import MessageKit
 
@@ -15,7 +16,7 @@ public enum MessageContent {
     case image(imageUrl: String)
 }
 
-public struct Message: MessageType, MessageRepresenting, MessageConvertible, MessageStateReflecting {
+public struct Message: MessageType, MessageWithContent, MessageConvertible, MessageStateReflecting {
     public var userId: EntityIdentifier
 
     public var sentAt: Date
@@ -39,12 +40,12 @@ public struct Message: MessageType, MessageRepresenting, MessageConvertible, Mes
         case .text(let message):
             self.kind = .text(message)
         case .image(let image):
+            // FIXME: Update zero size
             let imageItem = ImageItem(
                 url: nil,
                 image: image,
                 placeholderImage: UIImage(),
-                size: CGSize(width: Constants.imageMessageSize.width,
-                             height: Constants.imageMessageSize.height)
+                size: CGSize.zero
             )
             self.kind = .photo(imageItem)
         }
@@ -61,12 +62,12 @@ public struct Message: MessageType, MessageRepresenting, MessageConvertible, Mes
         case .text(let message):
             self.kind = .text(message)
         case .image(let imageUrl):
+            // FIXME: Update zero size
             let imageItem = ImageItem(
                 url: URL(string: imageUrl),
                 image: nil,
                 placeholderImage: UIImage(),
-                size: CGSize(width: Constants.imageMessageSize.width,
-                             height: Constants.imageMessageSize.height)
+                size: CGSize.zero
             )
             self.kind = .photo(imageItem)
         }

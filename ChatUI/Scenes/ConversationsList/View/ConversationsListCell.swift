@@ -7,12 +7,9 @@
 //
 
 import UIKit
+import ChatCore
 
-class ConversationsListCell: UITableViewCell {
-
-    private enum Constants {
-        static let borderWidth = CGFloat(2)
-    }
+class ConversationsListCell<Conversation: ConversationRepresenting>: UITableViewCell where Conversation.Message: MessageWithContent {
     
     @IBOutlet private var nameLabel: UILabel! {
         didSet {
@@ -34,7 +31,7 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    var model: ConversationsListCellViewModel? {
+    var model: ConversationsListCellViewModel<Conversation>? {
         didSet {
             updateUI()
         }
@@ -68,11 +65,5 @@ private extension ConversationsListCell {
         case .other:
             messagePreviewLabel.text = ""
         }
-        
-        progressAvatar.update(
-            percentage: model.compatibility,
-            imageUrl: model.avatarUrl,
-            circleColor: model.circleColor
-        )
     }
 }

@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import ChatCore
 
-struct ConversationsListCellViewModel {
+struct ConversationsListCellViewModel<Conversation: ConversationRepresenting> where Conversation.Message: MessageWithContent {
     
     enum MessagePreview {
         case newConversation
@@ -17,13 +18,13 @@ struct ConversationsListCellViewModel {
     }
     
     private let conversation: Conversation
-    private let currentUser: User
+    private let currentUser: Conversation.User
     
     var title: String {
         partner?.name ?? .conversation
     }
     
-    var partner: User? {
+    var partner: Conversation.User? {
         conversation
             .members
             .first { $0.id != currentUser.id }
@@ -46,16 +47,7 @@ struct ConversationsListCellViewModel {
         partner?.imageUrl
     }
     
-    var compatibility: CGFloat {
-        CGFloat(partner?.compatibility ?? 0)
-    }
-    
-    // TODO: How is this color determined?
-    var circleColor: UIColor {
-        .conversationsCircleDefault
-    }
-    
-    init(conversation: Conversation, currentUser: User) {
+    init(conversation: Conversation, currentUser: Conversation.User) {
         self.conversation = conversation
         self.currentUser = currentUser
     }

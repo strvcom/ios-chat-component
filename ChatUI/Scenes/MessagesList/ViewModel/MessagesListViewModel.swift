@@ -11,12 +11,22 @@ import ChatCore
 import MessageKit
 
 class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling {
+    typealias User = Core.UIModels.UIUser
+    typealias Conversation = Core.UIModels.UIConversation
+    typealias Message = Core.UIModels.UIMessage
+    typealias MessageSpecification = Core.UIModels.UIMessageSpecification
     
     weak var delegate: MessagesListViewModelDelegate?
     
     private let core: Core
-    private(set) var state: ViewModelingState<MessagesListState> = .initial
     let conversation: Conversation
+    
+    private(set) var state: ViewModelingState<MessagesListState> = .initial {
+        didSet {
+            delegate?.stateDidChange()
+        }
+    }
+
     
     private var listener: ListenerIdentifier?
     
@@ -44,7 +54,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     }
     
     func load() {
-        updateState(.loading)
+        state = .loading
         
         if let existingListener = listener {
             core.remove(listener: existingListener)
@@ -57,16 +67,14 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             
             switch result {
             case .success(let payload):
-                self.updateState(
-                    .ready(
+                self.state = .ready(
                         value: MessagesListState(
                             items: payload.data,
                             reachedEnd: payload.reachedEnd
                         )
                     )
-                )
             case .failure(let error):
-                self.updateState(.failed(error: error))
+                self.state = .failed(error: error)
             }
         }
     }
@@ -76,7 +84,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             return
         }
         
-        updateState(.loadingMore)
+        state = .loadingMore
         
         core.loadMoreMessages(conversation: conversation.id)
     }
@@ -97,14 +105,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         conversation
             .seen
             .filter { (senderId, data) in
-                data.messageId == message && senderId != core.currentUser.senderId
-            }.contains { $0.key != core.currentUser.senderId } ? "Seen" : ""
-    }
-}
-
-private extension MessagesListViewModel {
-    func updateState(_ state: ViewModelingState<MessagesListState>) {
-        self.state = state
-        delegate?.didTransitionToState(state)
+                data.messageId == message && senderId != core.currentUser.id
+            }.contains { $0.key != core.currentUser.id } ? "Seen" : ""
     }
 }
