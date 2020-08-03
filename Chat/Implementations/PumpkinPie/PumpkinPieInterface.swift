@@ -9,9 +9,9 @@
 import UIKit
 import ChatUI
 
-public class PumpkinPieInterface: ChatInterfacing {
+public class PumpkinPieInterface<Models: ChatModeling>: ChatInterfacing {
     public let identifier: ObjectIdentifier
-    public let uiService: ChatUI<PumpkinPieChat.Core, PumpkinPieChat.UIModels>
+    public let uiService: ChatUI<PumpkinPieChat<Models>.Core, PumpkinPieChat<Models>.UIModels>
     
     public var delegate: ChatUIDelegate? {
         get {
@@ -25,7 +25,7 @@ public class PumpkinPieInterface: ChatInterfacing {
         uiService.rootViewController
     }
         
-    init(identifier: ObjectIdentifier, core: PumpkinPieChat.Core, config: UIService.Config) {
+    init(identifier: ObjectIdentifier, core: PumpkinPieChat<Models>.Core, config: UIService.Config) {
         self.identifier = identifier
         self.uiService = PumpkinPieChat.uiService(core: core, uiConfig: config)
     }

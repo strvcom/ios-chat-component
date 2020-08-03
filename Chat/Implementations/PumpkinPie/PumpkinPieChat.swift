@@ -11,12 +11,26 @@ import ChatCore
 import ChatNetworkingFirestore
 import ChatUI
 
+public protocol ChatModeling: ChatUIModeling, ChatFirestoreModeling where
+    UIMessage: MessageConvertible,
+    UIMessage: MessageStateReflecting,
+    UIMessageSpecification: Cachable,
+    UIMessage.MessageSpecification == UIMessageSpecification,
+    NetworkConversation: ChatUIConvertible,
+    NetworkMessage: ChatUIConvertible,
+    NetworkMessageSpecification: ChatUIConvertible,
+    NetworkConversation.UIModel == UIConversation,
+    NetworkMessage.UIModel == UIMessage,
+    NetworkMessageSpecification.UIModel == UIMessageSpecification,
+    UIMessage: MessageWithContent,
+    UIMessageSpecification: MessageSpecificationForContent {}
+
 /// Chat implementation for Pumpkin Pie project
-public class PumpkinPieChat: DefaultChatSpecifying {
-    public typealias UIModels = PumpkinPieModels
-    public typealias Networking = ChatFirestore<PumpkinPieModels>
+public class PumpkinPieChat<Models: ChatModeling>: DefaultChatSpecifying {
+    public typealias UIModels = Models
+    public typealias Networking = ChatFirestore<Models>
     public typealias Core = ChatCore<Networking, UIModels>
-    public typealias Interface = PumpkinPieInterface
+    public typealias Interface = PumpkinPieInterface<Models>
     public typealias UIDelegate = Interface.Delegate
 
     let core: Core
@@ -64,8 +78,7 @@ public extension PumpkinPieChat {
 
 // MARK: - Users
 public extension PumpkinPieChat {
-    func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?) {
-        let user = User(id: userId, name: name, imageUrl: imageUrl)
+    func setCurrentUser(user: Core.UserUI) {
         core.setCurrentUser(user: user)
     }
 }

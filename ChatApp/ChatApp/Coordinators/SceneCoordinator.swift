@@ -15,7 +15,7 @@ final class SceneCoordinator {
     let dependency: AppDependency
     let window: UIWindow
     
-    private(set) var interface: PumpkinPieChat.Interface?
+    private(set) var interface: PumpkinPieChat<PumpkinPieModels>.Interface?
     
     init(parent: AppCoordinator, dependency: AppDependency, window: UIWindow) {
         self.parent = parent
@@ -56,9 +56,9 @@ private extension SceneCoordinator {
     }
     
     func makeChat(user: User) -> UIViewController {
-        dependency.chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: user.imageUrl)
+        dependency.chat.setCurrentUser(user: user)
         
-        let interface: PumpkinPieChat.Interface
+        let interface: PumpkinPieChat<PumpkinPieModels>.Interface
         if #available(iOS 13.0, *) {
             interface = makeSceneInterface()
         } else {
@@ -71,12 +71,12 @@ private extension SceneCoordinator {
         return interface.rootViewController
     }
     
-    func makeInterface() -> PumpkinPieChat.Interface {
+    func makeInterface() -> PumpkinPieChat<PumpkinPieModels>.Interface {
         return dependency.chat.interface()
     }
     
     @available(iOS 13.0, *)
-    func makeSceneInterface() -> PumpkinPieChat.Interface {
+    func makeSceneInterface() -> PumpkinPieChat<PumpkinPieModels>.Interface {
         guard let scene = window.windowScene else {
             fatalError("Scene delegate doesn't have main window")
         }
@@ -86,7 +86,7 @@ private extension SceneCoordinator {
 }
 
 // MARK: Chat UI Delegate
-extension SceneCoordinator: PumpkinPieChat.UIDelegate {
+extension SceneCoordinator: PumpkinPieChat<PumpkinPieModels>.UIDelegate {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
     }
