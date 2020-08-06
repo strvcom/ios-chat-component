@@ -10,8 +10,6 @@ import UIKit
 import ChatCore
 
 public class ConversationsListViewController<ViewModel: ConversationsListViewModeling>: UIViewController, UITableViewDataSource {
-    typealias Cell = ConversationsListCell<ViewModel.Conversation>
-    
     weak var coordinator: RootCoordinator<ViewModel.Core>?
     
     private let viewModel: ViewModel
@@ -72,7 +70,7 @@ public class ConversationsListViewController<ViewModel: ConversationsListViewMod
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(of: Cell.self, at: indexPath)
+        let cell = tableView.dequeueReusableCell(of: ConversationsListCell.self, at: indexPath)
         
         cell.model = ConversationsListCellViewModel(conversation: conversations[indexPath.row], currentUser: viewModel.currentUser)
         
@@ -129,7 +127,7 @@ private extension ConversationsListViewController {
         tableView.delegate = delegate
         tableView.separatorStyle = .none
         
-        tableView.register(Cell.nib, forCellReuseIdentifier: Cell.reuseIdentifer)
+        tableView.register(ConversationsListCell.nib, forCellReuseIdentifier: ConversationsListCell.reuseIdentifer)
     }
     
     func toggleTableViewLoader(visible: Bool) {

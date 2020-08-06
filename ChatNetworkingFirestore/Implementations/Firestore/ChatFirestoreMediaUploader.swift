@@ -9,9 +9,18 @@
 import UIKit
 import ChatCore
 import FirebaseStorage
+import FirebaseCore
 
 public class ChatFirestoreMediaUploader: MediaUploading {
-    private lazy var storage = Storage.storage()
+    private lazy var storage: Storage = {
+        if let app = self.firebaseApp {
+            return Storage.storage(app: app)
+        } else {
+            return Storage.storage()
+        }
+    }()
+    
+    var firebaseApp: FirebaseApp?
     
     public init() {}
     

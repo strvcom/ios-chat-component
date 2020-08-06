@@ -9,7 +9,7 @@
 import UIKit
 import ChatCore
 
-class ConversationsListCell<Conversation: ConversationRepresenting>: UITableViewCell where Conversation.Message: MessageWithContent {
+class ConversationsListCell: UITableViewCell {
     
     @IBOutlet private var nameLabel: UILabel! {
         didSet {
@@ -31,7 +31,7 @@ class ConversationsListCell<Conversation: ConversationRepresenting>: UITableView
         }
     }
     
-    var model: ConversationsListCellViewModel<Conversation>? {
+    var model: ConversationsListCellViewModel? {
         didSet {
             updateUI()
         }

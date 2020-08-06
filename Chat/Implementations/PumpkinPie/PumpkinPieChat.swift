@@ -23,7 +23,9 @@ public protocol ChatModeling: ChatUIModeling, ChatFirestoreModeling where
     NetworkMessage.UIModel == UIMessage,
     NetworkMessageSpecification.UIModel == UIMessageSpecification,
     UIMessage: MessageWithContent,
-    UIMessageSpecification: MessageSpecificationForContent {}
+    UIMessageSpecification: MessageSpecificationForContent,
+    UIConversation == NetworkConversation {
+}
 
 /// Chat implementation for Pumpkin Pie project
 public class PumpkinPieChat<Models: ChatModeling>: DefaultChatSpecifying {

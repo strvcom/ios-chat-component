@@ -9,46 +9,34 @@
 import UIKit
 import ChatCore
 
-struct ConversationsListCellViewModel<Conversation: ConversationRepresenting> where Conversation.Message: MessageWithContent {
-    
+struct ConversationsListCellViewModel {
     enum MessagePreview {
         case newConversation
         case message(String)
         case other
     }
     
-    private let conversation: Conversation
-    private let currentUser: Conversation.User
+    let title: String
+    let avatarURL: URL?
+    let messagePreview: MessagePreview
     
-    var title: String {
-        partner?.name ?? .conversation
-    }
-    
-    var partner: Conversation.User? {
-        conversation
-            .members
-            .first { $0.id != currentUser.id }
-    }
-    
-    var messagePreview: MessagePreview {
+    init<Conversation: ConversationRepresenting>(conversation: Conversation, currentUser: Conversation.User) where Conversation.Message: MessageWithContent {
+        let partner = conversation
+                        .members
+                        .first { $0.id != currentUser.id }
+        self.title = partner?.name ?? .conversation
+        self.avatarURL = partner?.imageUrl
+        
         guard let lastMessage = conversation.lastMessage else {
-            return .newConversation
+            self.messagePreview = .newConversation
+            return
         }
         
         switch lastMessage.kind {
         case let .text(message):
-            return .message(message)
+            self.messagePreview = .message(message)
         default:
-            return .other
+            self.messagePreview = .other
         }
-    }
-    
-    var avatarUrl: URL? {
-        partner?.imageUrl
-    }
-    
-    init(conversation: Conversation, currentUser: Conversation.User) {
-        self.conversation = conversation
-        self.currentUser = currentUser
     }
 }

@@ -10,14 +10,64 @@ import UIKit
 import ChatCore
 import MessageKit
 
-public typealias ChatMessageType = MessageKind
+public typealias ChatUIMessageKitKind = MessageKind
 
-public protocol MessageSpecificationForContent: MessageSpecifying {
-    static func specification(for messageType: ChatMessageType) -> Self?
+public protocol ChatUIMessageContent {
+    var kind: ChatUIMessageKitKind { get }
 }
 
-public protocol MessageWithContent: MessageRepresenting {
-    var kind: ChatMessageType { get }
+public struct ChatUIMessageKitMediaItem: MediaItem {
+    public static let defaultSize: CGSize = CGSize(width: Constants.imageMessageSize.width, height: Constants.imageMessageSize.height)
+    
+    public var url: URL?
+    public var image: UIImage?
+    public var placeholderImage: UIImage
+    public var size: CGSize
+    
+    public init(url: URL? = nil, image: UIImage? = nil, placeholderImage: UIImage = UIImage(), size: CGSize = Self.defaultSize) {
+        self.url = url
+        self.image = image
+        self.placeholderImage = placeholderImage
+        self.size = size
+    }
+}
+
+public protocol ChatUIMessageMediaContent {
+    var media: ChatUIMessageKitMediaItem { get }
+}
+
+public protocol MessageSpecificationForContent: MessageSpecifying {
+    static func specification(for messageKitKind: ChatUIMessageKitKind) -> Self?
+}
+
+public protocol MessageWithContent: MessageRepresenting, MessageType {
+    associatedtype Content: ChatUIMessageContent
+    
+    var content: Content { get }
+}
+
+struct MessageUser: SenderType {
+    let senderId: String
+    let displayName: String
+}
+
+public extension MessageWithContent {
+    var sender: SenderType {
+        // TODO: Sender name
+        MessageUser(senderId: self.userId, displayName: "")
+    }
+    
+    var sentDate: Date {
+        sentAt
+    }
+    
+    var messageId: String {
+        id
+    }
+    
+    var kind: MessageKind {
+        content.kind
+    }
 }
 
 struct Media: MediaItem {

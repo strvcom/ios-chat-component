@@ -10,13 +10,13 @@ import Foundation
 import Chat
 
 /// This class specifies all necessary networking and UI models of Pumpkin Pie chat
-public class PumpkinPieModels: ChatModeling {
-    public typealias UIConversation = Conversation
-    public typealias UIMessage = Message
-    public typealias UIMessageSpecification = MessageSpecification
-    public typealias UIUser = User
-    public typealias NetworkConversation = Conversation
-    public typealias NetworkMessage = Message
-    public typealias NetworkMessageSpecification = MessageSpecification
-    public typealias NetworkUser = User
+class PumpkinPieModels: ChatModeling {
+    typealias UIConversation = Conversation
+    typealias UIMessage = Message
+    typealias UIMessageSpecification = MessageContent
+    typealias UIUser = User
+    typealias NetworkConversation = Conversation
+    typealias NetworkMessage = Message
+    typealias NetworkMessageSpecification = MessageContent
+    typealias NetworkUser = User
 }

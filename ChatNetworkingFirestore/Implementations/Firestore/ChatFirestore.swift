@@ -10,6 +10,7 @@ import Foundation
 import ChatCore
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseStorage
 
 /// Implementation of `ChatNetworkServicing` for Firestore backends
 open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
@@ -25,6 +26,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     private var constants: ChatFirestoreConstants {
         config.constants
     }
+    private let decoder: JSONDecoder
 
     // user management
     @Required private var currentUserId: String
@@ -40,7 +42,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     // dedicated thread queue
     private let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .background)
 
-    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = ChatFirestoreMediaUploader()) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -52,17 +54,23 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
         guard let firebaseApp = FirebaseApp.app(name: appName) else {
             fatalError("Can't configure Firebase app \(appName)")
         }
+        
+        // Pass firebase app reference to `ChatFirestoreMediaUploader`
+        if let uploader = mediaUploader as? ChatFirestoreMediaUploader {
+            uploader.firebaseApp = firebaseApp
+        }
 
         self.config = config
+        self.decoder = decoder
         self.database = Firestore.firestore(app: firebaseApp)
         self.userManager = userManager
         self.mediaUploader = mediaUploader
     }
     
-    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader()) {
-        let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config)
+    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+        let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config, decoder: decoder)
         
-        self.init(config: config, userManager: userManager, mediaUploader: mediaUploader)
+        self.init(config: config, userManager: userManager, mediaUploader: mediaUploader, decoder: decoder)
     }
     
     deinit {
@@ -106,7 +114,7 @@ public extension ChatFirestore {
                 var currentConversation: ConversationFirestore?
                 do {
                     let conversationSnapshot = try transaction.getDocument(reference)
-                    currentConversation = try conversationSnapshot.data(as: ConversationFirestore.self)
+                    currentConversation = try conversationSnapshot.decode(to: ConversationFirestore.self, with: self.decoder)
                 } catch let fetchError as NSError {
                     errorPointer?.pointee = fetchError
                     return nil
@@ -150,7 +158,7 @@ public extension ChatFirestore {
             }
 
             self.prepareMessageData(message: message) { result in
-                guard case let .success(data) = result else {
+                guard case var .success(data) = result else {
                     if case let .failure(error) = result {
                         print("Error while preparing message data \(error)")
                         completion(.failure(error))
@@ -170,6 +178,7 @@ public extension ChatFirestore {
                 self.database.runTransaction({ (transaction, _) -> Any? in
 
                     transaction.setData(data, forDocument: referenceMessage)
+                    data[Constants.identifierAttributeName] = referenceMessage.documentID
                     transaction.updateData([self.constants.conversations.lastMessageAttributeName: data], forDocument: referenceConversation)
 
                     return nil
@@ -217,7 +226,7 @@ public extension ChatFirestore {
                 mediaUploader.upload(content: value, on: self.networkingQueue) { result in
                     switch result {
                     case .success(let url):
-                        normalizedJSON[key] = url
+                        normalizedJSON[key] = url.absoluteString
                     case .failure(let error):
                         resultError = error
                     }
@@ -473,14 +482,15 @@ private extension ChatFirestore {
 // MARK: Private methods
 private extension ChatFirestore {
     func listenToCollection<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
-        let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self] (snapshot, error) in
+        let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self, decoder] (snapshot, error) in
             self?.networkingQueue.async {
                 if let snapshot = snapshot {
                     let list: [T] = snapshot.documents.compactMap {
                         do {
-                            return try $0.data(as: T.self)
+                            return try $0.decode(to: T.self, with: decoder)
                         } catch {
                             print("Couldn't decode document:", error)
+                            print($0.data())
                             return nil
                         }
                     }
@@ -502,18 +512,14 @@ private extension ChatFirestore {
     }
 
     func listenToDocument<T: Decodable>(reference: DocumentReference, listener: Listener, completion: @escaping (Result<T, ChatError>) -> Void) {
-        let networkListener = reference.addSnapshotListener { (snapshot, error) in
-            self.networkingQueue.async {
+        let networkListener = reference.addSnapshotListener { [weak self, decoder] (snapshot, error) in
+            self?.networkingQueue.async {
                 if let snapshot = snapshot {
                     do {
-                        if let object = try snapshot.data(as: T.self) {
-                            completion(.success(object))
-                        } else {
-                            completion(.failure(.internal(message: "Document data haven't been found")))
-                        }
+                        let object = try snapshot.decode(to: T.self, with: decoder)
+                        completion(.success(object))
                     } catch {
                         completion(.failure(.internal(message: "Couldn't decode document: \(error)")))
-                        return
                     }
                 } else if let error = error {
                     completion(.failure(.networking(error: error)))
