@@ -11,11 +11,11 @@ import ChatCore
 import MessageKit
 import InputBarAccessoryView
 
-public class MessagesListViewController<ViewModel: MessagesListViewModeling>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class MessagesListViewController<ViewModel: MessagesListViewModeling>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChatMessagesList {
     
     private var messages: [ViewModel.Message] = []
 
-    weak var coordinator: RootCoordinator<ViewModel.Core>?
+    public weak var actionsDelegate: ChatMessagesActionsDelegate?
     
     private let viewModel: ViewModel
 
@@ -90,7 +90,7 @@ public class MessagesListViewController<ViewModel: MessagesListViewModeling>: Me
     
     // MARK: - Actions
     @objc func didTapMoreButton() {
-        coordinator?.conversationDetailMoreButtonAction(conversation: viewModel.conversation)
+        actionsDelegate?.didTapOnMoreButton?(for: viewModel.conversationId, in: self)
     }
 }
 

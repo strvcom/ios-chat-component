@@ -403,12 +403,16 @@ extension ChatCore {
                     let converted = conversation.uiModel
                     self.conversations[id] = converted
                     // Call each closure registered for this listener
-                    self.conversationsListeners[listener]?.forEach {
-                        $0.closure(.success(converted))
+                    DispatchQueue.main.async {
+                        self.conversationsListeners[listener]?.forEach {
+                            $0.closure(.success(converted))
+                        }
                     }
                 case .failure(let error):
-                    self.conversationsListeners[listener]?.forEach {
-                        $0.closure(.failure(error))
+                    DispatchQueue.main.async {
+                        self.conversationsListeners[listener]?.forEach {
+                            $0.closure(.failure(error))
+                        }
                     }
                 }
             }

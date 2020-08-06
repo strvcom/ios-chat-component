@@ -19,7 +19,7 @@ public protocol MessagesListViewModeling: AnyObject {
     var state: ViewModelingState<MessagesListState> { get }
     var currentUser: Core.UIModels.UIUser { get }
     var partner: Core.UIModels.UIUser? { get }
-    var conversation: Core.UIModels.UIConversation { get }
+    var conversationId: EntityIdentifier { get }
 
     func load()
     func loadMore()

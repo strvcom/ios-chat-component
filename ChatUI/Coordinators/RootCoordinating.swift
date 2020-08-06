@@ -6,13 +6,12 @@
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import ChatCore
 
 protocol RootCoordinating: AnyObject {
     associatedtype Core: ChatCoreServicing
     
-    func navigate(to conversation: Core.UIModels.UIConversation)
-    func emptyStateAction()
-    func conversationDetailMoreButtonAction(conversation: Core.UIModels.UIConversation)
+    var conversationsViewController: ChatConversationsListController { get }
+    func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController
 }

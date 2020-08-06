@@ -12,7 +12,7 @@ class CustomNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationBar.barTintColor = .navigationBarTintColor
+        navigationBar.barTintColor = .white
         navigationBar.shadowImage = UIImage()
         navigationBar.backIndicatorImage = UIImage()
         navigationBar.backIndicatorTransitionMaskImage = UIImage()

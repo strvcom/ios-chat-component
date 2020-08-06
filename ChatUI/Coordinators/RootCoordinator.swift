@@ -9,41 +9,23 @@
 import UIKit
 import ChatCore
 
-class RootCoordinator<Core: ChatUICoreServicing>: Coordinating {
-    
-    private lazy var navigationController: UINavigationController = {
-        return CustomNavigationController(rootViewController: makeConversationsListController())
-    }()
+class RootCoordinator<Core: ChatUICoreServicing> {
     
     private let core: Core
-    private weak var delegate: ChatUIDelegate?
     
-    init(core: Core, delegate: ChatUIDelegate?) {
+    lazy var conversationsViewController: ChatConversationsListController = {
+        makeConversationsListController()
+    }()
+
+    init(core: Core) {
         self.core = core
-        self.delegate = delegate
-    }
-    
-    func start() -> UIViewController {
-        navigationController
     }
 }
 
-
+// MARK: RootCoordinating
 extension RootCoordinator: RootCoordinating {
-    func navigate(to conversation: Core.UIModels.UIConversation) {
-        navigationController.pushViewController(
-            makeMessagesListController(conversation: conversation),
-            animated: true
-        )
-    }
-    
-    func emptyStateAction() {
-        delegate?.conversationsListEmptyListAction()
-    }
-    
-    func conversationDetailMoreButtonAction(conversation: Core.UIModels.UIConversation) {
-        // TODO: Inform delegate
-        // delegate?.conversationDetailMoreButtonTapped(conversation: conversation)
+    func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController {
+        makeMessagesListController(conversationId: conversationId)
     }
 }
 
@@ -53,21 +35,17 @@ private extension RootCoordinator {
         let controller = ConversationsListViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
-
-        controller.coordinator = self
         
         return controller
     }
     
-    func makeMessagesListController(conversation: Core.UIModels.UIConversation) -> UIViewController {
+    func makeMessagesListController(conversationId: EntityIdentifier) -> ChatMessagesListController {
         let controller = MessagesListViewController(
             viewModel: MessagesListViewModel(
-                conversation: conversation,
+                conversationId: conversationId,
                 core: core
             )
         )
-        
-        controller.coordinator = self
         
         return controller
     }

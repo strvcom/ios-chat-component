@@ -9,8 +9,8 @@
 import UIKit
 import ChatCore
 
-public class ConversationsListViewController<ViewModel: ConversationsListViewModeling>: UIViewController, UITableViewDataSource {
-    weak var coordinator: RootCoordinator<ViewModel.Core>?
+public class ConversationsListViewController<ViewModel: ConversationsListViewModeling>: ChatConversationsListController, UITableViewDataSource {
+    public weak var actionsDelegate: ChatConversationsActionsDelegate?
     
     private let viewModel: ViewModel
     private lazy var tableView = UITableView()
@@ -24,7 +24,11 @@ public class ConversationsListViewController<ViewModel: ConversationsListViewMod
         let view = EmptyConversationsList.nibInstance
         
         view.buttonAction = { [weak self] in
-            self?.coordinator?.emptyStateAction()
+            guard let self = self else {
+                return
+            }
+            
+            self.actionsDelegate?.didTapOnEmptyListAction?(in: self)
         }
         
         return view
@@ -111,11 +115,11 @@ private extension ConversationsListViewController {
         
         delegate = Delegate(
             didSelectBlock: { [weak self] row in
-                guard let conversation = self?.conversations[safe: row] else {
+                guard let self = self, let conversation = self.conversations[safe: row] else {
                     return
                 }
                 
-                self?.coordinator?.navigate(to: conversation)
+                self.actionsDelegate?.didSelectConversation(conversationId: conversation.id, in: self)
             },
             didReachBottomBlock: { [weak self] in
                 self?.viewModel.loadMore()

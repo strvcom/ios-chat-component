@@ -19,62 +19,75 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
     weak var delegate: MessagesListViewModelDelegate?
     
     private let core: Core
-    let conversation: Conversation
+    let conversationId: EntityIdentifier
     
     private(set) var state: ViewModelingState<MessagesListState> = .initial {
         didSet {
             delegate?.stateDidChange()
         }
     }
+    private var messagesState: ViewModelingState<MessagesListState> = .initial {
+        didSet {
+            updateState()
+        }
+    }
+    private var conversation: Core.UIModels.UIConversation? {
+        didSet {
+            updateState()
+        }
+    }
 
-    
-    private var listener: ListenerIdentifier?
-    
+    private var messagesListener: ListenerIdentifier?
+    private var conversationListener: ListenerIdentifier?
+        
     var currentUser: User {
         core.currentUser
     }
     
     var partner: User? {
-        conversation
+        conversation?
             .members
             .first { $0.id != currentUser.id }
     }
 
-    init(conversation: Conversation, core: Core) {
-        self.conversation = conversation
+    init(conversationId: EntityIdentifier, core: Core) {
+        self.conversationId = conversationId
         self.core = core
     }
     
     deinit {
-        guard let listener = listener else {
-            return
-        }
-        
-        core.remove(listener: listener)
+        removeListeners()
     }
     
     func load() {
-        state = .loading
+        messagesState = .loading
         
-        if let existingListener = listener {
-            core.remove(listener: existingListener)
-        }
-        
-        listener = core.listenToMessages(conversation: conversation.id) { [weak self] result in
+        removeListeners()
+
+        conversationListener = core.listenToConversation(conversation: conversationId, completion: { [weak self] result in
+            switch result {
+            case .success(let conversation):
+                self?.conversation = conversation
+            case .failure(let error):
+                print(error)
+                self?.conversation = nil
+            }
+        })
+        messagesListener = core.listenToMessages(conversation: conversationId) { [weak self] result in
             guard let self = self else {
                 return
             }
             
             switch result {
             case .success(let payload):
-                self.state = .ready(
+                self.messagesState = .ready(
                         value: MessagesListState(
                             items: payload.data,
                             reachedEnd: payload.reachedEnd
                         )
                     )
             case .failure(let error):
-                self.state = .failed(error: error)
+                self.messagesState = .failed(error: error)
             }
         }
     }
@@ -84,28 +97,56 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             return
         }
         
-        state = .loadingMore
+        messagesState = .loadingMore
         
-        core.loadMoreMessages(conversation: conversation.id)
+        core.loadMoreMessages(conversation: conversationId)
     }
     
     func updateSeenMessage(_ message: Message) {
-        core.updateSeenMessage(message.id, in: conversation.id)
+        core.updateSeenMessage(message.id, in: conversationId)
     }
     
     func send(message: MessageSpecification, completion: @escaping (Result<Message, ChatError>) -> Void) {
-        core.send(message: message, to: conversation.id, completion: completion)
+        core.send(message: message, to: conversationId, completion: completion)
     }
     
     func seen(message: EntityIdentifier) -> Bool {
-        conversation.seen.contains { $0.value.messageId == message }
+        guard let conversation = conversation else {
+            return false
+        }
+        
+        return conversation.seen.contains { $0.value.messageId == message }
     }
     
     func seenLabel(for message: EntityIdentifier) -> String {
-        conversation
+        guard let conversation = conversation else {
+            return ""
+        }
+        
+        return conversation
             .seen
             .filter { (senderId, data) in
                 data.messageId == message && senderId != core.currentUser.id
             }.contains { $0.key != core.currentUser.id } ? "Seen" : ""
+    }
+}
+
+private extension MessagesListViewModel {
+    func removeListeners() {
+        if let existingListener = messagesListener {
+            core.remove(listener: existingListener)
+        }
+        if let existingListener = conversationListener {
+            core.remove(listener: existingListener)
+        }
+    }
+    
+    func updateState() {
+        guard conversation != nil else {
+            state = .loading
+            return
+        }
+        
+        state = messagesState
     }
 }

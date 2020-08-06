@@ -33,7 +33,6 @@ public class PumpkinPieChat<Models: ChatModeling>: DefaultChatSpecifying {
     public typealias Networking = ChatFirestore<Models>
     public typealias Core = ChatCore<Networking, UIModels>
     public typealias Interface = PumpkinPieInterface<Models>
-    public typealias UIDelegate = Interface.Delegate
 
     let core: Core
     let uiConfig: UIConfiguration

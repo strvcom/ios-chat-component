@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040A2D70244DCCE700BA9D9F /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */; };
 		04124A5024483969006475ED /* EmptyMessagesList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04124A4F24483969006475ED /* EmptyMessagesList.xib */; };
 		04124A5224483975006475ED /* EmptyMessagesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04124A5124483975006475ED /* EmptyMessagesList.swift */; };
 		04124A5424484BEC006475ED /* StatefulViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04124A5324484BEC006475ED /* StatefulViewController.swift */; };
@@ -25,7 +24,6 @@
 		045A6B212424EC300055B5E1 /* UIFont+ChatFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */; };
 		045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B222424EC3A0055B5E1 /* UIColor+ChatColors.swift */; };
 		045A6B25242509130055B5E1 /* ConversationsListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B24242509130055B5E1 /* ConversationsListViewModeling.swift */; };
-		045A6B2724250A180055B5E1 /* Coordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2624250A180055B5E1 /* Coordinating.swift */; };
 		045A6B2924250A360055B5E1 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B2824250A360055B5E1 /* RootCoordinator.swift */; };
 		045A6B34242905680055B5E1 /* RootCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B33242905680055B5E1 /* RootCoordinating.swift */; };
 		045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B35242908090055B5E1 /* StyleConfig.swift */; };
@@ -162,6 +160,7 @@
 		C1CFB7F324D86C990023CB10 /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */; };
 		C1CFB7F624D93E650023CB10 /* DocumentSnapshot+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFB7F524D93E650023CB10 /* DocumentSnapshot+Decoding.swift */; };
 		C1CFB7F924D93F850023CB10 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFB7F824D93F850023CB10 /* Constants.swift */; };
+		C1CFB7FC24DC34210023CB10 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */; };
 		C1D30F84244F0E0F00973EE9 /* EntityIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E2E23EDCD1E005E10A1 /* EntityIdentifiable.swift */; };
 		C1D30F86244F0F5600973EE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D30F85244F0F5600973EE9 /* AppDelegate.swift */; };
 		CAB3F52E4B85EAA2C055C5E4 /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E9BE22E04F1D039E5733B5 /* Pods_Chat.framework */; };
@@ -259,7 +258,6 @@
 		045A6B202424EC300055B5E1 /* UIFont+ChatFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+ChatFonts.swift"; sourceTree = "<group>"; };
 		045A6B222424EC3A0055B5E1 /* UIColor+ChatColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+ChatColors.swift"; sourceTree = "<group>"; };
 		045A6B24242509130055B5E1 /* ConversationsListViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewModeling.swift; sourceTree = "<group>"; };
-		045A6B2624250A180055B5E1 /* Coordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinating.swift; sourceTree = "<group>"; };
 		045A6B2824250A360055B5E1 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		045A6B33242905680055B5E1 /* RootCoordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinating.swift; sourceTree = "<group>"; };
 		045A6B35242908090055B5E1 /* StyleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleConfig.swift; sourceTree = "<group>"; };
@@ -477,7 +475,6 @@
 		045A6B032424DD200055B5E1 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				045A6B2624250A180055B5E1 /* Coordinating.swift */,
 				045A6B33242905680055B5E1 /* RootCoordinating.swift */,
 				045A6B2824250A360055B5E1 /* RootCoordinator.swift */,
 			);
@@ -489,7 +486,6 @@
 			children = (
 				0471CBCB24474981006B8212 /* ConversationDetailNavigationTitle.swift */,
 				045A6B3F242A1B860055B5E1 /* ProgressAvatar.swift */,
-				040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */,
 				04BD15AC244F65A300EDC62E /* ErrorView.swift */,
 			);
 			path = View;
@@ -883,6 +879,7 @@
 		C1275F9D244721F400AAE90E /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */,
 				ADB40CD023C200A5003DC146 /* LaunchScreen.storyboard */,
 			);
 			path = Scenes;
@@ -1505,7 +1502,6 @@
 				04E5CEB624365FA300C9532F /* ListState.swift in Sources */,
 				04BD15AD244F65A400EDC62E /* ErrorView.swift in Sources */,
 				0490E771241EB778008C4412 /* ConversationsListViewModel.swift in Sources */,
-				045A6B2724250A180055B5E1 /* Coordinating.swift in Sources */,
 				C11E9E6123EDCD34005E10A1 /* UIImageView+Network.swift in Sources */,
 				045A6B2924250A360055B5E1 /* RootCoordinator.swift in Sources */,
 				C1CFB7F224D84FA30023CB10 /* MessageContent.swift in Sources */,
@@ -1513,7 +1509,6 @@
 				04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */,
 				0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */,
 				048ED59424339BD500F9C7BA /* MessagesListViewController.swift in Sources */,
-				040A2D70244DCCE700BA9D9F /* CustomNavigationController.swift in Sources */,
 				04E74E7A2432440800401222 /* UIImage+ChatImages.swift in Sources */,
 				C11E9E6323EDCD34005E10A1 /* ChatUI.swift in Sources */,
 				045A6B3D242A10F60055B5E1 /* String+ChatStrings.swift in Sources */,
@@ -1602,6 +1597,7 @@
 				04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */,
 				C18C35BB24CB2A3900BD3C92 /* Conversation.swift in Sources */,
 				C18C35BE24CB2A3900BD3C92 /* User.swift in Sources */,
+				C1CFB7FC24DC34210023CB10 /* CustomNavigationController.swift in Sources */,
 				C18C35C424CB2A6700BD3C92 /* PumpkinPieModels.swift in Sources */,
 				C1CFB7F024D84F350023CB10 /* MessageContent.swift in Sources */,
 				C1A62337244843FB00301C82 /* AppDependency.swift in Sources */,

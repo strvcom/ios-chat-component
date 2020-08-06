@@ -8,6 +8,7 @@
 
 import UIKit
 import Chat
+import ChatCore
 import ChatUI
 
 final class SceneCoordinator {
@@ -65,10 +66,11 @@ private extension SceneCoordinator {
             interface = makeInterface()
         }
         
-        interface.delegate = self
         self.interface = interface
         
-        return interface.rootViewController
+        var conversationsController = interface.conversationsViewController
+        conversationsController.actionsDelegate = self
+        return CustomNavigationController(rootViewController: conversationsController)
     }
     
     func makeInterface() -> PumpkinPieChat<PumpkinPieModels>.Interface {
@@ -86,7 +88,7 @@ private extension SceneCoordinator {
 }
 
 // MARK: Chat UI Delegate
-extension SceneCoordinator: PumpkinPieChat<PumpkinPieModels>.UIDelegate {
+extension SceneCoordinator {
     func conversationsListEmptyListAction() {
         print("Take a Quiz button tapped!")
     }
@@ -94,4 +96,25 @@ extension SceneCoordinator: PumpkinPieChat<PumpkinPieModels>.UIDelegate {
     func conversationDetailMoreButtonTapped() {
         print("Conversation detail more button tapped")
     }
+}
+
+// MARK: Conversations action delegate
+extension SceneCoordinator: ChatConversationsActionsDelegate {
+    func didSelectConversation(conversationId: EntityIdentifier, in controller: UIViewController) {
+        guard let interface = interface else {
+            return
+        }
+        guard let navigation = window.rootViewController as? UINavigationController else {
+            return
+        }
+        
+        var messagesController = interface.messagesViewController(for: conversationId)
+        messagesController.actionsDelegate = self
+        navigation.pushViewController(messagesController, animated: true)
+    }
+}
+
+// MARK: Messages action delegate
+extension SceneCoordinator: ChatMessagesActionsDelegate {
+    
 }
