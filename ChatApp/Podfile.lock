@@ -254,6 +254,8 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 1.30906.0)
+  - FirebaseFirestoreSwift (0.4.0):
+    - FirebaseFirestore (>= 1.6.1, ~> 1.6)
   - FirebaseStorage (3.9.0):
     - FirebaseCore (~> 6.10)
     - GTMSessionFetcher/Core (~> 1.1)
@@ -338,6 +340,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - FirebaseCore
   - FirebaseFirestore
+  - FirebaseFirestoreSwift
   - FirebaseStorage
   - FirebaseUI/Auth
   - FirebaseUI/Email
@@ -355,6 +358,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
+    - FirebaseFirestoreSwift
     - FirebaseStorage
     - FirebaseUI
     - GoogleDataTransport
@@ -380,6 +384,7 @@ SPEC CHECKSUMS:
   FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
   FirebaseFirestore: adff4877869ca91a11250cc0989a6cd56bad163f
+  FirebaseFirestoreSwift: 2c46dbc1156db97dc4f6dd798d4f5b57b9c7fab6
   FirebaseStorage: 33b92875a9b556824886cc7a65120c7d2cb3a8d8
   FirebaseUI: 9df84336a56f1d755ae4c37d5885c237d3084b6b
   GoogleDataTransport: b7f406340a291370045a270c599e53c6fa6ec20f
@@ -396,6 +401,6 @@ SPEC CHECKSUMS:
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   SwiftLint: dfd554ff0dff17288ee574814ccdd5cea85d76f7
 
-PODFILE CHECKSUM: d862d20b3125b13df2403ecbaa2aa1de8c689e4e
+PODFILE CHECKSUM: ceb1234cb7704207628d088de5e02fe464aa0fd4
 
 COCOAPODS: 1.9.3
