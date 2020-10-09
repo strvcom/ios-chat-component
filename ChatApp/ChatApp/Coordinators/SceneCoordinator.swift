@@ -16,7 +16,7 @@ final class SceneCoordinator {
     let dependency: AppDependency
     let window: UIWindow
     
-    private(set) var interface: PumpkinPieChat<PumpkinPieModels>.Interface?
+    private(set) var interface: ChatService.Interface?
     
     init(parent: AppCoordinator, dependency: AppDependency, window: UIWindow) {
         self.parent = parent
@@ -59,7 +59,7 @@ private extension SceneCoordinator {
     func makeChat(user: User) -> UIViewController {
         dependency.chat.setCurrentUser(user: user)
         
-        let interface: PumpkinPieChat<PumpkinPieModels>.Interface
+        let interface: ChatService.Interface
         if #available(iOS 13.0, *) {
             interface = makeSceneInterface()
         } else {
@@ -73,12 +73,12 @@ private extension SceneCoordinator {
         return CustomNavigationController(rootViewController: conversationsController)
     }
     
-    func makeInterface() -> PumpkinPieChat<PumpkinPieModels>.Interface {
+    func makeInterface() -> ChatService.Interface {
         return dependency.chat.interface()
     }
     
     @available(iOS 13.0, *)
-    func makeSceneInterface() -> PumpkinPieChat<PumpkinPieModels>.Interface {
+    func makeSceneInterface() -> ChatService.Interface {
         guard let scene = window.windowScene else {
             fatalError("Scene delegate doesn't have main window")
         }

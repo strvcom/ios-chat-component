@@ -1,5 +1,5 @@
 //
-//  PumpkinPie.swift
+//  ChatMessageKitFirestore.swift
 //  Chat
 //
 //  Created by Jan on 31/03/2020.
@@ -28,11 +28,11 @@ public protocol ChatModeling: ChatUIModeling, ChatFirestoreModeling where
 }
 
 /// Chat implementation for Pumpkin Pie project
-public class PumpkinPieChat<Models: ChatModeling>: DefaultChatSpecifying {
+public class ChatMessageKitFirestore<Models: ChatModeling>: DefaultChatSpecifying {
     public typealias UIModels = Models
     public typealias Networking = ChatFirestore<Models>
     public typealias Core = ChatCore<Networking, UIModels>
-    public typealias Interface = PumpkinPieInterface<Models>
+    public typealias Interface = ChatInterfaceMessageKit<Models>
 
     let core: Core
     let uiConfig: UIConfiguration
@@ -54,7 +54,7 @@ public class PumpkinPieChat<Models: ChatModeling>: DefaultChatSpecifying {
 }
 
 // MARK: - UI
-public extension PumpkinPieChat {
+public extension ChatMessageKitFirestore {
     func interface(with identifier: ObjectIdentifier) -> Interface {
         if let interface = interfaces[identifier] {
             return interface
@@ -67,7 +67,7 @@ public extension PumpkinPieChat {
 }
 
 // MARK: - Messages
-public extension PumpkinPieChat {
+public extension ChatMessageKitFirestore {
     func runBackgroundTasks(completion: @escaping (UIBackgroundFetchResult) -> Void) {
         core.runBackgroundTasks(completion: completion)
     }
@@ -78,7 +78,7 @@ public extension PumpkinPieChat {
 }
 
 // MARK: - Users
-public extension PumpkinPieChat {
+public extension ChatMessageKitFirestore {
     func setCurrentUser(user: Core.UserUI) {
         core.setCurrentUser(user: user)
     }

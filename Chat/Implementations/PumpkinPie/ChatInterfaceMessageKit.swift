@@ -1,5 +1,5 @@
 //
-//  PumpkinPieInterface.swift
+//  ChatInterfaceMessageKit.swift
 //  Chat
 //
 //  Created by Jan on 07/04/2020.
@@ -10,17 +10,17 @@ import UIKit
 import ChatUI
 import ChatCore
 
-public class PumpkinPieInterface<Models: ChatModeling>: ChatInterfacing {
+public class ChatInterfaceMessageKit<Models: ChatModeling>: ChatInterfacing {
     public let identifier: ObjectIdentifier
-    public let uiService: ChatUI<PumpkinPieChat<Models>.Core, PumpkinPieChat<Models>.UIModels>
+    public let uiService: ChatUI<ChatMessageKitFirestore<Models>.Core, ChatMessageKitFirestore<Models>.UIModels>
     
     public var conversationsViewController: ChatConversationsListController {
         uiService.conversationsViewController
     }
         
-    init(identifier: ObjectIdentifier, core: PumpkinPieChat<Models>.Core, config: UIService.Config) {
+    init(identifier: ObjectIdentifier, core: ChatMessageKitFirestore<Models>.Core, config: UIService.Config) {
         self.identifier = identifier
-        self.uiService = PumpkinPieChat.uiService(core: core, uiConfig: config)
+        self.uiService = ChatMessageKitFirestore.uiService(core: core, uiConfig: config)
     }
     
     public func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController {

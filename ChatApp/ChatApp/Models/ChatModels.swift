@@ -1,5 +1,5 @@
 //
-//  PumpkinPieModels.swift
+//  ChatModels.swift
 //  Chat
 //
 //  Created by Jan on 29/04/2020.
@@ -10,7 +10,7 @@ import Foundation
 import Chat
 
 /// This class specifies all necessary networking and UI models of Pumpkin Pie chat
-class PumpkinPieModels: ChatModeling {
+class ChatModels: ChatModeling {
     typealias UIConversation = Conversation
     typealias UIMessage = Message
     typealias UIMessageSpecification = MessageContent
