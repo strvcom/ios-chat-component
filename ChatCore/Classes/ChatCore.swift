@@ -88,7 +88,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
 
     deinit {
         print("\(self) released")
-        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
