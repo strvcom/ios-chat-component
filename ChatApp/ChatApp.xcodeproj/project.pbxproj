@@ -131,7 +131,6 @@
 		C1275FA42447227200AAE90E /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1275FA32447227200AAE90E /* AppCoordinator.swift */; };
 		C1275FA6244724EF00AAE90E /* SceneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1275FA5244724EF00AAE90E /* SceneCoordinator.swift */; };
 		C17F74D72459CE5F0008A8BF /* ChatFirestoreUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */; };
-		C18389A22452E9DD0008195B /* MembersStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389A12452E9DD0008195B /* MembersStoring.swift */; };
 		C18389A42452EBF40008195B /* MediaUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389A32452EBF40008195B /* MediaUploading.swift */; };
 		C18389AD2457169F0008195B /* MediaContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389AC2457169F0008195B /* MediaContent.swift */; };
 		C18389AE2457176A0008195B /* UIImage+Resizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E0223EDCCDA005E10A1 /* UIImage+Resizing.swift */; };
@@ -390,7 +389,6 @@
 		C1275FA32447227200AAE90E /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		C1275FA5244724EF00AAE90E /* SceneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCoordinator.swift; sourceTree = "<group>"; };
 		C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreUserManager.swift; sourceTree = "<group>"; };
-		C18389A12452E9DD0008195B /* MembersStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersStoring.swift; sourceTree = "<group>"; };
 		C18389A32452EBF40008195B /* MediaUploading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploading.swift; sourceTree = "<group>"; };
 		C18389AC2457169F0008195B /* MediaContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContent.swift; sourceTree = "<group>"; };
 		C185740A24333BA300F08E78 /* ChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatApp.entitlements; sourceTree = "<group>"; };
@@ -1005,7 +1003,6 @@
 		C1BD6337245867F10093769C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C18389A12452E9DD0008195B /* MembersStoring.swift */,
 				C11E9E2D23EDCD1E005E10A1 /* ChatUIModeling.swift */,
 				C1BD63332458577F0093769C /* ChatNetworkModeling.swift */,
 				C11E9E2A23EDCD1E005E10A1 /* UserRepresenting.swift */,
@@ -1565,7 +1562,6 @@
 				8488DE41241EDB8000AC5651 /* Reachability.swift in Sources */,
 				C1D30F84244F0E0F00973EE9 /* EntityIdentifiable.swift in Sources */,
 				842E50A92446EC5F00C4FA60 /* ChatNetworkingWithTypingUsers.swift in Sources */,
-				C18389A22452E9DD0008195B /* MembersStoring.swift in Sources */,
 				C11E9E4023EDCD1E005E10A1 /* ChatUIServicing.swift in Sources */,
 				C11E9E4423EDCD1E005E10A1 /* ConversationRepresenting.swift in Sources */,
 				C11E9E3B23EDCD1E005E10A1 /* UserRepresenting.swift in Sources */,

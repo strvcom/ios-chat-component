@@ -9,16 +9,12 @@
 import Foundation
 import ChatCore
 
-struct Conversation: ConversationRepresenting, MembersStoring {
+struct Conversation: ConversationRepresenting {
     let id: EntityIdentifier
     let lastMessage: Message?
     let memberIds: [EntityIdentifier]
-    private(set) var members: [User] = []
+    var members: [User] = []
     let seen: [String: SeenItem]
-
-    mutating func setMembers(_ members: [User]) {
-        self.members = members
-    }
 }
 
 extension Conversation: ChatModel {}

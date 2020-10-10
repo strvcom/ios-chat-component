@@ -535,7 +535,7 @@ private extension ChatFirestore {
     func conversationsWithMembers(conversations: [ConversationFirestore], users: [UserFirestore]) -> [ConversationFirestore] {
         conversations.map { conversation in
             var result = conversation
-            result.setMembers(users.filter { result.memberIds.contains($0.id) })
+            result.members = users.filter { result.memberIds.contains($0.id) }
             return result
         }
     }
