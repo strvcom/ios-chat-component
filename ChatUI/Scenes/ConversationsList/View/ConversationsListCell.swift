@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ChatCore
 
 class ConversationsListCell: UITableViewCell {
     
