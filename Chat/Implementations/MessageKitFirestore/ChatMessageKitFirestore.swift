@@ -11,23 +11,7 @@ import ChatCore
 import ChatNetworkingFirestore
 import ChatUI
 
-public protocol ChatModeling: ChatUIModeling, ChatFirestoreModeling where
-    UIMessage: MessageConvertible,
-    UIMessage: MessageStateReflecting,
-    UIMessageSpecification: Cachable,
-    UIMessage.MessageSpecification == UIMessageSpecification,
-    NetworkConversation: ChatUIConvertible,
-    NetworkMessage: ChatUIConvertible,
-    NetworkMessageSpecification: ChatUIConvertible,
-    NetworkConversation.UIModel == UIConversation,
-    NetworkMessage.UIModel == UIMessage,
-    NetworkMessageSpecification.UIModel == UIMessageSpecification,
-    UIMessage: MessageWithContent,
-    UIMessageSpecification: MessageSpecificationForContent,
-    UIConversation == NetworkConversation {
-}
-
-/// Chat implementation for Pumpkin Pie project
+/// Chat implementation that uses Firestore networking and MessageKit UI
 public class ChatMessageKitFirestore<Models: ChatModeling>: DefaultChatSpecifying {
     public typealias UIModels = Models
     public typealias Networking = ChatFirestore<Models>

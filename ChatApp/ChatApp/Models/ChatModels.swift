@@ -9,7 +9,7 @@
 import Foundation
 import Chat
 
-/// This class specifies all necessary networking and UI models of Pumpkin Pie chat
+/// This class specifies all necessary chat models
 class ChatModels: ChatModeling {
     typealias UIConversation = Conversation
     typealias UIMessage = Message
