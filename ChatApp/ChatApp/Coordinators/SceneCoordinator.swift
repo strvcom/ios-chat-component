@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import Chat
 import ChatCore
 import ChatUI
 
 final class SceneCoordinator {
     weak var parent: AppCoordinator?
+    
     let dependency: AppDependency
     let window: UIWindow
     
@@ -87,17 +87,6 @@ private extension SceneCoordinator {
     }
 }
 
-// MARK: Chat UI Delegate
-extension SceneCoordinator {
-    func conversationsListEmptyListAction() {
-        print("Take a Quiz button tapped!")
-    }
-    
-    func conversationDetailMoreButtonTapped() {
-        print("Conversation detail more button tapped")
-    }
-}
-
 // MARK: Conversations action delegate
 extension SceneCoordinator: ChatConversationsActionsDelegate {
     func didSelectConversation(conversationId: EntityIdentifier, in controller: UIViewController) {
@@ -112,9 +101,15 @@ extension SceneCoordinator: ChatConversationsActionsDelegate {
         messagesController.actionsDelegate = self
         navigation.pushViewController(messagesController, animated: true)
     }
+    
+    func didTapOnEmptyListAction(in controller: UIViewController) {
+        print("Take a Quiz button tapped!")
+    }
 }
 
 // MARK: Messages action delegate
 extension SceneCoordinator: ChatMessagesActionsDelegate {
-    
+    func didTapOnMoreButton(for conversationId: EntityIdentifier, in controller: UIViewController) {
+        print("Conversation detail more button tapped")
+    }
 }
