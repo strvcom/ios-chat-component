@@ -338,7 +338,6 @@ public extension ChatFirestore {
             self.listenToDocument(reference: reference, listener: listener, completion: { (result: Result<ConversationFirestore, ChatError>) in
                 
                 guard case let .success(conversation) = result else {
-                    print(result)
                     completion(result)
                     return
                 }
@@ -510,7 +509,6 @@ private extension ChatFirestore {
                             return try $0.decode(to: T.self, with: decoder)
                         } catch {
                             print("Couldn't decode document:", error)
-                            print($0.data())
                             return nil
                         }
                     }
