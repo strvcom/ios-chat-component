@@ -12,6 +12,7 @@ import Foundation
 public protocol ConversationRepresenting: EntityIdentifiable {
     associatedtype Message: MessageRepresenting
     associatedtype User: UserRepresenting
+    associatedtype SeenItem: SeenMessageRepresenting
     
     /// Copy of the last message in conversation
     var lastMessage: Message? { get }

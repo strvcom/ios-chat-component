@@ -8,7 +8,6 @@
 
 import Foundation
 import ChatCore
-import FirebaseFirestore
 
 struct Conversation: ConversationRepresenting, MembersStoring {
     let id: EntityIdentifier
@@ -30,21 +29,5 @@ extension Conversation: Decodable {
         case lastMessage
         case memberIds = "members"
         case seen
-    }
-}
-
-extension SeenItem: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case messageId
-        case seenAt = "timestamp"
-    }
-
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-
-        let messageId = try values.decode(EntityIdentifier.self, forKey: .messageId)
-        let timestamp = try values.decode(Date.self, forKey: .seenAt)
-
-        self = .init(messageId: messageId, seenAt: timestamp)
     }
 }

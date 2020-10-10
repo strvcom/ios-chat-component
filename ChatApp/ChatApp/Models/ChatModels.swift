@@ -19,4 +19,5 @@ class ChatModels: ChatMessageKitFirestoreModeling {
     typealias NetworkMessage = Message
     typealias NetworkMessageSpecification = MessageContent
     typealias NetworkUser = User
+    typealias NetworkSeenItem = SeenItem
 }

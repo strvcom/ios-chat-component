@@ -151,6 +151,7 @@
 		C1A62337244843FB00301C82 /* AppDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A62336244843FB00301C82 /* AppDependency.swift */; };
 		C1A6233924498D8900301C82 /* ChatSpecifying+iOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */; };
 		C1AF47B1253201AB0069044C /* ChatMessageKitFirestoreModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AF47B0253201AB0069044C /* ChatMessageKitFirestoreModeling.swift */; };
+		C1AF47D82532113E0069044C /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AF47D72532113E0069044C /* SeenItem.swift */; };
 		C1B67D5024A4C1A900A05BC3 /* UserRepresenting+SenderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B67D4F24A4C1A900A05BC3 /* UserRepresenting+SenderType.swift */; };
 		C1B67D5424A4D36800A05BC3 /* MessageRepresenting+MessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B67D5324A4D36800A05BC3 /* MessageRepresenting+MessageType.swift */; };
 		C1B67D5624A4DD3200A05BC3 /* ChatUICoreServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B67D5524A4DD3200A05BC3 /* ChatUICoreServicing.swift */; };
@@ -158,7 +159,7 @@
 		C1BD633C2458773C0093769C /* ChatJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD633B2458773C0093769C /* ChatJSON.swift */; };
 		C1CFB7F024D84F350023CB10 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFB7EF24D84F350023CB10 /* MessageContent.swift */; };
 		C1CFB7F224D84FA30023CB10 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B67D5124A4D29B00A05BC3 /* MessageContent.swift */; };
-		C1CFB7F324D86C990023CB10 /* SeenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */; };
+		C1CFB7F324D86C990023CB10 /* SeenMessageRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9DFF23EDCCDA005E10A1 /* SeenMessageRepresenting.swift */; };
 		C1CFB7F624D93E650023CB10 /* DocumentSnapshot+Decoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFB7F524D93E650023CB10 /* DocumentSnapshot+Decoding.swift */; };
 		C1CFB7F924D93F850023CB10 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CFB7F824D93F850023CB10 /* Constants.swift */; };
 		C1CFB7FC24DC34210023CB10 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040A2D6F244DCCE700BA9D9F /* CustomNavigationController.swift */; };
@@ -348,7 +349,7 @@
 		C11E9DF723EDCCDA005E10A1 /* ChatFirestore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatFirestore.swift; sourceTree = "<group>"; };
 		C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatNetworkingFirestore.h; sourceTree = "<group>"; };
 		C11E9DF923EDCCDA005E10A1 /* ChatFirestoreMediaUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatFirestoreMediaUploader.swift; sourceTree = "<group>"; };
-		C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenItem.swift; sourceTree = "<group>"; };
+		C11E9DFF23EDCCDA005E10A1 /* SeenMessageRepresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenMessageRepresenting.swift; sourceTree = "<group>"; };
 		C11E9E0223EDCCDA005E10A1 /* UIImage+Resizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resizing.swift"; sourceTree = "<group>"; };
 		C11E9E0323EDCCDA005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11E9E1123EDCD06005E10A1 /* Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
@@ -400,6 +401,7 @@
 		C1A62336244843FB00301C82 /* AppDependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependency.swift; sourceTree = "<group>"; };
 		C1A6233824498D8900301C82 /* ChatSpecifying+iOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatSpecifying+iOS12.swift"; sourceTree = "<group>"; };
 		C1AF47B0253201AB0069044C /* ChatMessageKitFirestoreModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageKitFirestoreModeling.swift; sourceTree = "<group>"; };
+		C1AF47D72532113E0069044C /* SeenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeenItem.swift; sourceTree = "<group>"; };
 		C1B67D4F24A4C1A900A05BC3 /* UserRepresenting+SenderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserRepresenting+SenderType.swift"; sourceTree = "<group>"; };
 		C1B67D5124A4D29B00A05BC3 /* MessageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContent.swift; sourceTree = "<group>"; };
 		C1B67D5324A4D36800A05BC3 /* MessageRepresenting+MessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageRepresenting+MessageType.swift"; sourceTree = "<group>"; };
@@ -674,6 +676,7 @@
 				C11E9E4D23EDCD34005E10A1 /* User.swift */,
 				C1888D8124598AA500E0136A /* ChatModels.swift */,
 				C1CFB7EF24D84F350023CB10 /* MessageContent.swift */,
+				C1AF47D72532113E0069044C /* SeenItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -794,7 +797,6 @@
 				843A583F241283B0007E6F45 /* CachedMessage.swift */,
 				8478F5BF24239725002BC890 /* CachedMessageState.swift */,
 				842C71C52426C7230079145A /* MessageState.swift */,
-				C11E9DFF23EDCCDA005E10A1 /* SeenItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1010,6 +1012,7 @@
 				C11E9E2B23EDCD1E005E10A1 /* MessageSpecifying.swift */,
 				C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
+				C11E9DFF23EDCCDA005E10A1 /* SeenMessageRepresenting.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1552,7 +1555,7 @@
 				843A5840241283B0007E6F45 /* CachedMessage.swift in Sources */,
 				04F62DF92412BEED0061B308 /* Listener.swift in Sources */,
 				C1BD633C2458773C0093769C /* ChatJSON.swift in Sources */,
-				C1CFB7F324D86C990023CB10 /* SeenItem.swift in Sources */,
+				C1CFB7F324D86C990023CB10 /* SeenMessageRepresenting.swift in Sources */,
 				C18389AD2457169F0008195B /* MediaContent.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,
 				04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */,
@@ -1608,6 +1611,7 @@
 				ADB40CC823C200A5003DC146 /* SceneDelegate.swift in Sources */,
 				C1275FA6244724EF00AAE90E /* SceneCoordinator.swift in Sources */,
 				045A6B36242908090055B5E1 /* StyleConfig.swift in Sources */,
+				C1AF47D82532113E0069044C /* SeenItem.swift in Sources */,
 				04BF183B242CD0B900C1D626 /* UIColor+RGB.swift in Sources */,
 				C18C35BB24CB2A3900BD3C92 /* Conversation.swift in Sources */,
 				C18C35BE24CB2A3900BD3C92 /* User.swift in Sources */,
