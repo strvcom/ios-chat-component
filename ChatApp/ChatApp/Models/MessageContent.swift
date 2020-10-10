@@ -6,7 +6,6 @@
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
-import Foundation
 import ChatCore
 import ChatUI
 import UIKit

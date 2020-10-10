@@ -8,9 +8,8 @@
 
 import Foundation
 import ChatCore
-import MessageKit
 
-struct User: UserRepresenting, Encodable {
+struct User: UserRepresenting {
     let id: EntityIdentifier
     let name: String
     let imageUrl: URL?
@@ -18,4 +17,4 @@ struct User: UserRepresenting, Encodable {
 
 extension User: ChatModel {}
 
-extension User: Decodable {}
+extension User: Codable {}

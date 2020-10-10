@@ -6,11 +6,9 @@
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
+import Foundation
 import ChatCore
 import ChatUI
-import Foundation
-import MessageKit
-import FirebaseFirestore
 
 struct Message: MessageWithContent, MessageConvertible, MessageStateReflecting {
     let id: EntityIdentifier
