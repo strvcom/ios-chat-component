@@ -12,7 +12,7 @@ import ChatNetworkingFirestore
 import ChatUI
 
 /// Chat implementation that uses Firestore networking and MessageKit UI
-public class ChatMessageKitFirestore<Models: ChatModeling>: DefaultChatSpecifying {
+public class ChatMessageKitFirestore<Models: ChatMessageKitFirestoreModeling>: DefaultChatSpecifying {
     public typealias UIModels = Models
     public typealias Networking = ChatFirestore<Models>
     public typealias Core = ChatCore<Networking, UIModels>

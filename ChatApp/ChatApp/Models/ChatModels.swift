@@ -10,7 +10,7 @@ import Foundation
 import Chat
 
 /// This class specifies all necessary chat models
-class ChatModels: ChatModeling {
+class ChatModels: ChatMessageKitFirestoreModeling {
     typealias UIConversation = Conversation
     typealias UIMessage = Message
     typealias UIMessageSpecification = MessageContent

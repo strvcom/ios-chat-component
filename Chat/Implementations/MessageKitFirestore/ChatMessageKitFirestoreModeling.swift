@@ -11,7 +11,7 @@ import ChatCore
 import ChatNetworkingFirestore
 import ChatUI
 
-public protocol ChatModeling: ChatUIModeling, ChatFirestoreModeling where
+public protocol ChatMessageKitFirestoreModeling: ChatUIModeling, ChatFirestoreModeling where
     UIMessage: MessageConvertible,
     UIMessage: MessageStateReflecting,
     UIMessageSpecification: Cachable,
