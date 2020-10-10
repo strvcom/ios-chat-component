@@ -9,6 +9,7 @@
 import Foundation
 import ChatCore
 
+/// Extension of `ChatCoreServicing` that specializes model types
 public protocol ChatUICoreServicing: ChatCoreServicing where UIModels.UIMessage: MessageWithContent, UIModels.UIMessageSpecification: MessageSpecificationForContent {}
 
 extension ChatCore: ChatUICoreServicing where CoreMessage: MessageWithContent, CoreMessageSpecification: MessageSpecificationForContent {}

@@ -21,6 +21,7 @@ extension DocumentSnapshot {
 }
 
 extension Dictionary where Key == String, Value == Any {
+    /// Replace Firebase `Timestamp` type with time interval
     mutating func replaceFirebaseTimestamps() {
         for (key, value) in self {
             if let timestamp = value as? Timestamp {
