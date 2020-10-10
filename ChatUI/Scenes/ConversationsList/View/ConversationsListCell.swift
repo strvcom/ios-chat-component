@@ -17,7 +17,7 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    @IBOutlet private var progressAvatar: ProgressAvatar!
+    @IBOutlet private var avatarView: AvatarView!
     
     @IBOutlet private var messagePreviewLabel: UILabel! {
         didSet {
@@ -52,6 +52,7 @@ private extension ConversationsListCell {
         }
         
         nameLabel.text = model.title
+        avatarView.configure(with: model.avatarURL)
         
         switch model.messagePreview {
         case .message(let message):

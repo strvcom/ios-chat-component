@@ -30,8 +30,7 @@
 		045A6B3924292A880055B5E1 /* UITableView+ReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */; };
 		045A6B3B24292CEF0055B5E1 /* UIView+Nib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */; };
 		045A6B3D242A10F60055B5E1 /* String+ChatStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */; };
-		045A6B40242A1B860055B5E1 /* ProgressAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3F242A1B860055B5E1 /* ProgressAvatar.swift */; };
-		0471CBCC24474981006B8212 /* ConversationDetailNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0471CBCB24474981006B8212 /* ConversationDetailNavigationTitle.swift */; };
+		045A6B40242A1B860055B5E1 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3F242A1B860055B5E1 /* AvatarView.swift */; };
 		048ED59424339BD500F9C7BA /* MessagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048ED59324339BD500F9C7BA /* MessagesListViewController.swift */; };
 		0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E768241E5F74008C4412 /* ConversationsListCell.swift */; };
 		0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0490E769241E5F74008C4412 /* ConversationsListCell.xib */; };
@@ -266,8 +265,7 @@
 		045A6B3724292A850055B5E1 /* UITableView+ReuseIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+ReuseIdentifier.swift"; sourceTree = "<group>"; };
 		045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Nib.swift"; sourceTree = "<group>"; };
 		045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ChatStrings.swift"; sourceTree = "<group>"; };
-		045A6B3F242A1B860055B5E1 /* ProgressAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAvatar.swift; sourceTree = "<group>"; };
-		0471CBCB24474981006B8212 /* ConversationDetailNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailNavigationTitle.swift; sourceTree = "<group>"; };
+		045A6B3F242A1B860055B5E1 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		048ED59324339BD500F9C7BA /* MessagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewController.swift; sourceTree = "<group>"; };
 		0490E768241E5F74008C4412 /* ConversationsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCell.swift; sourceTree = "<group>"; };
 		0490E769241E5F74008C4412 /* ConversationsListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationsListCell.xib; sourceTree = "<group>"; };
@@ -488,8 +486,7 @@
 		045A6B3E242A1B650055B5E1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0471CBCB24474981006B8212 /* ConversationDetailNavigationTitle.swift */,
-				045A6B3F242A1B860055B5E1 /* ProgressAvatar.swift */,
+				045A6B3F242A1B860055B5E1 /* AvatarView.swift */,
 				04BD15AC244F65A300EDC62E /* ErrorView.swift */,
 			);
 			path = View;
@@ -1497,8 +1494,7 @@
 				045A6B232424EC3A0055B5E1 /* UIColor+ChatColors.swift in Sources */,
 				C1B67D5024A4C1A900A05BC3 /* UserRepresenting+SenderType.swift in Sources */,
 				04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */,
-				045A6B40242A1B860055B5E1 /* ProgressAvatar.swift in Sources */,
-				0471CBCC24474981006B8212 /* ConversationDetailNavigationTitle.swift in Sources */,
+				045A6B40242A1B860055B5E1 /* AvatarView.swift in Sources */,
 				C11E9E5923EDCD34005E10A1 /* ConversationsListViewController.swift in Sources */,
 				045A6B3B24292CEF0055B5E1 /* UIView+Nib.swift in Sources */,
 				C1B67D5424A4D36800A05BC3 /* MessageRepresenting+MessageType.swift in Sources */,

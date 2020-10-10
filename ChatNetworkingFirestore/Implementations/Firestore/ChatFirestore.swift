@@ -335,7 +335,27 @@ public extension ChatFirestore {
                 .collection(self.constants.conversations.path)
                 .document(id)
 
-            self.listenToDocument(reference: reference, listener: listener, completion: completion)
+            self.listenToDocument(reference: reference, listener: listener, completion: { (result: Result<ConversationFirestore, ChatError>) in
+                
+                guard case let .success(conversation) = result else {
+                    print(result)
+                    completion(result)
+                    return
+                }
+
+                self.loadUsersForConversations(conversations: [conversation]) { result in
+                    switch result {
+                    case .success(let conversations):
+                        if let conversation = conversations.first {
+                            completion(.success(conversation))
+                        } else {
+                            completion(.failure(.unexpectedState))
+                        }
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            })
         }
     }
 

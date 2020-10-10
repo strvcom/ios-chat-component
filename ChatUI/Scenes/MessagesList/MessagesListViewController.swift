@@ -138,7 +138,7 @@ extension MessagesListViewController: MessagesDisplayDelegate {
         }
     }
 
-    public func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+    public func configureAvatarView(_ avatarView: MessageKit.AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         avatarView.isHidden = true
     }
 
@@ -171,11 +171,7 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
 private extension MessagesListViewController {
     func setup() {
         view.backgroundColor = .chatBackground
-        
-        if let partner = viewModel.partner {
-            navigationItem.titleView = ConversationDetailNavigationTitle(user: partner)
-        }
-        
+
         let moreButtonImage: UIImage = .moreButton
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: moreButtonImage.withRenderingMode(.alwaysOriginal),
@@ -248,6 +244,10 @@ private extension MessagesListViewController {
         picker.delegate = self
         present(picker, animated: true)
     }
+    
+    func configureView() {
+        navigationItem.title = viewModel.partner?.name
+    }
 }
 
 // MARK: StatefulViewController
@@ -285,6 +285,7 @@ extension MessagesListViewController: MessagesListViewModelDelegate {
         case .initial:
             break
         case .ready(let data):
+            configureView()
             
             // Scroll to the bottom on first load
             if messages.isEmpty {
