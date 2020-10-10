@@ -14,7 +14,6 @@ struct User: UserRepresenting, Encodable {
     let id: EntityIdentifier
     let name: String
     let imageUrl: URL?
-    let compatibility: Float?
 }
 
 extension User: ChatModel {}

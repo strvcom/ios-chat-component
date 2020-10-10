@@ -21,7 +21,7 @@ final class FirebaseAuthentication: NSObject {
         guard let firUser = auth.currentUser else {
             return nil
         }
-        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL, compatibility: nil)
+        let user = User(id: firUser.uid, name: firUser.displayName ?? firUser.email ?? "", imageUrl: firUser.photoURL)
         return user
     }
 
