@@ -10,7 +10,6 @@ import UIKit
 import ChatCore
 
 class RootCoordinator<Core: ChatUICoreServicing> {
-    
     private let core: Core
     
     lazy var conversationsViewController: ChatConversationsListController = {
@@ -31,7 +30,7 @@ extension RootCoordinator: RootCoordinating {
 
 // MARK: Controllers
 private extension RootCoordinator {
-    func makeConversationsListController() -> ConversationsListViewController<ConversationsListViewModel<Core>> {
+    func makeConversationsListController() -> ChatConversationsListController {
         let controller = ConversationsListViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
