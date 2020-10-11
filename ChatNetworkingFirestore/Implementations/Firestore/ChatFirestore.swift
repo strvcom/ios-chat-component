@@ -40,7 +40,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
     // dedicated thread queue
-    private let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .background)
+    private let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .userInteractive)
 
     public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
 

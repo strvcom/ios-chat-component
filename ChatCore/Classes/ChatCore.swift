@@ -51,7 +51,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
     private var dataManagers = [Listener: DataManager]()
 
     // dedicated thread queue
-    private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
+    private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .userInteractive)
     
     private var conversationListListeners = [
         Listener: [IdentifiableClosure<ConversationListResult, Void>]

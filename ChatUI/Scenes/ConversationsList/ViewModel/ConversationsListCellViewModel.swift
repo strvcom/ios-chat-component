@@ -35,6 +35,8 @@ struct ConversationsListCellViewModel {
         switch lastMessage.kind {
         case let .text(message):
             self.messagePreview = .message(message)
+        case .photo:
+            self.messagePreview = .message("Photo message")
         default:
             self.messagePreview = .other
         }

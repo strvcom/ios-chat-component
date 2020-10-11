@@ -61,7 +61,7 @@ final class TaskManager {
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
     // dedicated thread queue
-    private let dispatchQueue = DispatchQueue(label: "com.strv.taskmanager", qos: .background)
+    private let dispatchQueue = DispatchQueue(label: "com.strv.taskmanager", qos: .utility)
 
     // retry tasks stack
     private var retryCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: RetryType] = [:]
