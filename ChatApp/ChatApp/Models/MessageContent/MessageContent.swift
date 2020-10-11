@@ -10,7 +10,7 @@ import ChatCore
 import ChatUI
 import UIKit
 
-enum MessageContent: MessageKindSpecifying {
+enum MessageContent: ChatMessageContent {
     case text(MessageContentText)
     case image(MessageContentImage)
     
@@ -35,7 +35,7 @@ enum MessageContent: MessageKindSpecifying {
 
 extension MessageContent: ChatModel {}
 
-extension MessageContent: ChatMessageContent {
+extension MessageContent {
     static func specification(for messageType: ChatMessageKind) -> MessageContent? {
         switch messageType {
         case let .text(text):
