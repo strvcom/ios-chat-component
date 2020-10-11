@@ -20,7 +20,7 @@ public protocol ChatNetworkServicing {
     typealias NetworkMessage = NetworkModels.NetworkMessage
     typealias NetworkMessageSpecification = NetworkModels.NetworkMessageSpecification
 
-    init(config: Config, userManager: UserManager, mediaUploader: MediaUploading)
+    init(config: Config, userManager: UserManager, mediaUploader: MediaUploading, decoder: JSONDecoder)
 
     /// Set current user
     ///

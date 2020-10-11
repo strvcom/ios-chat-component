@@ -51,7 +51,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
     private var dataManagers = [Listener: DataManager]()
 
     // dedicated thread queue
-    private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .background)
+    private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .userInteractive)
     
     private var conversationListListeners = [
         Listener: [IdentifiableClosure<ConversationListResult, Void>]
@@ -88,7 +88,6 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
 
     deinit {
         print("\(self) released")
-        NotificationCenter.default.removeObserver(self)
     }
 
     // Here we can have also persistent storage manager
@@ -170,7 +169,7 @@ extension ChatCore {
                         self.handleResultInCache(cachedMessage: cachedMessage, result: result)
                         self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .remove)
 
-                        let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, messageSpecification: message, state: .sent)
+                        let messageUI = MessageUI(id: messageId, userId: self.currentUser.id, sentAt: Date(), messageSpecification: message, state: .sent)
 
                         DispatchQueue.main.async {
                             completion(.success(messageUI))
@@ -403,12 +402,16 @@ extension ChatCore {
                     let converted = conversation.uiModel
                     self.conversations[id] = converted
                     // Call each closure registered for this listener
-                    self.conversationsListeners[listener]?.forEach {
-                        $0.closure(.success(converted))
+                    DispatchQueue.main.async {
+                        self.conversationsListeners[listener]?.forEach {
+                            $0.closure(.success(converted))
+                        }
                     }
                 case .failure(let error):
-                    self.conversationsListeners[listener]?.forEach {
-                        $0.closure(.failure(error))
+                    DispatchQueue.main.async {
+                        self.conversationsListeners[listener]?.forEach {
+                            $0.closure(.failure(error))
+                        }
                     }
                 }
             }
@@ -582,14 +585,14 @@ private extension ChatCore {
             newData = messagesPayload.data.filter { $0.id != id }
 
         case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: self.currentUser.id, messageSpecification: message, state: state)
+            let temporaryMessage = MessageUI(id: id, userId: self.currentUser.id, sentAt: Date(), messageSpecification: message, state: state)
             newData = messagesPayload.data
             newData.append(temporaryMessage)
 
         case .updateSent(let message, let identifier):
             newData = messagesPayload.data
             if let index = newData.firstIndex(where: { $0.id == id }) {
-                let temporaryMessage = MessageUI(id: identifier, userId: currentUser.id, messageSpecification: message, state: .sent)
+                let temporaryMessage = MessageUI(id: identifier, userId: currentUser.id, sentAt: Date(), messageSpecification: message, state: .sent)
                 newData[index] = temporaryMessage
             }
 

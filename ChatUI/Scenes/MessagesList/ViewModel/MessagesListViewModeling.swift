@@ -8,21 +8,23 @@
 
 import UIKit
 import ChatCore
-import MessageKit
 
-public typealias MessagesListState = ListState<Message>
+public protocol MessagesListViewModeling: AnyObject {
+    associatedtype Core: ChatUICoreServicing
+    typealias Message = Core.UIModels.UIMessage
+    typealias MessageSpecification = Core.UIModels.UIMessageSpecification
+    typealias MessagesListState = ListState<Message>
 
-protocol MessagesListViewModeling: AnyObject {
     var delegate: MessagesListViewModelDelegate? { get set }
     var state: ViewModelingState<MessagesListState> { get }
-    var currentUser: User { get }
-    var partner: User? { get }
-    var conversation: Conversation { get }
+    var currentUser: Core.UIModels.UIUser { get }
+    var partner: Core.UIModels.UIUser? { get }
+    var conversationId: EntityIdentifier { get }
 
     func load()
     func loadMore()
-    func updateSeenMessage(_ message: Message)
-    func send(message: MessageSpecification, completion: @escaping (Result<Message, ChatError>) -> Void)
+    func updateSeenMessage()
+    func send(message: Core.UIModels.UIMessageSpecification, completion: @escaping (Result<Core.UIModels.UIMessage, ChatError>) -> Void)
     func seen(message: EntityIdentifier) -> Bool
     func seenLabel(for: EntityIdentifier) -> String
 }

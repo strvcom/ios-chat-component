@@ -10,6 +10,6 @@ import Chat
 import Firebase
 
 struct AppDependency {
-    let chat: PumpkinPieChat
+    let chat: ChatService
     let firebaseAuthentication: FirebaseAuthentication
 }

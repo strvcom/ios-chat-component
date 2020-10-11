@@ -9,13 +9,13 @@
 import Foundation
 import FirebaseCore
 import FirebaseFirestore
-import FirebaseFirestoreSwift
 import ChatCore
 
 // MARK: - Default firestore implementation of user managing
 public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirestoreUserManager<User> where User: Decodable {
 
     private let config: ChatFirestoreConfig
+    private let decoder: JSONDecoder
     private let database: Firestore
     private var users: [User] = []
     private var currentUserIds: Set<EntityIdentifier> = []
@@ -30,8 +30,10 @@ public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirest
         listener?.remove()
     }
 
-    public init(config: ChatFirestoreConfig) {
+    public init(config: ChatFirestoreConfig, decoder: JSONDecoder) {
         self.config = config
+        self.decoder = decoder
+        
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
@@ -60,17 +62,17 @@ public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirest
             listener?.remove()
 
             let query = database.collection(usersPath).whereField(FieldPath.documentID(), in: userIds)
-            listener = query.addSnapshotListener(includeMetadataChanges: false) { (snapshot, error) in
+            listener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self, decoder] (snapshot, error) in
                 if let snapshot = snapshot {
                     let list: [User] = snapshot.documents.compactMap {
                         do {
-                            return try $0.data(as: User.self)
+                            return try $0.decode(to: User.self, with: decoder)
                         } catch {
                             print("Couldn't decode document:", error)
                             return nil
                         }
                     }
-                    self.users = list
+                    self?.users = list
                     completion(.success(list))
                 } else if let error = error {
                     completion(.failure(.networking(error: error)))

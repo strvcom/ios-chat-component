@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseCore
+import FirebaseFirestore
 import FirebaseUI
 import Chat
 
@@ -107,10 +108,10 @@ private extension AppDelegate {
         let database = Firestore.firestore()
         let firebaseAuthentication = FirebaseAuthentication(database: database)
         
-        let uiConfig = PumpkinPieChat.UIConfiguration(
+        let uiConfig = ChatService.UIConfiguration(
             fonts: AppStyleConfig.fonts,
             colors: AppStyleConfig.colors,
-            strings: PumpkinPieChat.UIConfiguration.Strings(
+            strings: ChatService.UIConfiguration.Strings(
                 newConversation: "Wants to chat!",
                 conversation: "Conversation",
                 conversationsListEmptyTitle: "No matches yet",
@@ -123,8 +124,8 @@ private extension AppDelegate {
             ),
             images: AppStyleConfig.images
         )
-        let networkConfig = PumpkinPieChat.NetworkConfiguration(configUrl: configUrl)
-        let chat = PumpkinPieChat(networkConfig: networkConfig, uiConfig: uiConfig)
+        let networkConfig = ChatService.NetworkConfiguration(configUrl: configUrl)
+        let chat = ChatService(networkConfig: networkConfig, uiConfig: uiConfig)
         
         return AppDependency(chat: chat, firebaseAuthentication: firebaseAuthentication)
     }

@@ -1,20 +1,20 @@
 //
 //  User.swift
-//  ChatApp
+//  ChatUI
 //
-//  Created by Tomas Cejka on 4/1/20.
+//  Created by Mireya Orta on 1/14/20.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
 import Foundation
+import ChatCore
 
-// MARK: - App user model
-struct User: Encodable {
-    let id: String
+struct User: UserRepresenting {
+    let id: EntityIdentifier
     let name: String
-    let imageUrl: String?
-
-    private enum CodingKeys: String, CodingKey {
-        case name, imageUrl
-    }
+    let imageUrl: URL?
 }
+
+extension User: ChatModel {}
+
+extension User: Codable {}

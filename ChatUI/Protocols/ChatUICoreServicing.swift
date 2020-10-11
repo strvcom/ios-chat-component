@@ -2,7 +2,7 @@
 //  ChatUICoreServicing.swift
 //  ChatUI
 //
-//  Created by Mireya Orta on 1/14/20.
+//  Created by Jan on 25/06/2020.
 //  Copyright © 2020 Jan Schwarz. All rights reserved.
 //
 
@@ -10,6 +10,6 @@ import Foundation
 import ChatCore
 
 /// Extension of `ChatCoreServicing` that specializes model types
-public protocol ChatUICoreServicing: ChatCoreServicing where CoreConversation == Conversation, CoreMessageSpecification == MessageSpecification { }
+public protocol ChatUICoreServicing: ChatCoreServicing where UIModels.UIMessage: ContentfulMessageRepresenting, UIModels.UIMessageSpecification: ChatMessageContent {}
 
-extension ChatCore: ChatUICoreServicing where Models.UIConversation == Conversation { }
+extension ChatCore: ChatUICoreServicing where CoreMessage: ContentfulMessageRepresenting, CoreMessageSpecification: ChatMessageContent {}

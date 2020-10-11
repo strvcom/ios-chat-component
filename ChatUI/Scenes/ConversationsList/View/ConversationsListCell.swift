@@ -9,10 +9,6 @@
 import UIKit
 
 class ConversationsListCell: UITableViewCell {
-
-    private enum Constants {
-        static let borderWidth = CGFloat(2)
-    }
     
     @IBOutlet private var nameLabel: UILabel! {
         didSet {
@@ -20,7 +16,7 @@ class ConversationsListCell: UITableViewCell {
         }
     }
     
-    @IBOutlet private var progressAvatar: ProgressAvatar!
+    @IBOutlet private var avatarView: AvatarView!
     
     @IBOutlet private var messagePreviewLabel: UILabel! {
         didSet {
@@ -55,6 +51,7 @@ private extension ConversationsListCell {
         }
         
         nameLabel.text = model.title
+        avatarView.configure(with: model.avatarURL)
         
         switch model.messagePreview {
         case .message(let message):
@@ -68,11 +65,5 @@ private extension ConversationsListCell {
         case .other:
             messagePreviewLabel.text = ""
         }
-        
-        progressAvatar.update(
-            percentage: model.compatibility,
-            imageUrl: model.avatarUrl,
-            circleColor: model.circleColor
-        )
     }
 }

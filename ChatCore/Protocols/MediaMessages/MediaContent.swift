@@ -14,5 +14,5 @@ import Foundation
 public protocol MediaContent {
     /// Data representation of the object. The data must be suitable for upload i.e. their size should normalized to save network traffic
     /// - Parameter completion: Completion block that is called once the conversion of the object to data is finished
-    func normalizedData(completion: (Data) -> Void)
+    func dataForUpload(completion: (Data) -> Void)
 }

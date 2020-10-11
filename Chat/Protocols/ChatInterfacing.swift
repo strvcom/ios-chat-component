@@ -8,19 +8,18 @@
 
 import UIKit
 import ChatCore
+import ChatUI
 
 public protocol ChatInterfacing {
     /// Underlying `ChatUIServicing` implementation
     associatedtype UIService: ChatUIServicing
-    /// Underlying `ChatUIServicing` implementation's delegate
-    associatedtype Delegate where Delegate == UIService.Delegate
     
     /// Unique identifier
     var identifier: ObjectIdentifier { get }
     /// Instance of underlying `ChatUIServicing` implementation
     var uiService: UIService { get }
-    /// Underlying `ChatUIServicing` implementation's delegate
-    var delegate: Delegate? { get set }
-    /// Underlying `ChatUIServicing` implementation's root view controller
-    var rootViewController: UIViewController { get }
+    /// Underlying `ChatUIServicing` implementation's conversations view controller
+    var conversationsViewController: ConversationsListViewController { get }
+    /// Underlying `ChatUIServicing` implementation's messages view controller
+    func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController
 }

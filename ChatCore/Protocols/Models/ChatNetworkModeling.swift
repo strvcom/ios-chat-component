@@ -14,4 +14,5 @@ public protocol ChatNetworkModeling {
     associatedtype NetworkMessage where NetworkMessage == NetworkConversation.Message
     associatedtype NetworkMessageSpecification: MessageSpecifying
     associatedtype NetworkUser where NetworkUser == NetworkConversation.User
+    associatedtype NetworkSeenItem where NetworkSeenItem == NetworkConversation.SeenItem
 }

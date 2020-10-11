@@ -7,56 +7,38 @@
 //
 
 import UIKit
+import ChatCore
 
 struct ConversationsListCellViewModel {
-    
     enum MessagePreview {
         case newConversation
         case message(String)
         case other
     }
     
-    private let conversation: Conversation
-    private let currentUser: User
+    let title: String
+    let avatarURL: URL?
+    let messagePreview: MessagePreview
     
-    var title: String {
-        partner?.name ?? .conversation
-    }
-    
-    var partner: User? {
-        conversation
-            .members
-            .first { $0.id != currentUser.id }
-    }
-    
-    var messagePreview: MessagePreview {
+    init<Conversation: ConversationRepresenting>(conversation: Conversation, currentUser: Conversation.User) where Conversation.Message: ContentfulMessageRepresenting {
+        let partner = conversation
+                        .members
+                        .first { $0.id != currentUser.id }
+        self.title = partner?.name ?? .conversation
+        self.avatarURL = partner?.imageUrl
+        
         guard let lastMessage = conversation.lastMessage else {
-            return .newConversation
+            self.messagePreview = .newConversation
+            return
         }
         
         switch lastMessage.kind {
         case let .text(message):
-            return .message(message)
+            self.messagePreview = .message(message)
+        case .photo:
+            self.messagePreview = .message("Photo message")
         default:
-            return .other
+            self.messagePreview = .other
         }
-    }
-    
-    var avatarUrl: URL? {
-        partner?.imageUrl
-    }
-    
-    var compatibility: CGFloat {
-        CGFloat(partner?.compatibility ?? 0)
-    }
-    
-    // TODO: How is this color determined?
-    var circleColor: UIColor {
-        .conversationsCircleDefault
-    }
-    
-    init(conversation: Conversation, currentUser: User) {
-        self.conversation = conversation
-        self.currentUser = currentUser
     }
 }

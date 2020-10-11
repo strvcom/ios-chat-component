@@ -9,14 +9,23 @@
 import UIKit
 import ChatCore
 import FirebaseStorage
+import FirebaseCore
 
 public class ChatFirestoreMediaUploader: MediaUploading {
-    private lazy var storage = Storage.storage()
+    private lazy var storage: Storage = {
+        if let app = self.firebaseApp {
+            return Storage.storage(app: app)
+        } else {
+            return Storage.storage()
+        }
+    }()
+    
+    var firebaseApp: FirebaseApp?
     
     public init() {}
     
     public func upload(content: MediaContent, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void) {
-        content.normalizedData { [weak self] data in
+        content.dataForUpload { [weak self] data in
             self?.upload(data: data, completion: { result in
                 queue.async {
                     completion(result)

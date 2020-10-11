@@ -13,7 +13,6 @@ public protocol ChatUIServicing {
     associatedtype Core: ChatCoreServicing
     associatedtype Models: ChatUIModeling
     associatedtype Config
-    associatedtype Delegate
     
     init(core: Core, config: Config)
 }

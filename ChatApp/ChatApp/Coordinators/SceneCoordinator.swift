@@ -7,15 +7,16 @@
 //
 
 import UIKit
-import Chat
+import ChatCore
 import ChatUI
 
 final class SceneCoordinator {
     weak var parent: AppCoordinator?
+    
     let dependency: AppDependency
     let window: UIWindow
     
-    private(set) var interface: PumpkinPieChat.Interface?
+    private(set) var interface: ChatService.Interface?
     
     init(parent: AppCoordinator, dependency: AppDependency, window: UIWindow) {
         self.parent = parent
@@ -56,31 +57,28 @@ private extension SceneCoordinator {
     }
     
     func makeChat(user: User) -> UIViewController {
-        var imageUrl: URL?
-        if let userImageUrl = user.imageUrl {
-            imageUrl = URL(string: userImageUrl)
-        }
-        dependency.chat.setCurrentUser(userId: user.id, name: user.name, imageUrl: imageUrl)
+        dependency.chat.setCurrentUser(user: user)
         
-        let interface: PumpkinPieChat.Interface
+        let interface: ChatService.Interface
         if #available(iOS 13.0, *) {
             interface = makeSceneInterface()
         } else {
             interface = makeInterface()
         }
         
-        interface.delegate = self
         self.interface = interface
         
-        return interface.rootViewController
+        var conversationsController = interface.conversationsViewController
+        conversationsController.actionsDelegate = self
+        return CustomNavigationController(rootViewController: conversationsController)
     }
     
-    func makeInterface() -> PumpkinPieChat.Interface {
+    func makeInterface() -> ChatService.Interface {
         return dependency.chat.interface()
     }
     
     @available(iOS 13.0, *)
-    func makeSceneInterface() -> PumpkinPieChat.Interface {
+    func makeSceneInterface() -> ChatService.Interface {
         guard let scene = window.windowScene else {
             fatalError("Scene delegate doesn't have main window")
         }
@@ -89,13 +87,29 @@ private extension SceneCoordinator {
     }
 }
 
-// MARK: Chat UI Delegate
-extension SceneCoordinator: PumpkinPieChat.UIDelegate {
-    func conversationsListEmptyListAction() {
-        print("Take a Quiz button tapped!")
+// MARK: Conversations action delegate
+extension SceneCoordinator: ConversationsListActionsDelegate {
+    func didSelectConversation(conversationId: EntityIdentifier, in controller: UIViewController) {
+        guard let interface = interface else {
+            return
+        }
+        guard let navigation = window.rootViewController as? UINavigationController else {
+            return
+        }
+        
+        var messagesController = interface.messagesViewController(for: conversationId)
+        messagesController.actionsDelegate = self
+        navigation.pushViewController(messagesController, animated: true)
     }
     
-    func conversationDetailMoreButtonTapped(conversation: Conversation) {
-        print("Conversation detail more button tapped ID \(conversation.id)")
+    func didTapOnEmptyListAction(in controller: UIViewController) {
+        print("Take a Quiz button tapped!")
+    }
+}
+
+// MARK: Messages action delegate
+extension SceneCoordinator: MessagesListActionsDelegate {
+    func didTapOnMoreButton(for conversationId: EntityIdentifier, in controller: UIViewController) {
+        print("Conversation detail more button tapped")
     }
 }

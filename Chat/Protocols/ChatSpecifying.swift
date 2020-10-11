@@ -52,5 +52,5 @@ public protocol ChatSpecifying {
     ///   - userId: User identifier
     ///   - name: User's name
     ///   - imageUrl: User's profile image URL
-    func setCurrentUser(userId: EntityIdentifier, name: String, imageUrl: URL?)
+    func setCurrentUser(user: Core.UIModels.UIUser)
 }

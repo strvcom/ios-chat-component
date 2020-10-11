@@ -17,6 +17,7 @@ public protocol MessageConvertible {
     /// - Parameters:
     ///   - id: Message identifier
     ///   - userId: User who sends the message
+    ///   - sentAt: Time when message was sent
     ///   - messageSpecification: Message specification content
-    init(id: EntityIdentifier, userId: EntityIdentifier, messageSpecification: MessageSpecification, state: MessageState)
+    init(id: EntityIdentifier, userId: EntityIdentifier, sentAt: Date, messageSpecification: MessageSpecification, state: MessageState)
 }
