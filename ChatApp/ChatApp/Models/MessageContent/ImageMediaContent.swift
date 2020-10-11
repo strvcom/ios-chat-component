@@ -7,15 +7,16 @@
 //
 
 import UIKit
+import ChatCore
 
 /// Default implementation of `MediaContent` that represents an image
-public struct ImageMediaContent {
+struct ImageMediaContent {
     /// Image object
-    public let image: UIImage
+    let image: UIImage
     /// Closure for converting the image to data
-    public let convertor: (UIImage) -> Data
+    let convertor: (UIImage) -> Data
     
-    public init(image: UIImage, convertor: ((UIImage) -> Data)? = nil) {
+    init(image: UIImage, convertor: ((UIImage) -> Data)? = nil) {
         self.image = image
         
         if let convertor = convertor {
@@ -36,7 +37,7 @@ public struct ImageMediaContent {
 
 // MARK: Media Content
 extension ImageMediaContent: MediaContent {
-    public func normalizedData(completion: (Data) -> Void) {
+    func dataForUpload(completion: (Data) -> Void) {
         completion(
             convertor(image)
         )

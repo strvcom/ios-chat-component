@@ -14,6 +14,7 @@ struct Message: MessageWithContent, MessageConvertible, MessageStateReflecting {
     let id: EntityIdentifier
     let userId: EntityIdentifier
     let sentAt: Date
+    let type: String
     let content: MessageContent
     var state: MessageState = .sent
 
@@ -21,6 +22,7 @@ struct Message: MessageWithContent, MessageConvertible, MessageStateReflecting {
         self.id = id
         self.userId = userId
         self.sentAt = sentAt
+        self.type = messageSpecification.identifier
         self.content = messageSpecification
         self.state = state
     }
@@ -29,10 +31,11 @@ struct Message: MessageWithContent, MessageConvertible, MessageStateReflecting {
 extension Message: ChatModel {}
 
 extension Message: Decodable {
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
         case userId
-        case content = "data"
         case sentAt
+        case type
+        case content = "data"
     }
 }

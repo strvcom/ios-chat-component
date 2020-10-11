@@ -10,39 +10,18 @@ import ChatCore
 import ChatUI
 import UIKit
 
-enum MessageContentImage: ChatUIMessageMediaContent, Equatable {
-    case urlString(String)
-    case image(UIImage)
-    
-    var media: ChatUIMessageKitMediaItem {
-        switch self {
-        case let .urlString(urlString):
-            return ChatUIMessageKitMediaItem(url: URL(string: urlString))
-        case let .image(image):
-            return ChatUIMessageKitMediaItem(image: image)
-        }
-    }
-}
-
-enum MessageContentText: ChatUIMessageContent, Equatable {
-    case simple(String)
-    case attributed(NSAttributedString)
-    
-    var kind: ChatUIMessageKitKind {
-        switch self {
-        case let .simple(text):
-            return .text(text)
-        case let .attributed(attributed):
-            return .attributedText(attributed)
-        }
-    }
-}
-
-extension MessageContent: ChatModel {}
-
-enum MessageContent: ChatUIMessageContent, MessageSpecificationForContent {
+enum MessageContent: ChatUIMessageContent {
     case text(MessageContentText)
     case image(MessageContentImage)
+    
+    var identifier: String {
+        switch self {
+        case .text:
+            return "text"
+        case .image:
+            return "image"
+        }
+    }
     
     var kind: ChatUIMessageKitKind {
         switch self {
@@ -52,7 +31,11 @@ enum MessageContent: ChatUIMessageContent, MessageSpecificationForContent {
             return .photo(content.media)
         }
     }
-    
+}
+
+extension MessageContent: ChatModel {}
+
+extension MessageContent: MessageSpecificationForContent {
     static func specification(for messageType: ChatUIMessageKitKind) -> MessageContent? {
         switch messageType {
         case let .text(text):
@@ -122,22 +105,22 @@ extension MessageContent: Cachable {
 // TODO: Try to figure out how to infer this
 extension MessageContent: JSONConvertible {
     public var json: [String: Any] {
+        var json: [String: Any] = [
+            Message.CodingKeys.type.rawValue: self.identifier
+        ]
+        
+        let data: [String: Any]
         switch self {
         case let .text(content):
-            let message: String
+            let message: Any
             switch content {
             case let .simple(text):
                 message = text
             case let .attributed(text):
                 message = text.string
             }
-            let data: [String: Any] = [
-                "type": "text",
-                "data": [
-                    "text": message
-                ]
-            ]
-            return data
+            data = [CodingKeys.text.rawValue: message]
+            
         case let .image(content):
             let imageUrl: Any
             switch content {
@@ -146,13 +129,11 @@ extension MessageContent: JSONConvertible {
             case let .image(image):
                 imageUrl = ImageMediaContent(image: image)
             }
-            let data: [String: Any] = [
-                "type": "image",
-                "data": [
-                    "imageUrl": imageUrl
-                ]
-            ]
-            return data
+            data = [CodingKeys.imageUrl.rawValue: imageUrl]
         }
+        
+        json[Message.CodingKeys.content.rawValue] = data
+        
+        return json
     }
 }

@@ -25,7 +25,7 @@ public class ChatFirestoreMediaUploader: MediaUploading {
     public init() {}
     
     public func upload(content: MediaContent, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void) {
-        content.normalizedData { [weak self] data in
+        content.dataForUpload { [weak self] data in
             self?.upload(data: data, completion: { result in
                 queue.async {
                     completion(result)
