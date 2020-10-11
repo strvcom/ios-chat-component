@@ -17,6 +17,7 @@ struct Message: MessageType {
 
 extension MessageWithContent {
     var messageType: MessageType {
+        // TODO: Add display name
         Message(sender: Sender(senderId: userId, displayName: ""), messageId: id, sentDate: sentAt, kind: kind)
     }
 }
