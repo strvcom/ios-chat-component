@@ -78,6 +78,7 @@ public class MessagesViewController<ViewModel: MessagesListViewModeling>: Messag
         
         picker.dismiss(animated: true)
         
+        // TODO: Think of direct construction
         let kind: MessageKind = .photo(ChatMediaItem(image: image))
         if let message = ViewModel.MessageSpecification.specification(for: kind) {
             viewModel.send(message: message) { _ in }
@@ -162,6 +163,7 @@ extension MessagesViewController: MessagesDisplayDelegate {
 extension MessagesViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        // TODO: Think of direct construction
         guard let specs = ViewModel.MessageSpecification.specification(for: .text(text)) else {
             return
         }
