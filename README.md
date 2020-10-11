@@ -27,12 +27,12 @@ source 'https://cdn.cocoapods.org/'
 
 target 'TARGET_NAME' do
   # For plug&play solution with predefined MessageKit UI and Firestore backend
-  pod 'Chat'
+  pod 'STRVChat'
 
   # If you want to use just some of the layers
-  pod 'Chat/Core'
-  pod 'Chat/NetworkingFirestore'
-  pod 'Chat/UIMessageKit'
+  pod 'STRVChat/Core'
+  pod 'STRVChat/NetworkingFirestore'
+  pod 'STRVChat/UI'
 end
 ```
 

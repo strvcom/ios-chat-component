@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "STRVChatUI"
   spec.module_name  = "ChatUI"
-  spec.version      = "0.0.3"
+  spec.version      = "0.0.4"
   spec.summary      = "MessageKit UI framework of Universal Modular Chat Component from STRV"
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
@@ -36,7 +36,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "ChatUI/*.swift", "ChatUI/**/*.swift"
 
-  spec.dependency "ChatCore", "~> 0.0.3"
+  spec.dependency "ChatCore", "~> 0.0.4"
   spec.dependency "MessageKit", "~> 3.4.2"
 
 end

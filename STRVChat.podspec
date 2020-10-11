@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "STRVChat"
   spec.module_name  = "Chat"
-  spec.version      = "0.0.3"
+  spec.version      = "0.0.4"
   spec.summary      = "Universal Modular Chat Component from STRV"
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
@@ -40,21 +40,21 @@ Pod::Spec.new do |spec|
   # ――― Core ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'Core' do |subspec|
-	  subspec.dependency "STRVChatCore", "~> 0.0.3"
+	  subspec.dependency "STRVChatCore", "~> 0.0.4"
   end
 
   # ――― MessageKitUI ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'UI' do |subspec|
 	  subspec.dependency "Chat/Core"
-	  subspec.dependency "STRVChatUI", "~> 0.0.3"
+	  subspec.dependency "STRVChatUI", "~> 0.0.4"
   end
 
   # ――― NetworkingFirestore ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'NetworkingFirestore' do |subspec|
 	  subspec.dependency "Chat/Core"
-	  subspec.dependency "STRVChatNetworkingFirestore", "~> 0.0.3"
+	  subspec.dependency "STRVChatNetworkingFirestore", "~> 0.0.4"
   end
 
   spec.subspec 'ChatMessageKitFirestore' do |subspec|
