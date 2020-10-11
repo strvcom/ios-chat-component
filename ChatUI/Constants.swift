@@ -8,6 +8,7 @@
 
 import UIKit
 
-struct Constants {
+enum Constants {
     static let imageMessageSize = (width: 200, height: 200)
+    static let buttonCornerRadius: CGFloat = 24
 }

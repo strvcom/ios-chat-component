@@ -6,9 +6,13 @@ use_frameworks!
 inhibit_all_warnings!
 
 def networking_pods
-  pod 'Firebase/Firestore'
-  pod 'Firebase/Storage'
-  pod 'FirebaseFirestoreSwift'
+  pod 'FirebaseCore'
+  pod 'FirebaseFirestore'
+  pod 'FirebaseStorage'
+  pod 'Firebase/Auth'
+  pod 'FirebaseUI/Auth'
+  pod 'FirebaseUI/Google'
+  pod 'FirebaseUI/Email'
 end
 
 def ui_pods
@@ -17,10 +21,12 @@ end
 
 target 'ChatApp' do
   networking_pods
+  ui_pods
+  pod 'SwiftLint'
 end
 
 target 'Chat' do
-  networking_pods
+  ui_pods
 end
 
 target 'ChatNetworkingFirestore' do
@@ -29,4 +35,15 @@ end
 
 target 'ChatUI' do
   ui_pods
+end
+
+# Workaround for Xcode 12 to set deployment targets greater than or equal to iOS 9.0
+post_install do |installer|
+   installer.pods_project.targets.each do |target|
+     target.build_configurations.each do |config|
+       if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].split('.')[0].to_i < 9
+         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+       end
+     end
+   end
 end

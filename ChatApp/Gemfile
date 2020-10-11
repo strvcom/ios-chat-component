@@ -1,0 +1,5 @@
+# STRV s.r.o. 2018
+# STRV
+
+source 'https://rubygems.org'
+gem 'cocoapods', '~> 1.9.3'
