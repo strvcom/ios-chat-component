@@ -44,13 +44,7 @@ public class ConversationsViewController<ViewModel: ConversationsListViewModelin
 
     // swiftlint:disable:next weak_delegate
     private var delegate: Delegate?
-    private var conversations: [ViewModel.Core.UIModels.UIConversation] {
-        guard case let .ready(payload) = viewModel.state else {
-            return []
-        }
-        
-        return payload.items
-    }
+    private var conversations: [ViewModel.Conversation] = []
 
     init(viewModel: ViewModel) {
 
@@ -154,6 +148,7 @@ extension ConversationsViewController: ConversationsListViewModelDelegate {
         case .initial:
             break
         case let .ready(state):
+            conversations = state.items
             tableView.reloadData()
             toggleTableViewLoader(visible: false)
             
@@ -163,6 +158,7 @@ extension ConversationsViewController: ConversationsListViewModelDelegate {
             setState(.error(error: error))
         case .loading:
             setState(.loading)
+            conversations = []
             tableView.reloadData()
         case .loadingMore:
             toggleTableViewLoader(visible: true)

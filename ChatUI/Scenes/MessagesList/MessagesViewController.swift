@@ -13,13 +13,7 @@ import InputBarAccessoryView
 
 public class MessagesViewController<ViewModel: MessagesListViewModeling>: MessageKit.MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MessagesList {
     
-    private var messages: [ViewModel.Message] {
-        guard case let .ready(payload) = viewModel.state else {
-            return []
-        }
-        
-        return payload.items
-    }
+    private var messages: [ViewModel.Message] = []
 
     public weak var actionsDelegate: MessagesListActionsDelegate?
     
@@ -289,13 +283,15 @@ extension MessagesViewController: MessagesListViewModelDelegate {
         switch viewModel.state {
         case .initial:
             break
-        case .ready:
+        case .ready(let data):
             configureView()
             
             // Scroll to the bottom on first load
             if messages.isEmpty {
                 messagesCollectionView.scrollToBottom()
             }
+            
+            messages = data.items
             
             let oldOffset = messagesCollectionView.contentSize.height - messagesCollectionView.contentOffset.y
             messagesCollectionView.reloadData()
@@ -309,6 +305,7 @@ extension MessagesViewController: MessagesListViewModelDelegate {
         case .failed(let error):
             setState(.error(error: error))
         case .loading:
+            messages = []
             setState(.loading)
             messagesCollectionView.reloadData()
         case .loadingMore:
