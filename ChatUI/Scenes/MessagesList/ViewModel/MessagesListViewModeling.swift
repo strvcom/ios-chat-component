@@ -23,7 +23,7 @@ public protocol MessagesListViewModeling: AnyObject {
 
     func load()
     func loadMore()
-    func updateSeenMessage(_ message: Core.UIModels.UIMessage)
+    func updateSeenMessage()
     func send(message: Core.UIModels.UIMessageSpecification, completion: @escaping (Result<Core.UIModels.UIMessage, ChatError>) -> Void)
     func seen(message: EntityIdentifier) -> Bool
     func seenLabel(for: EntityIdentifier) -> String

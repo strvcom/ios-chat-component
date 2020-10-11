@@ -279,10 +279,7 @@ extension MessagesViewController: StatefulViewController {
 // MARK: - Private methods
 private extension MessagesViewController {
     func markSeenMessage() {
-        guard let lastMessage = messages.last else {
-            return
-        }
-        viewModel.updateSeenMessage(lastMessage)
+        viewModel.updateSeenMessage()
     }
 }
 

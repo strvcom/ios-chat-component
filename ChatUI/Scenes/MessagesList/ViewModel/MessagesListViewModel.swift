@@ -49,6 +49,14 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             .members
             .first { $0.id != currentUser.id }
     }
+    
+    var messages: [Message] {
+        guard case let .ready(payload) = state else {
+            return []
+        }
+        
+        return payload.items
+    }
 
     init(conversationId: EntityIdentifier, core: Core) {
         self.conversationId = conversationId
@@ -102,7 +110,11 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
         core.loadMoreMessages(conversation: conversationId)
     }
     
-    func updateSeenMessage(_ message: Message) {
+    func updateSeenMessage() {
+        guard let message = messages.last(where: { $0.userId != self.currentUser.id }) else {
+            return
+        }
+        
         core.updateSeenMessage(message.id, in: conversationId)
     }
     
