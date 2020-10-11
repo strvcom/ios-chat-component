@@ -8,11 +8,11 @@
 
 import ChatUI
 
-enum MessageContentText: ChatUIMessageContent, Equatable {
+enum MessageContentText: MessageKindSpecifying, Equatable {
     case simple(String)
     case attributed(NSAttributedString)
     
-    var kind: ChatUIMessageKitKind {
+    var kind: ChatMessageKind {
         switch self {
         case let .simple(text):
             return .text(text)

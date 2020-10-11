@@ -10,6 +10,6 @@ import Foundation
 import ChatCore
 
 /// Extension of `ChatCoreServicing` that specializes model types
-public protocol ChatUICoreServicing: ChatCoreServicing where UIModels.UIMessage: MessageWithContent, UIModels.UIMessageSpecification: MessageSpecificationForContent {}
+public protocol ChatUICoreServicing: ChatCoreServicing where UIModels.UIMessage: ContentfulMessageRepresenting, UIModels.UIMessageSpecification: ChatMessageContent {}
 
-extension ChatCore: ChatUICoreServicing where CoreMessage: MessageWithContent, CoreMessageSpecification: MessageSpecificationForContent {}
+extension ChatCore: ChatUICoreServicing where CoreMessage: ContentfulMessageRepresenting, CoreMessageSpecification: ChatMessageContent {}

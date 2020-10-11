@@ -72,7 +72,7 @@ public class MessagesViewController<ViewModel: MessagesListViewModeling>: Messag
         
         picker.dismiss(animated: true)
         
-        let kind: MessageKind = .photo(Media(url: nil, image: image))
+        let kind: MessageKind = .photo(ChatMediaItem(image: image))
         if let message = ViewModel.MessageSpecification.specification(for: kind) {
             viewModel.send(message: message) { _ in }
         }

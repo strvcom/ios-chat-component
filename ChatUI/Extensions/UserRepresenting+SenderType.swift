@@ -10,11 +10,6 @@ import Foundation
 import MessageKit
 import ChatCore
 
-struct Sender: SenderType {
-    let senderId: String
-    let displayName: String
-}
-
 extension UserRepresenting {
     var sender: SenderType {
         Sender(senderId: id, displayName: name)

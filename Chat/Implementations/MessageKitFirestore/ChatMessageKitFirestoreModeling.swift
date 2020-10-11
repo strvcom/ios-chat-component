@@ -12,8 +12,6 @@ import ChatNetworkingFirestore
 import ChatUI
 
 public protocol ChatMessageKitFirestoreModeling: ChatUIModeling, ChatFirestoreModeling where
-    UIMessage: MessageConvertible,
-    UIMessage: MessageStateReflecting,
     UIMessageSpecification: Cachable,
     UIMessage.MessageSpecification == UIMessageSpecification,
     NetworkConversation: ChatUIConvertible,
@@ -22,7 +20,7 @@ public protocol ChatMessageKitFirestoreModeling: ChatUIModeling, ChatFirestoreMo
     NetworkConversation.UIModel == UIConversation,
     NetworkMessage.UIModel == UIMessage,
     NetworkMessageSpecification.UIModel == UIMessageSpecification,
-    UIMessage: MessageWithContent,
-    UIMessageSpecification: MessageSpecificationForContent,
+    UIMessage: ContentfulMessageRepresenting,
+    UIMessageSpecification: ChatMessageContent,
     UIConversation == NetworkConversation {
 }

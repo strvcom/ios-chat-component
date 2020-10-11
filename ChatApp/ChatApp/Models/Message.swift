@@ -10,7 +10,7 @@ import Foundation
 import ChatCore
 import ChatUI
 
-struct Message: MessageWithContent, MessageConvertible, MessageStateReflecting {
+struct Message: ContentfulMessageRepresenting {
     let id: EntityIdentifier
     let userId: EntityIdentifier
     let sentAt: Date

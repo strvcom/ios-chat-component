@@ -20,7 +20,7 @@ struct ConversationsListCellViewModel {
     let avatarURL: URL?
     let messagePreview: MessagePreview
     
-    init<Conversation: ConversationRepresenting>(conversation: Conversation, currentUser: Conversation.User) where Conversation.Message: MessageWithContent {
+    init<Conversation: ConversationRepresenting>(conversation: Conversation, currentUser: Conversation.User) where Conversation.Message: ContentfulMessageRepresenting {
         let partner = conversation
                         .members
                         .first { $0.id != currentUser.id }

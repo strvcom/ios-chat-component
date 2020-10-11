@@ -9,16 +9,16 @@
 import UIKit
 import ChatUI
 
-enum MessageContentImage: ChatUIMessageMediaContent, Equatable {
+enum MessageContentImage: MessageMediaSpecifying, Equatable {
     case urlString(String)
     case image(UIImage)
     
-    var media: ChatUIMessageKitMediaItem {
+    var media: ChatMediaItem {
         switch self {
         case let .urlString(urlString):
-            return ChatUIMessageKitMediaItem(url: URL(string: urlString))
+            return ChatMediaItem(url: URL(string: urlString))
         case let .image(image):
-            return ChatUIMessageKitMediaItem(image: image)
+            return ChatMediaItem(image: image)
         }
     }
 }
