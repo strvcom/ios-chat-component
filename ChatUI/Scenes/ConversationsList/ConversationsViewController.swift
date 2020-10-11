@@ -9,7 +9,7 @@
 import UIKit
 import ChatCore
 
-public class ConversationsViewController<ViewModel: ConversationsListViewModeling>: ConversationsListViewController, UITableViewDataSource {
+public class ConversationsViewController<ViewModel: ConversationsListViewModeling>: ConversationsListViewController, UITableViewDataSource, UITableViewDelegate {
     public weak var actionsDelegate: ConversationsListActionsDelegate?
     
     private let viewModel: ViewModel
@@ -19,7 +19,9 @@ public class ConversationsViewController<ViewModel: ConversationsListViewModelin
         indicator.color = .loadingIndicator
         return indicator
     }()
-    
+    private let rowHeight: CGFloat = 72
+    private let footerHeight: CGFloat = 50
+
     private lazy var emptyStateView: EmptyConversationsList = {
         let view = EmptyConversationsList.nibInstance
         
@@ -42,8 +44,6 @@ public class ConversationsViewController<ViewModel: ConversationsListViewModelin
         return indicator
     }()
 
-    // swiftlint:disable:next weak_delegate
-    private var delegate: Delegate?
     private var conversations: [ViewModel.Conversation] = []
 
     init(viewModel: ViewModel) {
@@ -81,6 +81,32 @@ public class ConversationsViewController<ViewModel: ConversationsListViewModelin
         return cell
     }
 
+    // MARK: - UITableViewDelegate
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let conversation = conversations[safe: indexPath.row] else {
+            return
+        }
+        
+        self.actionsDelegate?.didSelectConversation(conversationId: conversation.id, in: self)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        rowHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        footerHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        footerLoader
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            viewModel.loadMore()
+        }
+    }
 }
 
 // MARK: StatefulViewController
@@ -113,22 +139,8 @@ private extension ConversationsViewController {
         view.addSubview(tableView)
         tableView.pinToSuperview()
         
-        delegate = Delegate(
-            didSelectBlock: { [weak self] row in
-                guard let self = self, let conversation = self.conversations[safe: row] else {
-                    return
-                }
-                
-                self.actionsDelegate?.didSelectConversation(conversationId: conversation.id, in: self)
-            },
-            didReachBottomBlock: { [weak self] in
-                self?.viewModel.loadMore()
-            },
-            footerView: footerLoader
-        )
-        
         tableView.dataSource = self
-        tableView.delegate = delegate
+        tableView.delegate = self
         tableView.separatorStyle = .none
         
         tableView.register(ConversationsListCell.nib, forCellReuseIdentifier: ConversationsListCell.reuseIdentifer)
@@ -162,49 +174,6 @@ extension ConversationsViewController: ConversationsListViewModelDelegate {
             tableView.reloadData()
         case .loadingMore:
             toggleTableViewLoader(visible: true)
-        }
-    }
-}
-
-extension ConversationsViewController {
-    
-    // MARK: Delegate
-    class Delegate: NSObject, UITableViewDelegate {
-        
-        let didSelectBlock: (Int) -> Void
-        let didReachBottomBlock: () -> Void
-        
-        private let footerView: UIView
-        
-        private let rowHeight: CGFloat = 72
-        private let footerHeight: CGFloat = 50
-        
-        init(didSelectBlock: @escaping (Int) -> Void, didReachBottomBlock: @escaping () -> Void, footerView: UIView) {
-            self.didSelectBlock = didSelectBlock
-            self.didReachBottomBlock = didReachBottomBlock
-            self.footerView = footerView
-        }
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            didSelectBlock(indexPath.row)
-        }
-        
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            rowHeight
-        }
-        
-        func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-            footerHeight
-        }
-        
-        func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-            footerView
-        }
-        
-        func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-            if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-                didReachBottomBlock()
-            }
         }
     }
 }
