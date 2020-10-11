@@ -47,7 +47,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'UI' do |subspec|
 	  subspec.dependency "Chat/Core"
-	  subspec.dependency "STRVChatUI", "~> 0.0.4"
+	  subspec.dependency "STRVChatUI", "~> 0.0.5"
   end
 
   # ――― NetworkingFirestore ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
