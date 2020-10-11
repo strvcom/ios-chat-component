@@ -12,6 +12,6 @@ import ChatCore
 protocol RootCoordinating: AnyObject {
     associatedtype Core: ChatCoreServicing
     
-    var conversationsViewController: ChatConversationsListController { get }
-    func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController
+    var conversationsViewController: ConversationsListViewController { get }
+    func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController
 }

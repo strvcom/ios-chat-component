@@ -19,7 +19,7 @@ public protocol ChatInterfacing {
     /// Instance of underlying `ChatUIServicing` implementation
     var uiService: UIService { get }
     /// Underlying `ChatUIServicing` implementation's conversations view controller
-    var conversationsViewController: ChatConversationsListController { get }
+    var conversationsViewController: ConversationsListViewController { get }
     /// Underlying `ChatUIServicing` implementation's messages view controller
-    func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController
+    func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController
 }

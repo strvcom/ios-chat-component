@@ -88,7 +88,7 @@ private extension SceneCoordinator {
 }
 
 // MARK: Conversations action delegate
-extension SceneCoordinator: ChatConversationsActionsDelegate {
+extension SceneCoordinator: ConversationsListActionsDelegate {
     func didSelectConversation(conversationId: EntityIdentifier, in controller: UIViewController) {
         guard let interface = interface else {
             return
@@ -108,7 +108,7 @@ extension SceneCoordinator: ChatConversationsActionsDelegate {
 }
 
 // MARK: Messages action delegate
-extension SceneCoordinator: ChatMessagesActionsDelegate {
+extension SceneCoordinator: MessagesListActionsDelegate {
     func didTapOnMoreButton(for conversationId: EntityIdentifier, in controller: UIViewController) {
         print("Conversation detail more button tapped")
     }

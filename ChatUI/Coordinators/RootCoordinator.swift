@@ -12,7 +12,7 @@ import ChatCore
 class RootCoordinator<Core: ChatUICoreServicing> {
     private let core: Core
     
-    lazy var conversationsViewController: ChatConversationsListController = {
+    lazy var conversationsViewController: ConversationsListViewController = {
         makeConversationsListController()
     }()
 
@@ -23,23 +23,23 @@ class RootCoordinator<Core: ChatUICoreServicing> {
 
 // MARK: RootCoordinating
 extension RootCoordinator: RootCoordinating {
-    func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController {
+    func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController {
         makeMessagesListController(conversationId: conversationId)
     }
 }
 
 // MARK: Controllers
 private extension RootCoordinator {
-    func makeConversationsListController() -> ChatConversationsListController {
-        let controller = ConversationsListViewController(
+    func makeConversationsListController() -> ConversationsListViewController {
+        let controller = ConversationsViewController(
             viewModel: ConversationsListViewModel(core: core)
         )
         
         return controller
     }
     
-    func makeMessagesListController(conversationId: EntityIdentifier) -> ChatMessagesListController {
-        let controller = MessagesListViewController(
+    func makeMessagesListController(conversationId: EntityIdentifier) -> MessagesListViewController {
+        let controller = MessagesViewController(
             viewModel: MessagesListViewModel(
                 conversationId: conversationId,
                 core: core

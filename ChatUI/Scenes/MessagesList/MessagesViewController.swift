@@ -11,11 +11,11 @@ import ChatCore
 import MessageKit
 import InputBarAccessoryView
 
-public class MessagesListViewController<ViewModel: MessagesListViewModeling>: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ChatMessagesList {
+public class MessagesViewController<ViewModel: MessagesListViewModeling>: MessageKit.MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MessagesList {
     
     private var messages: [ViewModel.Message] = []
 
-    public weak var actionsDelegate: ChatMessagesActionsDelegate?
+    public weak var actionsDelegate: MessagesListActionsDelegate?
     
     private let viewModel: ViewModel
 
@@ -95,7 +95,7 @@ public class MessagesListViewController<ViewModel: MessagesListViewModeling>: Me
 }
 
 // MARK: - MessagesDataSource
-extension MessagesListViewController: MessagesDataSource {
+extension MessagesViewController: MessagesDataSource {
     public func currentSender() -> SenderType {
         return viewModel.currentUser.sender
     }
@@ -124,10 +124,10 @@ extension MessagesListViewController: MessagesDataSource {
 }
 
 // MARK: MessagesLayoutDelegate
-extension MessagesListViewController: MessagesLayoutDelegate {}
+extension MessagesViewController: MessagesLayoutDelegate {}
 
 // MARK: - MessagesDisplayDelegate
-extension MessagesListViewController: MessagesDisplayDelegate {
+extension MessagesViewController: MessagesDisplayDelegate {
 
     public func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         switch message.kind {
@@ -153,7 +153,7 @@ extension MessagesListViewController: MessagesDisplayDelegate {
 }
 
 // MARK: - InputBarAccessoryViewDelegate
-extension MessagesListViewController: InputBarAccessoryViewDelegate {
+extension MessagesViewController: InputBarAccessoryViewDelegate {
 
     public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard let specs = ViewModel.MessageSpecification.specification(for: .text(text)) else {
@@ -168,7 +168,7 @@ extension MessagesListViewController: InputBarAccessoryViewDelegate {
 }
 
 // MARK: - Setup
-private extension MessagesListViewController {
+private extension MessagesViewController {
     func setup() {
         view.backgroundColor = .chatBackground
 
@@ -251,7 +251,7 @@ private extension MessagesListViewController {
 }
 
 // MARK: StatefulViewController
-extension MessagesListViewController: StatefulViewController {
+extension MessagesViewController: StatefulViewController {
     var contentView: UIView? {
         switch state {
         case .empty:
@@ -269,7 +269,7 @@ extension MessagesListViewController: StatefulViewController {
 }
 
 // MARK: - Private methods
-private extension MessagesListViewController {
+private extension MessagesViewController {
     func markSeenMessage() {
         guard let lastMessage = messages.last else {
             return
@@ -279,7 +279,7 @@ private extension MessagesListViewController {
 }
 
 // MARK: MessagesListViewModelDelegate
-extension MessagesListViewController: MessagesListViewModelDelegate {
+extension MessagesViewController: MessagesListViewModelDelegate {
     public func stateDidChange() {
         switch viewModel.state {
         case .initial:

@@ -14,7 +14,7 @@ public class ChatUI<Core: ChatUICoreServicing, Models: ChatUIModeling>: ChatUISe
     
     private lazy var coordinator = RootCoordinator(core: core)
     
-    public var conversationsViewController: ChatConversationsListController {
+    public var conversationsViewController: ConversationsListViewController {
         coordinator.conversationsViewController
     }
 
@@ -23,7 +23,7 @@ public class ChatUI<Core: ChatUICoreServicing, Models: ChatUIModeling>: ChatUISe
         UIConfig.current = config
     }
     
-    public func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController {
+    public func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController {
         coordinator.messagesViewController(for: conversationId)
     }
 }

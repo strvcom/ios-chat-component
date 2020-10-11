@@ -14,7 +14,7 @@ public class ChatInterfaceMessageKit<Models: ChatMessageKitFirestoreModeling>: C
     public let identifier: ObjectIdentifier
     public let uiService: ChatUI<ChatMessageKitFirestore<Models>.Core, ChatMessageKitFirestore<Models>.UIModels>
     
-    public var conversationsViewController: ChatConversationsListController {
+    public var conversationsViewController: ConversationsListViewController {
         uiService.conversationsViewController
     }
         
@@ -23,7 +23,7 @@ public class ChatInterfaceMessageKit<Models: ChatMessageKitFirestoreModeling>: C
         self.uiService = ChatMessageKitFirestore.uiService(core: core, uiConfig: config)
     }
     
-    public func messagesViewController(for conversationId: EntityIdentifier) -> ChatMessagesListController {
+    public func messagesViewController(for conversationId: EntityIdentifier) -> MessagesListViewController {
         uiService.messagesViewController(for: conversationId)
     }
 }

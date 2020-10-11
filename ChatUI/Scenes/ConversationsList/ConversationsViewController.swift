@@ -9,8 +9,8 @@
 import UIKit
 import ChatCore
 
-public class ConversationsListViewController<ViewModel: ConversationsListViewModeling>: ChatConversationsListController, UITableViewDataSource {
-    public weak var actionsDelegate: ChatConversationsActionsDelegate?
+public class ConversationsViewController<ViewModel: ConversationsListViewModeling>: ConversationsListViewController, UITableViewDataSource {
+    public weak var actionsDelegate: ConversationsListActionsDelegate?
     
     private let viewModel: ViewModel
     private lazy var tableView = UITableView()
@@ -84,7 +84,7 @@ public class ConversationsListViewController<ViewModel: ConversationsListViewMod
 }
 
 // MARK: StatefulViewController
-extension ConversationsListViewController: StatefulViewController {
+extension ConversationsViewController: StatefulViewController {
     var contentView: UIView? {
         switch state {
         case .empty:
@@ -102,7 +102,7 @@ extension ConversationsListViewController: StatefulViewController {
 }
 
 // MARK: Private methods
-private extension ConversationsListViewController {
+private extension ConversationsViewController {
     func setup() {
         title = .conversationsListNavigationTitle
         
@@ -141,7 +141,7 @@ private extension ConversationsListViewController {
 }
 
 // MARK: ConversationsListViewModelDelegate
-extension ConversationsListViewController: ConversationsListViewModelDelegate {
+extension ConversationsViewController: ConversationsListViewModelDelegate {
     public func stateDidChange() {
         
         switch viewModel.state {
@@ -166,7 +166,7 @@ extension ConversationsListViewController: ConversationsListViewModelDelegate {
     }
 }
 
-extension ConversationsListViewController {
+extension ConversationsViewController {
     
     // MARK: Delegate
     class Delegate: NSObject, UITableViewDelegate {
