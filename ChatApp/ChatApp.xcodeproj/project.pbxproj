@@ -81,7 +81,6 @@
 		84D7388E243D143300DFC62F /* UserManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7388D243D143300DFC62F /* UserManaging.swift */; };
 		84D7388F243D175E00DFC62F /* ChatFirestoreDefaultUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7388A243C98B700DFC62F /* ChatFirestoreDefaultUserManager.swift */; };
 		84D7F41C24444BE800F919AA /* Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D7F41A24444BE000F919AA /* Closure.swift */; };
-		AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */; };
 		AD6B5D3E23C32020007F7754 /* ChatUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; };
 		AD6B5D3F23C32020007F7754 /* ChatUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D3723C32020007F7754 /* ChatUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AD6B5D5023C320CB007F7754 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6B5D4923C320CB007F7754 /* ChatCore.framework */; };
@@ -135,6 +134,7 @@
 		C12CB6CE253311E100B74AE8 /* ConversationsListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */; };
 		C12CB6D3253311F200B74AE8 /* MessagesListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */; };
 		C12CB6DA253312AC00B74AE8 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6B82533117300B74AE8 /* ConversationsListViewController.swift */; };
+		C1577E8A254AB03F00E0BE2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */; };
 		C17F74D72459CE5F0008A8BF /* ChatFirestoreUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */; };
 		C18389A42452EBF40008195B /* MediaUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389A32452EBF40008195B /* MediaUploading.swift */; };
 		C18389AD2457169F0008195B /* MediaContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389AC2457169F0008195B /* MediaContent.swift */; };
@@ -342,7 +342,6 @@
 		84D7388D243D143300DFC62F /* UserManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManaging.swift; sourceTree = "<group>"; };
 		84D7F41A24444BE000F919AA /* Closure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Closure.swift; sourceTree = "<group>"; };
 		ACE257D4B37C577F4A9DF40E /* Pods_ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD6B5D3723C32020007F7754 /* ChatUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD6B5D4923C320CB007F7754 /* ChatCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD6B5D5A23C320E8007F7754 /* ChatNetworkingFirestore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatNetworkingFirestore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -403,6 +402,7 @@
 		C12CB6C02533119C00B74AE8 /* MessagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewController.swift; sourceTree = "<group>"; };
 		C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListDelegates.swift; sourceTree = "<group>"; };
 		C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListDelegates.swift; sourceTree = "<group>"; };
+		C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreUserManager.swift; sourceTree = "<group>"; };
 		C18389A32452EBF40008195B /* MediaUploading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploading.swift; sourceTree = "<group>"; };
 		C18389AC2457169F0008195B /* MediaContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContent.swift; sourceTree = "<group>"; };
@@ -917,7 +917,7 @@
 			children = (
 				C185740A24333BA300F08E78 /* ChatApp.entitlements */,
 				ADB40CD323C200A5003DC146 /* Info.plist */,
-				AD6B5CFF23C262A2007F7754 /* GoogleService-Info.plist */,
+				C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -1371,6 +1371,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1577E8A254AB03F00E0BE2E /* GoogleService-Info.plist in Resources */,
 				045A6B1E2424E4E00055B5E1 /* Catamaran-Regular.ttf in Resources */,
 				045A6B1C2424E4E00055B5E1 /* Catamaran-Light.ttf in Resources */,
 				ADB40CD223C200A5003DC146 /* LaunchScreen.storyboard in Resources */,
@@ -1378,7 +1379,6 @@
 				ADB40CCF23C200A5003DC146 /* Assets.xcassets in Resources */,
 				045A6B1B2424E4E00055B5E1 /* OFL.txt in Resources */,
 				045A6B162424E4E00055B5E1 /* Catamaran-SemiBold.ttf in Resources */,
-				AD6B5D0123C262A2007F7754 /* GoogleService-Info.plist in Resources */,
 				045A6B182424E4E00055B5E1 /* Catamaran-ExtraBold.ttf in Resources */,
 				045A6B1F2424E4E00055B5E1 /* Catamaran-Bold.ttf in Resources */,
 				045A6B1A2424E4E00055B5E1 /* Catamaran-Medium.ttf in Resources */,

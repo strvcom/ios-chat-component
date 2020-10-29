@@ -92,3 +92,6 @@ iOSInjectionProject/
 # Ruby gems
 ChatApp/vendor/
 ChatApp/.bundle/
+
+# Firebase configuration
+ChatApp/**/GoogleService*
