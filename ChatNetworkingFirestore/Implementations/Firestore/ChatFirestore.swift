@@ -48,11 +48,19 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
             fatalError("Can't configure Firebase")
         }
-
-        let appName = UUID().uuidString
-        FirebaseApp.configure(name: appName, options: options)
-        guard let firebaseApp = FirebaseApp.app(name: appName) else {
-            fatalError("Can't configure Firebase app \(appName)")
+        
+        let app: FirebaseApp?
+        
+        if let existingInstance = FirebaseApp.app() {
+            app = existingInstance
+        } else {
+            let appName = UUID().uuidString
+            FirebaseApp.configure(name: appName, options: options)
+            app = FirebaseApp.app(name: appName)
+        }
+        
+        guard let firebaseApp = app else {
+            fatalError("Can't configure Firebase")
         }
         
         // Pass firebase app reference to `ChatFirestoreMediaUploader`
