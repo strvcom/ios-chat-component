@@ -480,9 +480,15 @@ public extension ChatFirestore {
 // MARK: Queries
 private extension ChatFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
+        let lastMessageTimestampFieldPath = FieldPath([
+            constants.conversations.lastMessageAttributeName,
+            constants.messages.sentAtAttributeName
+        ])
+        
         let query = database
             .collection(constants.conversations.path)
             .whereField(constants.conversations.membersAttributeName, arrayContains: currentUserId)
+            .order(by: lastMessageTimestampFieldPath, descending: true)
 
         if let limit = numberOfConversations {
             return query.limit(to: limit)
