@@ -11,6 +11,13 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.9]
+
+ ### ChatNetworkingFirestore
+
+ #### Changed
+ - Add public init to ChatFirestoreUserManager to allow creating custom user managers outside of the component
+
  ## [0.0.8]
 
  ### ChatNetworkingFirestore
