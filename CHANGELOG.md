@@ -17,6 +17,7 @@ __Sections__
 
  #### Changed
  - Add public init to ChatFirestoreUserManager to allow creating custom user managers outside of the component
+ - Add updateLastMessage variable to Firestore config
 
  ## [0.0.8]
 
