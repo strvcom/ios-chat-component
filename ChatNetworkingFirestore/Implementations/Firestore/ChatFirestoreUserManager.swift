@@ -13,6 +13,8 @@ import ChatCore
 ///
 /// `ChatFirestore` needs to be provided with a subclass of this class
 open class ChatFirestoreUserManager<User: UserRepresenting>: UserManaging where User: Decodable {
+    public init() {}
+    
     // swiftlint:disable:next unavailable_function
     open func users(userIds: [EntityIdentifier], completion: @escaping (Result<[User], ChatError>) -> Void) {
         fatalError("\(#function) has not been implemented")
