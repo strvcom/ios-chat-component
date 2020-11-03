@@ -13,9 +13,11 @@ import FirebaseFirestore
 public struct ChatFirestoreConfig {
     let configUrl: String
     let constants: ChatFirestoreConstants
+    let updateLastMessage: Bool
 
-    public init(configUrl: String, constants: ChatFirestoreConstants = ChatFirestoreConstants()) {
+    public init(configUrl: String, constants: ChatFirestoreConstants = ChatFirestoreConstants(), updateLastMessage: Bool = true) {
         self.configUrl = configUrl
         self.constants = constants
+        self.updateLastMessage = updateLastMessage
     }
 }
