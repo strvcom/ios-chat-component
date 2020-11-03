@@ -186,9 +186,9 @@ public extension ChatFirestore {
                 self.database.runTransaction({ (transaction, _) -> Any? in
 
                     transaction.setData(data, forDocument: referenceMessage)
-                    data[Constants.identifierAttributeName] = referenceMessage.documentID
                     
                     if self.config.updateLastMessage {
+                        data[Constants.identifierAttributeName] = referenceMessage.documentID
                         transaction.updateData([self.constants.conversations.lastMessageAttributeName: data], forDocument: referenceConversation)
                     }
 
