@@ -40,8 +40,10 @@ public extension ChatFirestore {
                 self.database.runTransaction({ (transaction, _) -> Any? in
 
                     transaction.deleteDocument(referenceMessage)
-                    // TODO: Handle do not update last message
-                    transaction.updateData([self.constants.conversations.lastMessageAttributeName: newLastMessage ?? FieldValue.delete], forDocument: referenceConversation)
+                    
+                    if self.config.updateLastMessage {
+                        transaction.updateData([self.constants.conversations.lastMessageAttributeName: newLastMessage ?? FieldValue.delete], forDocument: referenceConversation)
+                    }
 
                     return nil
                 }, completion: { (_, error) in
