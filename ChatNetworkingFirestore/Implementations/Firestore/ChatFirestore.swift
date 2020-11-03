@@ -22,27 +22,27 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     public typealias UserFirestore = Models.NetworkUser
     public typealias MessageSpecificationFirestore = Models.NetworkMessageSpecification
     
-    private let config: ChatFirestoreConfig
-    private var constants: ChatFirestoreConstants {
+    let config: ChatFirestoreConfig
+    var constants: ChatFirestoreConstants {
         config.constants
     }
-    private let decoder: JSONDecoder
+    let decoder: JSONDecoder
 
     // user management
-    @Required private var currentUserId: String
+    @Required private(set) var currentUserId: String
 
-    private let database: Firestore
-    private let userManager: ChatFirestoreUserManager<UserFirestore>
-    private let mediaUploader: MediaUploading
+    let database: Firestore
+    let userManager: ChatFirestoreUserManager<UserFirestore>?
+    let mediaUploader: MediaUploading
 
     private var listeners: [Listener: ListenerRegistration] = [:]
     private var messagesPaginators: [EntityIdentifier: Pagination<MessageFirestore>] = [:]
     private var conversationsPagination: Pagination<ConversationFirestore> = .empty
 
     // dedicated thread queue
-    private let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .userInteractive)
+    let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .userInteractive)
 
-    public required init(config: ChatFirestoreConfig, userManager: UserManager, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager?, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -75,6 +75,13 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
         self.mediaUploader = mediaUploader
     }
     
+    /// Convenience initializer
+    /// WARNING: This initializer instantiates `ChatFirestoreDefaultUserManager` as a user manager. If you want to use custom user mananager or you don't want to use separate user manager at all, use the full initializer with `userManager` parameter
+    ///
+    /// - Parameters:
+    ///   - config: Networking configuration
+    ///   - mediaUploader: Service for uploading photos, videos and other media
+    ///   - decoder: Instance of `JSONDecoder ` if you don't want to use the default one
     public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
         let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config, decoder: decoder)
         
@@ -105,231 +112,6 @@ public extension ChatFirestore {
     }
 }
 
-// MARK: Update conversation
-public extension ChatFirestore {
-    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-
-            let reference = self.database
-                .collection(self.constants.conversations.path)
-                .document(conversation)
-
-            self.database.runTransaction({ (transaction, errorPointer) -> Any? in
-                var currentConversation: ConversationFirestore?
-                do {
-                    let conversationSnapshot = try transaction.getDocument(reference)
-                    currentConversation = try conversationSnapshot.decode(to: ConversationFirestore.self, with: self.decoder)
-                } catch let fetchError as NSError {
-                    errorPointer?.pointee = fetchError
-                    return nil
-                }
-
-                guard let seenItems = currentConversation?.seen else {
-                    return nil
-                }
-
-                var json: [String: Any] = seenItems.mapValues({
-                    [self.constants.conversations.seenAttribute.messageIdAttributeName: $0.messageId,
-                     self.constants.conversations.seenAttribute.timestampAttributeName: $0.seenAt]
-                })
-                
-                json[self.currentUserId] = [
-                    self.constants.conversations.seenAttribute.messageIdAttributeName: message,
-                    self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
-                ]
-
-                transaction.updateData([self.constants.conversations.seenAttribute.name: json], forDocument: reference)
-
-                return nil
-            }, completion: { (_, error) in
-                if let err = error {
-                    print("Error updating conversation last seen message: \(err)")
-                } else {
-                    print("Conversation last seen message successfully updated")
-                }
-            })
-        }
-    }
-}
-
-// MARK: Create message
-public extension ChatFirestore {
-    func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-
-            self.prepareMessageData(message: message) { result in
-                guard case var .success(data) = result else {
-                    if case let .failure(error) = result {
-                        print("Error while preparing message data \(error)")
-                        completion(.failure(error))
-                    }
-                    return
-                }
-
-                let referenceConversation = self.database
-                    .collection(self.constants.conversations.path)
-                    .document(conversation)
-
-
-                let referenceMessage = referenceConversation
-                    .collection(self.constants.messages.path)
-                    .document()
-
-                self.database.runTransaction({ (transaction, _) -> Any? in
-
-                    transaction.setData(data, forDocument: referenceMessage)
-                    data[Constants.identifierAttributeName] = referenceMessage.documentID
-                    transaction.updateData([self.constants.conversations.lastMessageAttributeName: data], forDocument: referenceConversation)
-
-                    return nil
-                }, completion: { (_, error) in
-                    if let error = error {
-                        completion(.failure(.networking(error: error)))
-                    } else {
-                        completion(.success(referenceMessage.documentID))
-                    }
-                })
-            }
-        }
-    }
-
-    private func prepareMessageData(message: MessageSpecificationFirestore, completion: @escaping (Result<[String: Any], ChatError>) -> Void) {
-        let json = message.json
-        
-        uploadMedia(for: json) { [weak self] result in
-            guard let self = self, case let .success(json) = result else {
-                if case let .failure(error) = result {
-                    completion(.failure(error))
-                }
-
-                return
-            }
-
-            var newJSON: [String: Any] = json
-            newJSON[self.constants.messages.userIdAttributeName] = self.currentUserId
-            newJSON[self.constants.messages.sentAtAttributeName] = Timestamp()
-            completion(.success(newJSON))
-        }
-    }
-    
-    private func uploadMedia(for json: ChatJSON, completion: @escaping (Result<ChatJSON, ChatError>) -> Void) {
-        var normalizedJSON: ChatJSON = [:]
-        var resultError: ChatError?
-        
-        let dispatchGroup = DispatchGroup()
-        
-        for (key, value) in json {
-            switch value {
-            case let value as MediaContent:
-                dispatchGroup.enter()
-                
-                mediaUploader.upload(content: value, on: self.networkingQueue) { result in
-                    switch result {
-                    case .success(let url):
-                        normalizedJSON[key] = url.absoluteString
-                    case .failure(let error):
-                        resultError = error
-                    }
-                    
-                    dispatchGroup.leave()
-                }
-            case let value as ChatJSON:
-                dispatchGroup.enter()
-                
-                uploadMedia(for: value) { result in
-                    switch result {
-                    case .success(let json):
-                        normalizedJSON[key] = json
-                    case .failure(let error):
-                        resultError = error
-                    }
-                    
-                    dispatchGroup.leave()
-                }
-            default:
-                normalizedJSON[key] = value
-            }
-        }
-        
-        dispatchGroup.notify(queue: self.networkingQueue) {
-            if let error = resultError {
-                completion(.failure(error))
-            } else {
-                completion(.success(normalizedJSON))
-            }
-        }
-    }
-
-}
-
-// MARK: - Delete message
-public extension ChatFirestore {
-    func delete(message: MessageFirestore, from conversation: EntityIdentifier, completion: @escaping (Result<Void, ChatError>) -> Void) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-
-            self.lastMessage(after: message.id, from: conversation) { result in
-
-                guard case let .success(newLastMessage) = result else {
-                    if case let .failure(error) = result {
-                        print("Error while loading last message \(error)")
-                        completion(.failure(error))
-                    }
-
-                    return
-                }
-
-                let referenceConversation = self.database
-                    .collection(self.constants.conversations.path)
-                    .document(conversation)
-
-                let referenceMessage = referenceConversation
-                    .collection(self.constants.messages.path)
-                    .document(message.id)
-
-                self.database.runTransaction({ (transaction, _) -> Any? in
-
-                    transaction.deleteDocument(referenceMessage)
-                    transaction.updateData([self.constants.conversations.lastMessageAttributeName: newLastMessage ?? FieldValue.delete], forDocument: referenceConversation)
-
-                    return nil
-                }, completion: { (_, error) in
-                    if let error = error {
-                        completion(.failure(.networking(error: error)))
-                    } else {
-                        completion(.success(()))
-                    }
-                })
-            }
-        }
-    }
-
-    private func lastMessage(after messageId: EntityIdentifier, from conversation: EntityIdentifier, completion: @escaping (Result<[String: Any]?, ChatError>) -> Void) {
-        
-        let lastMessageQuery = messagesQuery(conversation: conversation, numberOfMessages: 2)
-        lastMessageQuery.getDocuments { (snapshot, error) in
-            if let error = error {
-                return completion(.failure(.networking(error: error)))
-            } else {
-                // conversation can be empty
-                let newLastMessage = snapshot?.documents.last(where: { $0.documentID != messageId })
-                completion(.success(newLastMessage?.data()))
-            }
-        }
-    }
-}
-
 // MARK: Listen to collections
 public extension ChatFirestore {
     func listenToConversation(conversation id: EntityIdentifier, completion: @escaping (Result<ConversationFirestore, ChatError>) -> Void) {
@@ -349,8 +131,13 @@ public extension ChatFirestore {
                     completion(result)
                     return
                 }
+                
+                guard let userManager = self.userManager else {
+                    completion(result)
+                    return
+                }
 
-                self.loadUsersForConversations(conversations: [conversation]) { result in
+                self.loadUsersForConversations(conversations: [conversation], userManager: userManager) { result in
                     switch result {
                     case .success(let conversations):
                         if let conversation = conversations.first {
@@ -390,7 +177,11 @@ public extension ChatFirestore {
                     return
                 }
 
-                self.loadUsersForConversations(conversations: conversations, completion: completion)
+                if let userManager = self.userManager {
+                    self.loadUsersForConversations(conversations: conversations, userManager: userManager, completion: completion)
+                } else {
+                    completion(.success(conversations))
+                }
             })
         }
     }
@@ -443,7 +234,11 @@ public extension ChatFirestore {
 
                     switch result {
                     case .success(let conversations):
-                        self.loadUsersForConversations(conversations: conversations, completion: completion)
+                        if let userManager = self.userManager {
+                            self.loadUsersForConversations(conversations: conversations, userManager: userManager, completion: completion)
+                        } else {
+                            completion(.success(conversations))
+                        }
                     case .failure(let error):
                         completion(.failure(error))
                     }
@@ -478,7 +273,7 @@ public extension ChatFirestore {
 }
 
 // MARK: Queries
-private extension ChatFirestore {
+extension ChatFirestore {
     func conversationsQuery(numberOfConversations: Int? = nil) -> Query {
         let lastMessageTimestampFieldPath = FieldPath([
             constants.conversations.lastMessageAttributeName,
@@ -513,7 +308,7 @@ private extension ChatFirestore {
 }
 
 // MARK: Private methods
-private extension ChatFirestore {
+extension ChatFirestore {
     func listenToCollection<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
         let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self, decoder] (snapshot, error) in
             self?.networkingQueue.async {
@@ -598,8 +393,8 @@ private extension ChatFirestore {
         }
     }
 
-    func loadUsersForConversations(conversations: [ConversationFirestore], completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
-        self.userManager.users(userIds: conversations.flatMap { $0.memberIds }) { [weak self] result in
+    func loadUsersForConversations(conversations: [ConversationFirestore], userManager: UserManager, completion: @escaping (Result<[ConversationFirestore], ChatError>) -> Void) {
+        userManager.users(userIds: conversations.flatMap { $0.memberIds }) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -613,74 +408,6 @@ private extension ChatFirestore {
                     completion(.failure(error))
                 }
             }
-        }
-    }
-}
-
-// MARK: - ChatNetworkingWithTypingUsers
-extension ChatFirestore: ChatNetworkingWithTypingUsers {
-    public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let document = self.database
-                .collection(self.constants.conversations.path)
-                .document(conversation)
-                .collection(self.constants.typingUsers.path)
-                .document(userId)
-
-            isTyping ? self.setTypingUser(typingUserReference: document) : self.removeTypingUser(typingUserReference: document)
-        }
-    }
-
-    private func setTypingUser(typingUserReference: DocumentReference) {
-        typingUserReference.setData([:]) { error in
-            if let err = error {
-                print("Error updating user typing: \(err)")
-            } else {
-                print("Typing user successfully set")
-            }
-        }
-    }
-
-    private func removeTypingUser(typingUserReference: DocumentReference) {
-        typingUserReference.delete { error in
-            if let err = error {
-                print("Error deleting user typing: \(err)")
-            } else {
-                print("Typing user successfully removed")
-            }
-        }
-    }
-
-    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserFirestore], ChatError>) -> Void) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let query = self.database
-                .collection(self.constants.conversations.path)
-                .document(conversation)
-                .collection(self.constants.typingUsers.path)
-
-            let listener = Listener.typingUsers(conversationId: conversation)
-            // to infer type from generic
-            let listenToCompletion: (Result<[EntityIdentifier], ChatError>) -> Void = { result in
-
-                switch result {
-                case .success(let userIds):
-                    // Set members from previously downloaded users
-                    self.userManager.users(userIds: userIds, completion: completion)
-                case .failure(let error):
-                    print(error)
-                    completion(.failure(error))
-                }
-            }
-
-            self.listenToCollection(query: query, listener: listener, completion: listenToCompletion)
         }
     }
 }
