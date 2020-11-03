@@ -187,7 +187,10 @@ public extension ChatFirestore {
 
                     transaction.setData(data, forDocument: referenceMessage)
                     data[Constants.identifierAttributeName] = referenceMessage.documentID
-                    transaction.updateData([self.constants.conversations.lastMessageAttributeName: data], forDocument: referenceConversation)
+                    
+                    if self.config.updateLastMessage {
+                        transaction.updateData([self.constants.conversations.lastMessageAttributeName: data], forDocument: referenceConversation)
+                    }
 
                     return nil
                 }, completion: { (_, error) in
