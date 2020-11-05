@@ -134,6 +134,10 @@
 		C12CB6CE253311E100B74AE8 /* ConversationsListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */; };
 		C12CB6D3253311F200B74AE8 /* MessagesListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */; };
 		C12CB6DA253312AC00B74AE8 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6B82533117300B74AE8 /* ConversationsListViewController.swift */; };
+		C14810C6255060EA00E5BD02 /* ChatFirestore+Typing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */; };
+		C14810CB2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */; };
+		C14810D02551CABF00E5BD02 /* ChatFirestore+SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */; };
+		C14810D52551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */; };
 		C1577E8A254AB03F00E0BE2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */; };
 		C17F74D72459CE5F0008A8BF /* ChatFirestoreUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */; };
 		C18389A42452EBF40008195B /* MediaUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389A32452EBF40008195B /* MediaUploading.swift */; };
@@ -402,6 +406,10 @@
 		C12CB6C02533119C00B74AE8 /* MessagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewController.swift; sourceTree = "<group>"; };
 		C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListDelegates.swift; sourceTree = "<group>"; };
 		C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListDelegates.swift; sourceTree = "<group>"; };
+		C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+Typing.swift"; sourceTree = "<group>"; };
+		C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+UpdateSeenMessage.swift"; sourceTree = "<group>"; };
+		C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+SendMessage.swift"; sourceTree = "<group>"; };
+		C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+DeleteMessage.swift"; sourceTree = "<group>"; };
 		C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreUserManager.swift; sourceTree = "<group>"; };
 		C18389A32452EBF40008195B /* MediaUploading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploading.swift; sourceTree = "<group>"; };
@@ -1091,6 +1099,10 @@
 				C124E4AC2451DEC8006119CD /* Protocols */,
 				846905412433328200807AFF /* ChatFirestoreConfig.swift */,
 				C11E9DF723EDCCDA005E10A1 /* ChatFirestore.swift */,
+				C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */,
+				C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */,
+				C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */,
+				C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */,
 				84D7388A243C98B700DFC62F /* ChatFirestoreDefaultUserManager.swift */,
 				C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */,
 				C11E9DF923EDCCDA005E10A1 /* ChatFirestoreMediaUploader.swift */,
@@ -1670,8 +1682,12 @@
 				84D7388F243D175E00DFC62F /* ChatFirestoreDefaultUserManager.swift in Sources */,
 				C11E9E0523EDCCDA005E10A1 /* ChatFirestore.swift in Sources */,
 				C1CFB7F624D93E650023CB10 /* DocumentSnapshot+Decoding.swift in Sources */,
+				C14810C6255060EA00E5BD02 /* ChatFirestore+Typing.swift in Sources */,
 				C11E9E0423EDCCDA005E10A1 /* ChatFirestoreConstants.swift in Sources */,
+				C14810CB2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift in Sources */,
 				04957CC623F306A900AD595B /* Pagination.swift in Sources */,
+				C14810D02551CABF00E5BD02 /* ChatFirestore+SendMessage.swift in Sources */,
+				C14810D52551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift in Sources */,
 				C1CFB7F924D93F850023CB10 /* Constants.swift in Sources */,
 				846905422433328200807AFF /* ChatFirestoreConfig.swift in Sources */,
 				C11E9E0723EDCCDA005E10A1 /* ChatFirestoreMediaUploader.swift in Sources */,

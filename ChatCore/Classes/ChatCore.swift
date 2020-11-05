@@ -502,9 +502,7 @@ extension ChatCore {
 // MARK: - ChatCoreServicingWithTypingUsers
 extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
-    Networking: ChatNetworkingWithTypingUsers,
-    Networking.TU: ChatUIConvertible,
-    Networking.TU.UIModel == Models.UIUser {
+    Networking: ChatNetworkingWithTypingUsers {
 
     open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
@@ -517,7 +515,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
         }
     }
 
-    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[UserUI], ChatError>) -> Void) -> Listener {
+    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void) -> Listener {
 
         let listener = Listener.typingUsers(conversationId: conversation)
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
@@ -529,17 +527,8 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
             self.networking.listenToTypingUsers(in: conversation) { result in
                 self.coreQueue.async {
                     self.taskHandler(result: result, completion: taskCompletion)
-                    switch result {
-                    case .success(let users):
-                        let converted = users.compactMap({ $0.uiModel })
-                        DispatchQueue.main.async {
-                            completion(.success(converted))
-                        }
-
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+                    DispatchQueue.main.async {
+                        completion(result)
                     }
                 }
             }

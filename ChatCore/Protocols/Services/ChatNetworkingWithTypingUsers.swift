@@ -11,9 +11,6 @@ import Foundation
 // swiftlint:disable type_name
 /// Defines networking with ability to listen and manage users who are typing
 public protocol ChatNetworkingWithTypingUsers {
-    // User type
-    associatedtype TU: UserRepresenting
-
     /// Manages user who is typing in conversation
     ///
     /// - Parameters:
@@ -26,6 +23,6 @@ public protocol ChatNetworkingWithTypingUsers {
     ///
     /// - Parameters:
     ///   - conversation: Conversation ID
-    ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TU], ChatError>) -> Void)
+    ///   - completion: User IDs of typing users. Called upon receiving data (or encountering an error)
+    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void)
 }

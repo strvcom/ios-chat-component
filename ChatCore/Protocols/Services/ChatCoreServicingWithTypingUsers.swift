@@ -10,9 +10,6 @@ import Foundation
 
 /// Defines networking with ability to listen and manage users who are typing
 public protocol ChatCoreServicingWithTypingUsers {
-    // User type
-    associatedtype TypingUser: UserRepresenting
-
     /// Sets current user as typing user
     ///
     /// - Parameters:
@@ -26,11 +23,6 @@ public protocol ChatCoreServicingWithTypingUsers {
     ///
     /// - Parameters:
     ///   - conversation: Conversation ID
-    ///   - completion: Called upon receiving data (or encountering an error)
-    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[TypingUser], ChatError>) -> Void) -> Listener
-}
-
-/// Default type requirement for user at `ChatCoreServicing`
-public extension ChatCoreServicing where Self: ChatCoreServicingWithTypingUsers {
-    typealias TypingUser = CoreUser
+    ///   - completion: Returns IDs of typing users. Called upon receiving data (or encountering an error)
+    func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void) -> Listener
 }
