@@ -504,7 +504,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers {
 
-    open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
+    open func setCurrentUserTyping(isTyping: Bool, in conversation: TypingStatusRepresenting) {
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
             guard let self = self else {
                 return
@@ -513,28 +513,6 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
             self.networking.setUserTyping(userId: self.currentUser.id, isTyping: isTyping, in: conversation)
         }
-    }
-
-    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void) -> Listener {
-
-        let listener = Listener.typingUsers(conversationId: conversation)
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
-            guard let self = self else {
-                return
-            }
-            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
-
-            self.networking.listenToTypingUsers(in: conversation) { result in
-                self.coreQueue.async {
-                    self.taskHandler(result: result, completion: taskCompletion)
-                    DispatchQueue.main.async {
-                        completion(result)
-                    }
-                }
-            }
-        }
-
-        return listener
     }
 }
 
