@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol TypingStatusRepresenting where Self: EntityIdentifiable {
+public protocol TypingStatusRepresenting {
     var typingUsers: [EntityIdentifier: Bool] { get set }
 }
