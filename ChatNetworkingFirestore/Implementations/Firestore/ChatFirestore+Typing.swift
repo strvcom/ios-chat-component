@@ -21,11 +21,23 @@ extension ChatFirestore: ChatNetworkingWithTypingUsers {
                 .collection(self.constants.conversations.path)
                 .document(conversation.id)
             
-            document.setData([
-                self.constants.conversations.typingUsersAttributeName: [
-                    userId: isTyping
-                ]
-            ], merge: true)
+            self.database.runTransaction({ (transaction, error) -> Any? in
+                guard
+                    let conversation = try? transaction.getDocument(document),
+                    let conversationData = conversation.data(),
+                    var typingUsers = conversationData[self.constants.conversations.typingUsersAttributeName] as? [EntityIdentifier: Bool]
+                else {
+                    return nil
+                }
+                
+                typingUsers[userId] = isTyping
+                
+                transaction.updateData([
+                    self.constants.conversations.typingUsersAttributeName: typingUsers
+                ], forDocument: conversation.reference)
+                
+                return nil
+            }, completion: { (_, _) in })
         }
     }
 }
