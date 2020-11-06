@@ -10,7 +10,7 @@ import ChatCore
 import FirebaseFirestore
 
 extension ChatFirestore: ChatNetworkingWithTypingUsers {
-    public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: TypingStatusRepresenting) {
+    public func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier) {
 
         networkingQueue.async { [weak self] in
             guard let self = self else {
@@ -19,9 +19,9 @@ extension ChatFirestore: ChatNetworkingWithTypingUsers {
             
             let document = self.database
                 .collection(self.constants.conversations.path)
-                .document(conversation.id)
+                .document(conversation)
             
-            self.database.runTransaction({ (transaction, error) -> Any? in
+            self.database.runTransaction({ (transaction, _) -> Any? in
                 guard
                     let conversation = try? transaction.getDocument(document),
                     let conversationData = conversation.data(),

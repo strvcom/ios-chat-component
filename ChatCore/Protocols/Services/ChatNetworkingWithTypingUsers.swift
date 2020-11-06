@@ -16,5 +16,5 @@ public protocol ChatNetworkingWithTypingUsers {
     ///   - userId: User id
     ///   - conversation: Conversation id
     ///   - isTyping: flag if current user is / isn't typing
-    func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: TypingStatusRepresenting)
+    func setUserTyping(userId: EntityIdentifier, isTyping: Bool, in conversation: EntityIdentifier)
 }

@@ -504,7 +504,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
     Networking: ChatNetworkingWithTypingUsers {
 
-    open func setCurrentUserTyping(isTyping: Bool, in conversation: TypingStatusRepresenting) {
+    open func setCurrentUserTyping(isTyping: Bool, in conversation: EntityIdentifier) {
         taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] _ in
             guard let self = self else {
                 return
