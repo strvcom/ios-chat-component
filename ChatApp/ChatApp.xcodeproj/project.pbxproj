@@ -43,6 +43,7 @@
 		04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */; };
 		04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
+		04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
@@ -303,6 +304,7 @@
 		04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Regular.ttf"; sourceTree = "<group>"; };
 		04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Bold.ttf"; sourceTree = "<group>"; };
 		04C0ECE624201F08008A5ADB /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
+		04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingStatusRepresenting.swift; sourceTree = "<group>"; };
 		04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCellViewModel.swift; sourceTree = "<group>"; };
 		04E56CFE242003E7001F54A9 /* UIView+Fill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Fill.swift"; sourceTree = "<group>"; };
 		04E56D012420045B001F54A9 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
@@ -1069,6 +1071,7 @@
 				C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
 				C11E9DFF23EDCCDA005E10A1 /* SeenMessageRepresenting.swift */,
+				04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1663,6 +1666,7 @@
 				843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */,
 				84BE30D0242B46B900DA8664 /* MessageStateReflecting.swift in Sources */,
 				049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */,
+				04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */,
 				843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */,
 				843D81542406E90F00C62656 /* TaskManager.swift in Sources */,
 				8478F5C024239725002BC890 /* CachedMessageState.swift in Sources */,

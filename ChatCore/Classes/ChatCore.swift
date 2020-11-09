@@ -514,28 +514,6 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
             self.networking.setUserTyping(userId: self.currentUser.id, isTyping: isTyping, in: conversation)
         }
     }
-
-    open func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void) -> Listener {
-
-        let listener = Listener.typingUsers(conversationId: conversation)
-        taskManager.run(attributes: [.backgroundTask, .backgroundThread(coreQueue), .afterInit]) { [weak self] taskCompletion in
-            guard let self = self else {
-                return
-            }
-            precondition(self.$currentUser, "Current user is nil when calling \(#function)")
-
-            self.networking.listenToTypingUsers(in: conversation) { result in
-                self.coreQueue.async {
-                    self.taskHandler(result: result, completion: taskCompletion)
-                    DispatchQueue.main.async {
-                        completion(result)
-                    }
-                }
-            }
-        }
-
-        return listener
-    }
 }
 
 // MARK: - Temporary messages

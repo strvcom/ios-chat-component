@@ -16,50 +16,28 @@ extension ChatFirestore: ChatNetworkingWithTypingUsers {
             guard let self = self else {
                 return
             }
+            
             let document = self.database
                 .collection(self.constants.conversations.path)
                 .document(conversation)
-                .collection(self.constants.typingUsers.path)
-                .document(userId)
-
-            isTyping ? self.setTypingUser(typingUserReference: document) : self.removeTypingUser(typingUserReference: document)
-        }
-    }
-
-    private func setTypingUser(typingUserReference: DocumentReference) {
-        typingUserReference.setData([:]) { error in
-            if let err = error {
-                print("Error updating user typing: \(err)")
-            } else {
-                print("Typing user successfully set")
-            }
-        }
-    }
-
-    private func removeTypingUser(typingUserReference: DocumentReference) {
-        typingUserReference.delete { error in
-            if let err = error {
-                print("Error deleting user typing: \(err)")
-            } else {
-                print("Typing user successfully removed")
-            }
-        }
-    }
-
-    public func listenToTypingUsers(in conversation: EntityIdentifier, completion: @escaping (Result<[EntityIdentifier], ChatError>) -> Void) {
-
-        networkingQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let query = self.database
-                .collection(self.constants.conversations.path)
-                .document(conversation)
-                .collection(self.constants.typingUsers.path)
-
-            let listener = Listener.typingUsers(conversationId: conversation)
-
-            self.listenToCollection(query: query, listener: listener, completion: completion)
+            
+            self.database.runTransaction({ (transaction, _) -> Any? in
+                guard
+                    let conversation = try? transaction.getDocument(document),
+                    let conversationData = conversation.data(),
+                    var typingUsers = conversationData[self.constants.conversations.typingUsersAttributeName] as? [EntityIdentifier: Bool]
+                else {
+                    return nil
+                }
+                
+                typingUsers[userId] = isTyping
+                
+                transaction.updateData([
+                    self.constants.conversations.typingUsersAttributeName: typingUsers
+                ], forDocument: conversation.reference)
+                
+                return nil
+            }, completion: { (_, _) in })
         }
     }
 }
