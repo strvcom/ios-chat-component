@@ -17,6 +17,7 @@ __Sections__
 
  #### Changed
  - Move `typingUsers` variable to conversation object instead of using a subcollection. Client app can now just listen to conversation and read `typingUsers` from there.
+ - Make providing a `UserManager` optional
 
  ## [0.0.9]
 
