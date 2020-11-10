@@ -38,7 +38,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "ChatNetworkingFirestore/*.swift", "ChatNetworkingFirestore/**/*.swift"
 
-  spec.dependency "STRVChatCore", "~> 0.0.4"
+  spec.dependency "STRVChatCore", "~> 0.0.5"
   spec.dependency "FirebaseCore", "~> 6.10.3"
   spec.dependency "FirebaseFirestore", "~> 1.18.0"
   spec.dependency "FirebaseStorage", "~> 3.9.0"
