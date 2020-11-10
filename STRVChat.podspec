@@ -2,36 +2,36 @@ Pod::Spec.new do |spec|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.name         = "STRVChat"
-  spec.module_name  = "Chat"
-  spec.version      = "0.0.7"
-  spec.summary      = "Universal Modular Chat Component from STRV"
+  spec.name         = 'STRVChat'
+  spec.module_name  = 'Chat'
+  spec.version      = '0.0.8'
+  spec.summary      = 'Universal Modular Chat Component from STRV'
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
   					Core is an universal business logic that you can use with any UI and networking
   					that convorms to respective protocols.
                    DESC
-  spec.homepage     = "https://github.com/strvcom/ios-chat-component"
+  spec.homepage     = 'https://github.com/strvcom/ios-chat-component'
   
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.license      = { :type => "MIT", :file => "LICENSE" }
+  spec.license      = { :type => 'MIT', :file => 'LICENSE' }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.authors      = { "Jan Schwarz" => "jan.schwarz@strv.com", "Tomáš Čejka" => "tomas.cejka@strv.com", "Daniel Pecher" => "daniel.pecher@strv.com", "Mireya Orta" => "mireya.orta@strv.com" }
+  spec.authors      = { 'Jan Schwarz' => 'jan.schwarz@strv.com', 'Tomáš Čejka' => 'tomas.cejka@strv.com', 'Daniel Pecher' => 'daniel.pecher@strv.com', 'Mireya Orta' => 'mireya.orta@strv.com' }
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.platform     = :ios, "12.0"
+  spec.platform     = :ios, '12.0'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.source = { 
-    :git => "https://github.com/strvcom/ios-chat-component.git",
-    :tag => "Chat-" + spec.version.to_s
+    :git => 'https://github.com/strvcom/ios-chat-component.git',
+    :tag => 'Chat-' + spec.version.to_s
   }
 
   spec.static_framework = true
@@ -43,28 +43,28 @@ Pod::Spec.new do |spec|
   # ――― Core ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'Core' do |subspec|
-	  subspec.dependency "STRVChatCore", "~> 0.0.9"
+	  subspec.dependency 'STRVChatCore', '~> 0.0.9'
   end
 
   # ――― MessageKitUI ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'UI' do |subspec|
-	  subspec.dependency "STRVChat/Core"
-	  subspec.dependency "STRVChatUI", "~> 0.0.6"
+	  subspec.dependency 'STRVChat/Core'
+	  subspec.dependency 'STRVChatUI', '~> 0.0.7'
   end
 
   # ――― NetworkingFirestore ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'NetworkingFirestore' do |subspec|
-	  subspec.dependency "STRVChat/Core"
-	  subspec.dependency "STRVChatNetworkingFirestore", "~> 0.0.11"
+	  subspec.dependency 'STRVChat/Core'
+	  subspec.dependency 'STRVChatNetworkingFirestore', '~> 0.0.12'
   end
 
   spec.subspec 'ChatMessageKitFirestore' do |subspec|
-    subspec.source_files  = "Chat/*.swift", "Chat/**/*.swift"
+    subspec.source_files  = 'Chat/*.swift', 'Chat/**/*.swift'
 
-    subspec.dependency "STRVChat/UI"
-    subspec.dependency "STRVChat/NetworkingFirestore"
+    subspec.dependency 'STRVChat/UI'
+    subspec.dependency 'STRVChat/NetworkingFirestore'
   end
 
 end
