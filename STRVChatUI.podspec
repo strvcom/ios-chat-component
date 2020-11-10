@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "STRVChatUI"
   spec.module_name  = "ChatUI"
-  spec.version      = "0.0.5"
+  spec.version      = "0.0.6"
   spec.summary      = "MessageKit UI framework of Universal Modular Chat Component from STRV"
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
@@ -29,7 +29,10 @@ Pod::Spec.new do |spec|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.source = { :git => "https://github.com/strvcom/ios-chat-component.git", :tag => spec.version }
+  spec.source = { 
+    :git => "https://github.com/strvcom/ios-chat-component.git",
+    :tag => "UI-" + spec.version
+  }
 
   spec.cocoapods_version = '>= 1.4.0'
   spec.swift_version = '5.3'
