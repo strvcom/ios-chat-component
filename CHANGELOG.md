@@ -11,6 +11,14 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.10]
+
+ ### ChatNetworkingFirestore
+
+ #### Changed
+ - Move `typingUsers` variable to conversation object instead of using a subcollection. Client app can now just listen to conversation and read `typingUsers` from there.
+ - Make providing a `UserManager` optional
+
  ## [0.0.9]
 
  ### ChatNetworkingFirestore
