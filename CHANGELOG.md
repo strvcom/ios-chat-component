@@ -11,6 +11,9 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.11]
+ - Maintenance build to update core version
+
  ## [0.0.10]
 
  ### ChatNetworkingFirestore
