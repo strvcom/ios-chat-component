@@ -9,12 +9,13 @@
 import Foundation
 import ChatCore
 
-struct Conversation: ConversationRepresenting {
+struct Conversation: ConversationRepresenting, TypingStatusRepresenting {
     let id: EntityIdentifier
     let lastMessage: Message?
     let memberIds: [EntityIdentifier]
     var members: [User] = []
     let seen: [String: SeenItem]
+    var typingUsers: [EntityIdentifier: Bool]
 }
 
 extension Conversation: ChatModel {}
@@ -25,5 +26,6 @@ extension Conversation: Decodable {
         case lastMessage
         case memberIds = "members"
         case seen
+        case typingUsers
     }
 }

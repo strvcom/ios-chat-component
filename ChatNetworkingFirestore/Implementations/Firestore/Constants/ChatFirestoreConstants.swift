@@ -12,7 +12,6 @@ public struct ChatFirestoreConstants {
     public var conversations = Conversations()
     public var messages = Messages()
     public var users = Users()
-    public var typingUsers = TypingUsers()
     
     public init() {}
 }
@@ -32,6 +31,7 @@ public extension ChatFirestoreConstants {
         public var seenAttribute = SeenMessages()
         public var lastMessageAttributeName = "lastMessage"
         public var membersAttributeName = "members"
+        public var typingUsersAttributeName = "typingUsers"
     }
     
     struct SeenMessages {
@@ -43,9 +43,5 @@ public extension ChatFirestoreConstants {
     
     struct Users {
         public var path = "users"
-    }
-    
-    struct TypingUsers {
-        public var path = "typingUsers"
     }
 }

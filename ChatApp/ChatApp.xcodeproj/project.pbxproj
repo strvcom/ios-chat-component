@@ -43,6 +43,7 @@
 		04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */; };
 		04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
+		04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
 		04E56D0324200484001F54A9 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56D012420045B001F54A9 /* Array+Subscript.swift */; };
@@ -134,6 +135,10 @@
 		C12CB6CE253311E100B74AE8 /* ConversationsListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */; };
 		C12CB6D3253311F200B74AE8 /* MessagesListDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */; };
 		C12CB6DA253312AC00B74AE8 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CB6B82533117300B74AE8 /* ConversationsListViewController.swift */; };
+		C14810C6255060EA00E5BD02 /* ChatFirestore+Typing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */; };
+		C14810CB2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */; };
+		C14810D02551CABF00E5BD02 /* ChatFirestore+SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */; };
+		C14810D52551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */; };
 		C1577E8A254AB03F00E0BE2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */; };
 		C17F74D72459CE5F0008A8BF /* ChatFirestoreUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */; };
 		C18389A42452EBF40008195B /* MediaUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18389A32452EBF40008195B /* MediaUploading.swift */; };
@@ -299,6 +304,7 @@
 		04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Regular.ttf"; sourceTree = "<group>"; };
 		04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Bold.ttf"; sourceTree = "<group>"; };
 		04C0ECE624201F08008A5ADB /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
+		04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingStatusRepresenting.swift; sourceTree = "<group>"; };
 		04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCellViewModel.swift; sourceTree = "<group>"; };
 		04E56CFE242003E7001F54A9 /* UIView+Fill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Fill.swift"; sourceTree = "<group>"; };
 		04E56D012420045B001F54A9 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
@@ -402,6 +408,10 @@
 		C12CB6C02533119C00B74AE8 /* MessagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListViewController.swift; sourceTree = "<group>"; };
 		C12CB6CD253311E100B74AE8 /* ConversationsListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListDelegates.swift; sourceTree = "<group>"; };
 		C12CB6D2253311F200B74AE8 /* MessagesListDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListDelegates.swift; sourceTree = "<group>"; };
+		C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+Typing.swift"; sourceTree = "<group>"; };
+		C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+UpdateSeenMessage.swift"; sourceTree = "<group>"; };
+		C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+SendMessage.swift"; sourceTree = "<group>"; };
+		C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatFirestore+DeleteMessage.swift"; sourceTree = "<group>"; };
 		C1577E89254AB03F00E0BE2E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreUserManager.swift; sourceTree = "<group>"; };
 		C18389A32452EBF40008195B /* MediaUploading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploading.swift; sourceTree = "<group>"; };
@@ -1061,6 +1071,7 @@
 				C11E9E2C23EDCD1E005E10A1 /* MessageRepresenting.swift */,
 				C11E9E3323EDCD1E005E10A1 /* ConversationRepresenting.swift */,
 				C11E9DFF23EDCCDA005E10A1 /* SeenMessageRepresenting.swift */,
+				04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1091,6 +1102,10 @@
 				C124E4AC2451DEC8006119CD /* Protocols */,
 				846905412433328200807AFF /* ChatFirestoreConfig.swift */,
 				C11E9DF723EDCCDA005E10A1 /* ChatFirestore.swift */,
+				C14810C5255060EA00E5BD02 /* ChatFirestore+Typing.swift */,
+				C14810CA2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift */,
+				C14810CF2551CABF00E5BD02 /* ChatFirestore+SendMessage.swift */,
+				C14810D42551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift */,
 				84D7388A243C98B700DFC62F /* ChatFirestoreDefaultUserManager.swift */,
 				C17F74D62459CE5F0008A8BF /* ChatFirestoreUserManager.swift */,
 				C11E9DF923EDCCDA005E10A1 /* ChatFirestoreMediaUploader.swift */,
@@ -1651,6 +1666,7 @@
 				843D814F2406D81300C62656 /* IdentifiableClosure.swift in Sources */,
 				84BE30D0242B46B900DA8664 /* MessageStateReflecting.swift in Sources */,
 				049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */,
+				04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */,
 				843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */,
 				843D81542406E90F00C62656 /* TaskManager.swift in Sources */,
 				8478F5C024239725002BC890 /* CachedMessageState.swift in Sources */,
@@ -1670,8 +1686,12 @@
 				84D7388F243D175E00DFC62F /* ChatFirestoreDefaultUserManager.swift in Sources */,
 				C11E9E0523EDCCDA005E10A1 /* ChatFirestore.swift in Sources */,
 				C1CFB7F624D93E650023CB10 /* DocumentSnapshot+Decoding.swift in Sources */,
+				C14810C6255060EA00E5BD02 /* ChatFirestore+Typing.swift in Sources */,
 				C11E9E0423EDCCDA005E10A1 /* ChatFirestoreConstants.swift in Sources */,
+				C14810CB2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift in Sources */,
 				04957CC623F306A900AD595B /* Pagination.swift in Sources */,
+				C14810D02551CABF00E5BD02 /* ChatFirestore+SendMessage.swift in Sources */,
+				C14810D52551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift in Sources */,
 				C1CFB7F924D93F850023CB10 /* Constants.swift in Sources */,
 				846905422433328200807AFF /* ChatFirestoreConfig.swift in Sources */,
 				C11E9E0723EDCCDA005E10A1 /* ChatFirestoreMediaUploader.swift in Sources */,
