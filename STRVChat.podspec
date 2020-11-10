@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "STRVChat"
   spec.module_name  = "Chat"
-  spec.version      = "0.0.6"
+  spec.version      = "0.0.7"
   spec.summary      = "Universal Modular Chat Component from STRV"
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
@@ -29,7 +29,10 @@ Pod::Spec.new do |spec|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.source = { :git => "https://github.com/strvcom/ios-chat-component.git", :tag => spec.version }
+  spec.source = { 
+    :git => "https://github.com/strvcom/ios-chat-component.git",
+    :tag => "Chat-" + spec.version
+  }
 
   spec.static_framework = true
     
@@ -40,21 +43,21 @@ Pod::Spec.new do |spec|
   # ――― Core ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'Core' do |subspec|
-	  subspec.dependency "STRVChatCore", "~> 0.0.4"
+	  subspec.dependency "STRVChatCore", "~> 0.0.5"
   end
 
   # ――― MessageKitUI ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'UI' do |subspec|
 	  subspec.dependency "STRVChat/Core"
-	  subspec.dependency "STRVChatUI", "~> 0.0.5"
+	  subspec.dependency "STRVChatUI", "~> 0.0.6"
   end
 
   # ――― NetworkingFirestore ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'NetworkingFirestore' do |subspec|
 	  subspec.dependency "STRVChat/Core"
-	  subspec.dependency "STRVChatNetworkingFirestore", "~> 0.0.4"
+	  subspec.dependency "STRVChatNetworkingFirestore", "~> 0.0.11"
   end
 
   spec.subspec 'ChatMessageKitFirestore' do |subspec|

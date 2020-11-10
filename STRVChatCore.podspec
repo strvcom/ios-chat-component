@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "STRVChatCore"
   spec.module_name  = "ChatCore"
-  spec.version      = "0.0.4"
+  spec.version      = "0.0.5"
   spec.summary      = "Core framework of Universal Modular Chat Component from STRV"
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
@@ -29,7 +29,10 @@ Pod::Spec.new do |spec|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  spec.source = { :git => "https://github.com/strvcom/ios-chat-component.git", :tag => spec.version }
+  spec.source = { 
+    :git => "https://github.com/strvcom/ios-chat-component.git",
+    :tag => "Core-" + spec.version
+  }
 
   spec.cocoapods_version = '>= 1.4.0'
   spec.swift_version = '5.3'
