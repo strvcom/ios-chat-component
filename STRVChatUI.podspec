@@ -31,7 +31,7 @@ Pod::Spec.new do |spec|
 
   spec.source = { 
     :git => "https://github.com/strvcom/ios-chat-component.git",
-    :tag => "UI-" + spec.version
+    :tag => "UI-" + spec.version.to_s
   }
 
   spec.cocoapods_version = '>= 1.4.0'
@@ -39,7 +39,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "ChatUI/*.swift", "ChatUI/**/*.swift"
 
-  spec.dependency "STRVChatCore", "~> 0.0.4"
+  spec.dependency "STRVChatCore", "~> 0.0.9"
   spec.dependency "MessageKit", "~> 3.4.2"
 
 end

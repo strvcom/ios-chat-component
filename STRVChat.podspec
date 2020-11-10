@@ -31,7 +31,7 @@ Pod::Spec.new do |spec|
 
   spec.source = { 
     :git => "https://github.com/strvcom/ios-chat-component.git",
-    :tag => "Chat-" + spec.version
+    :tag => "Chat-" + spec.version.to_s
   }
 
   spec.static_framework = true
@@ -43,7 +43,7 @@ Pod::Spec.new do |spec|
   # ――― Core ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'Core' do |subspec|
-	  subspec.dependency "STRVChatCore", "~> 0.0.5"
+	  subspec.dependency "STRVChatCore", "~> 0.0.9"
   end
 
   # ――― MessageKitUI ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

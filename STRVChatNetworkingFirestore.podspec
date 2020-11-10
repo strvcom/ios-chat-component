@@ -31,7 +31,7 @@ Pod::Spec.new do |spec|
 
   spec.source = { 
     :git => "https://github.com/strvcom/ios-chat-component.git",
-    :tag => "NetworkingFirestore-" + spec.version
+    :tag => "NetworkingFirestore-" + spec.version.to_s
   }
 
   spec.static_framework = true
@@ -41,7 +41,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "ChatNetworkingFirestore/*.swift", "ChatNetworkingFirestore/**/*.swift"
 
-  spec.dependency "STRVChatCore", "~> 0.0.5"
+  spec.dependency "STRVChatCore", "~> 0.0.9"
   spec.dependency "FirebaseCore", "~> 6.10.3"
   spec.dependency "FirebaseFirestore", "~> 1.18.0"
   spec.dependency "FirebaseStorage", "~> 3.9.0"
