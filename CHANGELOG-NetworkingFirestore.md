@@ -11,6 +11,11 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.12]
+
+ #### Fixed
+ - Fixed podspec syntax
+
  ## [0.0.11]
 
  #### Changed
