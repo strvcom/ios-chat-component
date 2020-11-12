@@ -43,7 +43,7 @@ Pod::Spec.new do |spec|
   # ――― Core ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.subspec 'Core' do |subspec|
-	  subspec.dependency 'STRVChatCore', '~> 0.0.9'
+	  subspec.dependency 'STRVChatCore', '~> 0.0.10'
   end
 
   # ――― MessageKitUI ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

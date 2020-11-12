@@ -39,7 +39,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = 'ChatUI/*.swift', 'ChatUI/**/*.swift'
 
-  spec.dependency 'STRVChatCore', '~> 0.0.9'
+  spec.dependency 'STRVChatCore', '~> 0.0.10'
   spec.dependency 'MessageKit', '~> 3.4.2'
 
 end
