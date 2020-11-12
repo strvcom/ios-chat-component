@@ -10,7 +10,7 @@ import ChatCore
 import FirebaseFirestore
 
 public extension ChatFirestore {
-    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier, with data: [String: Any]?) {
 
         networkingQueue.async { [weak self] in
             guard let self = self else {
@@ -43,9 +43,9 @@ public extension ChatFirestore {
                 json[self.currentUserId] = [
                     self.constants.conversations.seenAttribute.messageIdAttributeName: message,
                     self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
-                ]
-
-                transaction.updateData([self.constants.conversations.seenAttribute.name: json], forDocument: reference)
+                ].merging(data ?? [:], uniquingKeysWith: { _, new in new })
+                
+                transaction.setData([self.constants.conversations.seenAttribute.name: json], forDocument: reference, merge: true)
 
                 return nil
             }, completion: { (_, error) in

@@ -55,7 +55,8 @@ public protocol ChatNetworkServicing {
     /// - Parameters:
     ///   - message: Identifier of a message to be set as last seen
     ///   - conversation: Identifier of a target conversation
-    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier)
+    ///   - data: Any additional data to add to user's seen object
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier, with data: [String: Any]?)
 
     /// Creates a listener to single conversation.
     ///
