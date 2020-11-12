@@ -1,4 +1,3 @@
-# Uncomment the next line to define a global platform for your project
 platform :ios, '12.0'
 
 # Comment the next line if you don't want to use dynamic frameworks
@@ -6,23 +5,24 @@ use_frameworks!
 inhibit_all_warnings!
 
 def networking_pods
-  pod 'FirebaseCore'
-  pod 'FirebaseFirestore'
-  pod 'FirebaseStorage'
-  pod 'Firebase/Auth'
+  pod 'FirebaseCore', '= 6.10.3'
+  pod 'FirebaseFirestore', '= 1.18.0'
+  pod 'FirebaseStorage', '= 3.9.0'
+  pod 'FirebaseAuth', '= 6.9.2'
   pod 'FirebaseUI/Auth'
   pod 'FirebaseUI/Google'
   pod 'FirebaseUI/Email'
 end
 
 def ui_pods
-  pod 'MessageKit'
+  pod 'MessageKit', '= 3.4.2'
 end
 
 target 'ChatApp' do
   networking_pods
   ui_pods
-  pod 'SwiftLint'
+
+  pod 'SwiftLint', '~> 0.40'
 end
 
 target 'Chat' do
