@@ -277,10 +277,6 @@ extension ChatCore {
             self.networking.updateSeenMessage(message, in: conversation, with: data)
         }
     }
-    
-    open func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
-        updateSeenMessage(message, in: conversation, with: nil)
-    }
 }
 
 // MARK: - Listening to messages
