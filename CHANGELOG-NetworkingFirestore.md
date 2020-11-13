@@ -11,6 +11,11 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.14]
+
+ #### Changed
+ - When updating seen messages, update only current user's data instead of updating the whole `seen` map.
+
  ## [0.0.13]
 
  #### Changed
