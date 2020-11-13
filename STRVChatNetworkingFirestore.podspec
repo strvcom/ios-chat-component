@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = 'STRVChatNetworkingFirestore'
   spec.module_name  = 'ChatNetworkingFirestore'
-  spec.version      = '0.0.12'
+  spec.version      = '0.0.13'
   spec.summary      = 'Universal Modular Chat Component from STRV'
   spec.description  = <<-DESC
   					Universal Modular Chat Component from STRV. 
