@@ -107,10 +107,11 @@ public protocol ChatCoreServicing {
     /// - Parameters:
     ///   - message: Identifier of a message to be set as last seen
     ///   - conversation: Identifier of a target conversation
-    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier)
+    ///   - data: Any additional data to add to user's seen object
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier, with data: [String: Any]?)
 }
 
-// MARK: Default page size
+// MARK: Default implementations
 public extension ChatCoreServicing {
     func listenToMessages(conversation id: EntityIdentifier, completion: @escaping (Result<DataPayload<[CoreMessage]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToMessages(conversation: id, pageSize: Constants.defaultPageSize, completion: completion)
@@ -118,5 +119,9 @@ public extension ChatCoreServicing {
     
     func listenToConversations(completion: @escaping (Result<DataPayload<[CoreConversation]>, ChatError>) -> Void) -> ListenerIdentifier {
         listenToConversations(pageSize: Constants.defaultPageSize, completion: completion)
+    }
+    
+    func updateSeenMessage(_ message: EntityIdentifier, in conversation: EntityIdentifier) {
+        updateSeenMessage(message, in: conversation, with: nil)
     }
 }
