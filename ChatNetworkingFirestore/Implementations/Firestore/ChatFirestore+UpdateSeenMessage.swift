@@ -31,10 +31,6 @@ public extension ChatFirestore {
                     return nil
                 }
 
-                guard let seenItems = currentConversation?.seen else {
-                    return nil
-                }
-
                 let newSeenData = [
                     self.constants.conversations.seenAttribute.messageIdAttributeName: message,
                     self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
