@@ -21,16 +21,7 @@ public extension ChatFirestore {
                 .collection(self.constants.conversations.path)
                 .document(conversation)
 
-            self.database.runTransaction({ (transaction, errorPointer) -> Any? in
-                var currentConversation: ConversationFirestore?
-                do {
-                    let conversationSnapshot = try transaction.getDocument(reference)
-                    currentConversation = try conversationSnapshot.decode(to: ConversationFirestore.self, with: self.decoder)
-                } catch let fetchError as NSError {
-                    errorPointer?.pointee = fetchError
-                    return nil
-                }
-
+            self.database.runTransaction({ (transaction, _) -> Any? in
                 let newSeenData = [
                     self.constants.conversations.seenAttribute.messageIdAttributeName: message,
                     self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
