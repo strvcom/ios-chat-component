@@ -35,17 +35,16 @@ public extension ChatFirestore {
                     return nil
                 }
 
-                var json: [String: Any] = seenItems.mapValues({
-                    [self.constants.conversations.seenAttribute.messageIdAttributeName: $0.messageId,
-                     self.constants.conversations.seenAttribute.timestampAttributeName: $0.seenAt]
-                })
-                
-                json[self.currentUserId] = [
+                let newSeenData = [
                     self.constants.conversations.seenAttribute.messageIdAttributeName: message,
                     self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
                 ].merging(data ?? [:], uniquingKeysWith: { _, new in new })
-                
-                transaction.setData([self.constants.conversations.seenAttribute.name: json], forDocument: reference, merge: true)
+
+                transaction.setData([
+                    self.constants.conversations.seenAttribute.name: [
+                        self.currentUserId: newSeenData
+                    ]
+                ], forDocument: reference, merge: true)
 
                 return nil
             }, completion: { (_, error) in
