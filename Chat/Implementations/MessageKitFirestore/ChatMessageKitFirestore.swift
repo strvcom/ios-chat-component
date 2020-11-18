@@ -19,9 +19,22 @@ public class ChatMessageKitFirestore<Models: ChatMessageKitFirestoreModeling>: D
     public typealias Interface = ChatInterfaceMessageKit<Models>
 
     let core: Core
+    let networking: Networking
     let uiConfig: UIConfiguration
     private(set) var interfaces: [ObjectIdentifier: Interface] = [:]
-      
+    
+    // Logger
+    public var logLevel: ChatLogLevel = .critical {
+        didSet {
+            core.logLevel = logLevel
+            networking.logLevel = logLevel
+            
+            for (_, interface) in interfaces {
+                interface.uiService.logLevel = logLevel
+            }
+        }
+    }
+
     public required init(networkConfig: NetworkConfiguration, uiConfig: UIConfiguration, userManager: Networking.UserManager? = nil) {
         self.uiConfig = uiConfig
 
@@ -33,6 +46,7 @@ public class ChatMessageKitFirestore<Models: ChatMessageKitFirestoreModeling>: D
             networking = Networking(config: networkConfig)
         }
         
+        self.networking = networking
         self.core = ChatCore<Networking, UIModels>(networking: networking)
     }
 }

@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let logger = ChatLogger()
+
 // swiftlint:disable file_length
 open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: ChatCoreServicing where
     
@@ -49,6 +51,12 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
     private var closureThrottler: ListenerThrottler<MessageUI, MessagesResult>?
     private var reachabilityObserver: ReachabilityObserver?
     private var dataManagers = [Listener: DataManager]()
+    
+    // Logger
+    public var logLevel: ChatLogLevel {
+        get { logger.level }
+        set { logger.level = newValue }
+    }
 
     // dedicated thread queue
     private let coreQueue = DispatchQueue(label: "com.strv.chat.core", qos: .userInteractive)
@@ -87,7 +95,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
     public var stateChanged: ((ChatCoreState) -> Void)?
 
     deinit {
-        print("\(self) released")
+        logger.log("\(self) released", level: .debug)
     }
 
     // Here we can have also persistent storage manager
@@ -265,7 +273,7 @@ extension ChatCore {
 
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
             guard let existingConversation = self.conversationList.data.first(where: { conversation == $0.id }) else {
-                print("Conversation with id \(conversation) not found")
+                logger.log("Conversation with id \(conversation) not found", level: .info)
                 return
             }
 

@@ -12,6 +12,8 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseStorage
 
+let logger = ChatLogger()
+
 /// Implementation of `ChatNetworkServicing` for Firestore backends
 open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     public typealias NetworkModels = Models
@@ -27,6 +29,12 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
         config.constants
     }
     let decoder: JSONDecoder
+    
+    // Logger
+    public var logLevel: ChatLogLevel {
+        get { logger.level }
+        set { logger.level = newValue }
+    }
 
     // user management
     @Required private(set) var currentUserId: String
@@ -89,7 +97,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     }
     
     deinit {
-        print("\(self) released")
+        logger.log("\(self) released", level: .debug)
         listeners.forEach {
             stop(listener: $0.key)
         }
@@ -172,7 +180,6 @@ public extension ChatFirestore {
             self.listenToCollection(query: query, listener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
 
                 guard case let .success(conversations) = result else {
-                    print(result)
                     completion(result)
                     return
                 }
@@ -228,7 +235,7 @@ public extension ChatFirestore {
                     }
 
                     guard let completion = self.conversationsPagination.updateBlock else {
-                        print("Unexpected error, conversation pagination \(self.conversationsPagination) update block is nil")
+                        logger.log("Unexpected error, conversation pagination \(self.conversationsPagination) update block is nil", level: .debug)
                         return
                     }
 
@@ -317,7 +324,7 @@ extension ChatFirestore {
                         do {
                             return try $0.decode(to: T.self, with: decoder)
                         } catch {
-                            print("Couldn't decode document:", error)
+                            logger.log("Couldn't decode document: \(error)", level: .info)
                             return nil
                         }
                     }
@@ -404,7 +411,7 @@ extension ChatFirestore {
                     // Set members from previously downloaded users
                     completion(.success(self.conversationsWithMembers(conversations: conversations, users: users)))
                 case .failure(let error):
-                    print(error)
+                    logger.log("Load users for conversations failed: \(error)", level: .debug)
                     completion(.failure(error))
                 }
             }

@@ -118,6 +118,8 @@
 		C11E9E6223EDCD34005E10A1 /* ChatUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9E5223EDCD34005E10A1 /* ChatUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11E9E6323EDCD34005E10A1 /* ChatUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E9E5323EDCD34005E10A1 /* ChatUI.swift */; };
 		C11E9E6823EDCF70005E10A1 /* ChatNetworkingFirestore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C11F767625653CAC0037DF26 /* ChatLogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F767525653CAC0037DF26 /* ChatLogLevel.swift */; };
+		C11F767E25653D100037DF26 /* ChatLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F767D25653D100037DF26 /* ChatLogger.swift */; };
 		C124E4AF2451DF3A006119CD /* ChatFirestoreModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124E4AD2451DEEB006119CD /* ChatFirestoreModeling.swift */; };
 		C124E4B52452CE11006119CD /* JSONConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124E4B42452CE11006119CD /* JSONConvertible.swift */; };
 		C1253A7C243C755C00733A95 /* ChatInterfaceMessageKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7B243C755C00733A95 /* ChatInterfaceMessageKit.swift */; };
@@ -392,6 +394,8 @@
 		C11E9E5223EDCD34005E10A1 /* ChatUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatUI.h; sourceTree = "<group>"; };
 		C11E9E5323EDCD34005E10A1 /* ChatUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUI.swift; sourceTree = "<group>"; };
 		C11E9E5723EDCD34005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C11F767525653CAC0037DF26 /* ChatLogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogLevel.swift; sourceTree = "<group>"; };
+		C11F767D25653D100037DF26 /* ChatLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogger.swift; sourceTree = "<group>"; };
 		C124E4AD2451DEEB006119CD /* ChatFirestoreModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreModeling.swift; sourceTree = "<group>"; };
 		C124E4B42452CE11006119CD /* JSONConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONConvertible.swift; sourceTree = "<group>"; };
 		C124E4BB2452D036006119CD /* ImageMediaContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMediaContent.swift; sourceTree = "<group>"; };
@@ -678,6 +682,7 @@
 		843D814C2406D68900C62656 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C11F767425653C700037DF26 /* Logger */,
 				8488DE3F241EDB5E00AC5651 /* Network */,
 				843A584324168AAC007E6F45 /* Keychain */,
 				843D81522406E90200C62656 /* TaskManager.swift */,
@@ -874,6 +879,15 @@
 				C1B67D5524A4DD3200A05BC3 /* ChatUICoreServicing.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		C11F767425653C700037DF26 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				C11F767525653CAC0037DF26 /* ChatLogLevel.swift */,
+				C11F767D25653D100037DF26 /* ChatLogger.swift */,
+			);
+			path = Logger;
 			sourceTree = "<group>";
 		};
 		C124E4AC2451DEC8006119CD /* Protocols */ = {
@@ -1641,6 +1655,7 @@
 				84BE30CE2429326D00DA8664 /* ClosureThrottler.swift in Sources */,
 				8414995A241AB70600D3EEC6 /* ChatCoreState.swift in Sources */,
 				C11E9E3A23EDCD1E005E10A1 /* ChatUIConvertible.swift in Sources */,
+				C11F767E25653D100037DF26 /* ChatLogger.swift in Sources */,
 				C11E9E3E23EDCD1E005E10A1 /* ChatUIModeling.swift in Sources */,
 				C18389A42452EBF40008195B /* MediaUploading.swift in Sources */,
 				84CF214C2448995F00074C41 /* ChatCoreServicingWithTypingUsers.swift in Sources */,
@@ -1660,6 +1675,7 @@
 				842E50A92446EC5F00C4FA60 /* ChatNetworkingWithTypingUsers.swift in Sources */,
 				C11E9E4023EDCD1E005E10A1 /* ChatUIServicing.swift in Sources */,
 				C11E9E4423EDCD1E005E10A1 /* ConversationRepresenting.swift in Sources */,
+				C11F767625653CAC0037DF26 /* ChatLogLevel.swift in Sources */,
 				C11E9E3B23EDCD1E005E10A1 /* UserRepresenting.swift in Sources */,
 				C124E4B52452CE11006119CD /* JSONConvertible.swift in Sources */,
 				C11E9E4123EDCD1E005E10A1 /* ChatNetworkServicing.swift in Sources */,

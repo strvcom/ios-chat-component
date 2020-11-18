@@ -126,6 +126,7 @@ private extension AppDelegate {
         )
         let networkConfig = ChatService.NetworkConfiguration(configUrl: configUrl)
         let chat = ChatService(networkConfig: networkConfig, uiConfig: uiConfig)
+        chat.logLevel = .info
         
         return AppDependency(chat: chat, firebaseAuthentication: firebaseAuthentication)
     }
