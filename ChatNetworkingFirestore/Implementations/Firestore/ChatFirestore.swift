@@ -50,7 +50,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     // dedicated thread queue
     let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .userInteractive)
 
-    public required init(config: ChatFirestoreConfig, userManager: UserManager?, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager?, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder.chatDefault) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -90,7 +90,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     ///   - config: Networking configuration
     ///   - mediaUploader: Service for uploading photos, videos and other media
     ///   - decoder: Instance of `JSONDecoder ` if you don't want to use the default one
-    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder.chatDefault) {
         let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config, decoder: decoder)
         
         self.init(config: config, userManager: userManager, mediaUploader: mediaUploader, decoder: decoder)
