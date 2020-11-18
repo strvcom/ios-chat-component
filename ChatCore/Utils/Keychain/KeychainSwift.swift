@@ -458,7 +458,7 @@ public enum KeychainSwiftAccessOptions {
   case accessibleWhenPasscodeSetThisDeviceOnly
 
   static var defaultOption: KeychainSwiftAccessOptions {
-    return .accessibleWhenUnlocked
+    return .accessibleAfterFirstUnlock
   }
 
   var value: String {
