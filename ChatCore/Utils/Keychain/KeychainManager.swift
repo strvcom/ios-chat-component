@@ -74,7 +74,7 @@ extension KeychainManager {
             let object = try decoder.decode(T.self, from: objectData)
             return object
         } catch {
-            print(error.localizedDescription)
+            logger.log("Couldn't retrieve object from Keychain: \(error.localizedDescription)", level: .debug)
             return nil
         }
     }
@@ -86,7 +86,7 @@ extension KeychainManager {
             let data = try encoder.encode(object)
             storeData(value: data, forKey: key)
         } catch {
-            print(error.localizedDescription)
+            logger.log("Couldn't store object in Keychain: \(error.localizedDescription)", level: .debug)
         }
     }
 }

@@ -28,10 +28,6 @@ final class FirebaseAuthentication: NSObject {
     let database: Firestore
     private var loginCompletion: ((Result<User, Error>) -> Void)?
 
-    deinit {
-        print("\(self) deinit")
-    }
-
     init(database: Firestore) {
         self.database = database
     }

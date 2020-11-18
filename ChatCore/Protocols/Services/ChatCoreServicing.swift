@@ -26,6 +26,9 @@ public protocol ChatCoreServicing {
     /// Current state of chat core and its observing
     var currentState: ChatCoreState { get }
     var stateChanged: ((ChatCoreState) -> Void)? { get set }
+    
+    /// Set log level for `Core` service
+    var logLevel: ChatLogLevel { get set }
 
     init(networking: Networking)
 

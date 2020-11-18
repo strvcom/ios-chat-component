@@ -77,7 +77,7 @@ class MessagesListViewModel<Core: ChatUICoreServicing>: MessagesListViewModeling
             case .success(let conversation):
                 self?.conversation = conversation
             case .failure(let error):
-                print(error)
+                logger.log("Conversation load failed: \(error)", level: .debug)
                 self?.conversation = nil
             }
         })

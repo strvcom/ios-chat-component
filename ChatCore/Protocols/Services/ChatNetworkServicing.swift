@@ -19,6 +19,9 @@ public protocol ChatNetworkServicing {
     typealias NetworkConversation = NetworkModels.NetworkConversation
     typealias NetworkMessage = NetworkModels.NetworkMessage
     typealias NetworkMessageSpecification = NetworkModels.NetworkMessageSpecification
+    
+    /// Set log level for `Network` service
+    var logLevel: ChatLogLevel { get set }
 
     init(config: Config, userManager: UserManager?, mediaUploader: MediaUploading, decoder: JSONDecoder)
 

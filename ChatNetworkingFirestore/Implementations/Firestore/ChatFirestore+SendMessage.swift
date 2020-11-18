@@ -20,7 +20,7 @@ public extension ChatFirestore {
             self.prepareMessageData(message: message) { result in
                 guard case var .success(data) = result else {
                     if case let .failure(error) = result {
-                        print("Error while preparing message data \(error)")
+                        logger.log("Error while preparing message data \(error)", level: .info)
                         completion(.failure(error))
                     }
                     return

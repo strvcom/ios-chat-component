@@ -20,7 +20,7 @@ final class ReachabilityObserver {
     private var reachabilityChanged: VoidClosure<ReachableState>
 
     deinit {
-        print("ReachabilityObserver deinit")
+        logger.log("ReachabilityObserver deinit", level: .debug)
         stopReachabilityObserving()
     }
 
@@ -47,7 +47,7 @@ private extension ReachabilityObserver {
 
             try reachability?.startNotifier()
         } catch {
-            print("Reachability throws \(error.localizedDescription)")
+            logger.log("Reachability throws \(error.localizedDescription)", level: .debug)
         }
     }
 

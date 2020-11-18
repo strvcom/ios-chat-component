@@ -91,7 +91,7 @@ final class TaskManager {
 // MARK: - Run task implementation
 private extension TaskManager {
     func run(attributes: Set<TaskAttribute> = [], _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
-        print("Run closure with id \(identifiableClosure.id) with attributes \(attributes)")
+        logger.log("Run closure with id \(identifiableClosure.id) with attributes \(attributes)", level: .debug)
 
         // after init is special, need to be initialized before running tasks
         guard (attributes.contains(.afterInit) && initialized) || !attributes.contains(.afterInit) else {
@@ -109,7 +109,7 @@ private extension TaskManager {
 
             let dispatchQueue = queue ?? self.dispatchQueue
             dispatchQueue.async { [weak self] in
-                print("Run in background thread task id \(identifiableClosure.id)")
+                logger.log("Run in background thread task id \(identifiableClosure.id)", level: .debug)
                 self?.runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
                     guard let self = self else {
                         return .finished
@@ -119,7 +119,7 @@ private extension TaskManager {
             }
 
         } else {
-            print("Run in main thread task id \(identifiableClosure.id)")
+            logger.log("Run in main thread task id \(identifiableClosure.id)", level: .debug)
             runClosure(attributes: attributes, identifiableClosure, completionHandler: { [weak self] result in
                 guard let self = self else {
                     return .finished
@@ -135,12 +135,12 @@ private extension TaskManager {
     }
 
     func handleTaskCompletionResult(attributes: Set<TaskAttribute>, result: TaskCompletionResult, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) -> TaskCompletionState {
-        print("HandleTaskCompletionResult task id \(identifiableClosure.id) with result \(result)")
+        logger.log("HandleTaskCompletionResult task id \(identifiableClosure.id) with result \(result)", level: .debug)
 
         // retry in case of network error
         if case .failure(let error) = result, case .networking = error, let retryType = retryCalls[identifiableClosure] {
             // run again whole flow
-            print("Retry task id \(identifiableClosure.id), retry type \(retryType)")
+            logger.log("Retry task id \(identifiableClosure.id), retry type \(retryType)", level: .debug)
             if case .finite(let attempts) = retryType, attempts > 0 {
                 run(attributes: attributes, identifiableClosure)
                 retryCalls[identifiableClosure] = .finite(attempts: attempts - 1)
@@ -184,7 +184,7 @@ private extension TaskManager {
 // MARK: - Clean up management
 private extension TaskManager {
     func finishTask(attributes: Set<TaskAttribute>, _ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
-        print("Finish task id \(identifiableClosure.id) with attributes \(attributes)")
+        logger.log("Finish task id \(identifiableClosure.id) with attributes \(attributes)", level: .debug)
         if attributes.contains(.backgroundTask) {
             finishedInBackgroundTask(id: identifiableClosure.id)
         }
@@ -194,7 +194,7 @@ private extension TaskManager {
 // MARK: - After initialization handling
 private extension TaskManager {
     func applyAfterInit(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
-        print("Hook after init task id \(identifiableClosure.id)")
+        logger.log("Hook after init task id \(identifiableClosure.id)", level: .debug)
         guard initialized else {
             cachedBeforeInitCalls[identifiableClosure] = attributes
             // to alow chaining
@@ -218,7 +218,7 @@ private extension TaskManager {
 private extension TaskManager {
 
     func applyBackgroundTask(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>) {
-        print("Hook closure id \(identifiableClosure.id) to background task")
+        logger.log("Hook closure id \(identifiableClosure.id) to background task", level: .debug)
         // Check if task is set already
         if backgroundTask == .invalid {
             registerBackgroundTask()
@@ -231,7 +231,7 @@ private extension TaskManager {
     }
 
     func finishedInBackgroundTask(id: EntityIdentifier) {
-        print("Finished closure with \(id) in background task")
+        logger.log("Finished closure with \(id) in background task", level: .debug)
         if let index = backgroundCalls.firstIndex(where: { $0.id == id }) {
             backgroundCalls.remove(at: index)
         }
@@ -242,7 +242,7 @@ private extension TaskManager {
     }
 
     func registerBackgroundTask() {
-        print("UIApplication background task registered")
+        logger.log("UIApplication background task registered", level: .debug)
         backgroundTask = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString) { [weak self] in
             guard let self = self else {
                 return
@@ -260,7 +260,7 @@ private extension TaskManager {
 
     func endBackgroundTask() {
         if backgroundTask != .invalid {
-            print("UIApplication background task ended")
+            logger.log("UIApplication background task ended", level: .debug)
             // clean up
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = .invalid
@@ -324,7 +324,7 @@ private extension TaskManager {
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            print("Could not schedule app refresh: \(error)")
+            logger.log("Could not schedule app refresh: \(error)", level: .debug)
         }
     }
 

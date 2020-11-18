@@ -31,6 +31,9 @@ public protocol ChatSpecifying {
     typealias UIConfiguration = Interface.UIService.Config
     typealias NetworkConfiguration = Networking.Config
     
+    /// Set log level for `Chat`
+    var logLevel: ChatLogLevel { get set }
+
     /// Function that returns an instance of UI for a given identifier
     /// When your app supports multiple windows you need to differentiate between multiple separate instances of UI
     ///

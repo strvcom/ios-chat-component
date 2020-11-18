@@ -9,11 +9,19 @@
 import UIKit
 import ChatCore
 
+let logger = ChatLogger()
+
 public class ChatUI<Core: ChatUICoreServicing, Models: ChatUIModeling>: ChatUIServicing {
     let core: Core
     
     private lazy var coordinator = RootCoordinator(core: core)
     
+    // Logger
+    public var logLevel: ChatLogLevel {
+        get { logger.level }
+        set { logger.level = newValue }
+    }
+
     public var conversationsViewController: ConversationsListViewController {
         coordinator.conversationsViewController
     }
