@@ -42,7 +42,7 @@ extension KeychainManager {
 }
 
 // MARK: - Keychaing base methods
-extension KeychainManager {
+private extension KeychainManager {
     func storeString(value: String, forKey key: KeychainKey) {
         // store new value
         keychain.set(value, forKey: key.rawValue)

@@ -143,9 +143,9 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
                 }
 
                 if message.state == .unsent {
-                    self.send(message: message.content, to: message.conversationId, completion: { _ in })
+                    self.send(message: message.content, with: message.id, to: message.conversationId, completion: { _ in })
                 } else if message.state == .failed {
-                    self.handleTemporaryMessage(id: message.id, to: message.conversationId, with: .add(message.content, .failedToBeSend))
+                    self.handleTemporaryMessage(id: message.id, to: message.conversationId, with: .addOrUpdate(message.content, .failedToBeSend))
                 }
             }
         }
@@ -156,6 +156,13 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: EntityIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+        send(message: message, with: nil, to: conversation, completion: completion)
+    }
+    
+    func send(message: MessageSpecifyingUI, with messageId: EntityIdentifier?, to conversation: EntityIdentifier,
+              completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+        // pregenerate temporary message id to have it consistent through retrys
+        let id = messageId ?? UUID().uuidString
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread(coreQueue), .retry(.finite())]) { [weak self] taskCompletion in
             guard let self = self else {
@@ -165,8 +172,8 @@ extension ChatCore {
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
             // by default is cached message in sending state, similar as temporary message
-            let cachedMessage = self.cacheMessage(message: message, from: conversation)
-            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .add(message))
+            let cachedMessage = self.cacheMessage(id: id, message: message, from: conversation)
+            self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .addOrUpdate(message))
             let mess = Networking.NetworkMessageSpecification(uiModel: message)
             self.networking.send(message: mess, to: conversation) { result in
 
@@ -528,7 +535,7 @@ extension ChatCore: ChatCoreServicingWithTypingUsers where
 private extension ChatCore {
     // Actions over temporary messages
     enum TemporaryMessageAction {
-        case add(MessageSpecifyingUI, MessageState = .sending)
+        case addOrUpdate(MessageSpecifyingUI, MessageState = .sending)
         case updateSent(MessageSpecifyingUI, EntityIdentifier)
         case changeState(MessageState)
         case remove
@@ -559,10 +566,15 @@ private extension ChatCore {
         case .remove:
             newData = messagesPayload.data.filter { $0.id != id }
 
-        case .add(let message, let state):
-            let temporaryMessage = MessageUI(id: id, userId: self.currentUser.id, sentAt: Date(), messageSpecification: message, state: state)
+        case .addOrUpdate(let message, let state):
             newData = messagesPayload.data
-            newData.append(temporaryMessage)
+            if let index = newData.firstIndex(where: { $0.id == id }) {
+                let temporaryMessage = MessageUI(id: id, userId: newData[index].userId, sentAt: newData[index].sentAt, messageSpecification: message, state: state)
+                newData[index] = temporaryMessage
+            } else {
+                let temporaryMessage = MessageUI(id: id, userId: self.currentUser.id, sentAt: Date(), messageSpecification: message, state: state)
+                newData.append(temporaryMessage)
+            }
 
         case .updateSent(let message, let identifier):
             newData = messagesPayload.data
@@ -598,10 +610,10 @@ private extension ChatCore {
 
 // MARK: - Caching messages
 private extension ChatCore {
-    func cacheMessage<T: MessageSpecifying & Cachable>(message: T, from conversation: EntityIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
+    func cacheMessage<T: MessageSpecifying & Cachable>(id: EntityIdentifier, message: T, from conversation: EntityIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
 
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(content: message, conversationId: conversation, userId: currentUser.id, state: state)
+        let cachedMessage = CachedMessage(id: id, content: message, conversationId: conversation, userId: currentUser.id, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage

@@ -120,6 +120,7 @@
 		C11E9E6823EDCF70005E10A1 /* ChatNetworkingFirestore.h in Headers */ = {isa = PBXBuildFile; fileRef = C11E9DF823EDCCDA005E10A1 /* ChatNetworkingFirestore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C11F767625653CAC0037DF26 /* ChatLogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F767525653CAC0037DF26 /* ChatLogLevel.swift */; };
 		C11F767E25653D100037DF26 /* ChatLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F767D25653D100037DF26 /* ChatLogger.swift */; };
+		C11F7689256583F60037DF26 /* JSONDecoder+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F7688256583F60037DF26 /* JSONDecoder+Convenience.swift */; };
 		C124E4AF2451DF3A006119CD /* ChatFirestoreModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124E4AD2451DEEB006119CD /* ChatFirestoreModeling.swift */; };
 		C124E4B52452CE11006119CD /* JSONConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124E4B42452CE11006119CD /* JSONConvertible.swift */; };
 		C1253A7C243C755C00733A95 /* ChatInterfaceMessageKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1253A7B243C755C00733A95 /* ChatInterfaceMessageKit.swift */; };
@@ -396,6 +397,7 @@
 		C11E9E5723EDCD34005E10A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11F767525653CAC0037DF26 /* ChatLogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogLevel.swift; sourceTree = "<group>"; };
 		C11F767D25653D100037DF26 /* ChatLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogger.swift; sourceTree = "<group>"; };
+		C11F7688256583F60037DF26 /* JSONDecoder+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Convenience.swift"; sourceTree = "<group>"; };
 		C124E4AD2451DEEB006119CD /* ChatFirestoreModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFirestoreModeling.swift; sourceTree = "<group>"; };
 		C124E4B42452CE11006119CD /* JSONConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONConvertible.swift; sourceTree = "<group>"; };
 		C124E4BB2452D036006119CD /* ImageMediaContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMediaContent.swift; sourceTree = "<group>"; };
@@ -1131,6 +1133,7 @@
 			isa = PBXGroup;
 			children = (
 				C1CFB7F524D93E650023CB10 /* DocumentSnapshot+Decoding.swift */,
+				C11F7688256583F60037DF26 /* JSONDecoder+Convenience.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1705,6 +1708,7 @@
 				C14810C6255060EA00E5BD02 /* ChatFirestore+Typing.swift in Sources */,
 				C11E9E0423EDCCDA005E10A1 /* ChatFirestoreConstants.swift in Sources */,
 				C14810CB2551CA4100E5BD02 /* ChatFirestore+UpdateSeenMessage.swift in Sources */,
+				C11F7689256583F60037DF26 /* JSONDecoder+Convenience.swift in Sources */,
 				04957CC623F306A900AD595B /* Pagination.swift in Sources */,
 				C14810D02551CABF00E5BD02 /* ChatFirestore+SendMessage.swift in Sources */,
 				C14810D52551CAEF00E5BD02 /* ChatFirestore+DeleteMessage.swift in Sources */,
@@ -2119,7 +2123,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ChatApp/SupportingFiles/ChatApp.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development: Jan Pacek (XT97TS9CAT)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2151,7 +2155,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "STRV s.r.o. Enterprise - Development PP";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development enterprise.com.strv.*";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2164,7 +2168,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ChatApp/SupportingFiles/ChatApp.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development: Jan Pacek (XT97TS9CAT)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = D6532TRNCE;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2196,7 +2200,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = enterprise.com.strv.ChatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "STRV s.r.o. Enterprise - Development PP";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development enterprise.com.strv.*";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
