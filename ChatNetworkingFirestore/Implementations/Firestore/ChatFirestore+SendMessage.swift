@@ -59,7 +59,7 @@ public extension ChatFirestore {
     private func prepareMessageData(message: MessageSpecificationFirestore, completion: @escaping (Result<[String: Any], ChatError>) -> Void) {
         let json = message.json
         
-        uploadMedia(for: json) { [weak self] result in
+        uploadMedia(for: json, path: message.uploadPath) { [weak self] result in
             guard let self = self, case let .success(json) = result else {
                 if case let .failure(error) = result {
                     completion(.failure(error))
@@ -75,7 +75,7 @@ public extension ChatFirestore {
         }
     }
     
-    private func uploadMedia(for json: ChatJSON, completion: @escaping (Result<ChatJSON, ChatError>) -> Void) {
+    private func uploadMedia(for json: ChatJSON, path: String? = nil, completion: @escaping (Result<ChatJSON, ChatError>) -> Void) {
         var normalizedJSON: ChatJSON = [:]
         var resultError: ChatError?
         
@@ -86,7 +86,7 @@ public extension ChatFirestore {
             case let value as MediaContent:
                 dispatchGroup.enter()
                 
-                mediaUploader.upload(content: value, on: self.networkingQueue) { result in
+                mediaUploader.upload(content: value, path: path, on: self.networkingQueue) { result in
                     switch result {
                     case .success(let url):
                         normalizedJSON[key] = url.absoluteString
@@ -99,7 +99,7 @@ public extension ChatFirestore {
             case let value as ChatJSON:
                 dispatchGroup.enter()
                 
-                uploadMedia(for: value) { result in
+                uploadMedia(for: value, path: path) { result in
                     switch result {
                     case .success(let json):
                         normalizedJSON[key] = json

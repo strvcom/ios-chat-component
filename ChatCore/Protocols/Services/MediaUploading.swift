@@ -15,5 +15,5 @@ public protocol MediaUploading {
     ///   - content: Media content that conforms to `MediaContent` protocol
     ///   - queue: `DispatchQueue` on which the `completion` should be called
     ///   - completion: Closure that is called on completion or error
-    func upload(content: MediaContent, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void)
+    func upload(content: MediaContent, path: String?, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void)
 }

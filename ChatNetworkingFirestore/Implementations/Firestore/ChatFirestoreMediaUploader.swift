@@ -24,9 +24,9 @@ public class ChatFirestoreMediaUploader: MediaUploading {
     
     public init() {}
     
-    public func upload(content: MediaContent, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void) {
+    public func upload(content: MediaContent, path: String? = nil, on queue: DispatchQueue, completion: @escaping (Result<URL, ChatError>) -> Void) {
         content.dataForUpload { [weak self] data in
-            self?.upload(data: data, completion: { result in
+            self?.upload(data: data, path: path, completion: { result in
                 queue.async {
                     completion(result)
                 }
@@ -34,8 +34,9 @@ public class ChatFirestoreMediaUploader: MediaUploading {
         }
     }
     
-    private func upload(data: Data, completion: @escaping (Result<URL, ChatError>) -> Void) {
-        let ref = storage.reference().child(UUID().uuidString)
+    private func upload(data: Data, path: String? = nil, completion: @escaping (Result<URL, ChatError>) -> Void) {
+        let path = path ?? UUID().uuidString
+        let ref = storage.reference().child(path)
         
         ref.putData(data, metadata: nil) { (_, error) in
             if let error = error {

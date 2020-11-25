@@ -12,7 +12,7 @@ import UIKit
 
 enum MessageContent: ChatMessageContent {
     case text(MessageContentText)
-    case image(MessageContentImage)
+    case image(MessageContentImage, conversationId: EntityIdentifier? = nil, userId: EntityIdentifier? = nil)
     
     var identifier: String {
         switch self {
@@ -27,7 +27,7 @@ enum MessageContent: ChatMessageContent {
         switch self {
         case let .text(content):
             return content.kind
-        case let .image(content):
+        case let .image(content, _, _):
             return .photo(content.media)
         }
     }
@@ -91,7 +91,7 @@ extension MessageContent: Cachable {
               message = text.string
           }
           try container.encode(message, forKey: .text)
-        case let .image(content):
+        case let .image(content, _, _):
             switch content {
             case let .image(image):
                 try container.encode(image.pngData(), forKey: .image)
@@ -121,7 +121,7 @@ extension MessageContent: JSONConvertible {
             }
             data = [CodingKeys.text.rawValue: message]
             
-        case let .image(content):
+        case let .image(content, _, _):
             let imageUrl: Any
             switch content {
             case let .urlString(url):
@@ -135,5 +135,19 @@ extension MessageContent: JSONConvertible {
         json[Message.CodingKeys.content.rawValue] = data
         
         return json
+    }
+}
+
+extension MessageContent: UploadPathSpecifying {
+    var uploadPath: String? {
+        guard case let .image(_, .some(conversationId), .some(userId)) = self else {
+            return nil
+        }
+        
+        return uploadPathFor(conversationId: conversationId, userId: userId)
+    }
+    
+    private func uploadPathFor(conversationId: EntityIdentifier, userId: EntityIdentifier) -> String {
+        "conversations/\(conversationId)/images/\(userId)/\(Date().timeIntervalSince1970).jpg"
     }
 }

@@ -30,6 +30,7 @@
 		045A6B3B24292CEF0055B5E1 /* UIView+Nib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */; };
 		045A6B3D242A10F60055B5E1 /* String+ChatStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */; };
 		045A6B40242A1B860055B5E1 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A6B3F242A1B860055B5E1 /* AvatarView.swift */; };
+		045B65F5256E9AA800DB0C6C /* UploadPathSpecifying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045B65F4256E9AA800DB0C6C /* UploadPathSpecifying.swift */; };
 		048ED59424339BD500F9C7BA /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048ED59324339BD500F9C7BA /* MessagesViewController.swift */; };
 		0490E76A241E5F74008C4412 /* ConversationsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490E768241E5F74008C4412 /* ConversationsListCell.swift */; };
 		0490E76B241E5F74008C4412 /* ConversationsListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0490E769241E5F74008C4412 /* ConversationsListCell.xib */; };
@@ -285,6 +286,7 @@
 		045A6B3A24292CEF0055B5E1 /* UIView+Nib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Nib.swift"; sourceTree = "<group>"; };
 		045A6B3C242A10F60055B5E1 /* String+ChatStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ChatStrings.swift"; sourceTree = "<group>"; };
 		045A6B3F242A1B860055B5E1 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		045B65F4256E9AA800DB0C6C /* UploadPathSpecifying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadPathSpecifying.swift; sourceTree = "<group>"; };
 		048ED59324339BD500F9C7BA /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		0490E768241E5F74008C4412 /* ConversationsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCell.swift; sourceTree = "<group>"; };
 		0490E769241E5F74008C4412 /* ConversationsListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationsListCell.xib; sourceTree = "<group>"; };
@@ -846,6 +848,7 @@
 				C1BD6335245867C60093769C /* MediaMessages */,
 				C11E9E2E23EDCD1E005E10A1 /* EntityIdentifiable.swift */,
 				C124E4B42452CE11006119CD /* JSONConvertible.swift */,
+				045B65F4256E9AA800DB0C6C /* UploadPathSpecifying.swift */,
 				84BE30CF242B46B900DA8664 /* MessageStateReflecting.swift */,
 				842C71C32426B94F0079145A /* MessageConvertible.swift */,
 				843A583B24114FE4007E6F45 /* Cachable.swift */,
@@ -1652,6 +1655,7 @@
 				C11E9E3723EDCD1E005E10A1 /* Error.swift in Sources */,
 				C1888D842459A78D00E0136A /* ChatModel.swift in Sources */,
 				842C71C42426B94F0079145A /* MessageConvertible.swift in Sources */,
+				045B65F5256E9AA800DB0C6C /* UploadPathSpecifying.swift in Sources */,
 				C11E9E3C23EDCD1E005E10A1 /* MessageSpecifying.swift in Sources */,
 				C11E9E3823EDCD1E005E10A1 /* EntityIdentifier.swift in Sources */,
 				842C71C62426C7230079145A /* MessageState.swift in Sources */,

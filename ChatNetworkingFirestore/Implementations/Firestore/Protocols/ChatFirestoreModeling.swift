@@ -16,7 +16,7 @@ public protocol ChatFirestoreModeling: ChatNetworkModeling where
     // Additional requirements for the message model
     NetworkMessage: Decodable,
     // Additional requirements for the message specification model
-    NetworkMessageSpecification: JSONConvertible,
+    NetworkMessageSpecification: JSONConvertible & UploadPathSpecifying,
     // Additional requirements for the user model
     NetworkUser: Decodable,
     // Additional requirements for the seen item
