@@ -11,6 +11,12 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.15]
+
+ #### Fixed
+ - Fix duplicaton of cached messages in Core
+ - Fix default date decoding
+
  ## [0.0.14]
 
  #### Changed
