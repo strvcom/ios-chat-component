@@ -22,7 +22,7 @@ public extension ChatFirestore {
 
                 guard case let .success(newLastMessage) = result else {
                     if case let .failure(error) = result {
-                        print("Error while loading last message \(error)")
+                        logger.log("Deleting message: error while loading last message \(error)", level: .info)
                         completion(.failure(error))
                     }
 

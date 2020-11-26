@@ -12,6 +12,8 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseStorage
 
+let logger = ChatLogger()
+
 /// Implementation of `ChatNetworkServicing` for Firestore backends
 open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     public typealias NetworkModels = Models
@@ -27,6 +29,12 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
         config.constants
     }
     let decoder: JSONDecoder
+    
+    // Logger
+    public var logLevel: ChatLogLevel {
+        get { logger.level }
+        set { logger.level = newValue }
+    }
 
     // user management
     @Required private(set) var currentUserId: String
@@ -42,7 +50,7 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     // dedicated thread queue
     let networkingQueue = DispatchQueue(label: "com.strv.chat.networking.firestore", qos: .userInteractive)
 
-    public required init(config: ChatFirestoreConfig, userManager: UserManager?, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+    public required init(config: ChatFirestoreConfig, userManager: UserManager?, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder.chatDefault) {
 
         // setup from config
         guard let options = FirebaseOptions(contentsOfFile: config.configUrl) else {
@@ -82,14 +90,14 @@ open class ChatFirestore<Models: ChatFirestoreModeling>: ChatNetworkServicing {
     ///   - config: Networking configuration
     ///   - mediaUploader: Service for uploading photos, videos and other media
     ///   - decoder: Instance of `JSONDecoder ` if you don't want to use the default one
-    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder()) {
+    public convenience init(config: ChatFirestoreConfig, mediaUploader: MediaUploading = ChatFirestoreMediaUploader(), decoder: JSONDecoder = JSONDecoder.chatDefault) {
         let userManager = ChatFirestoreDefaultUserManager<UserFirestore>(config: config, decoder: decoder)
         
         self.init(config: config, userManager: userManager, mediaUploader: mediaUploader, decoder: decoder)
     }
     
     deinit {
-        print("\(self) released")
+        logger.log("\(self) released", level: .debug)
         listeners.forEach {
             stop(listener: $0.key)
         }
@@ -172,7 +180,6 @@ public extension ChatFirestore {
             self.listenToCollection(query: query, listener: listener, completion: { (result: Result<[ConversationFirestore], ChatError>) in
 
                 guard case let .success(conversations) = result else {
-                    print(result)
                     completion(result)
                     return
                 }
@@ -228,7 +235,7 @@ public extension ChatFirestore {
                     }
 
                     guard let completion = self.conversationsPagination.updateBlock else {
-                        print("Unexpected error, conversation pagination \(self.conversationsPagination) update block is nil")
+                        logger.log("Unexpected error, conversation pagination \(self.conversationsPagination) update block is nil", level: .debug)
                         return
                     }
 
@@ -317,7 +324,7 @@ extension ChatFirestore {
                         do {
                             return try $0.decode(to: T.self, with: decoder)
                         } catch {
-                            print("Couldn't decode document:", error)
+                            logger.log("Couldn't decode document: \(error)", level: .info)
                             return nil
                         }
                     }
@@ -404,7 +411,7 @@ extension ChatFirestore {
                     // Set members from previously downloaded users
                     completion(.success(self.conversationsWithMembers(conversations: conversations, users: users)))
                 case .failure(let error):
-                    print(error)
+                    logger.log("Load users for conversations failed: \(error)", level: .debug)
                     completion(.failure(error))
                 }
             }

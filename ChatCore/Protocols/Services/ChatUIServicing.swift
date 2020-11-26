@@ -14,5 +14,8 @@ public protocol ChatUIServicing {
     associatedtype Models: ChatUIModeling
     associatedtype Config
     
+    /// Set log level for `UI` service
+    var logLevel: ChatLogLevel { get set }
+
     init(core: Core, config: Config)
 }

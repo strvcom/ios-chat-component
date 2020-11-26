@@ -36,9 +36,9 @@ public extension ChatFirestore {
                 return nil
             }, completion: { (_, error) in
                 if let err = error {
-                    print("Error updating conversation last seen message: \(err)")
+                    logger.log("Error updating conversation last seen message: \(err)", level: .info)
                 } else {
-                    print("Conversation last seen message successfully updated")
+                    logger.log("Conversation last seen message successfully updated", level: .debug)
                 }
             })
         }

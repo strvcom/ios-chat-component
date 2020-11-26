@@ -17,8 +17,8 @@ struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
     let userId: EntityIdentifier
     private(set) var state: CachedMessageState
 
-    init(content: T, conversationId: EntityIdentifier, userId: EntityIdentifier, state: CachedMessageState) {
-        self.id = UUID().uuidString
+    init(id: EntityIdentifier, content: T, conversationId: EntityIdentifier, userId: EntityIdentifier, state: CachedMessageState) {
+        self.id = id
         self.content = content
         self.conversationId = conversationId
         self.state = state

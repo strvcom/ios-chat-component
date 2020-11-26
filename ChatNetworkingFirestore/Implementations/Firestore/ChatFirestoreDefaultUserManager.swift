@@ -26,7 +26,7 @@ public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirest
     }
 
     deinit {
-        print("\(self) released")
+        logger.log("\(self) released", level: .debug)
         listener?.remove()
     }
 
@@ -76,7 +76,7 @@ public class ChatFirestoreDefaultUserManager<User: UserRepresenting>: ChatFirest
                         do {
                             return try $0.decode(to: User.self, with: decoder)
                         } catch {
-                            print("Couldn't decode document:", error)
+                            logger.log("User manager couldn't decode document: \(error)", level: .info)
                             return nil
                         }
                     }
