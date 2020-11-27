@@ -11,14 +11,16 @@ import Foundation
 // MARK: - Structure wrapping message specification and also allows to cache data
 struct CachedMessage<T: MessageSpecifying & Cachable>: Codable {
 
-    let content: T
-    let conversationId: EntityIdentifier
     let id: EntityIdentifier
+    let sentAt: Date
     let userId: EntityIdentifier
+    let conversationId: EntityIdentifier
+    let content: T
     private(set) var state: CachedMessageState
 
-    init(id: EntityIdentifier, content: T, conversationId: EntityIdentifier, userId: EntityIdentifier, state: CachedMessageState) {
+    init(id: EntityIdentifier, sentAt: Date, content: T, conversationId: EntityIdentifier, userId: EntityIdentifier, state: CachedMessageState) {
         self.id = id
+        self.sentAt = sentAt
         self.content = content
         self.conversationId = conversationId
         self.state = state

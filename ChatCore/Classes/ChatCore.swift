@@ -143,7 +143,7 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
                 }
 
                 if message.state == .unsent {
-                    self.send(message: message.content, with: message.id, to: message.conversationId, completion: { _ in })
+                    self.send(message: message.content, with: message.id, to: message.conversationId, sentAt: message.sentAt, completion: { _ in })
                 } else if message.state == .failed {
                     self.handleTemporaryMessage(id: message.id, to: message.conversationId, with: .addOrUpdate(message.content, .failedToBeSend))
                 }
@@ -156,13 +156,13 @@ open class ChatCore<Networking: ChatNetworkServicing, Models: ChatUIModeling>: C
 extension ChatCore {
     open func send(message: MessageSpecifyingUI, to conversation: EntityIdentifier,
                    completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
-        send(message: message, with: nil, to: conversation, completion: completion)
+        send(message: message, with: nil, to: conversation, sentAt: nil, completion: completion)
     }
     
-    func send(message: MessageSpecifyingUI, with messageId: EntityIdentifier?, to conversation: EntityIdentifier,
-              completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
+    func send(message: MessageSpecifyingUI, with messageId: EntityIdentifier?, to conversation: EntityIdentifier, sentAt: Date?, completion: @escaping (Result<MessageUI, ChatError>) -> Void) {
         // pregenerate temporary message id to have it consistent through retrys
         let id = messageId ?? UUID().uuidString
+        let date = sentAt ?? Date()
 
         taskManager.run(attributes: [.backgroundTask, .afterInit, .backgroundThread(coreQueue), .retry(.finite())]) { [weak self] taskCompletion in
             guard let self = self else {
@@ -172,7 +172,7 @@ extension ChatCore {
             precondition(self.$currentUser, "Current user is nil when calling \(#function)")
 
             // by default is cached message in sending state, similar as temporary message
-            let cachedMessage = self.cacheMessage(id: id, message: message, from: conversation)
+            let cachedMessage = self.cacheMessage(id: id, date: date, message: message, from: conversation)
             self.handleTemporaryMessage(id: cachedMessage.id, to: conversation, with: .addOrUpdate(message))
             let mess = Networking.NetworkMessageSpecification(uiModel: message)
             self.networking.send(message: mess, to: conversation) { result in
@@ -610,10 +610,10 @@ private extension ChatCore {
 
 // MARK: - Caching messages
 private extension ChatCore {
-    func cacheMessage<T: MessageSpecifying & Cachable>(id: EntityIdentifier, message: T, from conversation: EntityIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
+    func cacheMessage<T: MessageSpecifying & Cachable>(id: EntityIdentifier, date: Date, message: T, from conversation: EntityIdentifier, state: CachedMessageState = .sending) -> CachedMessage<T> {
 
         // store to keychain for purpose message wont send
-        let cachedMessage = CachedMessage(id: id, content: message, conversationId: conversation, userId: currentUser.id, state: state)
+        let cachedMessage = CachedMessage(id: id, sentAt: date, content: message, conversationId: conversation, userId: currentUser.id, state: state)
         keychainManager.storeUnsentMessage(cachedMessage)
 
         return cachedMessage
