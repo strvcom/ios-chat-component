@@ -514,6 +514,20 @@ extension ChatCore {
     }
 }
 
+// MARK: - Loading messages
+extension ChatCore {
+    open func getMessages(conversation id: EntityIdentifier, request: MessagesRequest, completion: @escaping (Result<[MessageUI], ChatError>) -> Void) {
+        networking.getMessages(conversation: id, request: request) { result in
+            switch result {
+            case let .success(messages):
+                completion(.success(messages.map { $0.uiModel }))
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
 // MARK: - ChatCoreServicingWithTypingUsers
 extension ChatCore: ChatCoreServicingWithTypingUsers where
     // Typing users feature requirements
