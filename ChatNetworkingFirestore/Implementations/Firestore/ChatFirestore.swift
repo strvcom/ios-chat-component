@@ -296,33 +296,32 @@ public extension ChatFirestore {
             switch result {
             case let .success(documentSnapshot):
                 var query = messagesCollection
-                    .limit(to: request.count)
                     .order(by: self.constants.messages.sentAtAttributeName, descending: true)
                 
-                query = request.direction == .before
-                    ? query.end(beforeDocument: documentSnapshot)
-                    : query.start(afterDocument: documentSnapshot)
-                
-                self.getDocuments(query: query, completion: { (result: Result<[NetworkMessage], ChatError>) in
-                    switch result {
-                    case let .success(messages):
-                        var messages = messages
-                        
-                        if request.includeInResult,
-                           let anchorMessage = try? documentSnapshot.decode(to: MessageFirestore.self, with: decoder) {
-                            switch request.direction {
-                            case .before:
-                                messages.append(anchorMessage)
-                            case .after:
-                                messages.insert(anchorMessage, at: 0)
-                            }
-                        }
-                        
-                        completion(.success(messages))
-                    case let .failure(error):
-                        completion(.failure(error))
+                switch request.direction {
+                case .before:
+                    if request.includeInResult {
+                        query = query
+                            .end(atDocument: documentSnapshot)
+                            .limit(toLast: request.count + 1)
+                    } else {
+                        query = query
+                            .end(beforeDocument: documentSnapshot)
+                            .limit(toLast: request.count)
                     }
-                })
+                case .after:
+                    if request.includeInResult {
+                        query = query
+                            .start(atDocument: documentSnapshot)
+                            .limit(to: request.count + 1)
+                    } else {
+                        query = query
+                            .start(afterDocument: documentSnapshot)
+                            .limit(to: request.count)
+                    }
+                }
+                
+                self.getDocuments(query: query, completion: completion)
             case let .failure(error):
                 completion(.failure(error))
             }
