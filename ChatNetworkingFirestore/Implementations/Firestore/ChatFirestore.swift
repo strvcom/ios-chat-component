@@ -384,16 +384,13 @@ extension ChatFirestore {
         query.getDocuments { [weak self, decoder] (documentsSnapshot, error) in
             self?.networkingQueue.async {
                 if let documentsSnapshot = documentsSnapshot {
-                    var list: [T]
-                    
-                    do {
-                        list = try documentsSnapshot.documents.compactMap {
-                            try $0.decode(to: T.self, with: decoder)
+                    let list: [T] = documentsSnapshot.documents.compactMap {
+                        do {
+                            return try $0.decode(to: T.self, with: decoder)
+                        } catch {
+                            logger.log("Couldn't decode document: \(error)", level: .info)
+                            return nil
                         }
-                        
-                    } catch {
-                        logger.log("Couldn't decode document: \(error)", level: .info)
-                        return
                     }
                     
                     completion(.success(list))
