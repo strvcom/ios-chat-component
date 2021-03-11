@@ -101,7 +101,7 @@ public protocol ChatCoreServicing {
     func loadMoreMessages(conversation id: EntityIdentifier)
     
     /// Load messages without creating a listener for them
-    /// 
+    ///
     /// - Parameters:
     ///   - id: Conversation ID
     ///   - request:

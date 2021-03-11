@@ -288,7 +288,7 @@ public extension ChatFirestore {
         let anchorMessage = messagesCollection.document(request.messageId)
         
         // We need to get a document snapshot for the message after/before which we will be loading data
-        getDocumentSnapshot(document: anchorMessage) { [weak self, decoder] result in
+        getDocumentSnapshot(document: anchorMessage) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -367,7 +367,7 @@ extension ChatFirestore {
 // MARK: Private methods
 extension ChatFirestore {
     func getDocumentSnapshot(document: DocumentReference, completion: @escaping (Result<DocumentSnapshot, ChatError>) -> Void) {
-        document.getDocument { [weak self, decoder] (snapshot, error) in
+        document.getDocument { [weak self] (snapshot, error) in
             self?.networkingQueue.async {
                 if let snapshot = snapshot {
                     completion(.success(snapshot))
