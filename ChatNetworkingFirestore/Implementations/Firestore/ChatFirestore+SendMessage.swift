@@ -70,7 +70,7 @@ public extension ChatFirestore {
 
             var newJSON: [String: Any] = json
             newJSON[self.constants.messages.userIdAttributeName] = self.currentUserId
-            newJSON[self.constants.messages.sentAtAttributeName] = Timestamp()
+            newJSON[self.constants.messages.sentAtAttributeName] = FieldValue.serverTimestamp()
             completion(.success(newJSON))
         }
     }

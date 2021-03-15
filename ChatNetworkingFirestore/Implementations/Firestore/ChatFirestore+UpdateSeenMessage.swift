@@ -24,7 +24,7 @@ public extension ChatFirestore {
             self.database.runTransaction({ (transaction, _) -> Any? in
                 let newSeenData = [
                     self.constants.conversations.seenAttribute.messageIdAttributeName: message,
-                    self.constants.conversations.seenAttribute.timestampAttributeName: Timestamp()
+                    self.constants.conversations.seenAttribute.timestampAttributeName: FieldValue.serverTimestamp()
                 ].merging(data ?? [:], uniquingKeysWith: { _, new in new })
 
                 transaction.setData([
