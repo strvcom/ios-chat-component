@@ -13,7 +13,7 @@ public struct MessagesRequest {
     public let count: Int
     public let includeInResult: Bool
     
-    public init(messageId: EntityIdentifier, direction: LoadingDirection, count: Int = 30, includeInResult: Bool = false) {
+    public init(messageId: EntityIdentifier, direction: LoadingDirection, count: Int = Constants.defaultPageSize, includeInResult: Bool = false) {
         self.messageId = messageId
         self.direction = direction
         self.count = count
