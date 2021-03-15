@@ -277,6 +277,56 @@ public extension ChatFirestore {
             })
         }
     }
+    
+    func getMessages(conversation id: EntityIdentifier, request: MessagesRequest, completion: @escaping (Result<[NetworkMessage], ChatError>) -> Void) {
+        
+        let messagesCollection = database
+            .collection(constants.conversations.path)
+            .document(id)
+            .collection(constants.messages.path)
+        
+        let anchorMessage = messagesCollection.document(request.messageId)
+        
+        // We need to get a document snapshot for the message after/before which we will be loading data
+        getDocumentSnapshot(document: anchorMessage) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case let .success(documentSnapshot):
+                var query = messagesCollection
+                    .order(by: self.constants.messages.sentAtAttributeName, descending: true)
+                
+                switch request.direction {
+                case .before:
+                    if request.includeInResult {
+                        query = query
+                            .end(atDocument: documentSnapshot)
+                            .limit(toLast: request.count + 1)
+                    } else {
+                        query = query
+                            .end(beforeDocument: documentSnapshot)
+                            .limit(toLast: request.count)
+                    }
+                case .after:
+                    if request.includeInResult {
+                        query = query
+                            .start(atDocument: documentSnapshot)
+                            .limit(to: request.count + 1)
+                    } else {
+                        query = query
+                            .start(afterDocument: documentSnapshot)
+                            .limit(to: request.count)
+                    }
+                }
+                
+                self.getDocuments(query: query, completion: completion)
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
 
 // MARK: Queries
@@ -316,6 +366,43 @@ extension ChatFirestore {
 
 // MARK: Private methods
 extension ChatFirestore {
+    func getDocumentSnapshot(document: DocumentReference, completion: @escaping (Result<DocumentSnapshot, ChatError>) -> Void) {
+        document.getDocument { [weak self] (snapshot, error) in
+            self?.networkingQueue.async {
+                if let snapshot = snapshot {
+                    completion(.success(snapshot))
+                } else if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.failure(.internal(message: "Unknown")))
+                }
+            }
+        }
+    }
+    
+    func getDocuments<T: Decodable>(query: Query, completion: @escaping (Result<[T], ChatError>) -> Void) {
+        query.getDocuments { [weak self, decoder] (documentsSnapshot, error) in
+            self?.networkingQueue.async {
+                if let documentsSnapshot = documentsSnapshot {
+                    let list: [T] = documentsSnapshot.documents.compactMap {
+                        do {
+                            return try $0.decode(to: T.self, with: decoder)
+                        } catch {
+                            logger.log("Couldn't decode document: \(error)", level: .info)
+                            return nil
+                        }
+                    }
+                    
+                    completion(.success(list))
+                } else if let error = error {
+                    completion(.failure(.networking(error: error)))
+                } else {
+                    completion(.failure(.internal(message: "Unknown")))
+                }
+            }
+        }
+    }
+    
     func listenToCollection<T: Decodable>(query: Query, listener: Listener, completion: @escaping (Result<[T], ChatError>) -> Void) {
         let networkListener = query.addSnapshotListener(includeMetadataChanges: false) { [weak self, decoder] (snapshot, error) in
             self?.networkingQueue.async {
