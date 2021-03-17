@@ -24,6 +24,9 @@ extension KeychainManager {
         // append only if not already contained
         if !unsentMessages.contains(message) {
             unsentMessages.append(message)
+            unsentMessages.sort { lhs, rhs in
+                lhs.sentAt < rhs.sentAt
+            }
         }
         storeObject(object: unsentMessages, forKey: .unsentMessages)
     }
