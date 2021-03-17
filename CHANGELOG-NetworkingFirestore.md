@@ -11,6 +11,14 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.16]
+ 
+ #### Added 
+ - Ability to get messages after before a specific message without listening
+
+ #### Fixed
+ - Use server generated timestamp instead of local
+
  ## [0.0.15]
 
  #### Fixed
