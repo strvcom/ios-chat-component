@@ -43,6 +43,8 @@
 		04BF183D242E09A100C1D626 /* EmptyConversationsList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BF183C242E09A100C1D626 /* EmptyConversationsList.xib */; };
 		04BF183F242E0AFA00C1D626 /* EmptyConversationsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF183E242E0AFA00C1D626 /* EmptyConversationsList.swift */; };
 		04C0ECE724201F08008A5ADB /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0ECE624201F08008A5ADB /* UIConfig.swift */; };
+		04DF827D25FA59E00099277E /* MessagesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DF827C25FA59DF0099277E /* MessagesRequest.swift */; };
+		04DF828225FA5A060099277E /* LoadingDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DF828125FA5A060099277E /* LoadingDirection.swift */; };
 		04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */; };
 		04E56CFD241EBEB6001F54A9 /* ConversationsListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */; };
 		04E56D00242003F9001F54A9 /* UIView+Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E56CFE242003E7001F54A9 /* UIView+Fill.swift */; };
@@ -307,6 +309,8 @@
 		04C0ECD624201B82008A5ADB /* Catamaran-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Regular.ttf"; sourceTree = "<group>"; };
 		04C0ECD724201B82008A5ADB /* Catamaran-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Catamaran-Bold.ttf"; sourceTree = "<group>"; };
 		04C0ECE624201F08008A5ADB /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
+		04DF827C25FA59DF0099277E /* MessagesRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesRequest.swift; sourceTree = "<group>"; };
+		04DF828125FA5A060099277E /* LoadingDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingDirection.swift; sourceTree = "<group>"; };
 		04E1FCB8255438BD00D88120 /* TypingStatusRepresenting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingStatusRepresenting.swift; sourceTree = "<group>"; };
 		04E56CFB241EBE91001F54A9 /* ConversationsListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListCellViewModel.swift; sourceTree = "<group>"; };
 		04E56CFE242003E7001F54A9 /* UIView+Fill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Fill.swift"; sourceTree = "<group>"; };
@@ -829,9 +833,11 @@
 				C11E9E2523EDCD1E005E10A1 /* Error.swift */,
 				843D814D2406D6B100C62656 /* IdentifiableClosure.swift */,
 				04F62DFA2417B8500061B308 /* ListenerIdentifier.swift */,
+				04DF828125FA5A060099277E /* LoadingDirection.swift */,
 				C11E9E2623EDCD1E005E10A1 /* EntityIdentifier.swift */,
 				843A583F241283B0007E6F45 /* CachedMessage.swift */,
 				8478F5BF24239725002BC890 /* CachedMessageState.swift */,
+				04DF827C25FA59DF0099277E /* MessagesRequest.swift */,
 				842C71C52426C7230079145A /* MessageState.swift */,
 			);
 			path = Models;
@@ -1328,7 +1334,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Jan Schwarz";
 				TargetAttributes = {
 					AD6B5D3623C32020007F7754 = {
@@ -1668,6 +1674,7 @@
 				04F62DF92412BEED0061B308 /* Listener.swift in Sources */,
 				C1BD633C2458773C0093769C /* ChatJSON.swift in Sources */,
 				C1CFB7F324D86C990023CB10 /* SeenMessageRepresenting.swift in Sources */,
+				04DF827D25FA59E00099277E /* MessagesRequest.swift in Sources */,
 				C18389AD2457169F0008195B /* MediaContent.swift in Sources */,
 				C11E9E3523EDCD1E005E10A1 /* ChatCore.swift in Sources */,
 				04F62DFC2417B8540061B308 /* ListenerIdentifier.swift in Sources */,
@@ -1686,6 +1693,7 @@
 				84BE30D0242B46B900DA8664 /* MessageStateReflecting.swift in Sources */,
 				049862C723FEEBAF00F7EFD6 /* DataManager.swift in Sources */,
 				04E1FCB9255438BD00D88120 /* TypingStatusRepresenting.swift in Sources */,
+				04DF828225FA5A060099277E /* LoadingDirection.swift in Sources */,
 				843A584524168B1A007E6F45 /* KeychainSwift.swift in Sources */,
 				843D81542406E90F00C62656 /* TaskManager.swift in Sources */,
 				8478F5C024239725002BC890 /* CachedMessageState.swift in Sources */,
@@ -1820,7 +1828,7 @@
 			baseConfigurationReference = F0FCC1374DE27CED772D1892 /* Pods-ChatUI.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2029,6 +2037,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2089,6 +2098,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2212,7 +2222,7 @@
 			baseConfigurationReference = C88069447CD91D674F534417 /* Pods-Chat.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2244,7 +2254,7 @@
 			baseConfigurationReference = 67A2E3821D8827C31BC1CF6F /* Pods-Chat.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

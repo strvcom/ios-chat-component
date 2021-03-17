@@ -100,6 +100,18 @@ public protocol ChatCoreServicing {
     /// - Parameter id: conversation ID
     func loadMoreMessages(conversation id: EntityIdentifier)
     
+    /// Load messages without creating a listener for them
+    ///
+    /// - Parameters:
+    ///   - id: Conversation ID
+    ///   - request:
+    ///     - messageId: message to start from
+    ///     - direction: direction of loaded data (older/newer)
+    ///     - count: number of items to get
+    ///     - includeInResult: include message specified by messageId in the result
+    ///   - completion: Called upon receiving data (or encountering an error)
+    func getMessages(conversation id: EntityIdentifier, request: MessagesRequest, completion: @escaping (Result<[CoreMessage], ChatError>) -> Void)
+    
     /// Used to remove listeners when you no longer need to receive data.
     ///
     /// - Parameter listener: listener identifier obtained when creating a listener to conversations or messages
