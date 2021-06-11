@@ -5,10 +5,10 @@ use_frameworks!
 inhibit_all_warnings!
 
 def networking_pods
-  pod 'FirebaseCore', '= 6.10.3'
-  pod 'FirebaseFirestore', '= 1.18.0'
-  pod 'FirebaseStorage', '= 3.9.0'
-  pod 'FirebaseAuth', '= 6.9.2'
+  pod 'FirebaseCore', '~> 8'
+  pod 'FirebaseFirestore', '~> 8'
+  pod 'FirebaseStorage', '~> 8'
+  pod 'FirebaseAuth', '~> 8'
   pod 'FirebaseUI/Auth'
   pod 'FirebaseUI/Google'
   pod 'FirebaseUI/Email'
