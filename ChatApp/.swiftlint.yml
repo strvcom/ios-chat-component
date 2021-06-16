@@ -26,7 +26,6 @@ opt_in_rules:
   - fatal_error_message
   - first_where
   - toggle_bool
-  - unused_private_declaration
   - modifier_order
   - contains_over_first_not_nil
   - convenience_type

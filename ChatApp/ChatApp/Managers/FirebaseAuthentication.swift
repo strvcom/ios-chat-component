@@ -41,7 +41,7 @@ extension FirebaseAuthentication {
             fatalError("Unable to create login UI")
         }
         authUI.delegate = self
-        authUI.providers = [FUIGoogleAuth(), FUIEmailAuth()]
+        authUI.providers = [FUIGoogleAuth(authUI: authUI), FUIEmailAuth()]
         return authUI.authViewController()
     }
 }
