@@ -37,11 +37,11 @@ private extension ReachabilityObserver {
         do {
             reachability = try Reachability()
 
-            reachability?.whenReachable = { [weak self] reachability in
+            reachability?.whenReachable = { [weak self] _ in
                 self?.reachabilityChanged(.reachable)
             }
 
-            reachability?.whenUnreachable = { [weak self] reachability in
+            reachability?.whenUnreachable = { [weak self] _ in
                 self?.reachabilityChanged(.unreachable)
             }
 
