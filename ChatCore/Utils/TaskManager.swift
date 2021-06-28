@@ -11,6 +11,42 @@ import BackgroundTasks
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
+    class TaskCache {
+        private var storage: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
+        private let queue = DispatchQueue(label: "com.strv.chatcore.taskcache.queue")
+        
+        public subscript(key: IdentifiableClosure<TaskCompletionResultHandler, Void>) -> Set<TaskAttribute> {
+            get {
+                return queue.sync {
+                    return storage[key] ?? []
+                }
+            }
+            set {
+                queue.sync {
+                    storage[key] = newValue
+                }
+            }
+        }
+        
+        public var isEmpty: Bool {
+            return queue.sync {
+                return storage.isEmpty
+            }
+        }
+        
+        public var allTasks: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] {
+            return queue.sync {
+                return storage
+            }
+        }
+        
+        public func removeAll() {
+            return queue.sync {
+                return storage.removeAll()
+            }
+        }
+    }
+    
     enum RetryType {
         case finite(attempts: Int = 3)
         case infinite
@@ -54,8 +90,8 @@ final class TaskManager {
     // Validate state of task after result on internal call
     typealias TaskCompletionResultHandler = (TaskCompletionResult) -> TaskCompletionState
 
-    // closure storage for calls before init
-    private var cachedBeforeInitCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
+    // Closure storage for calls before initialization
+    private let taskCache = TaskCache()
     // tasks hooked to background task
     private var backgroundCalls = [IdentifiableClosure<TaskCompletionResultHandler, Void>]()
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -196,21 +232,22 @@ private extension TaskManager {
     func applyAfterInit(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
         logger.log("Hook after init task id \(identifiableClosure.id)", level: .debug)
         guard initialized else {
-            cachedBeforeInitCalls[identifiableClosure] = attributes
+            taskCache[identifiableClosure] = attributes
             // to alow chaining
             return
         }
     }
 
     func runCachedTasks() {
-        guard !cachedBeforeInitCalls.isEmpty else {
+        guard !taskCache.isEmpty else {
             return
         }
 
-        cachedBeforeInitCalls.forEach { (key, value) in
+        taskCache.allTasks.forEach { (key, value) in
             run(attributes: value, key)
         }
-        cachedBeforeInitCalls.removeAll()
+        
+        taskCache.removeAll()
     }
 }
 
