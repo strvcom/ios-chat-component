@@ -12,10 +12,12 @@ import BackgroundTasks
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
     class TaskCache {
-        private var storage: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
+        typealias Closure = IdentifiableClosure<TaskCompletionResultHandler, Void>
+        
+        private var storage: [Closure: Set<TaskAttribute>] = [:]
         private let queue = DispatchQueue(label: "com.strv.chatcore.taskcache.queue")
         
-        public subscript(key: IdentifiableClosure<TaskCompletionResultHandler, Void>) -> Set<TaskAttribute> {
+        public subscript(key: Closure) -> Set<TaskAttribute> {
             get {
                 return queue.sync {
                     return storage[key] ?? []
@@ -34,7 +36,7 @@ final class TaskManager {
             }
         }
         
-        public var allTasks: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] {
+        public var allTasks: [Closure: Set<TaskAttribute>] {
             return queue.sync {
                 return storage
             }
