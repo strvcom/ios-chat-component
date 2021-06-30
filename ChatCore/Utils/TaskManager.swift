@@ -11,16 +11,21 @@ import BackgroundTasks
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
+    /**
+     Because dictionary isn't thread-safe and the accessing (reading AND writing) the tasks storage can happen simultaneously within the core queue,
+     we have to prevent possible crashes by using dedicated queue to protect the storage and make sure only one thread access it at the time.
+     */
     class TaskCache {
+        // swiftlint:disable:next nesting
         typealias Closure = IdentifiableClosure<TaskCompletionResultHandler, Void>
         
-        private var storage: [Closure: Set<TaskAttribute>] = [:]
+        private lazy var storage: [Closure: Set<TaskAttribute>] = [:]
         private let queue = DispatchQueue(label: "com.strv.chatcore.taskcache.queue")
         
-        public subscript(key: Closure) -> Set<TaskAttribute> {
+        subscript(key: Closure) -> Set<TaskAttribute> {
             get {
-                return queue.sync {
-                    return storage[key] ?? []
+                queue.sync {
+                    storage[key] ?? []
                 }
             }
             set {
@@ -30,21 +35,21 @@ final class TaskManager {
             }
         }
         
-        public var isEmpty: Bool {
-            return queue.sync {
-                return storage.isEmpty
+        var isEmpty: Bool {
+            queue.sync {
+                storage.isEmpty
             }
         }
         
-        public var allTasks: [Closure: Set<TaskAttribute>] {
-            return queue.sync {
-                return storage
+        var allTasks: [Closure: Set<TaskAttribute>] {
+            queue.sync {
+                storage
             }
         }
         
-        public func removeAll() {
-            return queue.sync {
-                return storage.removeAll()
+        func removeAll() {
+            queue.sync {
+                storage.removeAll()
             }
         }
     }
