@@ -19,7 +19,7 @@ final class TaskManager {
         // swiftlint:disable:next nesting
         typealias Closure = IdentifiableClosure<TaskCompletionResultHandler, Void>
         
-        private lazy var storage: [Closure: Set<TaskAttribute>] = [:]
+        private var storage: [Closure: Set<TaskAttribute>] = [:]
         private let queue = DispatchQueue(label: "com.strv.chatcore.taskcache.queue")
         
         subscript(key: Closure) -> Set<TaskAttribute> {
@@ -98,7 +98,7 @@ final class TaskManager {
     typealias TaskCompletionResultHandler = (TaskCompletionResult) -> TaskCompletionState
 
     // Closure storage for calls before initialization
-    private let taskCache = TaskCache()
+    private lazy var taskCache = TaskCache()
     // tasks hooked to background task
     private var backgroundCalls = [IdentifiableClosure<TaskCompletionResultHandler, Void>]()
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
