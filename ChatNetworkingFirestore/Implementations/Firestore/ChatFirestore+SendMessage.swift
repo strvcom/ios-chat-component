@@ -11,7 +11,11 @@ import FirebaseFirestore
 
 public extension ChatFirestore {
     func send(message: MessageSpecificationFirestore, to conversation: EntityIdentifier, completion: @escaping (Result<EntityIdentifier, ChatError>) -> Void) {
-
+        guard !conversation.isEmpty else {
+            completion(.failure(.internal(message: "Conversation ID cannot be empty")))
+            return
+        }
+        
         networkingQueue.async { [weak self] in
             guard let self = self else {
                 return
