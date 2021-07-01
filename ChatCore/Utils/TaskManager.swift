@@ -11,6 +11,49 @@ import BackgroundTasks
 
 // MARK: Helper class to automatically manage closures by applying various attributes
 final class TaskManager {
+    /**
+     Because dictionary isn't thread-safe and the accessing (reading AND writing) the tasks storage can happen simultaneously within the core queue,
+     we have to prevent possible crashes by using dedicated queue to protect the storage and make sure only one thread access it at the time.
+     */
+    class TaskCache {
+        // swiftlint:disable:next nesting
+        typealias Closure = IdentifiableClosure<TaskCompletionResultHandler, Void>
+        
+        private var storage: [Closure: Set<TaskAttribute>] = [:]
+        private let queue = DispatchQueue(label: "com.strv.chatcore.taskcache.queue")
+        
+        subscript(key: Closure) -> Set<TaskAttribute> {
+            get {
+                queue.sync {
+                    storage[key] ?? []
+                }
+            }
+            set {
+                queue.sync {
+                    storage[key] = newValue
+                }
+            }
+        }
+        
+        var isEmpty: Bool {
+            queue.sync {
+                storage.isEmpty
+            }
+        }
+        
+        var allTasks: [Closure: Set<TaskAttribute>] {
+            queue.sync {
+                storage
+            }
+        }
+        
+        func removeAll() {
+            queue.sync {
+                storage.removeAll()
+            }
+        }
+    }
+    
     enum RetryType {
         case finite(attempts: Int = 3)
         case infinite
@@ -54,8 +97,8 @@ final class TaskManager {
     // Validate state of task after result on internal call
     typealias TaskCompletionResultHandler = (TaskCompletionResult) -> TaskCompletionState
 
-    // closure storage for calls before init
-    private var cachedBeforeInitCalls: [IdentifiableClosure<TaskCompletionResultHandler, Void>: Set<TaskAttribute>] = [:]
+    // Closure storage for calls before initialization
+    private lazy var taskCache = TaskCache()
     // tasks hooked to background task
     private var backgroundCalls = [IdentifiableClosure<TaskCompletionResultHandler, Void>]()
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -196,21 +239,22 @@ private extension TaskManager {
     func applyAfterInit(_ identifiableClosure: IdentifiableClosure<TaskCompletionResultHandler, Void>, attributes: Set<TaskAttribute>) {
         logger.log("Hook after init task id \(identifiableClosure.id)", level: .debug)
         guard initialized else {
-            cachedBeforeInitCalls[identifiableClosure] = attributes
+            taskCache[identifiableClosure] = attributes
             // to alow chaining
             return
         }
     }
 
     func runCachedTasks() {
-        guard !cachedBeforeInitCalls.isEmpty else {
+        guard !taskCache.isEmpty else {
             return
         }
 
-        cachedBeforeInitCalls.forEach { (key, value) in
+        taskCache.allTasks.forEach { (key, value) in
             run(attributes: value, key)
         }
-        cachedBeforeInitCalls.removeAll()
+        
+        taskCache.removeAll()
     }
 }
 

@@ -11,6 +11,11 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.17]
+
+ #### Fixed
+ - Fix task manager race condition to prevent crashes in Core
+
  ## [0.0.16]
  
  #### Added 

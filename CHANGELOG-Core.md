@@ -10,6 +10,10 @@ __Sections__
  - `Deprecated` for once-stable features removed in upcoming releases.
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
+ 
+ ## [0.0.13]
+ #### Fixed
+ - Fix task manager race condition to prevent crashes
 
  ## [0.0.12]
 
