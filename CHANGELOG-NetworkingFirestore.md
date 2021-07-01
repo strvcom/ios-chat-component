@@ -11,6 +11,11 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+ ## [0.0.18]
+ 
+ #### Fixed
+ - Prevent crash when conversation ID is empty
+
  ## [0.0.17]
 
  #### Fixed
